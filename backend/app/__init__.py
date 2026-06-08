@@ -1,0 +1,1 @@
+"""SoundAtlas backend application package."""
