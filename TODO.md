@@ -45,27 +45,34 @@ Ziel des ersten MVP ist ein vertikaler Slice fuer **Birth of Hip-Hop: Bronx 1970
 
 ## 4. Frontend
 
-- [ ] SvelteKit-Grundstruktur initialisieren oder bestehendes Frontend migrieren
-- [ ] TypeScript aktivieren
-- [ ] Leaflet sauber in Svelte einbinden
-- [ ] `MapView`-Komponente erstellen
-- [ ] `Timeline`-Komponente erstellen
-- [ ] `RouteFilter`-Komponente erstellen
-- [ ] `StoryPanel`-Komponente erstellen
-- [ ] API-Client fuer Backend-Endpunkte bauen
-- [ ] Event-Marker nach aktivem Zeitraum filtern
-- [ ] Route-Farben konsistent darstellen
-- [ ] Leeren Zustand anzeigen, wenn keine Events sichtbar sind
+- [x] Bestehendes `frontend/` auf SvelteKit migrieren
+- [x] TypeScript-Konfiguration und SvelteKit-Scripts einrichten
+- [x] Frontend-Dependencies pruefen: SvelteKit, Vite, TypeScript, Leaflet
+- [x] API-Basis-URL fuer lokale Entwicklung definieren
+- [x] TypeScript-Typen fuer `Route`, `Place`, `Event` und `Connection` anlegen
+- [x] API-Client fuer `/routes`, `/events`, `/places` und `/connections` bauen
+- [x] Erste Seite als App-Shell mit Karte, Timeline und Side Panel aufbauen
+- [x] Leaflet browser-sicher in Svelte einbinden
+- [x] `MapView`-Komponente mit Event-Markern erstellen
+- [x] `Timeline`-Komponente fuer Zeitraum `1965-1985` erstellen
+- [x] `RouteFilter`-Komponente fuer aktive Routen erstellen
+- [x] `StoryPanel`-Komponente fuer ausgewähltes Event erstellen
+- [x] Gemeinsamen Frontend-State fuer Route, Zeitraum und ausgewähltes Event definieren
+- [x] Event-Marker nach aktivem Zeitraum und Route filtern
+- [x] Route-Farben konsistent aus API-Daten darstellen
+- [x] Loading-, Error- und Empty-States anzeigen
+- [x] Frontend-Smoke-Check oder Build-Check definieren und ausfuehren
 
 ## 5. UX und Design
 
-- [ ] Erste Bildschirmaufteilung festlegen: Karte, Timeline, Side Panel
-- [ ] Farbcode pro Route definieren
-- [ ] Marker-Zustaende definieren: default, hover, selected
-- [ ] 1977 als dramaturgischen Fokus sichtbar machen
-- [ ] Mobile Layout grob pruefen
-- [ ] Quellen und Medienlinks im Story Panel darstellen
-- [ ] Verbindungen zwischen Events visuell oder textlich anzeigen
+- [x] Erste Bildschirmaufteilung festlegen: Karte, Timeline, Side Panel
+- [x] Farbcode pro Route definieren
+- [x] Marker-Zustaende definieren: default, hover, selected
+- [x] 1977 als dramaturgischen Fokus sichtbar machen
+- [x] Mobile Layout grob pruefen
+- [x] Quellen und Medienlinks im Story Panel darstellen
+- [x] Verbindungen zwischen Events visuell oder textlich anzeigen
+- [x] Frontend-Akzeptanzkriterien pruefen: Karte zeigt Hip-Hop-Events, Timeline filtert, Story Panel reagiert auf Markerauswahl
 
 ## 6. Infrastruktur
 
@@ -80,4 +87,14 @@ Ziel des ersten MVP ist ein vertikaler Slice fuer **Birth of Hip-Hop: Bronx 1970
 
 - [x] Seed-Datenstruktur fuer `Birth of Hip-Hop` anlegen und mit den ersten Events befuellen
 - [x] FastAPI-App-Struktur anlegen und Seed-Daten laden
-- [ ] Frontend-Grundstruktur auf SvelteKit migrieren und API-Client anbinden
+- [x] Frontend-Grundstruktur auf SvelteKit migrieren und API-Client anbinden
+
+## Frontend-Akzeptanzkriterien fuer den naechsten Slice
+
+- [x] App startet lokal mit SvelteKit
+- [x] Backend-Daten werden ueber die FastAPI-Endpunkte geladen
+- [x] Karte zeigt Marker fuer `birth-of-hip-hop`
+- [x] Timeline filtert sichtbare Events nach Zeitraum
+- [x] Route Filter kann `Birth of Hip-Hop` ein- und ausblenden
+- [x] Klick auf Marker oeffnet Eventdetails im Story Panel
+- [x] Leere und fehlerhafte API-Zustaende sind sichtbar behandelt
