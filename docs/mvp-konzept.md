@@ -14,7 +14,7 @@ Der erste MVP konzentriert sich auf New York zwischen 1965 und 1985. Dieser Zeit
 
 ## Leitfrage
 
-Warum wurde New York zwischen 1965 und 1985 zu einem globalen Umschlagplatz für Hip-Hop, Disco, Punk, Salsa, Avantgarde und spätere Dance Music?
+Wie wurde New York zwischen 1965 und 1985 zu einem musikalischen Knotenpunkt, und warum verdichtet sich diese Entwicklung um 1977?
 
 ## Zielgruppe
 
