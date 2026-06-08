@@ -3,5 +3,268 @@
     "description": "Chronological and geographic music history events.",
     "schema_version": 1
   },
-  "events": []
+  "events": [
+    {
+      "id": "caribbean-soundsystem-influences",
+      "route_id": "birth-of-hip-hop",
+      "place_id": "south-bronx",
+      "title": "Karibische Soundsystem-Einfluesse erreichen die Bronx",
+      "year_start": 1967,
+      "year_end": 1972,
+      "summary": "Mobile Soundsystem-Praxis, Migration und Nachbarschaftspartys bilden einen wichtigen Vorlauf fuer fruehe Hip-Hop-DJ-Kultur.",
+      "significance": "Dieser Kontext zeigt, dass Hip-Hop nicht isoliert entsteht, sondern aus karibischen, afroamerikanischen und latino Praegungen im urbanen Raum.",
+      "tags": [
+        "migration",
+        "sound-system",
+        "bronx",
+        "dj-culture"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://americanhistory.si.edu/press/releases/hip-hop-comes-smithsonian"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "funk-disco-breaks-as-raw-material",
+      "route_id": "birth-of-hip-hop",
+      "place_id": "new-york-city",
+      "title": "Funk- und Disco-Breaks werden DJ-Rohmaterial",
+      "year_start": 1970,
+      "year_end": 1973,
+      "summary": "DJs greifen besonders tanzbare Breaks aus Funk-, Soul- und Disco-Platten auf und machen sie zum Ausgangsmaterial fuer neue Party-Praxis.",
+      "significance": "Breaks werden zum musikalischen Baustein, an dem DJ-Technik, Tanz und MCing zusammenfinden.",
+      "tags": [
+        "breakbeat",
+        "funk",
+        "disco",
+        "dj-culture"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://www.museumofplay.org/blog/indelibly-marked-crayons-records-and-grandmaster-flash/",
+        "https://www.britannica.com/art/hip-hop"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "kool-herc-back-to-school-jam",
+      "route_id": "birth-of-hip-hop",
+      "place_id": "1520-sedgwick-avenue",
+      "title": "Kool Herc's Back-to-School Jam",
+      "year_start": 1973,
+      "year_end": 1973,
+      "summary": "Am 11. August 1973 legt DJ Kool Herc bei einer Back-to-School-Party im Gemeinschaftsraum von 1520 Sedgwick Avenue auf.",
+      "significance": "Das Event ist ein symbolischer Ursprungspunkt, weil hier DJ-Technik, Community-Raum und Jugendkultur in einer spaeter kanonisierten Erzaehlung zusammenlaufen.",
+      "tags": [
+        "kool-herc",
+        "block-party",
+        "bronx",
+        "origin-story"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://www.history.com/this-day-in-history/hip-hop-is-born-at-a-birthday-party-in-the-bronx"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "breakbeat-dj-practice-spreads",
+      "route_id": "birth-of-hip-hop",
+      "place_id": "cedar-park-bronx",
+      "title": "Breakbeat-DJing verbreitet sich auf Partys",
+      "year_start": 1974,
+      "year_end": 1976,
+      "summary": "DJs verlaengern Breaks, die Menge reagiert darauf, und Block Parties, Parks sowie Community-Raeume werden zu Lernorten einer neuen Praxis.",
+      "significance": "Hip-Hop wird als wiederholbare Szene-Praxis erkennbar: DJing, Tanz, MCing und lokale Reputation verstaerken sich gegenseitig.",
+      "tags": [
+        "breakbeat",
+        "block-party",
+        "park",
+        "b-boying"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://americanhistory.si.edu/press/releases/hip-hop-comes-smithsonian",
+        "https://www.museumofplay.org/blog/indelibly-marked-crayons-records-and-grandmaster-flash/"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "grandmaster-flash-dj-techniques",
+      "route_id": "birth-of-hip-hop",
+      "place_id": "south-bronx",
+      "title": "Grandmaster Flash verfeinert DJ-Techniken",
+      "year_start": 1975,
+      "year_end": 1977,
+      "summary": "Grandmaster Flash entwickelt und verfeinert Techniken wie Backspin, Punch Phrasing und praezises Mischen.",
+      "significance": "Die Turntables werden staerker als spielbares Instrument verstanden und machen Breakbeat-Praxis technisch kontrollierbarer.",
+      "tags": [
+        "grandmaster-flash",
+        "dj-technique",
+        "turntablism",
+        "bronx"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://www.si.edu/object/technics-turntable-used-grandmaster-flash%3Anmah_1301251",
+        "https://www.namm.org/library/oral-history/dj-grandmaster-flash"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "zulu-nation-scene-organization",
+      "route_id": "birth-of-hip-hop",
+      "place_id": "bronx-river-houses",
+      "title": "Zulu Nation organisiert Szeneenergie",
+      "year_start": 1976,
+      "year_end": 1977,
+      "summary": "Afrika Bambaataa und sein Umfeld buendeln Party-, Tanz- und Crew-Kultur in einer staerker organisierten Szeneform.",
+      "significance": "Die Route zeigt hier, wie Hip-Hop nicht nur Musik, sondern soziale Organisation, Identitaet und kulturelle Praxis wird.",
+      "tags": [
+        "afrika-bambaataa",
+        "zulu-nation",
+        "bronx-river",
+        "scene-organization"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://citylore.org/places/bronx-river-houses/",
+        "https://bronxriver.org/post/greenway/the-bronx-river-houses-resilience/feed"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "nyc-blackout-1977",
+      "route_id": "birth-of-hip-hop",
+      "place_id": "new-york-city",
+      "title": "Blackout 1977 als urbaner Einschnitt",
+      "year_start": 1977,
+      "year_end": 1977,
+      "summary": "Der Stromausfall vom 13. bis 14. Juli 1977 wird zu einem Sinnbild fuer Krise, Armut und Spannungen im damaligen New York.",
+      "significance": "Der Blackout ist fuer die Route vor allem Kontext und Mythos: Er verdichtet die sozialen Bedingungen, unter denen lokale Kultur neue Formen annimmt.",
+      "tags": [
+        "blackout",
+        "urban-crisis",
+        "new-york-city",
+        "context"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://www.pbs.org/wgbh/americanexperience/films/blackout/",
+        "https://www.osti.gov/biblio/6673953"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "rappers-delight-mainstream-breakthrough",
+      "route_id": "birth-of-hip-hop",
+      "place_id": "englewood-sugar-hill-records",
+      "title": "Rapper's Delight bringt Rap in die Charts",
+      "year_start": 1979,
+      "year_end": 1979,
+      "summary": "Sugarhill Gangs 'Rapper's Delight' macht Rap fuer ein breites Publikum und die Pop-Charts sichtbar.",
+      "significance": "Das Event markiert den Uebergang von lokaler Performance- und Party-Kultur zu Schallplatte, Industrie und Massenmedien.",
+      "tags": [
+        "rappers-delight",
+        "sugarhill-gang",
+        "industry",
+        "mainstream"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://www.britannica.com/topic/the-Sugarhill-Gang",
+        "https://www.latimes.com/entertainment-arts/music/story/2023-08-07/sugar-hill-records-gang-sylvia-robinson-rappers-delight-1979-50th-anniversary-hip-hop"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "hip-hop-enters-downtown-clubs",
+      "route_id": "birth-of-hip-hop",
+      "place_id": "the-roxy-nyc",
+      "title": "Hip-Hop erreicht Downtown-Clubs",
+      "year_start": 1981,
+      "year_end": 1982,
+      "summary": "Hip-Hop wird in Downtown-Kontexten sichtbarer und trifft auf Clubkultur, Kunstszene, Medien und internationale Aufmerksamkeit.",
+      "significance": "Die Route verschiebt sich von Bronx-Nachbarschaftsraeumen zu Manhattan-Club- und Kunstnetzwerken.",
+      "tags": [
+        "downtown",
+        "club-culture",
+        "art-scene",
+        "cross-over"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://www.filmlinc.org/films/wild-style/",
+        "https://cinema.cornell.edu/wild-style"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "the-message-social-commentary",
+      "route_id": "birth-of-hip-hop",
+      "place_id": "new-york-city",
+      "title": "The Message zeigt Rap als sozialen Kommentar",
+      "year_start": 1982,
+      "year_end": 1982,
+      "summary": "Grandmaster Flash and the Furious Five veroeffentlichen 'The Message', einen fruehen Rap-Klassiker mit deutlicher Sozialbeobachtung.",
+      "significance": "Rap wird nicht nur als Party-Format, sondern als Medium fuer urbane Realitaet, Kritik und Erzaehlung erfahrbar.",
+      "tags": [
+        "the-message",
+        "social-commentary",
+        "grandmaster-flash",
+        "rap-record"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://www.britannica.com/topic/The-Message",
+        "https://rockhall.com/inductees/grandmaster-flash-and-furious-five/"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "planet-rock-electro-future",
+      "route_id": "birth-of-hip-hop",
+      "place_id": "bronx-river-houses",
+      "title": "Planet Rock verbindet Hip-Hop und Electro",
+      "year_start": 1982,
+      "year_end": 1982,
+      "summary": "Afrika Bambaataa and the Soulsonic Force verbinden Hip-Hop mit elektronischer Aesthetik, Kraftwerk-Einfluessen und Drum-Machine-Sound.",
+      "significance": "Hip-Hop oeffnet sich in Richtung Electro, Dance Music und spaetere globale Clubkultur.",
+      "tags": [
+        "planet-rock",
+        "electro",
+        "afrika-bambaataa",
+        "dance-music"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://www.soundonsound.com/techniques/classic-tracks-afrika-bambaataa-soulsonic-force-planet-rock",
+        "https://www.arts.gov/stories/other/afrika-bambaataa-renegade-funk"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "wild-style-global-visibility",
+      "route_id": "birth-of-hip-hop",
+      "place_id": "south-bronx",
+      "title": "Wild Style dokumentiert die vier Elemente",
+      "year_start": 1983,
+      "year_end": 1983,
+      "summary": "Charlie Ahearns Film 'Wild Style' zeigt fruehe Hip-Hop-Kultur mit Graffiti, DJing, MCing und Breaking in einem semi-dokumentarischen Spielfilm.",
+      "significance": "Der Film macht die Szene international lesbar und verbindet lokale Praxis mit globaler Wahrnehmung.",
+      "tags": [
+        "wild-style",
+        "film",
+        "four-elements",
+        "global-visibility"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://cinema.cornell.edu/wild-style",
+        "https://www.filmlinc.org/films/wild-style/"
+      ],
+      "media_links": []
+    }
+  ]
 }

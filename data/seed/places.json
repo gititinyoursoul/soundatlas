@@ -3,5 +3,110 @@
     "description": "Geographic places used by SoundAtlas events.",
     "schema_version": 1
   },
-  "places": []
+  "places": [
+    {
+      "id": "south-bronx",
+      "name": "South Bronx",
+      "borough": "Bronx",
+      "place_type": "region",
+      "latitude": 40.8176,
+      "longitude": -73.9182,
+      "summary": "Regionaler Kontext fuer viele fruehe Hip-Hop-Partys, Crews und soziale Bedingungen.",
+      "review_status": "draft",
+      "source_urls": [
+        "https://americanhistory.si.edu/press/releases/hip-hop-comes-smithsonian"
+      ]
+    },
+    {
+      "id": "new-york-city",
+      "name": "New York City",
+      "borough": "Citywide",
+      "place_type": "city",
+      "latitude": 40.7128,
+      "longitude": -74.006,
+      "summary": "Stadtweiter Kontext fuer Blackout, Medien, Plattenindustrie und Club-Verbreitung.",
+      "review_status": "draft",
+      "source_urls": [
+        "https://www.pbs.org/wgbh/americanexperience/films/blackout/"
+      ]
+    },
+    {
+      "id": "1520-sedgwick-avenue",
+      "name": "1520 Sedgwick Avenue",
+      "borough": "Bronx",
+      "place_type": "building",
+      "latitude": 40.8471,
+      "longitude": -73.9243,
+      "summary": "Apartmenthaus, dessen Gemeinschaftsraum als symbolischer Knotenpunkt der fruehen Hip-Hop-Geschichte gilt.",
+      "review_status": "draft",
+      "source_urls": [
+        "https://www.history.com/this-day-in-history/hip-hop-is-born-at-a-birthday-party-in-the-bronx"
+      ]
+    },
+    {
+      "id": "cedar-park-bronx",
+      "name": "Cedar Park",
+      "borough": "Bronx",
+      "place_type": "park",
+      "latitude": 40.856,
+      "longitude": -73.9195,
+      "summary": "Oeffentlicher Raum im West Bronx-Kontext, verbunden mit frueher DJ- und Park-Party-Kultur.",
+      "review_status": "draft",
+      "source_urls": []
+    },
+    {
+      "id": "bronx-river-houses",
+      "name": "Bronx River Houses",
+      "borough": "Bronx",
+      "place_type": "housing_complex",
+      "latitude": 40.835,
+      "longitude": -73.8769,
+      "summary": "Wohnkomplex im Soundview-Kontext, eng verbunden mit Afrika Bambaataa und frueher Szeneorganisation.",
+      "review_status": "draft",
+      "source_urls": [
+        "https://citylore.org/places/bronx-river-houses/",
+        "https://bronxriver.org/post/greenway/the-bronx-river-houses-resilience/feed"
+      ]
+    },
+    {
+      "id": "disco-fever-bronx",
+      "name": "Disco Fever",
+      "borough": "Bronx",
+      "place_type": "club",
+      "latitude": 40.8357,
+      "longitude": -73.9247,
+      "summary": "Bronx-Club an Jerome Avenue und 167th Street, wichtig fuer den Uebergang von lokaler Szene zu Club- und Medienpraesenz.",
+      "review_status": "draft",
+      "source_urls": [
+        "https://digital.library.cornell.edu/catalog/ss%3A927364"
+      ]
+    },
+    {
+      "id": "the-roxy-nyc",
+      "name": "The Roxy",
+      "borough": "Manhattan",
+      "place_type": "club",
+      "latitude": 40.7463,
+      "longitude": -74.0069,
+      "summary": "Downtown-Club und Roller-Rink an der West 18th Street, relevant fuer Hip-Hop als Club-, Kunst- und Medienphaenomen.",
+      "review_status": "draft",
+      "source_urls": [
+        "https://www.filmlinc.org/films/wild-style/"
+      ]
+    },
+    {
+      "id": "englewood-sugar-hill-records",
+      "name": "Sugar Hill Records / Englewood",
+      "borough": "External",
+      "place_type": "external_node",
+      "latitude": 40.8929,
+      "longitude": -73.9726,
+      "summary": "Externer Industrie-Knoten in Englewood, New Jersey, verbunden mit Sugar Hill Records und Rapper's Delight.",
+      "review_status": "draft",
+      "source_urls": [
+        "https://www.britannica.com/topic/the-Sugarhill-Gang",
+        "https://www.latimes.com/entertainment-arts/music/story/2023-08-07/sugar-hill-records-gang-sylvia-robinson-rappers-delight-1979-50th-anniversary-hip-hop"
+      ]
+    }
+  ]
 }

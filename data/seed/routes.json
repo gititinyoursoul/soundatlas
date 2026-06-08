@@ -3,5 +3,34 @@
     "description": "Curated narrative routes for SoundAtlas.",
     "schema_version": 1
   },
-  "routes": []
+  "routes": [
+    {
+      "id": "birth-of-hip-hop",
+      "title": "Birth of Hip-Hop",
+      "color": "#e4572e",
+      "year_start": 1970,
+      "year_end": 1985,
+      "summary": "Wie lokale Partys, DJ-Technik, Bronx-Communitys und Medienverbreitung aus Hip-Hop eine globale Kulturform machten.",
+      "thesis": "Hip-Hop entsteht aus DJ-Praxis, Community-Raeumen, urbanen Bedingungen und Medienverbreitung, nicht aus einem einzelnen Ursprungspunkt.",
+      "tags": [
+        "dj-culture",
+        "block-party",
+        "breakbeat",
+        "bronx",
+        "club-culture",
+        "media",
+        "industry",
+        "electro",
+        "social-commentary",
+        "film",
+        "migration",
+        "urban-crisis"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://americanhistory.si.edu/press/releases/hip-hop-comes-smithsonian",
+        "https://www.britannica.com/art/hip-hop"
+      ]
+    }
+  ]
 }

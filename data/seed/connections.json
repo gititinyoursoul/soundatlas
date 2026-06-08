@@ -3,5 +3,102 @@
     "description": "Narrative and historical connections between events.",
     "schema_version": 1
   },
-  "connections": []
+  "connections": [
+    {
+      "id": "soundsystems-to-kool-herc",
+      "from_event_id": "caribbean-soundsystem-influences",
+      "to_event_id": "kool-herc-back-to-school-jam",
+      "type": "influence",
+      "summary": "Verbindet mobile Soundsystem-Praxis und karibische Party-Kultur mit Kool Hercs frueher Bronx-DJ-Praxis.",
+      "review_status": "draft"
+    },
+    {
+      "id": "breaks-to-kool-herc",
+      "from_event_id": "funk-disco-breaks-as-raw-material",
+      "to_event_id": "kool-herc-back-to-school-jam",
+      "type": "musical_material",
+      "summary": "Zeigt Breaks als musikalisches Rohmaterial fuer die fruehe Party-Praxis.",
+      "review_status": "draft"
+    },
+    {
+      "id": "kool-herc-to-breakbeat-spread",
+      "from_event_id": "kool-herc-back-to-school-jam",
+      "to_event_id": "breakbeat-dj-practice-spreads",
+      "type": "practice_spread",
+      "summary": "Fuehrt vom symbolischen Event zu einer breiteren Szene-Praxis in Parks, Partys und Community-Raeumen.",
+      "review_status": "draft"
+    },
+    {
+      "id": "breakbeat-spread-to-grandmaster-flash",
+      "from_event_id": "breakbeat-dj-practice-spreads",
+      "to_event_id": "grandmaster-flash-dj-techniques",
+      "type": "technical_development",
+      "summary": "Verbindet die verbreitete Breakbeat-Praxis mit praeziserer DJ-Technik und Turntablism.",
+      "review_status": "draft"
+    },
+    {
+      "id": "breakbeat-spread-to-zulu-nation",
+      "from_event_id": "breakbeat-dj-practice-spreads",
+      "to_event_id": "zulu-nation-scene-organization",
+      "type": "scene_formation",
+      "summary": "Zeigt, wie Party-Praxis in staerker organisierte Szene- und Crew-Strukturen uebergeht.",
+      "review_status": "draft"
+    },
+    {
+      "id": "blackout-context-to-scene",
+      "from_event_id": "nyc-blackout-1977",
+      "to_event_id": "breakbeat-dj-practice-spreads",
+      "type": "context",
+      "summary": "Setzt den Blackout als urbanen Krisenkontext neben die Entwicklung lokaler Kulturraeume.",
+      "review_status": "draft"
+    },
+    {
+      "id": "grandmaster-flash-to-the-message",
+      "from_event_id": "grandmaster-flash-dj-techniques",
+      "to_event_id": "the-message-social-commentary",
+      "type": "artist_continuity",
+      "summary": "Verbindet Grandmaster Flashs DJ-Innovation mit spaeterer Platten- und Rap-Geschichte.",
+      "review_status": "draft"
+    },
+    {
+      "id": "zulu-nation-to-planet-rock",
+      "from_event_id": "zulu-nation-scene-organization",
+      "to_event_id": "planet-rock-electro-future",
+      "type": "artist_continuity",
+      "summary": "Fuehrt von Bambaataas Szeneorganisation zu einem musikalischen Schritt Richtung Electro und Dance Music.",
+      "review_status": "draft"
+    },
+    {
+      "id": "breakbeat-spread-to-rappers-delight",
+      "from_event_id": "breakbeat-dj-practice-spreads",
+      "to_event_id": "rappers-delight-mainstream-breakthrough",
+      "type": "media_transition",
+      "summary": "Zeigt den Uebergang von Live- und Party-Praxis zu Rap als kommerzieller Aufnahme.",
+      "review_status": "draft"
+    },
+    {
+      "id": "rappers-delight-to-downtown-clubs",
+      "from_event_id": "rappers-delight-mainstream-breakthrough",
+      "to_event_id": "hip-hop-enters-downtown-clubs",
+      "type": "visibility",
+      "summary": "Verbindet Chart- und Medienaufmerksamkeit mit staerkerer Sichtbarkeit in Clubs und Kunstnetzwerken.",
+      "review_status": "draft"
+    },
+    {
+      "id": "downtown-clubs-to-wild-style",
+      "from_event_id": "hip-hop-enters-downtown-clubs",
+      "to_event_id": "wild-style-global-visibility",
+      "type": "media_expansion",
+      "summary": "Fuehrt von Downtown-Vermittlung und Clubkontexten zu filmischer Dokumentation und globaler Lesbarkeit.",
+      "review_status": "draft"
+    },
+    {
+      "id": "downtown-clubs-to-planet-rock",
+      "from_event_id": "hip-hop-enters-downtown-clubs",
+      "to_event_id": "planet-rock-electro-future",
+      "type": "scene_bridge",
+      "summary": "Verbindet Hip-Hop mit Club-, Label- und Electro-Kontexten der fruehen 1980er.",
+      "review_status": "draft"
+    }
+  ]
 }
