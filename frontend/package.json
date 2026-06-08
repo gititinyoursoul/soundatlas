@@ -1,5 +1,24 @@
 {
+  "name": "soundatlas-frontend",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "svelte-kit sync && tsc --noEmit"
+  },
   "dependencies": {
     "leaflet": "^1.9.4"
+  },
+  "devDependencies": {
+    "@sveltejs/adapter-auto": "^7.0.1",
+    "@sveltejs/kit": "^2.63.1",
+    "@types/leaflet": "^1.9.21",
+    "@types/node": "^25.9.2",
+    "svelte": "^5.56.3",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.16"
   }
 }
