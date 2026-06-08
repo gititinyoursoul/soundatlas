@@ -28,16 +28,20 @@ Ziel des ersten MVP ist ein vertikaler Slice fuer **Birth of Hip-Hop: Bronx 1970
 
 ## 3. Backend
 
-- [ ] FastAPI-App-Struktur unter `backend/app/` anlegen
-- [ ] `GET /health` implementieren
-- [ ] `GET /routes` implementieren
-- [ ] `GET /events` mit `from_year`, `to_year` und `route_id` implementieren
-- [ ] `GET /events/{event_id}` implementieren
-- [ ] `GET /places` implementieren
-- [ ] `GET /connections` mit `route_id` implementieren
-- [ ] Pydantic-Schemas fuer API-Responses definieren
-- [ ] JSON-Seed-Dateien im Backend laden
-- [ ] Minimale Backend-Tests fuer Health und Events ergaenzen
+- [x] Backend-Projektbeschreibung in `backend/pyproject.toml` aktualisieren
+- [x] FastAPI-App-Struktur unter `backend/app/` anlegen
+- [x] Pydantic-Schemas fuer API-Responses definieren
+- [x] JSON-Seed-Dateien im Backend laden
+- [x] Seed-Daten gegen `docs/seed-validation.md` validieren
+- [x] `GET /health` implementieren
+- [x] `GET /routes` implementieren
+- [x] `GET /events` mit `from_year`, `to_year` und `route_id` implementieren
+- [x] `GET /events/{event_id}` implementieren
+- [x] `GET /places` implementieren
+- [x] `GET /connections` mit `route_id` implementieren
+- [x] Fehlerverhalten fuer unbekannte IDs und leere Filterergebnisse definieren
+- [x] Lokale CORS-Konfiguration fuer das Frontend ergaenzen
+- [x] Minimale Backend-Tests fuer Health und Events ergaenzen
 
 ## 4. Frontend
 
@@ -75,4 +79,5 @@ Ziel des ersten MVP ist ein vertikaler Slice fuer **Birth of Hip-Hop: Bronx 1970
 ## Naechster konkreter Schritt
 
 - [x] Seed-Datenstruktur fuer `Birth of Hip-Hop` anlegen und mit den ersten Events befuellen
-- [ ] FastAPI-App-Struktur anlegen und Seed-Daten laden
+- [x] FastAPI-App-Struktur anlegen und Seed-Daten laden
+- [ ] Frontend-Grundstruktur auf SvelteKit migrieren und API-Client anbinden
