@@ -54,6 +54,8 @@
 
     markerLayer.clearLayers();
 
+    const eventsByPlaceId = groupEventsByPlaceId(events);
+
     for (const event of events) {
       const place = placeById.get(event.place_id);
       const route = routeById.get(event.route_id);
@@ -63,8 +65,11 @@
       }
 
       const isSelected = selectedEventId === event.id;
+      const colocatedEvents = eventsByPlaceId.get(event.place_id) ?? [event];
+      const eventIndex = colocatedEvents.findIndex((colocatedEvent) => colocatedEvent.id === event.id);
+      const markerPosition = getMarkerPosition(place, eventIndex, colocatedEvents.length);
       const marker = leaflet
-        .circleMarker([place.latitude, place.longitude], {
+        .circleMarker(markerPosition, {
           radius: isSelected ? 10 : 7,
           color: '#17202a',
           weight: isSelected ? 3 : 1,
@@ -79,6 +84,35 @@
       marker.on('click', () => onSelectEvent(event.id));
       marker.addTo(markerLayer);
     }
+  }
+
+  function groupEventsByPlaceId(eventsToGroup: Event[]): Map<string, Event[]> {
+    const groupedEvents = new Map<string, Event[]>();
+
+    for (const event of eventsToGroup) {
+      groupedEvents.set(event.place_id, [...(groupedEvents.get(event.place_id) ?? []), event]);
+    }
+
+    return groupedEvents;
+  }
+
+  function getMarkerPosition(
+    place: Place,
+    eventIndex: number,
+    colocatedEventCount: number
+  ): [number, number] {
+    if (colocatedEventCount <= 1 || eventIndex < 0) {
+      return [place.latitude, place.longitude];
+    }
+
+    const angle = (2 * Math.PI * eventIndex) / colocatedEventCount;
+    const radiusInMeters = 70;
+    const latitudeOffset = (Math.sin(angle) * radiusInMeters) / 111_320;
+    const longitudeOffset =
+      (Math.cos(angle) * radiusInMeters) /
+      (111_320 * Math.cos((place.latitude * Math.PI) / 180));
+
+    return [place.latitude + latitudeOffset, place.longitude + longitudeOffset];
   }
 </script>
 
