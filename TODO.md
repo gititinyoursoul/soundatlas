@@ -6,14 +6,14 @@ Ziel des ersten MVP ist ein vertikaler Slice fuer **Birth of Hip-Hop: Bronx 1970
 
 ## 1. Produkt und Content
 
-- [ ] Leitfrage fuer den MVP finalisieren
+- [x] Leitfrage fuer den MVP finalisieren
 - [x] Route `Birth of Hip-Hop` redaktionell ausarbeiten
-- [ ] 8-12 Events fuer die Hip-Hop-Route definieren
-- [ ] 5-8 Places mit Koordinaten erfassen
-- [ ] 8-12 Influence Connections definieren
-- [ ] Quellenstruktur fuer Events festlegen
-- [ ] Medienlink-Regeln klaeren: YouTube, Spotify, Internet Archive oder externe Links
-- [ ] Offene historische Unsicherheiten markieren
+- [x] 8-12 Events fuer die Hip-Hop-Route definieren
+- [x] 5-8 Places mit Koordinaten erfassen
+- [x] 8-12 Influence Connections definieren
+- [x] Quellenstruktur fuer Events festlegen
+- [x] Medienlink-Regeln klaeren: YouTube, Spotify, Internet Archive oder externe Links
+- [x] Offene historische Unsicherheiten markieren
 
 ## 2. Seed-Daten
 
@@ -22,9 +22,9 @@ Ziel des ersten MVP ist ein vertikaler Slice fuer **Birth of Hip-Hop: Bronx 1970
 - [x] `data/seed/places.json` anlegen
 - [x] `data/seed/events.json` anlegen
 - [x] `data/seed/connections.json` anlegen
-- [ ] Beispiel-Daten fuer `Birth of Hip-Hop` eintragen
-- [ ] Einfache Validierung fuer Pflichtfelder definieren
-- [ ] Quellen- und Medienlinks als Arrays modellieren
+- [x] Beispiel-Daten fuer `Birth of Hip-Hop` eintragen
+- [x] Einfache Validierung fuer Pflichtfelder definieren
+- [x] Quellen- und Medienlinks als Arrays modellieren
 
 ## 3. Backend
 
@@ -74,4 +74,5 @@ Ziel des ersten MVP ist ein vertikaler Slice fuer **Birth of Hip-Hop: Bronx 1970
 
 ## Naechster konkreter Schritt
 
-- [ ] Seed-Datenstruktur fuer `Birth of Hip-Hop` anlegen und mit den ersten Events befuellen
+- [x] Seed-Datenstruktur fuer `Birth of Hip-Hop` anlegen und mit den ersten Events befuellen
+- [ ] FastAPI-App-Struktur anlegen und Seed-Daten laden
