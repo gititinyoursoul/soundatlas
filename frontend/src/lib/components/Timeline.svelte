@@ -17,8 +17,6 @@
     : axisStart;
   $: highlightedStart = ((highlightedStartYear - axisStart) / axisSpan) * 100;
   $: highlightedWidth = Math.max(((highlightedEndYear - highlightedStartYear) / axisSpan) * 100, 0);
-  $: eventLabel = hasEventRange ? `${eventStartYear}-${eventEndYear}` : '';
-
   function toPercent(year: number): number {
     return ((year - axisStart) / axisSpan) * 100;
   }
@@ -53,13 +51,11 @@
     </div>
   </div>
 
-  <p class="caption">
-    {#if hasEventRange}
-      {eventLabel} markiert das aktuelle Event.
-    {:else}
+  {#if !hasEventRange}
+    <p class="caption">
       Wähle ein Event, um dessen Zeitraum hervorzuheben.
-    {/if}
-  </p>
+    </p>
+  {/if}
 </section>
 
 <style>
