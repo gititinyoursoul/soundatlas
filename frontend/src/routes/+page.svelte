@@ -19,7 +19,16 @@
   let errorMessage: string | null = null;
 
   $: visibleEvents = filterEvents(events, activeRouteIds, timelineRange);
-  $: selectedEvent = visibleEvents.find((event) => event.id === selectedEventId) ?? null;
+  $: orderedVisibleEvents = [...visibleEvents].sort(compareEvents);
+  $: selectedEvent = orderedVisibleEvents.find((event) => event.id === selectedEventId) ?? null;
+  $: selectedEventIndex = selectedEvent
+    ? orderedVisibleEvents.findIndex((event) => event.id === selectedEvent.id)
+    : -1;
+  $: previousEvent = selectedEventIndex > 0 ? orderedVisibleEvents[selectedEventIndex - 1] : null;
+  $: nextEvent =
+    selectedEventIndex >= 0 && selectedEventIndex < orderedVisibleEvents.length - 1
+      ? orderedVisibleEvents[selectedEventIndex + 1]
+      : null;
   $: selectedPlace = selectedEvent
     ? places.find((place) => place.id === selectedEvent?.place_id) ?? null
     : null;
@@ -68,6 +77,14 @@
   function selectEvent(eventId: string): void {
     selectedEventId = eventId;
   }
+
+  function compareEvents(left: Event, right: Event): number {
+    return (
+      left.year_start - right.year_start ||
+      left.year_end - right.year_end ||
+      left.title.localeCompare(right.title)
+    );
+  }
 </script>
 
 <svelte:head>
@@ -108,7 +125,7 @@
         </div>
       {:else}
         <MapView
-          events={visibleEvents}
+          events={orderedVisibleEvents}
           {places}
           {routes}
           {selectedEventId}
@@ -124,6 +141,11 @@
       place={selectedPlace}
       route={selectedRoute}
       connections={selectedConnections}
+      {previousEvent}
+      {nextEvent}
+      currentEventIndex={selectedEventIndex}
+      eventCount={orderedVisibleEvents.length}
+      onNavigateEvent={selectEvent}
     />
   </section>
 </main>

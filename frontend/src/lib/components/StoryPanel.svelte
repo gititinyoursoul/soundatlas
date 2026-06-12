@@ -5,6 +5,11 @@
   export let place: Place | null = null;
   export let route: Route | null = null;
   export let connections: Connection[] = [];
+  export let previousEvent: Event | null = null;
+  export let nextEvent: Event | null = null;
+  export let currentEventIndex = 0;
+  export let eventCount = 0;
+  export let onNavigateEvent: (eventId: string) => void = () => {};
 </script>
 
 <aside class="story-panel" aria-label="Eventdetails">
@@ -21,6 +26,24 @@
     {#if place}
       <p class="place">{place.name}, {place.borough}</p>
     {/if}
+
+    <nav class="event-nav" aria-label="Event-Navigation">
+      <button
+        type="button"
+        disabled={!previousEvent}
+        on:click={() => previousEvent && onNavigateEvent(previousEvent.id)}
+      >
+        Vorheriges Event
+      </button>
+      <span>{currentEventIndex + 1} / {eventCount}</span>
+      <button
+        type="button"
+        disabled={!nextEvent}
+        on:click={() => nextEvent && onNavigateEvent(nextEvent.id)}
+      >
+        Nächstes Event
+      </button>
+    </nav>
 
     <section>
       <h3>Was passiert?</h3>
@@ -120,6 +143,43 @@
   .place {
     color: #314151;
     font-weight: 700;
+  }
+
+  .event-nav {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 0;
+    border-top: 1px solid #e5ebf0;
+    border-bottom: 1px solid #e5ebf0;
+  }
+
+  .event-nav button {
+    min-width: 0;
+    padding: 0.5rem 0.6rem;
+    border: 1px solid #cfd7df;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #314151;
+    font-size: 0.85rem;
+    font-weight: 700;
+  }
+
+  .event-nav button:not(:disabled):hover {
+    border-color: #17202a;
+  }
+
+  .event-nav button:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+  }
+
+  .event-nav span {
+    color: #6b7785;
+    font-size: 0.85rem;
+    font-weight: 700;
+    white-space: nowrap;
   }
 
   ul {
