@@ -76,6 +76,35 @@
     selectedEventId = eventId;
   }
 
+  function handleKeydown(event: KeyboardEvent): void {
+    if (event.defaultPrevented || isEditableTarget(event.target)) {
+      return;
+    }
+
+    if (event.key === 'ArrowLeft' && previousEvent) {
+      event.preventDefault();
+      selectEvent(previousEvent.id);
+    }
+
+    if (event.key === 'ArrowRight') {
+      const eventToSelect = nextEvent ?? (!selectedEvent ? orderedVisibleEvents[0] : null);
+
+      if (eventToSelect) {
+        event.preventDefault();
+        selectEvent(eventToSelect.id);
+      }
+    }
+  }
+
+  function isEditableTarget(target: EventTarget | null): boolean {
+    return (
+      target instanceof HTMLInputElement ||
+      target instanceof HTMLTextAreaElement ||
+      target instanceof HTMLSelectElement ||
+      (target instanceof HTMLElement && target.isContentEditable)
+    );
+  }
+
   function compareEvents(left: Event, right: Event): number {
     return (
       left.year_start - right.year_start ||
@@ -84,6 +113,8 @@
     );
   }
 </script>
+
+<svelte:window on:keydown={handleKeydown} />
 
 <svelte:head>
   <title>SoundAtlas</title>
