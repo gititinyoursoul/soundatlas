@@ -99,6 +99,102 @@
       "type": "scene_bridge",
       "summary": "Verbindet Hip-Hop mit Club-, Label- und Electro-Kontexten der fruehen 1980er.",
       "review_status": "draft"
+    },
+    {
+      "id": "loft-party-to-sound-system-culture",
+      "from_event_id": "loft-love-saves-the-day",
+      "to_event_id": "loft-sound-system-culture",
+      "type": "practice_development",
+      "summary": "Fuehrt vom symbolischen Loft-Startpunkt zu Sound-System, Raumdramaturgie und DJ-Kuration als Club-Infrastruktur.",
+      "review_status": "draft"
+    },
+    {
+      "id": "loft-sound-to-paradise-garage",
+      "from_event_id": "loft-sound-system-culture",
+      "to_event_id": "paradise-garage-opens",
+      "type": "influence",
+      "summary": "Verbindet Mancusos Loft-Idee mit Paradise Garage als spaeterem Sound- und Community-Zentrum.",
+      "review_status": "draft"
+    },
+    {
+      "id": "gallery-to-twelve-inch-culture",
+      "from_event_id": "gallery-dj-culture",
+      "to_event_id": "extended-mix-12-inch-culture",
+      "type": "format_pressure",
+      "summary": "Zeigt, wie Club-Dramaturgie und DJ-Praxis Bedarf nach laengeren, dancefloorfreundlichen Plattenformaten erzeugen.",
+      "review_status": "draft"
+    },
+    {
+      "id": "twelve-inch-to-west-end",
+      "from_event_id": "extended-mix-12-inch-culture",
+      "to_event_id": "west-end-post-disco-label-culture",
+      "type": "label_continuity",
+      "summary": "Verbindet 12-inch- und Extended-Mix-Praxis mit Labelkultur im Disco- und Post-Disco-Kontext.",
+      "review_status": "draft"
+    },
+    {
+      "id": "loft-to-studio-54-mainstream",
+      "from_event_id": "loft-love-saves-the-day",
+      "to_event_id": "studio-54-opens",
+      "type": "mainstream_transition",
+      "summary": "Setzt privaten Underground-Dancefloor und medienwirksame Glamour-Disco in Beziehung.",
+      "review_status": "draft"
+    },
+    {
+      "id": "studio-54-to-saturday-night-fever",
+      "from_event_id": "studio-54-opens",
+      "to_event_id": "saturday-night-fever-release",
+      "type": "media_amplification",
+      "summary": "Verbindet Club-Glamour mit Disco als global sichtbarem Pop- und Filmphaenomen.",
+      "review_status": "draft"
+    },
+    {
+      "id": "studio-54-to-disco-backlash",
+      "from_event_id": "studio-54-opens",
+      "to_event_id": "disco-backlash-and-reframing",
+      "type": "context",
+      "summary": "Zeigt, wie Mainstream-Sichtbarkeit auch zur kulturellen Gegenreaktion gegen Disco beitrug.",
+      "review_status": "draft"
+    },
+    {
+      "id": "backlash-to-west-end-post-disco",
+      "from_event_id": "disco-backlash-and-reframing",
+      "to_event_id": "west-end-post-disco-label-culture",
+      "type": "reframing",
+      "summary": "Fuehrt vom belasteten Disco-Begriff zu Labels und Sounds, die die Praxis unter neuen Namen weitertragen.",
+      "review_status": "draft"
+    },
+    {
+      "id": "paradise-garage-to-larry-levan",
+      "from_event_id": "paradise-garage-opens",
+      "to_event_id": "larry-levan-residency",
+      "type": "artist_continuity",
+      "summary": "Verbindet den Clubraum mit Larry Levans langfristiger DJ-Autorschaft und Soundpraegung.",
+      "review_status": "draft"
+    },
+    {
+      "id": "larry-levan-to-remix-culture",
+      "from_event_id": "larry-levan-residency",
+      "to_event_id": "dub-mix-remix-culture",
+      "type": "production_language",
+      "summary": "Zeigt, wie DJ-Praxis und Clubreaktion in Dub-, Remix- und Produktionsaesthetik uebergehen.",
+      "review_status": "draft"
+    },
+    {
+      "id": "remix-culture-to-garage-freestyle-electro",
+      "from_event_id": "dub-mix-remix-culture",
+      "to_event_id": "garage-freestyle-electro-bridges",
+      "type": "musical_development",
+      "summary": "Fuehrt von Remix- und Dub-Werkzeugen zu Garage, Freestyle, Electro und elektronischer Dance Music.",
+      "review_status": "draft"
+    },
+    {
+      "id": "planet-rock-to-disco-dance-bridges",
+      "from_event_id": "planet-rock-electro-future",
+      "to_event_id": "garage-freestyle-electro-bridges",
+      "type": "cross_route_bridge",
+      "summary": "Verbindet die Hip-Hop/Electro-Entwicklung mit der Disco-zu-Dance-Music-Route.",
+      "review_status": "draft"
     }
   ]
 }

@@ -31,6 +31,37 @@
         "https://americanhistory.si.edu/press/releases/hip-hop-comes-smithsonian",
         "https://www.britannica.com/art/hip-hop"
       ]
+    },
+    {
+      "id": "disco-to-dance-music",
+      "title": "Disco To Dance Music",
+      "color": "#f2b705",
+      "year_start": 1970,
+      "year_end": 1985,
+      "summary": "Wie New Yorker Clubraeume, DJs, Sound-Systeme, 12-inch-Mixes und Labels Disco in moderne Dance Music ueberfuehrten.",
+      "thesis": "Disco verschwindet nach dem Mainstream-Hoehepunkt nicht, sondern wandert in Post-Disco, Garage, Electro, Freestyle und moderne Remix-Kultur weiter.",
+      "tags": [
+        "disco",
+        "dance-music",
+        "club-culture",
+        "queer-club-culture",
+        "dj-culture",
+        "sound-system",
+        "twelve-inch",
+        "remix",
+        "post-disco",
+        "garage",
+        "media",
+        "label",
+        "brooklyn",
+        "manhattan"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://www.pbs.org/show/disco-soundtrack-revolution/",
+        "https://en.wikipedia.org/wiki/The_Loft_(New_York_City)",
+        "https://en.wikipedia.org/wiki/Paradise_Garage"
+      ]
     }
   ]
 }

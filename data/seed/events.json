@@ -265,6 +265,254 @@
         "https://www.filmlinc.org/films/wild-style/"
       ],
       "media_links": []
+    },
+    {
+      "id": "loft-love-saves-the-day",
+      "route_id": "disco-to-dance-music",
+      "place_id": "the-loft-broadway",
+      "title": "Love Saves the Day startet im Loft",
+      "year_start": 1970,
+      "year_end": 1970,
+      "summary": "David Mancuso veranstaltet eine private Party im Loft-Kontext, die spaeter als symbolischer Startpunkt frueher New Yorker Disco- und Dancefloor-Kultur gilt.",
+      "significance": "Das Event zeigt Disco als gemeinschaftliche, private und soundzentrierte Praxis vor dem Massenmarkt.",
+      "tags": [
+        "the-loft",
+        "david-mancuso",
+        "disco",
+        "club-culture"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/The_Loft_(New_York_City)"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "loft-sound-system-culture",
+      "route_id": "disco-to-dance-music",
+      "place_id": "the-loft-broadway",
+      "title": "Sound-System und Kuration werden Club-Infrastruktur",
+      "year_start": 1970,
+      "year_end": 1974,
+      "summary": "The Loft macht Sound-Qualitaet, komplette Platten, Raumdramaturgie und nicht-kommerzielle Partylogik zu zentralen Elementen der Cluberfahrung.",
+      "significance": "Die Route zeigt hier, dass moderne Dance Music auch aus Raumdesign, Hoerpraxis und DJ-Kuration entsteht.",
+      "tags": [
+        "sound-system",
+        "dj-culture",
+        "the-loft",
+        "dancefloor"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/The_Loft_(New_York_City)"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "gallery-dj-culture",
+      "route_id": "disco-to-dance-music",
+      "place_id": "the-gallery-nyc",
+      "title": "The Gallery professionalisiert DJ- und Clubdramaturgie",
+      "year_start": 1973,
+      "year_end": 1977,
+      "summary": "The Gallery steht fuer eine fruehe Clubpraxis, in der DJs wie Nicky Siano Tanzflaeche, Licht, Energie und Plattenauswahl dramaturgisch zusammenfuehren.",
+      "significance": "Club-DJs werden als Gestalter eines Abends sichtbar, nicht nur als Abspieler einzelner Songs.",
+      "tags": [
+        "the-gallery",
+        "nicky-siano",
+        "dj-culture",
+        "club-culture"
+      ],
+      "review_status": "draft",
+      "source_urls": [],
+      "media_links": []
+    },
+    {
+      "id": "extended-mix-12-inch-culture",
+      "route_id": "disco-to-dance-music",
+      "place_id": "west-end-records",
+      "title": "Extended Mixes und 12-inch-Singles werden DJ-Werkzeug",
+      "year_start": 1974,
+      "year_end": 1976,
+      "summary": "Laengere Mixes und 12-inch-Formate geben DJs mehr Raum fuer Uebergaenge, Breaks und Dancefloor-Reaktion.",
+      "significance": "Das Plattenformat wird selbst Teil der Clubtechnologie und bereitet Remix- und Dance-Music-Kultur vor.",
+      "tags": [
+        "twelve-inch",
+        "extended-mix",
+        "label",
+        "remix"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://pitchfork.com/thepitch/where-to-start-with-west-end-records-the-influential-disco-label-set-for-relaunch/"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "studio-54-opens",
+      "route_id": "disco-to-dance-music",
+      "place_id": "studio-54",
+      "title": "Studio 54 oeffnet als Glamour-Disco",
+      "year_start": 1977,
+      "year_end": 1977,
+      "summary": "Studio 54 oeffnet im April 1977 und macht Disco als spektakulaere Mischung aus Club, Theater, Celebrity-Kultur und Medienbild sichtbar.",
+      "significance": "Der Club verdichtet Disco im Mainstream, zeigt aber auch die Spannung zwischen exklusivem Glamour und Community-orientierten Dancefloors.",
+      "tags": [
+        "studio-54",
+        "disco",
+        "media",
+        "mainstream"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Studio_54"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "saturday-night-fever-release",
+      "route_id": "disco-to-dance-music",
+      "place_id": "bay-ridge-brooklyn",
+      "title": "Saturday Night Fever macht Disco global sichtbar",
+      "year_start": 1977,
+      "year_end": 1977,
+      "summary": "Saturday Night Fever verwandelt eine New-York-nahe Disco-Erzaehlung in ein globales Pop- und Filmphaenomen.",
+      "significance": "Der Film macht Disco massenmedial extrem sichtbar, verengt aber zugleich die Wahrnehmung realer Clubkultur auf einen Pop-Mythos.",
+      "tags": [
+        "saturday-night-fever",
+        "brooklyn",
+        "film",
+        "media"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Saturday_Night_Fever"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "paradise-garage-opens",
+      "route_id": "disco-to-dance-music",
+      "place_id": "paradise-garage",
+      "title": "Paradise Garage wird zentraler Clubraum",
+      "year_start": 1977,
+      "year_end": 1978,
+      "summary": "Paradise Garage entsteht an der King Street als Clubraum, der Sound-System, Community, queere Kultur und DJ-Autorschaft zusammenfuehrt.",
+      "significance": "Der Club wird zum zentralen Transformationsort zwischen Disco, Post-Disco, Garage und moderner Clubmusik.",
+      "tags": [
+        "paradise-garage",
+        "larry-levan",
+        "queer-club-culture",
+        "sound-system"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Paradise_Garage"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "larry-levan-residency",
+      "route_id": "disco-to-dance-music",
+      "place_id": "paradise-garage",
+      "title": "Larry Levan praegt Garage-Sound und Clubdramaturgie",
+      "year_start": 1978,
+      "year_end": 1985,
+      "summary": "Larry Levan entwickelt im Paradise Garage einen einflussreichen Stil aus Disco, dubartigen Mixen, R&B, Post-Disco und emotionaler Dancefloor-Dramaturgie.",
+      "significance": "Die DJ-Residency zeigt, wie ein Club langfristig Geschmack, Produktion, Labels und Pop-Rezeption beeinflussen kann.",
+      "tags": [
+        "larry-levan",
+        "garage",
+        "post-disco",
+        "dj-culture"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://pitchfork.com/features/article/9710-the-larry-levan-bump-how-the-legendary-paradise-garage-dj-ignited-some-of-the-80s-biggest-hits"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "disco-backlash-and-reframing",
+      "route_id": "disco-to-dance-music",
+      "place_id": "new-york-city",
+      "title": "Disco-Backlash verschiebt die Szene in neue Formen",
+      "year_start": 1979,
+      "year_end": 1980,
+      "summary": "Nach dem Mainstream-Hoehepunkt wird Disco als Begriff kulturell belastet, waehrend Clubpraktiken in Post-Disco, Boogie und Dance Music weiterlaufen.",
+      "significance": "Die Route vermeidet die Erzaehlung vom Ende und zeigt stattdessen eine Umcodierung von Sound, Markt und Szene.",
+      "tags": [
+        "disco-backlash",
+        "post-disco",
+        "context",
+        "dance-music"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://www.pbs.org/show/disco-soundtrack-revolution/"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "west-end-post-disco-label-culture",
+      "route_id": "disco-to-dance-music",
+      "place_id": "west-end-records",
+      "title": "West End Records verbindet Disco, Boogie und Post-Disco",
+      "year_start": 1979,
+      "year_end": 1983,
+      "summary": "West End Records steht fuer eine Labelkultur, in der DJs, Remix-Versionen und Clubreaktion die musikalische Form mitpraegen.",
+      "significance": "Labels werden als Infrastruktur zwischen Club, Studio und Plattenmarkt sichtbar.",
+      "tags": [
+        "west-end-records",
+        "post-disco",
+        "boogie",
+        "label"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://pitchfork.com/thepitch/where-to-start-with-west-end-records-the-influential-disco-label-set-for-relaunch/"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "dub-mix-remix-culture",
+      "route_id": "disco-to-dance-music",
+      "place_id": "prelude-records",
+      "title": "Dub- und Remix-Aesthetik wird Dance-Music-Sprache",
+      "year_start": 1980,
+      "year_end": 1984,
+      "summary": "Dub-Versionen, Instrumentals, Breakdowns, Synths und Drum-Machines werden in New Yorker Club- und Labelkontexten zu zentralen Werkzeugen.",
+      "significance": "Remix-Kultur wird nicht nur Vermarktung, sondern eine eigene musikalische Sprache fuer Dance Music.",
+      "tags": [
+        "dub-mix",
+        "remix",
+        "prelude-records",
+        "synth"
+      ],
+      "review_status": "draft",
+      "source_urls": [],
+      "media_links": []
+    },
+    {
+      "id": "garage-freestyle-electro-bridges",
+      "route_id": "disco-to-dance-music",
+      "place_id": "wbls-nyc-radio",
+      "title": "Garage, Freestyle und Electro werden Anschlussraeume",
+      "year_start": 1982,
+      "year_end": 1985,
+      "summary": "Club-, Radio- und Labelkontexte verbinden Post-Disco mit Garage, Electro, Latin Freestyle und frueher elektronischer Pop-Dance-Music.",
+      "significance": "Die Route endet nicht bei Disco, sondern zeigt die Fortsetzung in mehreren New Yorker Dance-Music-Zukuenften.",
+      "tags": [
+        "garage",
+        "freestyle",
+        "electro",
+        "radio"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://pitchfork.com/features/article/9710-the-larry-levan-bump-how-the-legendary-paradise-garage-dj-ignited-some-of-the-80s-biggest-hits"
+      ],
+      "media_links": []
     }
   ]
 }
