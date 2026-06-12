@@ -4,6 +4,8 @@ from pydantic import BaseModel, Field, field_validator, model_validator
 
 
 ReviewStatus = Literal["draft", "reviewed"]
+MediaProvider = Literal["youtube", "spotify", "qobuz"]
+MediaType = Literal["track", "album", "playlist", "video", "search"]
 
 
 class YearRangeMixin(BaseModel):
@@ -21,6 +23,7 @@ class Route(YearRangeMixin):
     id: str
     title: str
     color: str
+    creator: str
     summary: str
     thesis: str
     tags: list[str]
@@ -54,6 +57,23 @@ class Place(BaseModel):
         return value
 
 
+class MediaLink(BaseModel):
+    provider: MediaProvider
+    type: MediaType
+    title: str
+    url: str
+    query: str
+    confidence: float
+    review_status: ReviewStatus
+
+    @field_validator("confidence")
+    @classmethod
+    def validate_confidence(cls, value: float) -> float:
+        if value < 0 or value > 1:
+            raise ValueError("confidence must be between 0 and 1")
+        return value
+
+
 class Event(YearRangeMixin):
     id: str
     route_id: str
@@ -64,7 +84,7 @@ class Event(YearRangeMixin):
     tags: list[str]
     review_status: ReviewStatus
     source_urls: list[str]
-    media_links: list[str]
+    media_links: list[MediaLink]
 
 
 class Connection(BaseModel):

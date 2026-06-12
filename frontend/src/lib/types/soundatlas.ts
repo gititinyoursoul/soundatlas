@@ -1,9 +1,12 @@
 export type ReviewStatus = 'draft' | 'reviewed';
+export type MediaProvider = 'youtube' | 'spotify' | 'qobuz';
+export type MediaType = 'track' | 'album' | 'playlist' | 'video' | 'search';
 
 export type Route = {
   id: string;
   title: string;
   color: string;
+  creator: string;
   year_start: number;
   year_end: number;
   summary: string;
@@ -25,6 +28,16 @@ export type Place = {
   source_urls: string[];
 };
 
+export type MediaLink = {
+  provider: MediaProvider;
+  type: MediaType;
+  title: string;
+  url: string;
+  query: string;
+  confidence: number;
+  review_status: ReviewStatus;
+};
+
 export type Event = {
   id: string;
   route_id: string;
@@ -37,7 +50,7 @@ export type Event = {
   tags: string[];
   review_status: ReviewStatus;
   source_urls: string[];
-  media_links: string[];
+  media_links: MediaLink[];
 };
 
 export type Connection = {

@@ -1,5 +1,12 @@
 <script lang="ts">
-  import type { Connection, Event, Place, Route } from '$lib/types/soundatlas';
+  import type {
+    Connection,
+    Event,
+    MediaProvider,
+    MediaType,
+    Place,
+    Route
+  } from '$lib/types/soundatlas';
 
   export let event: Event | null = null;
   export let place: Place | null = null;
@@ -10,6 +17,16 @@
   export let currentEventIndex = 0;
   export let eventCount = 0;
   export let onNavigateEvent: (eventId: string) => void = () => {};
+
+  const providerLabels: Record<MediaProvider, string> = {
+    youtube: 'YouTube',
+    spotify: 'Spotify',
+    qobuz: 'Qobuz'
+  };
+
+  function formatMediaLinkLabel(provider: MediaProvider, type: MediaType): string {
+    return `${providerLabels[provider]} ${type}`;
+  }
 </script>
 
 <aside class="story-panel" aria-label="Event details">
@@ -74,7 +91,11 @@
             <li><a href={sourceUrl} target="_blank" rel="noreferrer">Source</a></li>
           {/each}
           {#each event.media_links as mediaLink}
-            <li><a href={mediaLink} target="_blank" rel="noreferrer">Media</a></li>
+            <li>
+              <a href={mediaLink.url} target="_blank" rel="noreferrer">
+                {formatMediaLinkLabel(mediaLink.provider, mediaLink.type)}
+              </a>
+            </li>
           {/each}
         </ul>
       </section>

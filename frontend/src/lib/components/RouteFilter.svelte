@@ -21,7 +21,10 @@
           title={route.summary}
         >
           <span class="swatch" style={`--route-color: ${route.color}`}></span>
-          <span>{route.title}</span>
+          <span class="route-copy">
+            <span>{route.title}</span>
+            <small>Creator: {route.creator}</small>
+          </span>
         </button>
       {/each}
     </div>
@@ -57,6 +60,7 @@
     border-radius: 999px;
     background: #ffffff;
     color: #314151;
+    text-align: left;
   }
 
   button.active {
@@ -66,10 +70,22 @@
   }
 
   .swatch {
+    flex: 0 0 auto;
     width: 0.75rem;
     height: 0.75rem;
     border-radius: 999px;
     background: var(--route-color);
+  }
+
+  .route-copy {
+    display: grid;
+    gap: 0.05rem;
+  }
+
+  small {
+    color: currentColor;
+    font-size: 0.68rem;
+    opacity: 0.72;
   }
 
   .empty {

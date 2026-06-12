@@ -18,6 +18,7 @@ Pflichtfelder pro Route:
 - `id`
 - `title`
 - `color`
+- `creator`
 - `year_start`
 - `year_end`
 - `summary`
@@ -69,12 +70,23 @@ Pflichtfelder pro Event:
 - `source_urls`
 - `media_links`
 
+`media_links` enthaelt strukturierte Medienlinks:
+
+- `provider`: `youtube`, `spotify` oder `qobuz`
+- `type`: `track`, `album`, `playlist`, `video` oder `search`
+- `title`
+- `url`
+- `query`
+- `confidence`: Zahl zwischen `0` und `1`
+- `review_status`
+
 Validierungsregeln:
 
 - `route_id` referenziert eine Route aus `routes.json`.
 - `place_id` referenziert einen Place aus `places.json`.
 - `year_start` ist kleiner oder gleich `year_end`.
-- `tags`, `source_urls` und `media_links` sind Arrays aus Strings.
+- `tags` und `source_urls` sind Arrays aus Strings.
+- `media_links` ist ein Array aus Medienlink-Objekten.
 
 ## `connections.json`
 
