@@ -105,7 +105,7 @@
       "from_event_id": "loft-love-saves-the-day",
       "to_event_id": "loft-sound-system-culture",
       "type": "practice_development",
-      "summary": "Fuehrt vom symbolischen Loft-Startpunkt zu Sound-System, Raumdramaturgie und DJ-Kuration als Club-Infrastruktur.",
+      "summary": "Leads from the symbolic Loft starting point to sound system, spatial dramaturgy, and DJ curation as club infrastructure.",
       "review_status": "draft"
     },
     {
@@ -113,7 +113,7 @@
       "from_event_id": "loft-sound-system-culture",
       "to_event_id": "paradise-garage-opens",
       "type": "influence",
-      "summary": "Verbindet Mancusos Loft-Idee mit Paradise Garage als spaeterem Sound- und Community-Zentrum.",
+      "summary": "Connects Mancuso's Loft idea with Paradise Garage as a later sound and community center.",
       "review_status": "draft"
     },
     {
@@ -121,7 +121,7 @@
       "from_event_id": "gallery-dj-culture",
       "to_event_id": "extended-mix-12-inch-culture",
       "type": "format_pressure",
-      "summary": "Zeigt, wie Club-Dramaturgie und DJ-Praxis Bedarf nach laengeren, dancefloorfreundlichen Plattenformaten erzeugen.",
+      "summary": "Shows how club dramaturgy and DJ practice create demand for longer, dancefloor-friendly record formats.",
       "review_status": "draft"
     },
     {
@@ -129,7 +129,7 @@
       "from_event_id": "extended-mix-12-inch-culture",
       "to_event_id": "west-end-post-disco-label-culture",
       "type": "label_continuity",
-      "summary": "Verbindet 12-inch- und Extended-Mix-Praxis mit Labelkultur im Disco- und Post-Disco-Kontext.",
+      "summary": "Connects 12-inch and extended-mix practice with label culture in disco and post-disco contexts.",
       "review_status": "draft"
     },
     {
@@ -137,7 +137,7 @@
       "from_event_id": "loft-love-saves-the-day",
       "to_event_id": "studio-54-opens",
       "type": "mainstream_transition",
-      "summary": "Setzt privaten Underground-Dancefloor und medienwirksame Glamour-Disco in Beziehung.",
+      "summary": "Relates a private underground dancefloor to media-driven glamour disco.",
       "review_status": "draft"
     },
     {
@@ -145,7 +145,7 @@
       "from_event_id": "studio-54-opens",
       "to_event_id": "saturday-night-fever-release",
       "type": "media_amplification",
-      "summary": "Verbindet Club-Glamour mit Disco als global sichtbarem Pop- und Filmphaenomen.",
+      "summary": "Connects club glamour with disco as a globally visible pop and film phenomenon.",
       "review_status": "draft"
     },
     {
@@ -153,7 +153,7 @@
       "from_event_id": "studio-54-opens",
       "to_event_id": "disco-backlash-and-reframing",
       "type": "context",
-      "summary": "Zeigt, wie Mainstream-Sichtbarkeit auch zur kulturellen Gegenreaktion gegen Disco beitrug.",
+      "summary": "Shows how mainstream visibility also contributed to the cultural backlash against disco.",
       "review_status": "draft"
     },
     {
@@ -161,7 +161,7 @@
       "from_event_id": "disco-backlash-and-reframing",
       "to_event_id": "west-end-post-disco-label-culture",
       "type": "reframing",
-      "summary": "Fuehrt vom belasteten Disco-Begriff zu Labels und Sounds, die die Praxis unter neuen Namen weitertragen.",
+      "summary": "Moves from a burdened disco term to labels and sounds that carry the practice forward under new names.",
       "review_status": "draft"
     },
     {
@@ -169,7 +169,7 @@
       "from_event_id": "paradise-garage-opens",
       "to_event_id": "larry-levan-residency",
       "type": "artist_continuity",
-      "summary": "Verbindet den Clubraum mit Larry Levans langfristiger DJ-Autorschaft und Soundpraegung.",
+      "summary": "Connects the club space with Larry Levan's long-term DJ authorship and sound imprint.",
       "review_status": "draft"
     },
     {
@@ -177,7 +177,7 @@
       "from_event_id": "larry-levan-residency",
       "to_event_id": "dub-mix-remix-culture",
       "type": "production_language",
-      "summary": "Zeigt, wie DJ-Praxis und Clubreaktion in Dub-, Remix- und Produktionsaesthetik uebergehen.",
+      "summary": "Shows how DJ practice and club response turn into dub, remix, and production aesthetics.",
       "review_status": "draft"
     },
     {
@@ -185,7 +185,7 @@
       "from_event_id": "dub-mix-remix-culture",
       "to_event_id": "garage-freestyle-electro-bridges",
       "type": "musical_development",
-      "summary": "Fuehrt von Remix- und Dub-Werkzeugen zu Garage, Freestyle, Electro und elektronischer Dance Music.",
+      "summary": "Leads from remix and dub tools toward garage, freestyle, electro, and electronic dance music.",
       "review_status": "draft"
     },
     {
@@ -193,7 +193,7 @@
       "from_event_id": "planet-rock-electro-future",
       "to_event_id": "garage-freestyle-electro-bridges",
       "type": "cross_route_bridge",
-      "summary": "Verbindet die Hip-Hop/Electro-Entwicklung mit der Disco-zu-Dance-Music-Route.",
+      "summary": "Connects the hip-hop/electro development with the Disco To Dance Music route.",
       "review_status": "draft"
     }
   ]
