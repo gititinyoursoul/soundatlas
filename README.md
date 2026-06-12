@@ -9,6 +9,16 @@ SoundAtlas ist ein MVP fuer eine interaktive Musikgeschichts-App. Der aktuelle S
 - Node.js und npm
 - PowerShell fuer das optionale Startskript
 
+## Environment
+
+Eine Beispielkonfiguration liegt in `.env.example`.
+
+```powershell
+Copy-Item .env.example .env
+```
+
+`.env` ist fuer lokale Secrets gedacht und wird nicht committed. Aktuell werden Env Vars direkt aus der Shell gelesen; setze benoetigte Werte daher in deiner aktiven PowerShell-Session oder lade sie ueber dein lokales Tooling.
+
 ## Lokaler Start
 
 ### Schnellstart mit Skript
