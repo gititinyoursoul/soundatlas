@@ -765,6 +765,261 @@
         "https://www.filmlinc.org/films/wild-style/"
       ],
       "media_links": []
+    },
+    {
+      "id": "palladium-afterlife-latin-dance-memory",
+      "route_id": "salsa-latin-new-york",
+      "place_id": "palladium-ballroom",
+      "title": "Palladium Afterlife Shapes Latin Dance Memory",
+      "year_start": 1965,
+      "year_end": 1966,
+      "summary": "As the mambo ballroom era recedes, the Palladium remains a symbolic reference point for Latin dance culture in New York.",
+      "significance": "The route starts with salsa's prehistory: dancers, bands, and audiences inherit a mambo-era city before salsa becomes a named 1970s sound.",
+      "tags": [
+        "mambo",
+        "dance-culture",
+        "palladium",
+        "prehistory"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Salsa_music"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "boogaloo-latin-soul-east-harlem",
+      "route_id": "salsa-latin-new-york",
+      "place_id": "east-harlem-el-barrio",
+      "title": "Boogaloo and Latin Soul Connect Barrio Youth Culture",
+      "year_start": 1966,
+      "year_end": 1968,
+      "summary": "Boogaloo and Latin soul mix Afro-Caribbean rhythms, soul, R&B, English and Spanish lyrics, and East Harlem youth culture.",
+      "significance": "This event shows a transitional sound where second-generation Latin New York audiences hear neighborhood identity alongside Black popular music.",
+      "tags": [
+        "boogaloo",
+        "latin-soul",
+        "east-harlem",
+        "youth-culture"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://pitchfork.com/reviews/albums/joe-bataan-gypsy-woman/"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "fania-records-label-infrastructure",
+      "route_id": "salsa-latin-new-york",
+      "place_id": "fania-records-nyc",
+      "title": "Fania Turns Local Latin Music into Label Infrastructure",
+      "year_start": 1965,
+      "year_end": 1968,
+      "summary": "After its 1964 founding, Fania Records builds a New York label system around Latin musicians, records, promotion, and distribution.",
+      "significance": "Fania becomes the infrastructure that helps local scenes become a marketable and exportable salsa identity.",
+      "tags": [
+        "fania",
+        "label",
+        "salsa",
+        "media"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Fania_Records"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "el-malo-bronx-barrio-sound",
+      "route_id": "salsa-latin-new-york",
+      "place_id": "south-bronx",
+      "title": "Willie Colon and Hector Lavoe Sharpen Barrio Salsa",
+      "year_start": 1967,
+      "year_end": 1967,
+      "summary": "Willie Colon's El Malo, with Hector Lavoe, presents a hard-edged young New York Latin sound tied to barrio imagery and street identity.",
+      "significance": "The event marks salsa's urban turn: trombone-heavy arrangements and album imagery make New York's Latin neighborhoods audible and visible.",
+      "tags": [
+        "willie-colon",
+        "hector-lavoe",
+        "bronx",
+        "barrio-sound"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/El_Malo"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "fania-all-stars-form",
+      "route_id": "salsa-latin-new-york",
+      "place_id": "fania-records-nyc",
+      "title": "Fania All-Stars Create a Label Supergroup",
+      "year_start": 1968,
+      "year_end": 1968,
+      "summary": "Fania organizes leading label musicians into the Fania All-Stars, creating a flexible concert and recording platform.",
+      "significance": "The ensemble turns a label roster into a public-facing scene, preparing salsa for large concerts and film documentation.",
+      "tags": [
+        "fania-all-stars",
+        "ensemble",
+        "label",
+        "salsa"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Fania_Records"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "el-museo-barrio-cultural-infrastructure",
+      "route_id": "salsa-latin-new-york",
+      "place_id": "el-museo-del-barrio",
+      "title": "El Museo del Barrio Anchors Puerto Rican Cultural Visibility",
+      "year_start": 1969,
+      "year_end": 1969,
+      "summary": "El Museo del Barrio is founded in East Harlem as a cultural institution centered on Puerto Rican and broader Latin art and history.",
+      "significance": "The route uses El Museo to show that salsa's New York context includes cultural self-representation, education, and institutional struggle.",
+      "tags": [
+        "el-museo-del-barrio",
+        "puerto-rican",
+        "cultural-institution",
+        "east-harlem"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/El_Museo_del_Barrio"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "cheetah-fania-all-stars-our-latin-thing",
+      "route_id": "salsa-latin-new-york",
+      "place_id": "cheetah-nightclub",
+      "title": "Fania All-Stars at Cheetah Become Our Latin Thing",
+      "year_start": 1971,
+      "year_end": 1971,
+      "summary": "The Fania All-Stars perform at Cheetah in 1971, a concert later recorded and filmed as part of Our Latin Thing.",
+      "significance": "Cheetah becomes a breakthrough visibility point where salsa is staged as a modern New York Latin sound for film, records, and wider audiences.",
+      "tags": [
+        "cheetah",
+        "fania-all-stars",
+        "our-latin-thing",
+        "concert"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Cheetah_(nightclub)",
+        "https://en.wikipedia.org/wiki/Fania_Records"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "fania-all-stars-yankee-stadium",
+      "route_id": "salsa-latin-new-york",
+      "place_id": "yankee-stadium",
+      "title": "Fania All-Stars Bring Salsa to Stadium Scale",
+      "year_start": 1973,
+      "year_end": 1973,
+      "summary": "Fania All-Stars perform at Yankee Stadium, marking salsa's move into large-scale concert spectacle.",
+      "significance": "The event shows salsa as mass culture: neighborhood music, label power, and Latin pride become visible at stadium scale.",
+      "tags": [
+        "fania-all-stars",
+        "yankee-stadium",
+        "mass-visibility",
+        "concert"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Fania_Records"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "nuyorican-poets-cafe-identity",
+      "route_id": "salsa-latin-new-york",
+      "place_id": "nuyorican-poets-cafe",
+      "title": "Nuyorican Poets Cafe Gives Language to Urban Puerto Rican Identity",
+      "year_start": 1973,
+      "year_end": 1975,
+      "summary": "The Nuyorican Poets Cafe grows from apartment gatherings into a public cultural space for poetry, performance, theater, and community language.",
+      "significance": "The event links salsa's musical identity to a broader Nuyorican movement concerned with language, place, race, and urban experience.",
+      "tags": [
+        "nuyorican",
+        "poetry",
+        "identity",
+        "lower-east-side"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Nuyorican_Poets_Caf%C3%A9",
+        "https://en.wikipedia.org/wiki/Nuyorican_movement"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "celia-cruz-fania-pan-latin-stage",
+      "route_id": "salsa-latin-new-york",
+      "place_id": "fania-records-nyc",
+      "title": "Celia Cruz Joins Fania's Pan-Latin Salsa Stage",
+      "year_start": 1974,
+      "year_end": 1975,
+      "summary": "Celia Cruz's Fania-era visibility connects Cuban musical memory, New York salsa infrastructure, and a broader Pan-Latin audience.",
+      "significance": "The route uses this moment to show salsa's transnational character and the importance of star voices in expanding the scene.",
+      "tags": [
+        "celia-cruz",
+        "fania",
+        "pan-latin",
+        "salsa"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Fania_Records"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "siembra-social-salsa",
+      "route_id": "salsa-latin-new-york",
+      "place_id": "fania-records-nyc",
+      "title": "Siembra Makes Salsa a Vehicle for Urban Storytelling",
+      "year_start": 1978,
+      "year_end": 1978,
+      "summary": "Willie Colon and Ruben Blades release Siembra, expanding salsa's narrative and social commentary through songs such as Pedro Navaja.",
+      "significance": "Siembra shows salsa as more than dance music: it becomes a medium for urban storytelling, politics, and Latin American consciousness.",
+      "tags": [
+        "siembra",
+        "willie-colon",
+        "ruben-blades",
+        "social-commentary"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Siembra"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "salsa-globalized-nyc-media",
+      "route_id": "salsa-latin-new-york",
+      "place_id": "new-york-city",
+      "title": "Salsa Circulates Globally from New York Media and Concert Networks",
+      "year_start": 1980,
+      "year_end": 1985,
+      "summary": "By the early 1980s, New York salsa circulates through records, concerts, radio, film memory, and Latin American markets.",
+      "significance": "The route ends by showing salsa as a global culture that remains tied to New York's neighborhoods, labels, and diasporic audiences.",
+      "tags": [
+        "global-visibility",
+        "media",
+        "latin-new-york",
+        "salsa"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://pitchfork.com/reviews/albums/15564-fania-records-1964-1980-the-original-sound-of-latin-new-york/",
+        "https://en.wikipedia.org/wiki/Salsa_music"
+      ],
+      "media_links": []
     }
   ]
 }

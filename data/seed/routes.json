@@ -88,6 +88,38 @@
         "https://en.wikipedia.org/wiki/No_New_York",
         "https://en.wikipedia.org/wiki/Punk_(magazine)"
       ]
+    },
+    {
+      "id": "salsa-latin-new-york",
+      "title": "Salsa & Latin New York",
+      "color": "#008c72",
+      "year_start": 1965,
+      "year_end": 1985,
+      "summary": "How Afro-Caribbean rhythm, Puerto Rican and broader Latin migration, labels, clubs, and media made New York a central salsa city.",
+      "thesis": "Salsa in New York emerged from migration, Afro-Caribbean musical memory, neighborhood dance culture, and a powerful label and concert infrastructure. Fania Records made salsa globally legible, but the route also depends on East Harlem, the South Bronx, Nuyorican cultural spaces, and Latin identity politics.",
+      "tags": [
+        "salsa",
+        "latin-new-york",
+        "nuyorican",
+        "fania",
+        "puerto-rican",
+        "afro-caribbean",
+        "boogaloo",
+        "latin-soul",
+        "migration",
+        "dance-culture",
+        "label",
+        "media",
+        "east-harlem",
+        "bronx",
+        "manhattan"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Fania_Records",
+        "https://en.wikipedia.org/wiki/Cheetah_(nightclub)",
+        "https://en.wikipedia.org/wiki/Salsa_music"
+      ]
     }
   ]
 }

@@ -283,6 +283,94 @@
       "type": "cross_scene_visibility",
       "summary": "Connects new wave crossover with broader downtown media circulation through shared clubs, press, film, and mixed audiences.",
       "review_status": "draft"
+    },
+    {
+      "id": "palladium-to-boogaloo-transition",
+      "from_event_id": "palladium-afterlife-latin-dance-memory",
+      "to_event_id": "boogaloo-latin-soul-east-harlem",
+      "type": "musical_transition",
+      "summary": "Connects mambo-era dance memory with boogaloo and Latin soul as younger New York audiences reshape Latin music.",
+      "review_status": "draft"
+    },
+    {
+      "id": "boogaloo-to-barrio-salsa",
+      "from_event_id": "boogaloo-latin-soul-east-harlem",
+      "to_event_id": "el-malo-bronx-barrio-sound",
+      "type": "scene_development",
+      "summary": "Shows how Latin soul and barrio youth culture feed into a harder urban salsa image.",
+      "review_status": "draft"
+    },
+    {
+      "id": "fania-label-to-all-stars",
+      "from_event_id": "fania-records-label-infrastructure",
+      "to_event_id": "fania-all-stars-form",
+      "type": "label_infrastructure",
+      "summary": "Leads from Fania as a record label to the All-Stars as a public-facing ensemble and concert platform.",
+      "review_status": "draft"
+    },
+    {
+      "id": "barrio-sound-to-fania-all-stars",
+      "from_event_id": "el-malo-bronx-barrio-sound",
+      "to_event_id": "fania-all-stars-form",
+      "type": "artist_network",
+      "summary": "Connects the Willie Colon and Hector Lavoe barrio sound with Fania's broader musician network.",
+      "review_status": "draft"
+    },
+    {
+      "id": "all-stars-to-cheetah",
+      "from_event_id": "fania-all-stars-form",
+      "to_event_id": "cheetah-fania-all-stars-our-latin-thing",
+      "type": "concert_visibility",
+      "summary": "Shows how the All-Stars concept becomes visible through the Cheetah concert and its recording and film afterlife.",
+      "review_status": "draft"
+    },
+    {
+      "id": "cheetah-to-yankee-stadium",
+      "from_event_id": "cheetah-fania-all-stars-our-latin-thing",
+      "to_event_id": "fania-all-stars-yankee-stadium",
+      "type": "scale_shift",
+      "summary": "Leads from club breakthrough to stadium-scale salsa spectacle.",
+      "review_status": "draft"
+    },
+    {
+      "id": "el-museo-to-nuyorican-cafe",
+      "from_event_id": "el-museo-barrio-cultural-infrastructure",
+      "to_event_id": "nuyorican-poets-cafe-identity",
+      "type": "cultural_identity",
+      "summary": "Connects institutional Puerto Rican cultural visibility with performance language and Nuyorican identity work.",
+      "review_status": "draft"
+    },
+    {
+      "id": "nuyorican-cafe-to-siembra",
+      "from_event_id": "nuyorican-poets-cafe-identity",
+      "to_event_id": "siembra-social-salsa",
+      "type": "social_commentary",
+      "summary": "Relates Nuyorican cultural language to salsa's turn toward urban storytelling and social commentary.",
+      "review_status": "draft"
+    },
+    {
+      "id": "cheetah-to-celia-pan-latin-stage",
+      "from_event_id": "cheetah-fania-all-stars-our-latin-thing",
+      "to_event_id": "celia-cruz-fania-pan-latin-stage",
+      "type": "pan_latin_expansion",
+      "summary": "Connects Fania's New York concert visibility with a broader Pan-Latin stage and star system.",
+      "review_status": "draft"
+    },
+    {
+      "id": "celia-to-global-salsa-media",
+      "from_event_id": "celia-cruz-fania-pan-latin-stage",
+      "to_event_id": "salsa-globalized-nyc-media",
+      "type": "media_expansion",
+      "summary": "Shows how star voices and Fania infrastructure help salsa circulate beyond New York.",
+      "review_status": "draft"
+    },
+    {
+      "id": "siembra-to-global-salsa-media",
+      "from_event_id": "siembra-social-salsa",
+      "to_event_id": "salsa-globalized-nyc-media",
+      "type": "global_circulation",
+      "summary": "Connects socially conscious salsa storytelling with the broader global circulation of New York salsa.",
+      "review_status": "draft"
     }
   ]
 }

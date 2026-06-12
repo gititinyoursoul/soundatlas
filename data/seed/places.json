@@ -310,6 +310,108 @@
       "source_urls": [
         "https://en.wikipedia.org/wiki/99_Records"
       ]
+    },
+    {
+      "id": "palladium-ballroom",
+      "name": "Palladium Ballroom",
+      "borough": "Manhattan",
+      "place_type": "ballroom",
+      "latitude": 40.7624,
+      "longitude": -73.9828,
+      "summary": "Former Midtown ballroom remembered as a mambo-era center whose dance culture shaped later New York salsa audiences.",
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Salsa_music"
+      ]
+    },
+    {
+      "id": "east-harlem-el-barrio",
+      "name": "East Harlem / El Barrio",
+      "borough": "Manhattan",
+      "place_type": "neighborhood",
+      "latitude": 40.7947,
+      "longitude": -73.9389,
+      "summary": "Puerto Rican and broader Latin neighborhood context for boogaloo, Latin soul, salsa audiences, and Nuyorican cultural life.",
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Nuyorican_movement"
+      ]
+    },
+    {
+      "id": "fania-records-nyc",
+      "name": "Fania Records / NYC",
+      "borough": "Manhattan",
+      "place_type": "label",
+      "latitude": 40.759,
+      "longitude": -73.9845,
+      "summary": "New York label and media node that organized, recorded, marketed, and circulated salsa as a global urban sound.",
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Fania_Records"
+      ]
+    },
+    {
+      "id": "cheetah-nightclub",
+      "name": "Cheetah",
+      "borough": "Manhattan",
+      "place_type": "club",
+      "latitude": 40.7629,
+      "longitude": -73.9858,
+      "summary": "Midtown nightclub where the 1971 Fania All-Stars concert helped make salsa visible as a mass urban phenomenon.",
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Cheetah_(nightclub)"
+      ]
+    },
+    {
+      "id": "yankee-stadium",
+      "name": "Yankee Stadium",
+      "borough": "Bronx",
+      "place_type": "stadium",
+      "latitude": 40.8296,
+      "longitude": -73.9262,
+      "summary": "Bronx stadium used as a marker of salsa's move from neighborhood and club scenes to large-scale concert spectacle.",
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Fania_Records"
+      ]
+    },
+    {
+      "id": "el-museo-del-barrio",
+      "name": "El Museo del Barrio",
+      "borough": "Manhattan",
+      "place_type": "cultural_institution",
+      "latitude": 40.7931,
+      "longitude": -73.9518,
+      "summary": "East Harlem cultural institution founded to center Puerto Rican, Caribbean, Latin American, and Latino art and history.",
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/El_Museo_del_Barrio"
+      ]
+    },
+    {
+      "id": "nuyorican-poets-cafe",
+      "name": "Nuyorican Poets Cafe",
+      "borough": "Manhattan",
+      "place_type": "cultural_space",
+      "latitude": 40.7217,
+      "longitude": -73.9834,
+      "summary": "Lower East Side cultural space that gave performance language to Nuyorican identity, poetry, theater, music, and urban experience.",
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Nuyorican_Poets_Caf%C3%A9"
+      ]
+    },
+    {
+      "id": "casa-amadeo",
+      "name": "Casa Amadeo",
+      "borough": "Bronx",
+      "place_type": "record_store",
+      "latitude": 40.8192,
+      "longitude": -73.9019,
+      "summary": "Bronx Latin music store and community memory node representing record retail, local knowledge, and long-running Latin music infrastructure.",
+      "review_status": "draft",
+      "source_urls": []
     }
   ]
 }
