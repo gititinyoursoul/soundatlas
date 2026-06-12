@@ -6,19 +6,18 @@
   import StoryPanel from '$lib/components/StoryPanel.svelte';
   import Timeline from '$lib/components/Timeline.svelte';
   import { filterEvents } from '$lib/data/filters';
-  import type { Connection, Event, Place, Route, TimelineRange } from '$lib/types/soundatlas';
+  import type { Connection, Event, Place, Route } from '$lib/types/soundatlas';
 
   let routes: Route[] = [];
   let places: Place[] = [];
   let events: Event[] = [];
   let connections: Connection[] = [];
   let activeRouteIds = new Set<string>();
-  let timelineRange: TimelineRange = { fromYear: 1965, toYear: 1985 };
   let selectedEventId: string | null = null;
   let isLoading = true;
   let errorMessage: string | null = null;
 
-  $: visibleEvents = filterEvents(events, activeRouteIds, timelineRange);
+  $: visibleEvents = filterEvents(events, activeRouteIds);
   $: orderedVisibleEvents = [...visibleEvents].sort(compareEvents);
   $: selectedEvent = orderedVisibleEvents.find((event) => event.id === selectedEventId) ?? null;
   $: selectedEventIndex = selectedEvent
@@ -35,6 +34,9 @@
   $: selectedRoute = selectedEvent
     ? routes.find((route) => route.id === selectedEvent?.route_id) ?? null
     : null;
+  $: timelineRoute = selectedRoute ?? routes.find((route) => activeRouteIds.has(route.id)) ?? routes[0] ?? null;
+  $: timelineStartYear = timelineRoute?.year_start ?? 1965;
+  $: timelineEndYear = timelineRoute?.year_end ?? 1985;
   $: selectedConnections = selectedEvent
     ? connections.filter(
         (connection) =>
@@ -68,10 +70,6 @@
     }
 
     activeRouteIds = nextRouteIds;
-  }
-
-  function updateTimelineRange(range: TimelineRange): void {
-    timelineRange = range;
   }
 
   function selectEvent(eventId: string): void {
@@ -133,7 +131,13 @@
         />
       {/if}
 
-      <Timeline range={timelineRange} onChangeRange={updateTimelineRange} />
+      <Timeline
+        routeTitle={timelineRoute?.title ?? 'Route'}
+        routeStartYear={timelineStartYear}
+        routeEndYear={timelineEndYear}
+        eventStartYear={selectedEvent?.year_start ?? null}
+        eventEndYear={selectedEvent?.year_end ?? null}
+      />
     </div>
 
     <StoryPanel
