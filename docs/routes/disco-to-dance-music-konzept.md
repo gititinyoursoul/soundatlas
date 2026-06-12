@@ -1,131 +1,131 @@
-# Route-Konzept: Disco To Dance Music
+# Route Concept: Disco To Dance Music
 
-## Kurzfassung
+## Summary
 
-**Disco To Dance Music** zeigt, wie New Yorker Clubkultur zwischen ca. 1970 und 1985 aus privaten Loft-Partys, queeren und Black/Brown Dancefloors, DJ-Technik, 12-inch-Mixes, Sound-Systemen, Labels und Medienereignissen eine dauerhafte Infrastruktur fuer moderne Dance Music formt.
+**Disco To Dance Music** shows how New York club culture between roughly 1970 and 1985 turned private loft parties, queer and Black/Brown dancefloors, DJ technique, 12-inch mixes, sound systems, labels, and media events into durable infrastructure for modern dance music.
 
-Die Route erzaehlt Disco nicht als kurze Modewelle, sondern als Uebergang: von gemeinschaftlichen Tanzraeumen zu Club-, Remix- und Post-Disco-Kulturen, die spaeter House, Garage, Freestyle, Pop-Remixes und globale Clubmusik vorbereiten.
+The route does not treat disco as a short-lived fad. It presents disco as a transition: from communal dance spaces to club, remix, and post-disco cultures that later prepared house, garage, freestyle, pop remixes, and global club music.
 
-## Leitfrage
+## Guiding Question
 
-Wie wurde aus New Yorker Disco- und Clubkultur zwischen 1970 und 1985 eine Grundlage fuer moderne Dance Music?
+How did New York disco and club culture between 1970 and 1985 become a foundation for modern dance music?
 
-## Route-These
+## Route Thesis
 
-Disco wird in New York durch drei Kraefte transformiert: durch soziale Raeume fuer marginalisierte Communities, durch DJs und Sound-Systeme als musikalische Infrastruktur und durch Labels, Filme, Radio und Remixe als Medienapparat. Nach dem Mainstream-Hoehepunkt um 1977 verschwindet Disco nicht, sondern wandert in Post-Disco, Garage, Electro, Freestyle und Club-Pop weiter.
+In New York, disco is transformed by three forces: social spaces for marginalized communities, DJs and sound systems as musical infrastructure, and labels, films, radio, and remixes as a media apparatus. After the mainstream peak around 1977, disco does not disappear; it moves into post-disco, garage, electro, freestyle, and club pop.
 
-## Zeitlicher Rahmen
+## Timeline
 
-### 1. Underground und Loft-Kultur: ca. 1970-1974
+### 1. Underground and Loft Culture: ca. 1970-1974
 
-Fokus: David Mancuso, The Loft, private Partys, audiophile Sound-Systeme, invitation-only Dancefloors.
+Focus: David Mancuso, The Loft, private parties, audiophile sound systems, invitation-only dancefloors.
 
-Erzaehlfunktion:
+Narrative function:
 
-- zeigt Disco als Raum- und Community-Praxis vor dem Massenmarkt
-- macht DJ-Kuration und Sound-Qualitaet als kulturelle Technik sichtbar
-- verbindet House-Partys, queere Raeume und Black/Brown Dancefloors
+- shows disco as a spatial and community practice before the mass market
+- makes DJ curation and sound quality visible as cultural technique
+- connects house parties, queer spaces, and Black/Brown dancefloors
 
-### 2. Club-Infrastruktur und 12-inch-Kultur: ca. 1974-1977
+### 2. Club Infrastructure and 12-Inch Culture: ca. 1974-1977
 
-Fokus: The Gallery, DJs wie Nicky Siano, Walter Gibbons, Tom Moulton, Remix- und Extended-Mix-Praxis.
+Focus: The Gallery, DJs such as Nicky Siano, Walter Gibbons, Tom Moulton, remix and extended-mix practice.
 
-Erzaehlfunktion:
+Narrative function:
 
-- erklaert, warum laengere Mixes und DJ-freundliche Platten wichtig werden
-- zeigt Clubs als Testlabore fuer Tracks, Breaks und Crowd-Reaktion
-- baut eine Bruecke zur Hip-Hop-Route ueber Breaks, DJ-Praxis und Dancefloor-Logik
+- explains why longer mixes and DJ-friendly records become important
+- shows clubs as test labs for tracks, breaks, and crowd response
+- builds a bridge to the hip-hop route through breaks, DJ practice, and dancefloor logic
 
-### 3. Mainstream-Verdichtung: 1977-1979
+### 3. Mainstream Condensation: 1977-1979
 
-Fokus: Studio 54, Paradise Garage, Saturday Night Fever, Disco als global sichtbarer Pop- und Medienmoment.
+Focus: Studio 54, Paradise Garage, Saturday Night Fever, disco as a global pop and media moment.
 
-Erzaehlfunktion:
+Narrative function:
 
-- zeigt 1977 als Verdichtungsjahr fuer Glamour, Medien und Kommerz
-- kontrastiert exklusive Celebrity-Disco mit Community-orientierten Clubraeumen
-- macht sichtbar, warum Disco gleichzeitig Mainstream und Underground sein kann
+- shows 1977 as a condensation year for glamour, media, and commerce
+- contrasts exclusive celebrity disco with community-oriented club spaces
+- makes it clear why disco can be both mainstream and underground
 
-### 4. Post-Disco und Dance-Music-Zukunft: 1980-1985
+### 4. Post-Disco and the Future of Dance Music: 1980-1985
 
-Fokus: Paradise Garage, Larry Levan, West End Records, Prelude, dub mixes, drum machines, synths, Garage und Freestyle-Vorformen.
+Focus: Paradise Garage, Larry Levan, West End Records, Prelude, dub mixes, drum machines, synths, garage and freestyle precursors.
 
-Erzaehlfunktion:
+Narrative function:
 
-- zeigt Disco nach dem Backlash als Weiterentwicklung statt Ende
-- verbindet Club-DJs mit Labels, Produzenten und Radio
-- fuehrt Richtung House, Garage, Freestyle, Electro und moderner Remix-Kultur
+- shows disco after backlash as evolution rather than ending
+- connects club DJs with labels, producers, and radio
+- leads toward house, garage, freestyle, electro, and modern remix culture
 
-## Primaere Orte
+## Primary Places
 
-| Ort | Rolle in der Route | Kartenlogik |
+| Place | Role in the Route | Map Logic |
 | --- | --- | --- |
-| The Loft, 647 Broadway | Privater Party- und Sound-System-Ursprung mit David Mancuso | Startmarker |
-| The Gallery, SoHo / Manhattan | DJ- und Clubraum um Nicky Siano, fruehe Disco-Infrastruktur | Club-Knoten |
-| Studio 54, Midtown | Mainstream-Glamour, Celebrity-Kultur, theatrales Clubdesign | Medien-Knoten |
-| Paradise Garage, 84 King Street | Larry Levan, Sound-System, queere Clubkultur, Post-Disco/Garage | Zentraler Transformationsknoten |
-| West End Records, Manhattan | Disco-/Post-Disco-Label, 12-inch- und Clubkultur | Label-Knoten |
-| Prelude Records, Manhattan | Post-Disco, synthlastige Clubmusik, Remix-Kultur | Label-Knoten |
-| Brooklyn / Bay Ridge | Saturday Night Fever als Pop-Mythos des Disco-Alltags | Medien-/Alltagsknoten |
-| WBLS / NYC Radio | Radio als Verstaerker zwischen Clubreaktion und Popmarkt | Medien-Knoten |
+| The Loft, 647 Broadway | Private party and sound-system origin with David Mancuso | Start marker |
+| The Gallery, SoHo / Manhattan | DJ and club space around Nicky Siano, early disco infrastructure | Club node |
+| Studio 54, Midtown | Mainstream glamour, celebrity culture, theatrical club design | Media node |
+| Paradise Garage, 84 King Street | Larry Levan, sound system, queer club culture, post-disco/garage | Central transformation node |
+| West End Records, Manhattan | Disco/post-disco label, 12-inch and club culture | Label node |
+| Prelude Records, Manhattan | Post-disco, synth-heavy club music, remix culture | Label node |
+| Brooklyn / Bay Ridge | Saturday Night Fever as a pop myth of everyday disco | Media / everyday node |
+| WBLS / NYC Radio | Radio as amplifier between club response and the pop market | Media node |
 
-Hinweis: Einige Orte muessen vor der Seed-Uebertragung genau geokodiert werden. Fuer den MVP koennen Labels oder Radiosender zunaechst als `place_type: "media_node"` modelliert werden.
+Note: Some places still need precise geocoding before seed transfer. For the MVP, labels or radio stations can first be modeled as `place_type: "media_node"`.
 
-## Event-Kandidaten
+## Event Candidates
 
-Diese Events sind als erster kuratierter Datensatz gedacht. Sie muessen vor finaler Veroeffentlichung noch quellenbasiert geprueft und redaktionell geschliffen werden.
+These events are intended as a first curated dataset. Before final publication, they still need source-based verification and editorial polishing.
 
-| ID | Jahr | Ort | Titel | Funktion |
+| ID | Year | Place | Title | Function |
 | --- | --- | --- | --- | --- |
-| `loft-love-saves-the-day` | 1970 | The Loft | David Mancuso startet Love Saves the Day | Underground-Ursprung |
-| `loft-sound-system-culture` | 1970-1974 | The Loft | Sound-System und Kuration werden Club-Infrastruktur | technische/soziale Praxis |
-| `gallery-dj-culture` | 1973-1977 | The Gallery | The Gallery professionalisiert DJ- und Clubdramaturgie | DJ-Knoten |
-| `extended-mix-12-inch-culture` | 1974-1976 | NYC Labels / Clubs | Extended Mixes und 12-inch-Singles werden DJ-Werkzeug | Format-Innovation |
-| `studio-54-opens` | 1977 | Studio 54 | Studio 54 oeffnet als Glamour-Disco | Mainstream-Verdichtung |
-| `saturday-night-fever-release` | 1977 | Brooklyn / NYC | Saturday Night Fever macht Disco global sichtbar | Medienereignis |
-| `paradise-garage-opens` | 1977-1978 | Paradise Garage | Paradise Garage wird zentraler Clubraum | Community-/Sound-Knoten |
-| `larry-levan-residency` | 1978-1985 | Paradise Garage | Larry Levan praegt Garage-Sound und Clubdramaturgie | DJ-Autorschaft |
-| `disco-backlash-and-reframing` | 1979-1980 | NYC / USA | Disco-Backlash verschiebt die Szene in neue Formen | Kontext |
-| `west-end-post-disco-label-culture` | 1979-1983 | West End Records | West End Records verbindet Disco, Boogie und Post-Disco | Label-Knoten |
-| `dub-mix-remix-culture` | 1980-1984 | NYC Clubs / Studios | Dub- und Remix-Aesthetik wird Dance-Music-Sprache | Produktionssprache |
-| `garage-freestyle-electro-bridges` | 1982-1985 | NYC Clubs / Labels | Garage, Freestyle und Electro werden Anschlussraeume | Weiterentwicklung |
+| `loft-love-saves-the-day` | 1970 | The Loft | David Mancuso launches Love Saves the Day | Underground origin |
+| `loft-sound-system-culture` | 1970-1974 | The Loft | Sound system and curation become club infrastructure | technical / social practice |
+| `gallery-dj-culture` | 1973-1977 | The Gallery | The Gallery professionalizes DJ and club dramaturgy | DJ node |
+| `extended-mix-12-inch-culture` | 1974-1976 | NYC labels / clubs | Extended mixes and 12-inch singles become DJ tools | format innovation |
+| `studio-54-opens` | 1977 | Studio 54 | Studio 54 opens as glamour disco | mainstream condensation |
+| `saturday-night-fever-release` | 1977 | Brooklyn / NYC | Saturday Night Fever makes disco globally visible | media event |
+| `paradise-garage-opens` | 1977-1978 | Paradise Garage | Paradise Garage becomes a central club space | community / sound node |
+| `larry-levan-residency` | 1978-1985 | Paradise Garage | Larry Levan shapes garage sound and club dramaturgy | DJ authorship |
+| `disco-backlash-and-reframing` | 1979-1980 | NYC / USA | Disco backlash shifts the scene into new forms | context |
+| `west-end-post-disco-label-culture` | 1979-1983 | West End Records | West End Records links disco, boogie, and post-disco | label node |
+| `dub-mix-remix-culture` | 1980-1984 | NYC clubs / studios | Dub and remix aesthetics become dance-music language | production language |
+| `garage-freestyle-electro-bridges` | 1982-1985 | NYC clubs / labels | Garage, freestyle, and electro become continuation spaces | further development |
 
-## Verbindungsketten
+## Connection Chains
 
-### Raum zu Sound-System
+### Space to Sound System
 
 `loft-love-saves-the-day -> loft-sound-system-culture -> paradise-garage-opens`
 
-### DJ-Praxis zu Plattenformat
+### DJ Practice to Record Format
 
 `gallery-dj-culture -> extended-mix-12-inch-culture -> west-end-post-disco-label-culture`
 
-### Underground zu Mainstream
+### Underground to Mainstream
 
 `loft-love-saves-the-day -> studio-54-opens -> saturday-night-fever-release`
 
-### Mainstream zu Post-Disco
+### Mainstream to Post-Disco
 
 `studio-54-opens -> disco-backlash-and-reframing -> west-end-post-disco-label-culture`
 
-### Garage zu Dance-Music-Zukunft
+### Garage to the Future of Dance Music
 
 `paradise-garage-opens -> larry-levan-residency -> dub-mix-remix-culture -> garage-freestyle-electro-bridges`
 
-## Story Panel Struktur
+## Story Panel Structure
 
-Jedes Event sollte diese Fragen beantworten:
+Each event should answer these questions:
 
-1. **Was passiert?**
-2. **Welcher Raum oder welches Medium ist entscheidend?**
-3. **Welche DJ-, Sound- oder Produktionspraxis wird sichtbar?**
-4. **Welche Community wird hier hoerbar oder sichtbar?**
-5. **Was fuehrt daraus weiter?**
-6. **Quellen und Medien**
+1. **What happens?**
+2. **Which space or medium matters?**
+3. **Which DJ, sound, or production practice becomes visible?**
+4. **Which community is audible or visible here?**
+5. **What continues from here?**
+6. **Sources and media**
 
-## Filter und Tags
+## Filters and Tags
 
-Empfohlene Tags fuer die Route:
+Recommended tags for the route:
 
 - `disco`
 - `dance-music`
@@ -142,16 +142,16 @@ Empfohlene Tags fuer die Route:
 - `brooklyn`
 - `manhattan`
 
-## Datenmodell-Hinweise
+## Data Model Notes
 
-Fuer die Seed-Daten sollte diese Route mindestens folgende Objekte enthalten:
+For the seed data, this route should contain at least the following objects:
 
-- 1 Route: `disco-to-dance-music`
-- 7-8 Places
-- 10-12 Events
-- 9-12 Connections
+- 1 route: `disco-to-dance-music`
+- 7-8 places
+- 10-12 events
+- 9-12 connections
 
-Empfohlene Route-Farbe:
+Recommended route color:
 
 ```json
 {
@@ -163,26 +163,26 @@ Empfohlene Route-Farbe:
 }
 ```
 
-## Content-Risiken
+## Content Risks
 
-- Disco sollte nicht nur als Studio-54-Glamour erzaehlt werden. The Loft, Paradise Garage und queere/Black/Brown Dancefloors sind fuer die Route zentral.
-- "Disco died" sollte vermieden werden. Praeziser ist: Das Wort und der Massenmarkt wurden toxisch, die musikalischen Praktiken wanderten weiter.
-- Einige Clubdaten und Adressen sind je nach Quelle uneinheitlich. Vor Seed-Uebertragung muessen Orte und Jahre geprueft werden.
-- Larry Levan sollte als DJ, Kurator und Produzent erzaehlt werden, ohne einzelne Charts-Erfolge monokausal seinem Einfluss zuzuschreiben.
-- Saturday Night Fever ist wichtig als Medienereignis, aber nicht als vollstaendige Darstellung realer New Yorker Clubkultur.
+- Disco should not be told only as Studio 54 glamour. The Loft, Paradise Garage, and queer/Black/Brown dancefloors are central to the route.
+- "Disco died" should be avoided. More precise is: the word and the mass market became toxic, while the musical practices continued elsewhere.
+- Some club dates and addresses vary by source. Before seed transfer, places and years must be checked.
+- Larry Levan should be told as DJ, curator, and producer, without reducing his influence to a single chart hit.
+- Saturday Night Fever matters as a media event, but it is not a complete picture of real New York club culture.
 
-## Quellenbasis fuer die weitere Redaktion
+## Source Base for Further Editing
 
 - PBS / BBC: `Disco: Soundtrack of a Revolution`
 - Tim Lawrence: `Love Saves the Day: A History of American Dance Music Culture 1970-1979`
-- Britannica / allgemeine Nachschlagewerke zu Disco und Dance Music
-- The Loft / David Mancuso: historische Texte und Nachrufe, u. a. New York Times
-- Paradise Garage / Larry Levan: Club-Historien, Fales Library/NYU-Material, Musikjournalismus
-- Studio 54: Dokumentarfilm `Studio 54`, Museum-/Ausstellungsmaterial und zeitgenoessische Presse
-- Saturday Night Fever: Filmquellen und Kontext zu Nik Cohns `Tribal Rites of the New Saturday Night`
-- West End Records / Prelude: Label-Diskografien, Musikjournalismus und Reissue-Kontexte
+- Britannica / general reference works on disco and dance music
+- The Loft / David Mancuso: historical texts and obituaries, including the New York Times
+- Paradise Garage / Larry Levan: club histories, Fales Library / NYU material, music journalism
+- Studio 54: documentary `Studio 54`, museum / exhibition material, and contemporary press
+- Saturday Night Fever: film sources and context around Nik Cohn's `Tribal Rites of the New Saturday Night`
+- West End Records / Prelude: label discographies, music journalism, and reissue context
 
-## Konkrete Quellen-URLs fuer den Start
+## Concrete Source URLs for the Start
 
 - https://www.pbs.org/show/disco-soundtrack-revolution/
 - https://en.wikipedia.org/wiki/The_Loft_(New_York_City)
@@ -192,11 +192,11 @@ Empfohlene Route-Farbe:
 - https://pitchfork.com/thepitch/where-to-start-with-west-end-records-the-influential-disco-label-set-for-relaunch/
 - https://pitchfork.com/features/article/9710-the-larry-levan-bump-how-the-legendary-paradise-garage-dj-ignited-some-of-the-80s-biggest-hits/
 
-## Naechster Umsetzungsschritt
+## Next Implementation Step
 
-Die Route sollte als Seed-Daten uebertragen werden:
+The route should now be transferred into seed data:
 
-- `routes.json`: Route `disco-to-dance-music`
-- `places.json`: The Loft, The Gallery, Studio 54, Paradise Garage, West End Records, Prelude Records, Brooklyn/Saturday-Night-Fever-Kontext, WBLS/Radio-Kontext
-- `events.json`: 10-12 Event-Kandidaten mit `review_status: "draft"`
-- `connections.json`: Verbindungsketten als einzelne Connections
+- `routes.json`: route `disco-to-dance-music`
+- `places.json`: The Loft, The Gallery, Studio 54, Paradise Garage, West End Records, Prelude Records, Brooklyn / Saturday Night Fever context, WBLS / radio context
+- `events.json`: 10-12 event candidates with `review_status: "draft"`
+- `connections.json`: connection chains as individual connections
