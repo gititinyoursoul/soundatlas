@@ -51,11 +51,6 @@
     </div>
   </div>
 
-  {#if !hasEventRange}
-    <p class="caption">
-      Select an event to highlight its time span.
-    </p>
-  {/if}
 </section>
 
 <style>
@@ -148,9 +143,4 @@
     font-size: 0.8rem;
   }
 
-  .caption {
-    margin: 0;
-    color: #536170;
-    font-size: 0.85rem;
-  }
 </style>
