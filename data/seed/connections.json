@@ -371,6 +371,94 @@
       "type": "global_circulation",
       "summary": "Connects socially conscious salsa storytelling with the broader global circulation of New York salsa.",
       "review_status": "draft"
+    },
+    {
+      "id": "slugs-to-loft-jazz-shift",
+      "from_event_id": "slugs-free-jazz-east-village",
+      "to_event_id": "ny-musicians-jazz-festival-loft-shift",
+      "type": "scene_transition",
+      "summary": "Connects late-1960s free-jazz club practice with the move toward musician-run loft presentation.",
+      "review_status": "draft"
+    },
+    {
+      "id": "loft-festival-to-studio-rivbea",
+      "from_event_id": "ny-musicians-jazz-festival-loft-shift",
+      "to_event_id": "studio-rivbea-loft-jazz-hub",
+      "type": "artist_run_infrastructure",
+      "summary": "Leads from festival self-organization to Studio Rivbea as a recurring loft-jazz hub.",
+      "review_status": "draft"
+    },
+    {
+      "id": "studio-rivbea-to-alis-alley",
+      "from_event_id": "studio-rivbea-loft-jazz-hub",
+      "to_event_id": "alis-alley-musician-run-space",
+      "type": "loft_network",
+      "summary": "Shows loft jazz as a network of musician-run rooms rather than one isolated space.",
+      "review_status": "draft"
+    },
+    {
+      "id": "studio-rivbea-to-wildflowers",
+      "from_event_id": "studio-rivbea-loft-jazz-hub",
+      "to_event_id": "wildflowers-loft-jazz-documented",
+      "type": "documentation",
+      "summary": "Connects Studio Rivbea's live ecology with Wildflowers as a recorded document of the loft scene.",
+      "review_status": "draft"
+    },
+    {
+      "id": "experimental-intermedia-to-kitchen",
+      "from_event_id": "experimental-intermedia-loft-practice",
+      "to_event_id": "kitchen-founded-video-music",
+      "type": "intermedia_context",
+      "summary": "Relates loft-based intermedia practice to The Kitchen's public platform for video, sound, and performance.",
+      "review_status": "draft"
+    },
+    {
+      "id": "kitchen-founding-to-new-music-new-york",
+      "from_event_id": "kitchen-founded-video-music",
+      "to_event_id": "kitchen-new-music-new-york",
+      "type": "institutional_development",
+      "summary": "Shows The Kitchen growing from experimental video and performance into a central new music institution.",
+      "review_status": "draft"
+    },
+    {
+      "id": "artists-space-to-tier-3-experiment",
+      "from_event_id": "artists-space-no-wave-experiment",
+      "to_event_id": "tier-3-no-wave-improv-crossover",
+      "type": "scene_bridge",
+      "summary": "Connects art-space no wave with club contexts where noise, post-punk, and improvisation share audiences.",
+      "review_status": "draft"
+    },
+    {
+      "id": "tier-3-to-zorn-game-pieces",
+      "from_event_id": "tier-3-no-wave-improv-crossover",
+      "to_event_id": "zorn-game-pieces-downtown-language",
+      "type": "improvisation_language",
+      "summary": "Links no wave and improvising club practice to rule-based downtown composition and game pieces.",
+      "review_status": "draft"
+    },
+    {
+      "id": "kitchen-to-roulette-presenter-network",
+      "from_event_id": "kitchen-new-music-new-york",
+      "to_event_id": "roulette-founded-downtown-music",
+      "type": "presenter_network",
+      "summary": "Connects institutional new music presentation with Roulette's artist-run presenter model.",
+      "review_status": "draft"
+    },
+    {
+      "id": "roulette-to-zorn-game-pieces",
+      "from_event_id": "roulette-founded-downtown-music",
+      "to_event_id": "zorn-game-pieces-downtown-language",
+      "type": "new_music_continuity",
+      "summary": "Shows how presenter networks support the improvisers and composers who define downtown experimental language.",
+      "review_status": "draft"
+    },
+    {
+      "id": "wildflowers-to-zorn-downtown-language",
+      "from_event_id": "wildflowers-loft-jazz-documented",
+      "to_event_id": "zorn-game-pieces-downtown-language",
+      "type": "experimental_continuity",
+      "summary": "Connects loft-jazz documentation with later downtown systems for improvisation, composition, and ensemble interaction.",
+      "review_status": "draft"
     }
   ]
 }

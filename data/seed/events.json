@@ -1020,6 +1020,257 @@
         "https://en.wikipedia.org/wiki/Salsa_music"
       ],
       "media_links": []
+    },
+    {
+      "id": "slugs-free-jazz-east-village",
+      "route_id": "downtown-experiment-no-wave-loft-jazz",
+      "place_id": "slugs-saloon",
+      "title": "Slugs' Saloon Hosts Free Jazz in the East Village",
+      "year_start": 1966,
+      "year_end": 1972,
+      "summary": "Slugs' Saloon becomes an East Village club where Sun Ra, Albert Ayler, Rashied Ali, and other adventurous musicians perform outside mainstream jazz circuits.",
+      "significance": "The event frames the route before the loft era, showing how free jazz needed rooms that could tolerate risk, intensity, and small audiences.",
+      "tags": [
+        "free-jazz",
+        "slugs-saloon",
+        "east-village",
+        "avant-garde"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Slugs%27_Saloon"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "experimental-intermedia-loft-practice",
+      "route_id": "downtown-experiment-no-wave-loft-jazz",
+      "place_id": "experimental-intermedia",
+      "title": "Experimental Intermedia Links Loft Practice, Film, Drone, and Performance",
+      "year_start": 1968,
+      "year_end": 1973,
+      "summary": "Experimental Intermedia grows around loft-based presentations where music, film, drone sound, and performance can share informal space.",
+      "significance": "This event expands the route beyond jazz by showing loft practice as a broader intermedia method for downtown experiment.",
+      "tags": [
+        "experimental-intermedia",
+        "drone",
+        "film",
+        "artist-run-space"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Phill_Niblock"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "kitchen-founded-video-music",
+      "route_id": "downtown-experiment-no-wave-loft-jazz",
+      "place_id": "the-kitchen",
+      "title": "The Kitchen Turns Video Art into an Experimental Music Platform",
+      "year_start": 1971,
+      "year_end": 1974,
+      "summary": "The Kitchen begins as a video art space and quickly expands into music, performance, dance, and experimental presentation.",
+      "significance": "The Kitchen becomes an institutional bridge between media art and sound, giving downtown experiment a recurring public platform.",
+      "tags": [
+        "the-kitchen",
+        "video-art",
+        "experimental-music",
+        "performance"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/The_Kitchen_(art_institution)"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "ny-musicians-jazz-festival-loft-shift",
+      "route_id": "downtown-experiment-no-wave-loft-jazz",
+      "place_id": "studio-rivbea",
+      "title": "New York Musicians' Jazz Festival Helps Shift Free Jazz into Lofts",
+      "year_start": 1972,
+      "year_end": 1972,
+      "summary": "The New York Musicians' Jazz Festival presents locally organized free jazz in parks, community spaces, and lofts.",
+      "significance": "The festival marks a shift toward musician-controlled presentation, helping define loft jazz as both a sound and an infrastructure.",
+      "tags": [
+        "loft-jazz",
+        "festival",
+        "artist-run-space",
+        "free-jazz"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Loft_jazz"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "studio-rivbea-loft-jazz-hub",
+      "route_id": "downtown-experiment-no-wave-loft-jazz",
+      "place_id": "studio-rivbea",
+      "title": "Studio Rivbea Becomes a Central Loft-Jazz Hub",
+      "year_start": 1972,
+      "year_end": 1976,
+      "summary": "Sam and Bea Rivers run Studio Rivbea on Bond Street as a performance space for avant-garde jazz and related experimental music.",
+      "significance": "Studio Rivbea shows musicians taking responsibility for presenting their own work beyond clubs, concert halls, and commercial programming.",
+      "tags": [
+        "studio-rivbea",
+        "sam-rivers",
+        "loft-jazz",
+        "free-jazz"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Sam_Rivers_(jazz_musician)"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "alis-alley-musician-run-space",
+      "route_id": "downtown-experiment-no-wave-loft-jazz",
+      "place_id": "alis-alley",
+      "title": "Ali's Alley Extends Musician-Run Loft Infrastructure",
+      "year_start": 1973,
+      "year_end": 1979,
+      "summary": "Rashied Ali's Ali's Alley extends the musician-run loft model with performance, community, and independent recording activity.",
+      "significance": "The event shows loft jazz as a network of rooms and labor, not a single famous address.",
+      "tags": [
+        "alis-alley",
+        "rashied-ali",
+        "loft-jazz",
+        "artist-run-space"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Loft_jazz"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "wildflowers-loft-jazz-documented",
+      "route_id": "downtown-experiment-no-wave-loft-jazz",
+      "place_id": "studio-rivbea",
+      "title": "Wildflowers Documents the New York Loft-Jazz Scene",
+      "year_start": 1976,
+      "year_end": 1977,
+      "summary": "Wildflowers records performances at Studio Rivbea and releases them as a multi-album document of the New York loft-jazz scene.",
+      "significance": "The recordings turn a temporary live ecology into a portable archive, making the loft scene legible beyond downtown audiences.",
+      "tags": [
+        "wildflowers",
+        "studio-rivbea",
+        "recording",
+        "loft-jazz"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Wildflowers:_The_New_York_Loft_Jazz_Sessions"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "artists-space-no-wave-experiment",
+      "route_id": "downtown-experiment-no-wave-loft-jazz",
+      "place_id": "artists-space",
+      "title": "Artists Space Connects No Wave to Downtown Art Experiment",
+      "year_start": 1978,
+      "year_end": 1978,
+      "summary": "Artists Space hosts a no wave festival that helps connect downtown noise, punk rejection, art practice, and the later No New York compilation.",
+      "significance": "No wave appears here as part of a broader experimental art ecology rather than only as a rock subgenre.",
+      "tags": [
+        "artists-space",
+        "no-wave",
+        "art-scene",
+        "downtown-experiment"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/No_New_York",
+        "https://pitchfork.com/features/article/6764-no-the-origins-of-no-wave/"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "roulette-founded-downtown-music",
+      "route_id": "downtown-experiment-no-wave-loft-jazz",
+      "place_id": "roulette-intermedium",
+      "title": "Roulette Builds an Artist-Run New Music Presenter Model",
+      "year_start": 1978,
+      "year_end": 1982,
+      "summary": "Roulette begins as an artist-run space for experimental music, improvisation, dance, intermedia, and one-time performance projects.",
+      "significance": "Roulette shows downtown experiment becoming a durable presenter network that can support repeated risk-taking over time.",
+      "tags": [
+        "roulette",
+        "new-music",
+        "improvisation",
+        "artist-run-space"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Roulette_Intermedium"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "kitchen-new-music-new-york",
+      "route_id": "downtown-experiment-no-wave-loft-jazz",
+      "place_id": "the-kitchen",
+      "title": "New Music New York Expands the Downtown Experiment Frame",
+      "year_start": 1979,
+      "year_end": 1979,
+      "summary": "The Kitchen hosts New Music New York, bringing together composers, improvisers, sound artists, and interdisciplinary performance.",
+      "significance": "The event names downtown experiment as a wider field where jazz, composition, electronics, performance, and art-world practice can overlap.",
+      "tags": [
+        "the-kitchen",
+        "new-music",
+        "festival",
+        "experimental-music"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/The_Kitchen_(art_institution)"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "tier-3-no-wave-improv-crossover",
+      "route_id": "downtown-experiment-no-wave-loft-jazz",
+      "place_id": "tier-3",
+      "title": "Tier 3 Crosses No Wave, Post-Punk, and Improvisation",
+      "year_start": 1979,
+      "year_end": 1980,
+      "summary": "Tier 3 supports a downtown mix of no wave, post-punk, experimental performance, and improvising musicians.",
+      "significance": "The venue shows how the route's jazz, art, and punk-adjacent practices share audiences and performance logics.",
+      "tags": [
+        "tier-3",
+        "no-wave",
+        "post-punk",
+        "improvisation"
+      ],
+      "review_status": "draft",
+      "source_urls": [],
+      "media_links": []
+    },
+    {
+      "id": "zorn-game-pieces-downtown-language",
+      "route_id": "downtown-experiment-no-wave-loft-jazz",
+      "place_id": "new-york-city",
+      "title": "John Zorn's Game Pieces Turn Improvisation into Rule-Based Downtown Language",
+      "year_start": 1978,
+      "year_end": 1985,
+      "summary": "John Zorn develops game pieces and small-group strategies that use rules, cues, and improvisers to organize fast-changing downtown sound.",
+      "significance": "The event closes the route by showing downtown experiment as a method: composition, improvisation, noise, and performer agency become one system.",
+      "tags": [
+        "john-zorn",
+        "game-pieces",
+        "improvisation",
+        "downtown-experiment"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/John_Zorn"
+      ],
+      "media_links": []
     }
   ]
 }

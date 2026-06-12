@@ -412,6 +412,85 @@
       "summary": "Bronx Latin music store and community memory node representing record retail, local knowledge, and long-running Latin music infrastructure.",
       "review_status": "draft",
       "source_urls": []
+    },
+    {
+      "id": "slugs-saloon",
+      "name": "Slugs' Saloon",
+      "borough": "Manhattan",
+      "place_type": "club",
+      "latitude": 40.7225,
+      "longitude": -73.9796,
+      "summary": "East Village jazz club associated with free jazz, Sun Ra, Albert Ayler, Rashied Ali, and adventurous late-1960s audiences.",
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Slugs%27_Saloon"
+      ]
+    },
+    {
+      "id": "studio-rivbea",
+      "name": "Studio Rivbea",
+      "borough": "Manhattan",
+      "place_type": "loft",
+      "latitude": 40.7279,
+      "longitude": -73.9959,
+      "summary": "Sam and Bea Rivers' Bond Street loft, one of the central artist-run spaces of the 1970s New York loft jazz scene.",
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Sam_Rivers_(jazz_musician)",
+        "https://en.wikipedia.org/wiki/Loft_jazz"
+      ]
+    },
+    {
+      "id": "alis-alley",
+      "name": "Ali's Alley",
+      "borough": "Manhattan",
+      "place_type": "loft",
+      "latitude": 40.7232,
+      "longitude": -73.994,
+      "summary": "Rashied Ali's musician-run loft and label context, part of the wider downtown loft jazz infrastructure.",
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Loft_jazz"
+      ]
+    },
+    {
+      "id": "the-kitchen",
+      "name": "The Kitchen",
+      "borough": "Manhattan",
+      "place_type": "arts_institution",
+      "latitude": 40.7455,
+      "longitude": -74.0069,
+      "summary": "Experimental art and performance institution founded in 1971 that connected video, music, dance, performance, and new media.",
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/The_Kitchen_(art_institution)"
+      ]
+    },
+    {
+      "id": "experimental-intermedia",
+      "name": "Experimental Intermedia",
+      "borough": "Manhattan",
+      "place_type": "arts_space",
+      "latitude": 40.7157,
+      "longitude": -73.997,
+      "summary": "Loft-based intermedia and experimental music context associated with drone, film, performance, and long-running avant-garde presentations.",
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Phill_Niblock"
+      ]
+    },
+    {
+      "id": "roulette-intermedium",
+      "name": "Roulette",
+      "borough": "Manhattan",
+      "place_type": "arts_space",
+      "latitude": 40.7197,
+      "longitude": -74.005,
+      "summary": "Artist-run presenter founded in 1978 for experimental music, improvisation, dance, intermedia, and one-time performance projects.",
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Roulette_Intermedium"
+      ]
     }
   ]
 }

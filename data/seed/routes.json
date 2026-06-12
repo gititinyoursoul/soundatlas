@@ -120,6 +120,36 @@
         "https://en.wikipedia.org/wiki/Cheetah_(nightclub)",
         "https://en.wikipedia.org/wiki/Salsa_music"
       ]
+    },
+    {
+      "id": "downtown-experiment-no-wave-loft-jazz",
+      "title": "Downtown Experiment / No Wave / Loft Jazz",
+      "color": "#005f73",
+      "year_start": 1966,
+      "year_end": 1985,
+      "summary": "How artist-run rooms, lofts, art spaces, and presenter networks connected free jazz, loft jazz, no wave, and downtown experimental music.",
+      "thesis": "Downtown experiment in New York grew from musicians and artists building their own rooms, festivals, labels, and performance rules. Loft jazz, no wave, The Kitchen, Roulette, and related scenes show experimental sound as an infrastructure of places, recordings, and cross-disciplinary practice rather than a single style.",
+      "tags": [
+        "downtown-experiment",
+        "no-wave",
+        "loft-jazz",
+        "free-jazz",
+        "avant-garde",
+        "experimental-music",
+        "new-music",
+        "improvisation",
+        "artist-run-space",
+        "intermedia",
+        "lower-east-side",
+        "soho",
+        "tribeca"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Loft_jazz",
+        "https://en.wikipedia.org/wiki/The_Kitchen_(art_institution)",
+        "https://en.wikipedia.org/wiki/Roulette_Intermedium"
+      ]
     }
   ]
 }
