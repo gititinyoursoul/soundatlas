@@ -195,6 +195,94 @@
       "type": "cross_route_bridge",
       "summary": "Connects the hip-hop/electro development with the Disco To Dance Music route.",
       "review_status": "draft"
+    },
+    {
+      "id": "dolls-to-maxs-punk-bridge",
+      "from_event_id": "new-york-dolls-mercer-scene",
+      "to_event_id": "maxs-kansas-city-punk-bridge",
+      "type": "scene_continuity",
+      "summary": "Connects glam and proto-punk performance energy with the venue network that carried downtown rock into punk.",
+      "review_status": "draft"
+    },
+    {
+      "id": "maxs-to-cbgb-downtown-scene",
+      "from_event_id": "maxs-kansas-city-punk-bridge",
+      "to_event_id": "cbgb-opens-downtown-scene",
+      "type": "venue_bridge",
+      "summary": "Shows how earlier art-rock and glam venues prepared audiences and musicians for the CBGB-centered punk scene.",
+      "review_status": "draft"
+    },
+    {
+      "id": "cbgb-to-core-punk-scene",
+      "from_event_id": "cbgb-opens-downtown-scene",
+      "to_event_id": "television-ramones-patti-smith-cbgb",
+      "type": "scene_formation",
+      "summary": "Leads from CBGB as a room to a recurring set of bands, audiences, and practices that make punk legible as a scene.",
+      "review_status": "draft"
+    },
+    {
+      "id": "core-punk-to-punk-magazine",
+      "from_event_id": "television-ramones-patti-smith-cbgb",
+      "to_event_id": "punk-magazine-documents-scene",
+      "type": "media_transition",
+      "summary": "Connects live downtown performance with fanzine documentation that names and circulates punk culture.",
+      "review_status": "draft"
+    },
+    {
+      "id": "core-punk-to-new-wave-crossover",
+      "from_event_id": "television-ramones-patti-smith-cbgb",
+      "to_event_id": "blondie-talking-heads-new-wave-crossover",
+      "type": "musical_development",
+      "summary": "Shows how the same CBGB infrastructure supports raw punk and more flexible new wave approaches.",
+      "review_status": "draft"
+    },
+    {
+      "id": "artists-space-to-tier-3-no-wave",
+      "from_event_id": "no-new-york-artists-space",
+      "to_event_id": "tier-3-no-wave-experimental-scene",
+      "type": "art_scene_continuity",
+      "summary": "Connects the art-space no wave moment with downtown venues that sustained experimental performance.",
+      "review_status": "draft"
+    },
+    {
+      "id": "artists-space-to-mudd-club",
+      "from_event_id": "no-new-york-artists-space",
+      "to_event_id": "mudd-club-opens",
+      "type": "scene_bridge",
+      "summary": "Links no wave's art-scene context to Mudd Club's mix of music, performance, fashion, and media.",
+      "review_status": "draft"
+    },
+    {
+      "id": "tier-3-to-99-records",
+      "from_event_id": "tier-3-no-wave-experimental-scene",
+      "to_event_id": "99-records-downtown-label-culture",
+      "type": "label_continuity",
+      "summary": "Shows how experimental downtown sounds move from performance spaces into independent label circulation.",
+      "review_status": "draft"
+    },
+    {
+      "id": "99-records-to-danceteria",
+      "from_event_id": "99-records-downtown-label-culture",
+      "to_event_id": "danceteria-new-wave-dance-crossover",
+      "type": "dance_crossover",
+      "summary": "Connects independent post-punk and no wave records with dancefloor and DJ contexts in early 1980s clubs.",
+      "review_status": "draft"
+    },
+    {
+      "id": "danceteria-to-downtown-media-circulation",
+      "from_event_id": "danceteria-new-wave-dance-crossover",
+      "to_event_id": "downtown-scene-global-media-circulation",
+      "type": "media_expansion",
+      "summary": "Leads from new wave club crossover to broader circulation through video, press, film, and international attention.",
+      "review_status": "draft"
+    },
+    {
+      "id": "new-wave-to-roxy-media-circulation",
+      "from_event_id": "blondie-talking-heads-new-wave-crossover",
+      "to_event_id": "downtown-scene-global-media-circulation",
+      "type": "cross_scene_visibility",
+      "summary": "Connects new wave crossover with broader downtown media circulation through shared clubs, press, film, and mixed audiences.",
+      "review_status": "draft"
     }
   ]
 }

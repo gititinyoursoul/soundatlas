@@ -62,6 +62,32 @@
         "https://en.wikipedia.org/wiki/The_Loft_(New_York_City)",
         "https://en.wikipedia.org/wiki/Paradise_Garage"
       ]
+    },
+    {
+      "id": "punk-new-wave-downtown",
+      "title": "Punk & New Wave Downtown",
+      "color": "#7b2cbf",
+      "year_start": 1971,
+      "year_end": 1985,
+      "summary": "How downtown New York venues, art spaces, fanzines, and independent labels turned punk into new wave, no wave, and crossover culture.",
+      "thesis": "Punk and new wave downtown emerged from a dense network of clubs, art scenes, independent media, and labels rather than from one venue alone. CBGB became the central node, but the wider scene moved through glam, no wave, post-punk, dance crossover, and global media circulation.",
+      "tags": [
+        "punk",
+        "new-wave",
+        "no-wave",
+        "downtown",
+        "cbgb",
+        "art-scene",
+        "independent-labels",
+        "club-culture",
+        "media"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/CBGB",
+        "https://en.wikipedia.org/wiki/No_New_York",
+        "https://en.wikipedia.org/wiki/Punk_(magazine)"
+      ]
     }
   ]
 }

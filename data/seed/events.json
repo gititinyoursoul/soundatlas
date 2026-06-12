@@ -513,6 +513,258 @@
         "https://pitchfork.com/features/article/9710-the-larry-levan-bump-how-the-legendary-paradise-garage-dj-ignited-some-of-the-80s-biggest-hits"
       ],
       "media_links": []
+    },
+    {
+      "id": "new-york-dolls-mercer-scene",
+      "route_id": "punk-new-wave-downtown",
+      "place_id": "mercer-arts-center",
+      "title": "New York Dolls Turn Glam into Downtown Proto-Punk",
+      "year_start": 1971,
+      "year_end": 1973,
+      "summary": "The New York Dolls emerge from early 1970s downtown performance culture, bringing glam theatricality, raw rock, and street style into a volatile live context.",
+      "significance": "This event frames punk as a development from glam, art-world proximity, and local performance spaces rather than as a sudden break.",
+      "tags": [
+        "proto-punk",
+        "glam",
+        "new-york-dolls",
+        "downtown"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/New_York_Dolls",
+        "https://en.wikipedia.org/wiki/Mercer_Arts_Center"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "maxs-kansas-city-punk-bridge",
+      "route_id": "punk-new-wave-downtown",
+      "place_id": "maxs-kansas-city",
+      "title": "Max's Kansas City Bridges Art Rock and Punk",
+      "year_start": 1972,
+      "year_end": 1976,
+      "summary": "Max's Kansas City connects Warhol-era art rock, glam, and early punk audiences before and alongside the rise of CBGB.",
+      "significance": "The venue shows that downtown punk grew from overlapping nightlife and art networks, not from a single club ecology.",
+      "tags": [
+        "maxs-kansas-city",
+        "art-rock",
+        "punk",
+        "club-culture"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Max%27s_Kansas_City"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "cbgb-opens-downtown-scene",
+      "route_id": "punk-new-wave-downtown",
+      "place_id": "cbgb",
+      "title": "CBGB Opens as a Downtown Music Room",
+      "year_start": 1973,
+      "year_end": 1973,
+      "summary": "CBGB opens on the Bowery and gradually becomes a space for original downtown bands that do not fit mainstream rock venues.",
+      "significance": "The club becomes the central infrastructure node for New York punk and new wave because it gives repeated stage time to emerging bands.",
+      "tags": [
+        "cbgb",
+        "punk",
+        "downtown",
+        "venue"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/CBGB"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "television-ramones-patti-smith-cbgb",
+      "route_id": "punk-new-wave-downtown",
+      "place_id": "cbgb",
+      "title": "Television, Ramones, and Patti Smith Define CBGB's Range",
+      "year_start": 1974,
+      "year_end": 1976,
+      "summary": "Television, Ramones, Patti Smith Group, and related bands establish CBGB as a room where different versions of stripped-down rock can share an audience.",
+      "significance": "The event shows scene formation as repetition: bands, audiences, bookers, and press return often enough to make a recognizable culture.",
+      "tags": [
+        "cbgb",
+        "television",
+        "ramones",
+        "patti-smith"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/CBGB"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "punk-magazine-documents-scene",
+      "route_id": "punk-new-wave-downtown",
+      "place_id": "new-york-city",
+      "title": "Punk Magazine Names and Circulates the Scene",
+      "year_start": 1975,
+      "year_end": 1976,
+      "summary": "Punk magazine emerges from New York with comics, interviews, and scene writing that helps make the CBGB-centered culture legible.",
+      "significance": "The magazine turns a local cluster of bands into a named media object, helping punk travel beyond the room where it is performed.",
+      "tags": [
+        "punk-magazine",
+        "media",
+        "fanzine",
+        "scene-documentation"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Punk_(magazine)"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "blondie-talking-heads-new-wave-crossover",
+      "route_id": "punk-new-wave-downtown",
+      "place_id": "cbgb",
+      "title": "Blondie and Talking Heads Widen Punk toward New Wave",
+      "year_start": 1975,
+      "year_end": 1978,
+      "summary": "Blondie and Talking Heads develop from the CBGB context while opening punk-adjacent music toward pop, art-school concepts, rhythm, and new wave presentation.",
+      "significance": "The route uses this event to show how the same infrastructure can produce both raw punk and more media-ready new wave forms.",
+      "tags": [
+        "new-wave",
+        "blondie",
+        "talking-heads",
+        "crossover"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/CBGB"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "no-new-york-artists-space",
+      "route_id": "punk-new-wave-downtown",
+      "place_id": "artists-space",
+      "title": "Artists Space Festival Leads toward No New York",
+      "year_start": 1978,
+      "year_end": 1978,
+      "summary": "A 1978 Artists Space festival presents downtown experimental bands and helps lead to the No New York compilation produced by Brian Eno.",
+      "significance": "No wave becomes visible as a downtown break with rock convention, shaped by art spaces as much as by clubs.",
+      "tags": [
+        "no-wave",
+        "artists-space",
+        "no-new-york",
+        "art-scene"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/No_New_York",
+        "https://pitchfork.com/features/article/6764-no-the-origins-of-no-wave/"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "mudd-club-opens",
+      "route_id": "punk-new-wave-downtown",
+      "place_id": "mudd-club",
+      "title": "Mudd Club Opens as a Downtown Art and Post-Punk Club",
+      "year_start": 1978,
+      "year_end": 1978,
+      "summary": "Mudd Club opens in TriBeCa and becomes a meeting point for post-punk music, no wave culture, performance, fashion, and downtown media.",
+      "significance": "The club shows punk's aftermath moving into mixed art and nightlife spaces where sound, style, and audience are inseparable.",
+      "tags": [
+        "mudd-club",
+        "post-punk",
+        "no-wave",
+        "club-culture"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Mudd_Club"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "tier-3-no-wave-experimental-scene",
+      "route_id": "punk-new-wave-downtown",
+      "place_id": "tier-3",
+      "title": "Tier 3 Supports No Wave and Experimental Performance",
+      "year_start": 1979,
+      "year_end": 1980,
+      "summary": "Tier 3 provides another downtown stage for no wave, post-punk, and experimental performance after the first CBGB-centered punk wave.",
+      "significance": "The event keeps the route from treating no wave as only a record or art-space moment by showing it as venue practice.",
+      "tags": [
+        "tier-3",
+        "no-wave",
+        "experimental",
+        "post-punk"
+      ],
+      "review_status": "draft",
+      "source_urls": [],
+      "media_links": []
+    },
+    {
+      "id": "99-records-downtown-label-culture",
+      "route_id": "punk-new-wave-downtown",
+      "place_id": "99-records",
+      "title": "99 Records Links No Wave, Post-Punk, and Dance Floors",
+      "year_start": 1980,
+      "year_end": 1984,
+      "summary": "99 Records operates as a store and label for downtown post-punk, no wave, post-disco, and dancefloor-adjacent records.",
+      "significance": "The label shows how local performance scenes become durable through independent distribution and club play.",
+      "tags": [
+        "99-records",
+        "independent-labels",
+        "post-punk",
+        "dance-crossover"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/99_Records"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "danceteria-new-wave-dance-crossover",
+      "route_id": "punk-new-wave-downtown",
+      "place_id": "danceteria",
+      "title": "Danceteria Connects New Wave, DJs, Video, and Dance Culture",
+      "year_start": 1980,
+      "year_end": 1985,
+      "summary": "Danceteria brings new wave bands, DJs, video programming, and mixed downtown audiences into a club format built for crossover.",
+      "significance": "The venue links punk and new wave afterlives to dance music, video culture, and the broader media vocabulary of the 1980s.",
+      "tags": [
+        "danceteria",
+        "new-wave",
+        "video",
+        "dance-crossover"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Danceteria"
+      ],
+      "media_links": []
+    },
+    {
+      "id": "downtown-scene-global-media-circulation",
+      "route_id": "punk-new-wave-downtown",
+      "place_id": "the-roxy-nyc",
+      "title": "Downtown Scenes Circulate through Clubs, Film, Video, and Press",
+      "year_start": 1981,
+      "year_end": 1985,
+      "summary": "Downtown music scenes become increasingly visible through clubs such as The Roxy, film and video culture, international press, and cross-scene nightlife.",
+      "significance": "The route ends by showing downtown punk and new wave as part of a wider media circuit that also touches hip-hop, dance music, and global youth culture.",
+      "tags": [
+        "downtown",
+        "media",
+        "the-roxy",
+        "global-visibility"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://www.filmlinc.org/films/wild-style/"
+      ],
+      "media_links": []
     }
   ]
 }

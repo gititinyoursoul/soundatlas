@@ -207,6 +207,109 @@
       "source_urls": [
         "https://pitchfork.com/features/article/9710-the-larry-levan-bump-how-the-legendary-paradise-garage-dj-ignited-some-of-the-80s-biggest-hits/"
       ]
+    },
+    {
+      "id": "cbgb",
+      "name": "CBGB",
+      "borough": "Manhattan",
+      "place_type": "club",
+      "latitude": 40.7251,
+      "longitude": -73.9916,
+      "summary": "Bowery music club that became the central venue for New York punk and new wave bands in the 1970s.",
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/CBGB"
+      ]
+    },
+    {
+      "id": "maxs-kansas-city",
+      "name": "Max's Kansas City",
+      "borough": "Manhattan",
+      "place_type": "club",
+      "latitude": 40.7365,
+      "longitude": -73.9885,
+      "summary": "Park Avenue South venue that connected Warhol-era art rock, glam, proto-punk, and later punk booking.",
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Max%27s_Kansas_City"
+      ]
+    },
+    {
+      "id": "mercer-arts-center",
+      "name": "Mercer Arts Center",
+      "borough": "Manhattan",
+      "place_type": "arts_center",
+      "latitude": 40.7281,
+      "longitude": -73.9965,
+      "summary": "Greenwich Village arts complex associated with early 1970s glam and proto-punk performance before its 1973 collapse.",
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Mercer_Arts_Center"
+      ]
+    },
+    {
+      "id": "artists-space",
+      "name": "Artists Space",
+      "borough": "Manhattan",
+      "place_type": "arts_space",
+      "latitude": 40.7242,
+      "longitude": -74.0025,
+      "summary": "Downtown art space linked to the 1978 no wave festival that helped shape the No New York compilation.",
+      "review_status": "draft",
+      "source_urls": [
+        "https://artistsspace.org/",
+        "https://en.wikipedia.org/wiki/No_New_York"
+      ]
+    },
+    {
+      "id": "mudd-club",
+      "name": "Mudd Club",
+      "borough": "Manhattan",
+      "place_type": "club",
+      "latitude": 40.718,
+      "longitude": -74.0047,
+      "summary": "TriBeCa club where post-punk, no wave, performance, fashion, and downtown art scenes overlapped.",
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Mudd_Club"
+      ]
+    },
+    {
+      "id": "tier-3",
+      "name": "Tier 3",
+      "borough": "Manhattan",
+      "place_type": "club",
+      "latitude": 40.7177,
+      "longitude": -74.007,
+      "summary": "Downtown venue remembered for experimental performance, no wave, post-punk, and early 1980s scene crossover.",
+      "review_status": "draft",
+      "source_urls": []
+    },
+    {
+      "id": "danceteria",
+      "name": "Danceteria",
+      "borough": "Manhattan",
+      "place_type": "club",
+      "latitude": 40.7423,
+      "longitude": -73.9935,
+      "summary": "Multi-format nightclub that linked new wave, DJs, video, dance culture, and downtown crossover audiences.",
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Danceteria"
+      ]
+    },
+    {
+      "id": "99-records",
+      "name": "99 Records",
+      "borough": "Manhattan",
+      "place_type": "label",
+      "latitude": 40.7302,
+      "longitude": -74.0007,
+      "summary": "Greenwich Village store and label connected to no wave, post-punk, post-disco, and independent downtown music.",
+      "review_status": "draft",
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/99_Records"
+      ]
     }
   ]
 }
