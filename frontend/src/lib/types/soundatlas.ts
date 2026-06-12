@@ -1,6 +1,26 @@
 export type ReviewStatus = 'draft' | 'reviewed';
 export type MediaProvider = 'youtube' | 'spotify' | 'qobuz';
 export type MediaType = 'track' | 'album' | 'playlist' | 'video' | 'search';
+export type ImageProvider =
+  | 'wikimedia'
+  | 'loc'
+  | 'nypl'
+  | 'internet_archive'
+  | 'cover_art_archive'
+  | 'manual';
+export type ImageType =
+  | 'venue_photo'
+  | 'artist_photo'
+  | 'album_cover'
+  | 'flyer_poster'
+  | 'archive_photo'
+  | 'map_image'
+  | 'press_scan';
+export type RightsStatus =
+  | 'open_license'
+  | 'public_domain'
+  | 'provider_restricted'
+  | 'unknown';
 
 export type Route = {
   id: string;
@@ -38,6 +58,23 @@ export type MediaLink = {
   review_status: ReviewStatus;
 };
 
+export type ImageLink = {
+  provider: ImageProvider;
+  type: ImageType;
+  title: string;
+  image_url: string;
+  thumbnail_url?: string | null;
+  source_url: string;
+  creator?: string | null;
+  license?: string | null;
+  license_url?: string | null;
+  rights_status: RightsStatus;
+  alt_text: string;
+  query: string;
+  confidence: number;
+  review_status: ReviewStatus;
+};
+
 export type Event = {
   id: string;
   route_id: string;
@@ -51,6 +88,7 @@ export type Event = {
   review_status: ReviewStatus;
   source_urls: string[];
   media_links: MediaLink[];
+  image_links: ImageLink[];
 };
 
 export type Connection = {

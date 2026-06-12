@@ -2,6 +2,7 @@
   import type {
     Connection,
     Event,
+    ImageLink,
     MediaProvider,
     MediaType,
     Place,
@@ -27,6 +28,12 @@
   function formatMediaLinkLabel(provider: MediaProvider, type: MediaType): string {
     return `${providerLabels[provider]} ${type}`;
   }
+
+  $: reviewedImageLinks = event?.image_links.filter((imageLink) => imageLink.review_status === 'reviewed') ?? [];
+
+  function formatImageAttribution(imageLink: ImageLink): string {
+    return [imageLink.creator, imageLink.license].filter(Boolean).join(' · ');
+  }
 </script>
 
 <aside class="story-panel" aria-label="Event details">
@@ -39,6 +46,23 @@
     </div>
 
     <h2>{event.title}</h2>
+
+    {#if reviewedImageLinks.length > 0}
+      <figure class="event-image">
+        <a href={reviewedImageLinks[0].source_url} target="_blank" rel="noreferrer">
+          <img
+            src={reviewedImageLinks[0].thumbnail_url ?? reviewedImageLinks[0].image_url}
+            alt={reviewedImageLinks[0].alt_text}
+          />
+        </a>
+        <figcaption>
+          <span>{reviewedImageLinks[0].title}</span>
+          {#if formatImageAttribution(reviewedImageLinks[0])}
+            <small>{formatImageAttribution(reviewedImageLinks[0])}</small>
+          {/if}
+        </figcaption>
+      </figure>
+    {/if}
 
     {#if place}
       <p class="place">{place.name}, {place.borough}</p>
@@ -164,6 +188,44 @@
   .place {
     color: #314151;
     font-weight: 700;
+  }
+
+  .event-image {
+    display: grid;
+    gap: 0.45rem;
+    margin: 0;
+  }
+
+  .event-image a {
+    display: block;
+    overflow: hidden;
+    border-radius: 12px;
+    background: #e5ebf0;
+  }
+
+  .event-image img {
+    display: block;
+    width: 100%;
+    max-height: 15rem;
+    object-fit: cover;
+  }
+
+  figcaption {
+    display: grid;
+    gap: 0.15rem;
+    color: #6b7785;
+    font-size: 0.78rem;
+    line-height: 1.35;
+  }
+
+  figcaption span {
+    color: #314151;
+    font-weight: 700;
+  }
+
+  figcaption small {
+    color: #6b7785;
+    font-size: inherit;
   }
 
   .event-nav {

@@ -8,7 +8,7 @@ Diese Datei definiert die minimale Validierungsregel fuer die kuratierten MVP-Se
 - Jede fachliche Entity braucht eine stabile, URL-taugliche `id`.
 - IDs sind klein geschrieben und verwenden Bindestriche, z. B. `birth-of-hip-hop`.
 - Referenzen muessen auf existierende IDs zeigen.
-- `source_urls` und `media_links` sind immer Arrays, auch wenn sie leer sind.
+- `source_urls`, `media_links` und `image_links` sind immer Arrays, auch wenn sie leer sind.
 - Draft-Daten verwenden `review_status: "draft"`.
 
 ## `routes.json`
@@ -69,6 +69,7 @@ Pflichtfelder pro Event:
 - `review_status`
 - `source_urls`
 - `media_links`
+- `image_links`
 
 `media_links` enthaelt strukturierte Medienlinks:
 
@@ -80,6 +81,23 @@ Pflichtfelder pro Event:
 - `confidence`: Zahl zwischen `0` und `1`
 - `review_status`
 
+`image_links` enthaelt strukturierte Bildlinks:
+
+- `provider`: `wikimedia`, `loc`, `nypl`, `internet_archive`, `cover_art_archive` oder `manual`
+- `type`: `venue_photo`, `artist_photo`, `album_cover`, `flyer_poster`, `archive_photo`, `map_image` oder `press_scan`
+- `title`
+- `image_url`
+- `thumbnail_url` optional
+- `source_url`
+- `creator` optional
+- `license` optional
+- `license_url` optional
+- `rights_status`: `open_license`, `public_domain`, `provider_restricted` oder `unknown`
+- `alt_text`
+- `query`
+- `confidence`: Zahl zwischen `0` und `1`
+- `review_status`
+
 Validierungsregeln:
 
 - `route_id` referenziert eine Route aus `routes.json`.
@@ -87,6 +105,7 @@ Validierungsregeln:
 - `year_start` ist kleiner oder gleich `year_end`.
 - `tags` und `source_urls` sind Arrays aus Strings.
 - `media_links` ist ein Array aus Medienlink-Objekten.
+- `image_links` ist ein Array aus Bildlink-Objekten.
 
 ## `connections.json`
 

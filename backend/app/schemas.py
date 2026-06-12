@@ -6,6 +6,29 @@ from pydantic import BaseModel, Field, field_validator, model_validator
 ReviewStatus = Literal["draft", "reviewed"]
 MediaProvider = Literal["youtube", "spotify", "qobuz"]
 MediaType = Literal["track", "album", "playlist", "video", "search"]
+ImageProvider = Literal[
+    "wikimedia",
+    "loc",
+    "nypl",
+    "internet_archive",
+    "cover_art_archive",
+    "manual",
+]
+ImageType = Literal[
+    "venue_photo",
+    "artist_photo",
+    "album_cover",
+    "flyer_poster",
+    "archive_photo",
+    "map_image",
+    "press_scan",
+]
+RightsStatus = Literal[
+    "open_license",
+    "public_domain",
+    "provider_restricted",
+    "unknown",
+]
 
 
 class YearRangeMixin(BaseModel):
@@ -74,6 +97,30 @@ class MediaLink(BaseModel):
         return value
 
 
+class ImageLink(BaseModel):
+    provider: ImageProvider
+    type: ImageType
+    title: str
+    image_url: str
+    source_url: str
+    rights_status: RightsStatus
+    alt_text: str
+    query: str
+    confidence: float
+    review_status: ReviewStatus
+    thumbnail_url: str | None = None
+    creator: str | None = None
+    license: str | None = None
+    license_url: str | None = None
+
+    @field_validator("confidence")
+    @classmethod
+    def validate_confidence(cls, value: float) -> float:
+        if value < 0 or value > 1:
+            raise ValueError("confidence must be between 0 and 1")
+        return value
+
+
 class Event(YearRangeMixin):
     id: str
     route_id: str
@@ -85,6 +132,7 @@ class Event(YearRangeMixin):
     review_status: ReviewStatus
     source_urls: list[str]
     media_links: list[MediaLink]
+    image_links: list[ImageLink]
 
 
 class Connection(BaseModel):

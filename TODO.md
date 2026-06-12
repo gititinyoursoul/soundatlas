@@ -13,6 +13,7 @@ Ziel des ersten MVP ist ein vertikaler Slice fuer **Birth of Hip-Hop: Bronx 1970
 - [x] 8-12 Influence Connections definieren
 - [x] Quellenstruktur fuer Events festlegen
 - [x] Medienlink-Regeln klaeren: YouTube, Spotify, Internet Archive oder externe Links
+- [x] Media-Enrichment-Konzept dokumentieren
 - [x] Offene historische Unsicherheiten markieren
 
 ## 2. Seed-Daten
@@ -73,6 +74,16 @@ Ziel des ersten MVP ist ein vertikaler Slice fuer **Birth of Hip-Hop: Bronx 1970
 - [x] Quellen und Medienlinks im Story Panel darstellen
 - [x] Verbindungen zwischen Events visuell oder textlich anzeigen
 - [x] Frontend-Akzeptanzkriterien pruefen: Karte zeigt Hip-Hop-Events, Timeline filtert, Story Panel reagiert auf Markerauswahl
+
+## 5.1 Bildmaterial
+
+- [x] Konzept fuer Event-Bildmaterial dokumentieren
+- [x] `image_links` im Event-Schema definieren
+- [x] Seed-Validierungsregeln fuer Bildlinks dokumentieren
+- [x] Bestehende Events mit leeren `image_links` initialisieren
+- [x] Story Panel fuer reviewed Bildmaterial erweitern
+- [x] Tests fuer Bildlink-Schema und Seed-Daten ergaenzen
+- [x] Optionales Skript fuer automatische Bildkandidaten planen
 
 ## 6. Infrastruktur
 

@@ -1,5 +1,5 @@
 from app.seed_repository import SeedRepository
-from app.schemas import MediaLink
+from app.schemas import ImageLink, MediaLink
 
 
 def test_seed_repository_loads_routes_places_events_and_connections() -> None:
@@ -20,6 +20,7 @@ def test_seed_repository_loads_routes_places_events_and_connections() -> None:
     assert {route.creator for route in repository.list_routes()} == {"gpt-5.5"}
     for event in repository.list_events():
         assert all(isinstance(media_link, MediaLink) for media_link in event.media_links)
+        assert all(isinstance(image_link, ImageLink) for image_link in event.image_links)
 
 
 def test_seed_repository_filters_connections_by_route() -> None:
