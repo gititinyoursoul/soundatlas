@@ -89,12 +89,12 @@
   <title>SoundAtlas</title>
   <meta
     name="description"
-    content="Interaktive Karte fuer New York 1965-1985 und die Birth-of-Hip-Hop-Route."
+    content="Interactive map for New York 1965-1985 and the Birth of Hip-Hop route."
   />
 </svelte:head>
 
 <main class="app-shell">
-  <section class="workspace" aria-label="SoundAtlas Arbeitsbereich">
+  <section class="workspace" aria-label="SoundAtlas workspace">
     <div class="map-column">
       <header class="topbar">
         <div>
@@ -103,11 +103,11 @@
         </div>
         <div class="status">
           {#if isLoading}
-            Lade API-Daten
+            Loading API data
           {:else if errorMessage}
-            API nicht erreichbar
+            API unavailable
           {:else}
-            {visibleEvents.length} Events sichtbar
+            {visibleEvents.length} events visible
           {/if}
         </div>
       </header>
@@ -118,7 +118,7 @@
 
       {#if errorMessage}
         <div class="notice error">
-          <strong>Backend nicht erreichbar.</strong>
+          <strong>Backend unavailable.</strong>
           <span>{errorMessage}</span>
         </div>
       {:else}

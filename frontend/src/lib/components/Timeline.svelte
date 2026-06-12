@@ -22,7 +22,7 @@
   }
 </script>
 
-<section class="timeline" aria-label={`Timeline der Route ${routeTitle}`}>
+<section class="timeline" aria-label={`Timeline for route ${routeTitle}`}>
   <div class="timeline-header">
     <div class="title-block">
       <span>Route</span>
@@ -53,7 +53,7 @@
 
   {#if !hasEventRange}
     <p class="caption">
-      Wähle ein Event, um dessen Zeitraum hervorzuheben.
+      Select an event to highlight its time span.
     </p>
   {/if}
 </section>

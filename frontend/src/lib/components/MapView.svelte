@@ -136,10 +136,10 @@
 </script>
 
 <div class="map-shell">
-  <div bind:this={mapContainer} class="map" aria-label="SoundAtlas Karte"></div>
+  <div bind:this={mapContainer} class="map" aria-label="SoundAtlas map"></div>
 
   {#if events.length === 0}
-    <div class="map-empty">Keine Events im aktiven Zeitraum.</div>
+    <div class="map-empty">No events in the active time range.</div>
   {/if}
 </div>
 

@@ -6,11 +6,11 @@
   export let onToggleRoute: (routeId: string) => void = () => {};
 </script>
 
-<section class="route-filter" aria-label="Routenfilter">
-  <div class="section-label">Routen</div>
+<section class="route-filter" aria-label="Route filter">
+  <div class="section-label">Routes</div>
 
   {#if routes.length === 0}
-    <p class="empty">Keine Routen geladen.</p>
+    <p class="empty">No routes loaded.</p>
   {:else}
     <div class="routes">
       {#each routes as route}

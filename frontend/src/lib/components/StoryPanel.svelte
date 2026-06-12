@@ -12,7 +12,7 @@
   export let onNavigateEvent: (eventId: string) => void = () => {};
 </script>
 
-<aside class="story-panel" aria-label="Eventdetails">
+<aside class="story-panel" aria-label="Event details">
   {#if event}
     <div class="eyebrow">
       <span>{event.year_start}{event.year_start !== event.year_end ? `-${event.year_end}` : ''}</span>
@@ -27,13 +27,13 @@
       <p class="place">{place.name}, {place.borough}</p>
     {/if}
 
-    <nav class="event-nav" aria-label="Event-Navigation">
+    <nav class="event-nav" aria-label="Event navigation">
       <button
         type="button"
         disabled={!previousEvent}
         on:click={() => previousEvent && onNavigateEvent(previousEvent.id)}
       >
-        Vorheriges Event
+        Previous event
       </button>
       <span>{currentEventIndex + 1} / {eventCount}</span>
       <button
@@ -41,23 +41,23 @@
         disabled={!nextEvent}
         on:click={() => nextEvent && onNavigateEvent(nextEvent.id)}
       >
-        Nächstes Event
+        Next event
       </button>
     </nav>
 
     <section>
-      <h3>Was passiert?</h3>
+      <h3>What happens?</h3>
       <p>{event.summary}</p>
     </section>
 
     <section>
-      <h3>Warum wichtig?</h3>
+      <h3>Why does it matter?</h3>
       <p>{event.significance}</p>
     </section>
 
     {#if connections.length > 0}
       <section>
-        <h3>Verbindungen</h3>
+        <h3>Connections</h3>
         <ul>
           {#each connections as connection}
             <li>{connection.summary}</li>
@@ -68,21 +68,21 @@
 
     {#if event.source_urls.length > 0 || event.media_links.length > 0}
       <section>
-        <h3>Quellen und Medien</h3>
+        <h3>Sources and media</h3>
         <ul class="links">
           {#each event.source_urls as sourceUrl}
-            <li><a href={sourceUrl} target="_blank" rel="noreferrer">Quelle</a></li>
+            <li><a href={sourceUrl} target="_blank" rel="noreferrer">Source</a></li>
           {/each}
           {#each event.media_links as mediaLink}
-            <li><a href={mediaLink} target="_blank" rel="noreferrer">Medium</a></li>
+            <li><a href={mediaLink} target="_blank" rel="noreferrer">Media</a></li>
           {/each}
         </ul>
       </section>
     {/if}
   {:else}
     <div class="empty">
-      <h2>Event auswählen</h2>
-      <p>Klicke einen Marker auf der Karte, um Kontext, Bedeutung und Verbindungen zu sehen.</p>
+      <h2>Select an event</h2>
+      <p>Click a marker on the map to see context, significance, and connections.</p>
     </div>
   {/if}
 </aside>
