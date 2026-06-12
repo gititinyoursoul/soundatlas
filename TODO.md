@@ -76,9 +76,9 @@ Ziel des ersten MVP ist ein vertikaler Slice fuer **Birth of Hip-Hop: Bronx 1970
 
 ## 6. Infrastruktur
 
-- [ ] Root-README fuer Projektstart anlegen
-- [ ] Backend-Startbefehl dokumentieren
-- [ ] Frontend-Startbefehl dokumentieren
+- [x] Root-README fuer Projektstart anlegen
+- [x] Backend-Startbefehl dokumentieren
+- [x] Frontend-Startbefehl dokumentieren
 - [x] Gemeinsame Entwicklungsbefehle definieren
 - [ ] Entscheiden, ob ein Root-Task-Runner noetig ist
 - [ ] Git-Status vor dem naechsten Commit pruefen
