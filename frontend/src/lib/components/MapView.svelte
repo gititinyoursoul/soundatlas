@@ -14,10 +14,8 @@
   let markerLayer: import('leaflet').LayerGroup | null = null;
   let leaflet: typeof import('leaflet') | null = null;
 
-  $: placeById = new Map(places.map((place) => [place.id, place]));
-  $: routeById = new Map(routes.map((route) => [route.id, route]));
   $: if (leaflet && markerLayer) {
-    renderMarkers();
+    renderMarkers(selectedEventId, events, places, routes);
   }
 
   onMount(async () => {
@@ -39,7 +37,7 @@
 
     leaflet.control.zoom({ position: 'bottomright' }).addTo(map);
     markerLayer = leaflet.layerGroup().addTo(map);
-    renderMarkers();
+    renderMarkers(selectedEventId, events, places, routes);
 
     return () => {
       map?.remove();
@@ -47,34 +45,43 @@
     };
   });
 
-  function renderMarkers(): void {
+  function renderMarkers(
+    activeEventId = selectedEventId,
+    currentEvents = events,
+    currentPlaces = places,
+    currentRoutes = routes
+  ): void {
     if (!leaflet || !markerLayer) {
       return;
     }
 
     markerLayer.clearLayers();
 
-    const eventsByPlaceId = groupEventsByPlaceId(events);
+    const eventsByPlaceId = groupEventsByPlaceId(currentEvents);
+    let selectedMarkerPosition: [number, number] | null = null;
 
-    for (const event of events) {
-      const place = placeById.get(event.place_id);
-      const route = routeById.get(event.route_id);
+    const currentPlaceById = new Map(currentPlaces.map((place) => [place.id, place]));
+    const currentRouteById = new Map(currentRoutes.map((route) => [route.id, route]));
+
+    for (const event of currentEvents) {
+      const place = currentPlaceById.get(event.place_id);
+      const route = currentRouteById.get(event.route_id);
 
       if (!place || !route) {
         continue;
       }
 
-      const isSelected = selectedEventId === event.id;
+      const isSelected = activeEventId === event.id;
       const colocatedEvents = eventsByPlaceId.get(event.place_id) ?? [event];
       const eventIndex = colocatedEvents.findIndex((colocatedEvent) => colocatedEvent.id === event.id);
       const markerPosition = getMarkerPosition(place, eventIndex, colocatedEvents.length);
       const marker = leaflet
         .circleMarker(markerPosition, {
-          radius: isSelected ? 10 : 7,
+          radius: isSelected ? 13 : 7,
           color: '#17202a',
           weight: isSelected ? 3 : 1,
-          fillColor: route.color,
-          fillOpacity: isSelected ? 0.95 : 0.75
+          fillColor: isSelected ? '#2e7d32' : route.color,
+          fillOpacity: isSelected ? 1 : 0.75
         })
         .bindTooltip(`${event.title} (${event.year_start})`, {
           direction: 'top',
@@ -83,6 +90,18 @@
 
       marker.on('click', () => onSelectEvent(event.id));
       marker.addTo(markerLayer);
+
+      if (isSelected) {
+        marker.bringToFront();
+        selectedMarkerPosition = markerPosition;
+      }
+    }
+
+    if (selectedMarkerPosition && map) {
+      map.panTo(selectedMarkerPosition, {
+        animate: true,
+        duration: 0.35
+      });
     }
   }
 
