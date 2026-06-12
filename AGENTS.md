@@ -79,3 +79,21 @@ Events sollten mindestens enthalten:
 - Keine Commits ohne expliziten Nutzerauftrag.
 - Sinnvolle Commit-Gruppen bevorzugen: Doku, Daten, Backend, Frontend getrennt.
 - Lokale Ordner wie `.venv/`, `node_modules/`, `.vscode/` und `.github/` bleiben ignoriert.
+
+## Commit Messages
+
+- Verwende Conventional Commits: `type(scope): subject`
+- Erlaubte Typen: `feat`, `fix`, `refactor`, `perf`, `test`, `docs`, `build`, `ci`, `chore`, `revert`
+- Der Scope ist empfohlen, aber optional; falls verwendet, kurz und stabil halten
+- Subjekte im Imperativ formulieren und moeglichst unter 72 Zeichen halten
+- Keine abschliessenden Punkte im Subject
+- Bei Breaking Changes `!` verwenden, z. B. `feat(api)!: remove legacy endpoint`
+- Einen kurzen Body ergaenzen, wenn der Grund nicht klar ist
+
+## Working Defaults
+
+- Bevorzuge kleine, reviewbare Aenderungen statt grosser Spruenge
+- Wenn Frontend-Code geaendert wird, `npm run check` und bei grösseren Aenderungen `npm run build` ausfuehren
+- Wenn Backend-Code geaendert wird, `uv run pytest` ausfuehren
+- Wenn Daten oder Seed-Dateien geaendert werden, die JSON-Struktur und Referenzen pruefen
+- Wenn neue Arbeitspakete entstehen, `TODO.md` aktualisieren
