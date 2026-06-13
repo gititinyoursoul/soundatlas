@@ -43,6 +43,8 @@ Ziel des ersten MVP ist ein vertikaler Slice fuer **Birth of Hip-Hop: Bronx 1970
 - [x] Fehlerverhalten fuer unbekannte IDs und leere Filterergebnisse definieren
 - [x] Lokale CORS-Konfiguration fuer das Frontend ergaenzen
 - [x] Minimale Backend-Tests fuer Health und Events ergaenzen
+- [x] Sichere Media-Enrichment-Settings mit externem Secret-Pfad einfuehren
+- [x] Mockbare YouTube-Analyse-/Search-/Ranking-Pipeline fuer Content Pages umsetzen
 
 ## 4. Frontend
 

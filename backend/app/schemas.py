@@ -88,6 +88,11 @@ class MediaLink(BaseModel):
     query: str
     confidence: float
     review_status: ReviewStatus
+    video_id: str | None = None
+    channel_title: str | None = None
+    description: str | None = None
+    published_at: str | None = None
+    reason: str | None = None
 
     @field_validator("confidence")
     @classmethod

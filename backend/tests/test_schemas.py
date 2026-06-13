@@ -14,11 +14,17 @@ def test_media_link_accepts_structured_provider_link() -> None:
             "query": "example query",
             "confidence": 0.8,
             "review_status": "draft",
+            "video_id": "example",
+            "channel_title": "Example Channel",
+            "description": "Example description",
+            "published_at": "1977-08-11T00:00:00Z",
+            "reason": "references the event title directly",
         },
     )
 
     assert media_link.provider == "youtube"
     assert media_link.type == "video"
+    assert media_link.video_id == "example"
 
 
 @pytest.mark.parametrize(

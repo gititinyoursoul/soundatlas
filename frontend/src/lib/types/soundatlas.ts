@@ -56,6 +56,11 @@ export type MediaLink = {
   query: string;
   confidence: number;
   review_status: ReviewStatus;
+  video_id?: string | null;
+  channel_title?: string | null;
+  description?: string | null;
+  published_at?: string | null;
+  reason?: string | null;
 };
 
 export type ImageLink = {

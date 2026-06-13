@@ -11,13 +11,13 @@ SoundAtlas ist ein MVP fuer eine interaktive Musikgeschichts-App. Der aktuelle S
 
 ## Environment
 
-Eine Beispielkonfiguration liegt in `.env.example`.
+Eine Beispielkonfiguration liegt in `.env.example`. Fuer lokale Codex-/Testlaeufe gibt es zusaetzlich `.env.codex` mit reinen Dummy-Werten.
 
 ```powershell
-Copy-Item .env.example .env
+$env:SOUNDATLAS_ENV_FILE='C:\Users\Marius\secrets\soundatlas\.env'
 ```
 
-`.env` ist fuer lokale Secrets gedacht und wird nicht committed. Aktuell werden Env Vars direkt aus der Shell gelesen; setze benoetigte Werte daher in deiner aktiven PowerShell-Session oder lade sie ueber dein lokales Tooling.
+Reale Secrets gehoeren nicht in dieses Repository. Lege sie stattdessen ausserhalb des Workspaces ab, zum Beispiel unter `C:\Users\Marius\secrets\soundatlas\.env`, und setze nur den Zeiger `SOUNDATLAS_ENV_FILE` in deiner Shell. Wenn der Zeiger fehlt, faellt das Media-Enrichment sicher auf Dummy-/Testmodus zurueck oder bricht ohne externe Requests ab.
 
 ## Lokaler Start
 
@@ -98,13 +98,28 @@ Die Validierungsregeln sind in `docs/seed-validation.md` dokumentiert. Events ve
 
 Das Enrichment-Skript liest `data/seed/events.json`, sucht passende Medienlinks ueber Provider-APIs und schreibt strukturierte `media_links` zurueck.
 
-Erforderliche Env Vars je nach Provider:
+Erforderliche Env Vars in der externen Secret-Datei je nach Provider:
 
 - `YOUTUBE_API_KEY`
+- `SOUNDATLAS_OPENAI_API_KEY`
+- `SOUNDATLAS_OPENAI_MODEL`
 - `SPOTIFY_CLIENT_ID`
 - `SPOTIFY_CLIENT_SECRET`
 - `QOBUZ_APP_ID`
 - `QOBUZ_USER_AUTH_TOKEN`
+
+Empfohlene Secret-Datei ausserhalb des Repos:
+
+```powershell
+# C:\Users\Marius\secrets\soundatlas\.env
+YOUTUBE_API_KEY=your-real-youtube-key
+SOUNDATLAS_OPENAI_API_KEY=your-real-openai-key
+SOUNDATLAS_OPENAI_MODEL=gpt-4.1-mini
+SPOTIFY_CLIENT_ID=your-real-spotify-client-id
+SPOTIFY_CLIENT_SECRET=your-real-spotify-client-secret
+QOBUZ_APP_ID=your-real-qobuz-app-id
+QOBUZ_USER_AUTH_TOKEN=your-real-qobuz-user-token
+```
 
 Ausfuehren:
 
@@ -128,6 +143,8 @@ uv run python scripts/enrich_media_links.py --event-id grandmaster-flash
 ```
 
 Alle automatisch erzeugten Medienlinks bleiben `review_status: "draft"` und muessen redaktionell geprueft werden.
+
+Die YouTube-Suche laeuft ueber eine getrennte Content-Analyse-, Such- und Ranking-Pipeline. Der YouTube-Key wird nur im YouTube-Service verwendet; GPT-/LLM-Komponenten erhalten ausschliesslich Seitentext, Suchbegriffe und Video-Metadaten.
 
 ## Projektstruktur
 
