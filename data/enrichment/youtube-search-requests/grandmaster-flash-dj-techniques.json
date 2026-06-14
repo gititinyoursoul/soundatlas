@@ -1,0 +1,140 @@
+{
+  "provider": "youtube",
+  "api_method": "search.list",
+  "event_id": "grandmaster-flash-dj-techniques",
+  "editorial_status": "draft",
+  "query_strategy": "Multiple YouTube search.list requests, each targeting a specific media intent.",
+  "query_candidates": [
+    {
+      "intent": "documentary",
+      "media_goal": "Find explanatory video, documentary context, archival footage, or scene history.",
+      "youtube_type": "video",
+      "q": "Grandmaster Flash DJ techniques turntablism backspin documentary 1975 1977",
+      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=Grandmaster%20Flash%20DJ%20techniques%20turntablism%20backspin%20documentary%201975%201977&key=YOUTUBE_API_KEY",
+      "request_params": {
+        "part": "snippet",
+        "type": "video",
+        "maxResults": 8,
+        "order": "relevance",
+        "safeSearch": "moderate",
+        "relevanceLanguage": "en",
+        "regionCode": "US",
+        "q": "Grandmaster Flash DJ techniques turntablism backspin documentary 1975 1977",
+        "key": "YOUTUBE_API_KEY"
+      },
+      "confidence_hint": "high",
+      "review_priority": 1,
+      "reason": "The event is specifically about DJ technique, so explanatory video about turntablism, backspin, and mixing is directly relevant.",
+      "review_risks": [
+        "Check that results focus on Grandmaster Flash's techniques rather than generic DJ tutorials.",
+        "Prefer archival, museum, interview, or documented oral-history sources."
+      ]
+    },
+    {
+      "intent": "dj_mix",
+      "media_goal": "Find a DJ set, break mix, party mix, turntablism demonstration, or historically framed mix.",
+      "youtube_type": "video",
+      "q": "Grandmaster Flash turntablism DJ mix backspin breaks 1975 1977",
+      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=Grandmaster%20Flash%20turntablism%20DJ%20mix%20backspin%20breaks%201975%201977&key=YOUTUBE_API_KEY",
+      "request_params": {
+        "part": "snippet",
+        "type": "video",
+        "maxResults": 8,
+        "order": "relevance",
+        "safeSearch": "moderate",
+        "relevanceLanguage": "en",
+        "regionCode": "US",
+        "q": "Grandmaster Flash turntablism DJ mix backspin breaks 1975 1977",
+        "key": "YOUTUBE_API_KEY"
+      },
+      "confidence_hint": "high",
+      "review_priority": 1,
+      "reason": "The event is about DJ technique and turntablism, so a mix or demonstration can directly illustrate the musical practice.",
+      "review_risks": [
+        "Check whether the result is Grandmaster Flash or a historically framed demonstration.",
+        "Avoid generic turntablism videos that do not connect to Grandmaster Flash or early hip-hop."
+      ]
+    },
+    {
+      "intent": "interview",
+      "media_goal": "Find artist, DJ, producer, venue, or oral-history interview material.",
+      "youtube_type": "video",
+      "q": "Grandmaster Flash 1975 1977 interview",
+      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=Grandmaster%20Flash%201975%201977%20interview&key=YOUTUBE_API_KEY",
+      "request_params": {
+        "part": "snippet",
+        "type": "video",
+        "maxResults": 8,
+        "order": "relevance",
+        "safeSearch": "moderate",
+        "relevanceLanguage": "en",
+        "regionCode": "US",
+        "q": "Grandmaster Flash 1975 1977 interview",
+        "key": "YOUTUBE_API_KEY"
+      },
+      "confidence_hint": "high",
+      "review_priority": 1,
+      "reason": "Grandmaster Flash is directly named, and oral-history interviews are a strong fit for explaining technical development.",
+      "review_risks": [
+        "Check whether the interview includes technique discussion, not only career overview.",
+        "Corroborate technical claims with museum or music-history sources before treating them as authoritative."
+      ]
+    },
+    {
+      "intent": "song_or_track",
+      "media_goal": "Find a concrete song, recording, music video, live clip, or performance-related upload.",
+      "youtube_type": "video",
+      "q": "Grandmaster Flash Wheels of Steel turntablism performance 1975 1977",
+      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=Grandmaster%20Flash%20Wheels%20of%20Steel%20turntablism%20performance%201975%201977&key=YOUTUBE_API_KEY",
+      "request_params": {
+        "part": "snippet",
+        "type": "video",
+        "maxResults": 8,
+        "order": "relevance",
+        "safeSearch": "moderate",
+        "relevanceLanguage": "en",
+        "regionCode": "US",
+        "q": "Grandmaster Flash Wheels of Steel turntablism performance 1975 1977",
+        "key": "YOUTUBE_API_KEY"
+      },
+      "confidence_hint": "medium",
+      "review_priority": 2,
+      "reason": "A recording or performance centered on Grandmaster Flash's turntable technique can illustrate the sound of the practice, even if the release is later than the event window.",
+      "review_risks": [
+        "Check the date and framing before linking this to the 1975-1977 event window.",
+        "Do not imply the recording itself occurred during the event's date range unless independently sourced."
+      ]
+    },
+    {
+      "intent": "playlist_of_songs",
+      "media_goal": "Find a YouTube playlist, mix, or curated song collection that matches the event context.",
+      "youtube_type": "playlist",
+      "q": "Grandmaster Flash early hip hop DJ breaks playlist 1975 1977",
+      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=playlist&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=Grandmaster%20Flash%20early%20hip%20hop%20DJ%20breaks%20playlist%201975%201977&key=YOUTUBE_API_KEY",
+      "request_params": {
+        "part": "snippet",
+        "type": "playlist",
+        "maxResults": 8,
+        "order": "relevance",
+        "safeSearch": "moderate",
+        "relevanceLanguage": "en",
+        "regionCode": "US",
+        "q": "Grandmaster Flash early hip hop DJ breaks playlist 1975 1977",
+        "key": "YOUTUBE_API_KEY"
+      },
+      "confidence_hint": "medium",
+      "review_priority": 3,
+      "reason": "A playlist can provide listening context around Grandmaster Flash and early hip-hop DJ breaks.",
+      "review_risks": [
+        "Check whether playlist contents are historically plausible for the event's technique focus.",
+        "Use as contextual listening rather than direct evidence of technique development."
+      ]
+    }
+  ],
+  "omitted_intents": [],
+  "review_notes": [
+    "Check whether results are historically relevant before adding links.",
+    "Keep all automatically found links as draft until editorial review.",
+    "Verify channel/source quality before promoting any media link to reviewed."
+  ]
+}
