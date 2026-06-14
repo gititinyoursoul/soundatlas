@@ -45,6 +45,9 @@ Ziel des ersten MVP ist ein vertikaler Slice fuer **Birth of Hip-Hop: Bronx 1970
 - [x] Minimale Backend-Tests fuer Health und Events ergaenzen
 - [x] Sichere Media-Enrichment-Settings mit externem Secret-Pfad einfuehren
 - [x] Mockbare YouTube-Analyse-/Search-/Ranking-Pipeline fuer Content Pages umsetzen
+- [ ] OpenAI-Settings im CLI-Media-Enrichment aktiv verdrahten oder aus Env/Doku entfernen
+- [ ] YouTube-Search-Prompt `.github/prompts/youtube-search-list-media.md` so anpassen, dass Shorts ausgeschlossen werden
+- [ ] Pruefen, ob `backend/scripts/enrich_media_links.py` mit dem Plus-only Workflow kompatibel ist
 
 ## 4. Frontend
 

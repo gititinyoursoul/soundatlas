@@ -205,7 +205,7 @@ QOBUZ_APP_ID=
 QOBUZ_USER_AUTH_TOKEN=
 ```
 
-Real secrets must not live in the repository. Instead, an external file path is provided through `SOUNDATLAS_ENV_FILE`, for example `C:\Users\Marius\secrets\soundatlas\.env`.
+Real secrets must not live in the repository. Instead, an external file path is provided through `SOUNDATLAS_ENV_FILE`.
 
 Providers without live credentials are skipped. In dummy or test mode, mocks may be used without making real network requests.
 
@@ -225,6 +225,81 @@ For content-page-based media recommendations, the following rules apply:
 - `YouTube`: uses the shared content analysis, searches across multiple generated queries, normalizes richer video metadata, and applies explicit ranking with reasons.
 - `Spotify`: uses the same analyzed query set, searches tracks, albums, and playlists, and keeps only the strongest normalized candidates.
 - `Qobuz`: uses the same analyzed query set, searches tracks, albums, and playlists, and keeps only the strongest normalized candidates.
+
+## ChatGPT Plus-Only Workflow
+
+A ChatGPT Plus account does not provide a local API key for Python scripts. If the project is used only through ChatGPT Plus and the VS Code Codex extension, GPT should be treated as an interactive editorial assistant, not as an automated backend service.
+
+In this mode, the automated script can still call YouTube, Spotify, and Qobuz through their provider APIs. GPT/Codex is used before and after that automated step:
+
+1. Select an event or content page from the curated seed data.
+2. Ask Codex in VS Code to analyze the title, summary, significance, route, tags, years, and known scene terms.
+3. Let Codex propose provider-specific search queries for YouTube, Spotify, and Qobuz.
+4. Review those queries manually before using them as editorial input.
+5. Run `backend/scripts/enrich_media_links.py --dry-run` with provider keys loaded from the external secret file.
+6. Review the generated `draft` links with Codex or ChatGPT Plus.
+7. Keep only plausible links, remove weak matches, and promote links to `reviewed` only after editorial review.
+
+Example Codex prompt:
+
+```text
+You are helping curate media links for SoundAtlas, an interactive music history app.
+The current MVP scope is New York 1965-1985. Treat all suggestions as editorial
+drafts, not verified facts.
+
+Task:
+Analyze the SoundAtlas event below and propose search queries for YouTube,
+Spotify, and Qobuz. Focus on historically plausible media that could help users
+understand the event through sound, scene context, interviews, performances,
+documentary clips, artists, venues, years, labels, and related cultural terms.
+
+Safety and quality rules:
+- Do not invent media links, source URLs, video IDs, album IDs, or API results.
+- Do not mark anything as reviewed.
+- Do not include API keys, local paths, or secrets.
+- Prefer precise historical queries over generic genre queries.
+- Include the year or year range when it improves the query.
+- Use provider-specific intent: YouTube for video/interview/documentary/performance,
+  Spotify for tracks/albums/playlists, Qobuz for tracks/albums.
+- If a query is speculative, set confidence_hint to "low".
+- Return only JSON. Do not add prose outside the JSON.
+
+Input event:
+{
+  "id": "<event-id>",
+  "route_title": "<route title>",
+  "title": "<event title>",
+  "year_start": <year>,
+  "year_end": <year>,
+  "summary": "<event summary>",
+  "significance": "<why this matters>",
+  "tags": ["<tag>", "<tag>"],
+  "known_terms": ["<artist>", "<venue>", "<label>", "<release>"]
+}
+
+Return this JSON shape:
+{
+  "topic": "short topic label",
+  "mood": "short mood or scene description",
+  "target_audience": "who this media helps",
+  "keywords": ["keyword"],
+  "music_genres": ["genre"],
+  "queries": [
+    {
+      "provider": "youtube",
+      "query": "search query",
+      "intent": "video | interview | documentary | performance | track | album | playlist",
+      "reason": "why this query fits the event",
+      "confidence_hint": "high | medium | low"
+    }
+  ],
+  "review_notes": [
+    "specific risks or checks an editor should perform"
+  ]
+}
+```
+
+The Plus-only workflow is useful for editorial curation, but it is intentionally not a fully automated ranking system. That boundary keeps secrets out of the chat context and prevents automated links from becoming reviewed content without human approval.
 
 ## UX Concept
 
