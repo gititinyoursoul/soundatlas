@@ -40,6 +40,8 @@ test-results/
 *.db
 *.sqlite
 *.sqlite3
+data/enrichment/youtube-search-results/*.json
+!data/enrichment/youtube-search-results/.gitkeep
 
 # Logs
 *.log
@@ -56,3 +58,5 @@ IDEAS.md
 ideas.md
 .github/*
 !.github/copilot-instructions.md
+!.github/prompts/
+!.github/prompts/*.md
