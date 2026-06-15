@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document defines a stable conceptual schema for deriving YouTube search input from SoundAtlas events.
+This document defines a simple, stable schema for deriving YouTube search input from SoundAtlas events.
 
 The schema is intentionally separate from `data/seed/events.json`. Core event data should remain editorial product content, while retrieval metadata can evolve as the media pipeline improves.
 
@@ -38,6 +38,8 @@ data/seed/events.json
 
 Only selected media links are merged back into `events.json`. Intermediate search components, request plans, and search results stay in `data/enrichment/`.
 
+The next conceptual step is query planning, documented in `docs/media-retrieval-query-planning.md`.
+
 ## Stable Schema
 
 The object shape should stay stable across events. Individual arrays may be empty when a category does not apply.
@@ -46,24 +48,15 @@ The object shape should stay stable across events. Individual arrays may be empt
 {
   "event_id": "grandmaster-flash-dj-techniques",
   "event_type": "technique_development",
-  "primary_entities": {
+  "entities": {
     "artists": ["Grandmaster Flash"],
-    "groups": [],
-    "labels": [],
-    "tracks": [],
-    "albums": [],
-    "films": [],
+    "places": ["South Bronx", "Bronx", "New York"],
+    "works": [],
+    "organizations": [],
     "techniques": ["backspin", "punch phrasing", "precise mixing"],
     "historical_events": []
   },
-  "geo_entities": {
-    "cities": ["New York"],
-    "boroughs": ["Bronx"],
-    "neighborhoods": ["South Bronx"],
-    "venues": [],
-    "addresses": []
-  },
-  "associated_entities": {
+  "context": {
     "genres": ["hip hop"],
     "scenes": ["Bronx hip-hop"],
     "communities": [],
@@ -76,9 +69,9 @@ The object shape should stay stable across events. Individual arrays may be empt
     "year_end": 1977,
     "query_year_phrase": "1975 1977"
   },
-  "search_reliability": {
-    "high_confidence_terms": ["Grandmaster Flash", "turntablism"],
-    "context_terms": ["South Bronx", "hip hop", "Birth of Hip-Hop"],
+  "search_control": {
+    "strong_terms": ["Grandmaster Flash", "turntablism"],
+    "supporting_terms": ["South Bronx", "hip hop", "Birth of Hip-Hop"],
     "risky_terms": ["DJ techniques", "music history"],
     "avoid_terms": ["reaction", "tutorial", "karaoke", "cover", "AI cover"]
   },
@@ -105,34 +98,22 @@ These values are retrieval hints, not user-facing taxonomy.
 
 ## Entity Semantics
 
-### `primary_entities`
+### `entities`
 
-Use for terms that should drive high-priority queries:
+Use for concrete terms that can anchor YouTube queries:
 
-- `artists`: individual artists, DJs, producers, organizers.
-- `groups`: bands, crews, collectives, ensembles.
-- `labels`: labels or industry organizations.
-- `tracks`: specific songs or recordings.
-- `albums`: specific albums or releases.
-- `films`: specific films or documentaries.
+- `artists`: individual artists, DJs, producers, organizers, bands, groups, crews, collectives, or ensembles.
+- `places`: cities, boroughs, neighborhoods, venues, parks, clubs, studios, community rooms, or exact addresses.
+- `works`: tracks, albums, releases, films, documentaries, or other named works.
+- `organizations`: labels, institutions, crews, collectives, venues-as-organizations, media outlets, or industry entities.
 - `techniques`: musical, DJ, production, or performance techniques.
 - `historical_events`: named non-musical events relevant to the event context.
 
-### `geo_entities`
+This intentionally avoids over-modeling early. For YouTube search, `DJ Kool Herc` and `The Sugarhill Gang` often trigger similar intents, so both belong in `artists`. Likewise, `New York`, `Bronx`, and `1520 Sedgwick Avenue` can all be handled as `places`; query planning can still choose which terms are strong or supporting.
 
-Use for place information with different search weights:
+### `context`
 
-- `cities`: broad city context, for example `New York`.
-- `boroughs`: stronger than city context, for example `Bronx`.
-- `neighborhoods`: stronger again, for example `South Bronx`.
-- `venues`: specific clubs, parks, community rooms, studios, or cultural spaces.
-- `addresses`: exact addresses when historically meaningful.
-
-This separation matters because `New York` is broad, while `1520 Sedgwick Avenue` is a precise search anchor.
-
-### `associated_entities`
-
-Use for secondary context:
+Use for secondary terms that describe why an event matters:
 
 - `genres`: music genres.
 - `scenes`: named scenes or cultural formations.
@@ -148,12 +129,12 @@ Use event years as query context, not proof of relevance.
 - Single year: `query_year_phrase` should be `"1973"`.
 - Range: `query_year_phrase` should be `"1975 1977"`.
 
-### `search_reliability`
+### `search_control`
 
 Use to make query planning safer:
 
-- `high_confidence_terms`: precise terms likely to identify relevant material.
-- `context_terms`: useful context, but not enough for exact matching.
+- `strong_terms`: precise terms likely to identify relevant material.
+- `supporting_terms`: useful context, but not enough for exact matching.
 - `risky_terms`: broad or ambiguous terms that may create false positives.
 - `avoid_terms`: terms that often indicate poor YouTube results.
 
@@ -165,24 +146,15 @@ Use to make query planning safer:
 {
   "event_id": "caribbean-soundsystem-influences",
   "event_type": "scene_context",
-  "primary_entities": {
+  "entities": {
     "artists": [],
-    "groups": [],
-    "labels": [],
-    "tracks": [],
-    "albums": [],
-    "films": [],
+    "places": ["South Bronx", "Bronx", "New York"],
+    "works": [],
+    "organizations": [],
     "techniques": [],
     "historical_events": []
   },
-  "geo_entities": {
-    "cities": ["New York"],
-    "boroughs": ["Bronx"],
-    "neighborhoods": ["South Bronx"],
-    "venues": [],
-    "addresses": []
-  },
-  "associated_entities": {
+  "context": {
     "genres": ["hip hop"],
     "scenes": ["Caribbean sound system culture", "early Bronx hip-hop"],
     "communities": ["Caribbean", "African American", "Latino"],
@@ -199,24 +171,15 @@ Use to make query planning safer:
 {
   "event_id": "kool-herc-back-to-school-jam",
   "event_type": "symbolic_event",
-  "primary_entities": {
+  "entities": {
     "artists": ["DJ Kool Herc"],
-    "groups": [],
-    "labels": [],
-    "tracks": [],
-    "albums": [],
-    "films": [],
+    "places": ["1520 Sedgwick Avenue", "1520 Sedgwick Avenue community room", "Bronx", "New York"],
+    "works": [],
+    "organizations": [],
     "techniques": [],
     "historical_events": []
   },
-  "geo_entities": {
-    "cities": ["New York"],
-    "boroughs": ["Bronx"],
-    "neighborhoods": [],
-    "venues": ["1520 Sedgwick Avenue community room"],
-    "addresses": ["1520 Sedgwick Avenue"]
-  },
-  "associated_entities": {
+  "context": {
     "genres": ["hip hop"],
     "scenes": ["early Bronx hip-hop"],
     "communities": ["youth culture"],
@@ -233,24 +196,15 @@ Use to make query planning safer:
 {
   "event_id": "rappers-delight-mainstream-breakthrough",
   "event_type": "release",
-  "primary_entities": {
-    "artists": [],
-    "groups": ["The Sugarhill Gang"],
-    "labels": ["Sugar Hill Records"],
-    "tracks": ["Rapper's Delight"],
-    "albums": [],
-    "films": [],
+  "entities": {
+    "artists": ["The Sugarhill Gang"],
+    "places": ["New York", "Englewood"],
+    "works": ["Rapper's Delight"],
+    "organizations": ["Sugar Hill Records"],
     "techniques": [],
     "historical_events": []
   },
-  "geo_entities": {
-    "cities": ["New York", "Englewood"],
-    "boroughs": [],
-    "neighborhoods": [],
-    "venues": [],
-    "addresses": []
-  },
-  "associated_entities": {
+  "context": {
     "genres": ["rap", "hip hop"],
     "scenes": ["mainstream rap"],
     "communities": [],
@@ -267,24 +221,15 @@ Use to make query planning safer:
 {
   "event_id": "nyc-blackout-1977",
   "event_type": "historical_context",
-  "primary_entities": {
+  "entities": {
     "artists": [],
-    "groups": [],
-    "labels": [],
-    "tracks": [],
-    "albums": [],
-    "films": [],
+    "places": ["New York"],
+    "works": [],
+    "organizations": [],
     "techniques": [],
     "historical_events": ["1977 New York City blackout"]
   },
-  "geo_entities": {
-    "cities": ["New York"],
-    "boroughs": [],
-    "neighborhoods": [],
-    "venues": [],
-    "addresses": []
-  },
-  "associated_entities": {
+  "context": {
     "genres": [],
     "scenes": ["urban crisis context"],
     "communities": [],
@@ -297,12 +242,17 @@ Use to make query planning safer:
 
 ## Query Planning Implications
 
-- Artist or group present: consider `interview`, `documentary`, `live`, or `official_video`.
-- Track present: consider `song_or_track`, `official_video`, `live`, or `playlist`.
-- Venue or address present: consider `documentary`, `footage`, or `venue_context`.
-- Technique present: consider `documentary`, `interview`, or `demonstration`, but watch for tutorials.
-- Historical event present: consider `documentary` or archival context, not song search.
-- Only broad city context present: use it as a secondary term, not the query anchor.
+- `artists` present: consider `interview`, `documentary`, `artist_profile`, `live_performance`, or `official_music_video`.
+- `places` present: consider `venue_context`, `documentary`, `historical_context`, or archival footage.
+- `works` present: consider `official_track`, `official_music_video`, `album_or_film_context`, or `playlist_of_songs`.
+- `organizations` present: consider `documentary`, `label_context`, `scene_context`, or `playlist_of_songs`.
+- `techniques` present: consider `documentary`, `interview`, `dj_mix`, or demonstration-style queries, but watch for tutorials.
+- `historical_events` present: consider `historical_context` or `documentary`, not song search.
+- `context.genres`, `context.scenes`, and `context.practices` present: consider `playlist_of_songs`, `documentary`, or `dj_mix`.
+- `search_control.strong_terms` should anchor precise queries.
+- `search_control.supporting_terms` should enrich queries but not dominate them.
+- `search_control.risky_terms` should create review warnings.
+- `search_control.avoid_terms` should create negative-result checks.
 
 ## Non-Goals
 
