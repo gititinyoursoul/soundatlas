@@ -225,12 +225,14 @@ The merge script does not need provider credentials. The YouTube request runner 
 
 For YouTube search requests, the following rules apply:
 
-1. Query planning is stored as JSON request plans under `data/enrichment/youtube-search-requests/`.
-2. Request plans use `YOUTUBE_API_KEY` only as a placeholder.
-3. `run_youtube_search_requests.py` injects the real key at runtime and redacts it from written result files.
-4. Raw YouTube results are normalized into draft result files under `data/enrichment/youtube-search-results/`.
-5. `enrich_media_links.py` merges selected video and playlist candidates into `media_links`.
-6. Generated links remain `review_status: "draft"` until editorial review.
+1. Event search components are documented in `docs/media-retrieval-event-search-components.md`.
+2. Query planning is documented in `docs/media-retrieval-query-planning.md`.
+3. Query plans are stored as JSON request plans under `data/enrichment/youtube-search-requests/`.
+4. Request plans use `YOUTUBE_API_KEY` only as a placeholder.
+5. `run_youtube_search_requests.py` injects the real key at runtime and redacts it from written result files.
+6. Raw YouTube results are normalized into draft result files under `data/enrichment/youtube-search-results/`.
+7. `enrich_media_links.py` merges selected video and playlist candidates into `media_links`.
+8. Generated links remain `review_status: "draft"` until editorial review.
 
 ### Provider Behavior
 
