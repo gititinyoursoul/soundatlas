@@ -24,26 +24,26 @@ API target:
 GET https://www.googleapis.com/youtube/v3/search
 
 Supported query intents:
-- song_or_track: concrete songs, recordings, music videos, live clips, or performance-related uploads.
-- playlist_of_songs: YouTube playlists, mixes, or curated song collections that match the event context.
+- song: concrete songs, recordings, music videos, live clips, or performance-related uploads.
+- playlist: YouTube playlists, mixes, or curated song collections that match the event context.
 - dj_mix: DJ sets, break mixes, party mixes, turntablism demonstrations, or historically framed mixes.
 - documentary: explanatory videos, documentary excerpts, archival context, scene histories, or footage.
 - interview: artist, DJ, producer, venue, or oral-history interviews.
 
 Intent selection rules:
 - Include only intents that plausibly fit the event.
-- If the event has a specific artist, DJ, group, release, label, or track, prefer song_or_track and interview when relevant.
-- If the event is a broader scene, technique, neighborhood, venue, or context event, prefer documentary and playlist_of_songs.
+- If the event has a specific artist, DJ, group, release, label, or track, prefer song and interview when relevant.
+- If the event is a broader scene, technique, neighborhood, venue, or context event, prefer documentary and playlist.
 - If the event is about DJ practice, sound systems, breaks, parties, clubs, or turntablism, consider dj_mix when a mix could represent the sound-world without claiming to document the exact event.
-- If the event is about a specific release, prioritize song_or_track and use the release title in the query.
+- If the event is about a specific release, prioritize song and use the release title in the query.
 - If the event has no clear person to interview, omit interview or set confidence_hint to "low".
 - Do not force every intent into every event.
 
 Required API behavior per query candidate:
 - Use the YouTube Data API v3 search.list endpoint.
 - Use part=snippet.
-- Use type=video for song_or_track, dj_mix, documentary, and interview.
-- Use type=playlist for playlist_of_songs.
+- Use type=video for song, dj_mix, documentary, and interview.
+- Use type=playlist for playlist.
 - Use maxResults between 5 and 10.
 - Use order=relevance unless there is a clear reason to prefer date or viewCount.
 - Use safeSearch=moderate.
@@ -85,7 +85,7 @@ Write only this JSON shape to the output file:
   "editorial_status": "draft",
   "query_candidates": [
     {
-      "intent": "song_or_track",
+      "intent": "song",
       "media_goal": "Find a concrete song, recording, music video, live clip, or performance-related upload.",
       "youtube_type": "video",
       "q": "<plain text query before URL encoding>",
@@ -109,7 +109,7 @@ Write only this JSON shape to the output file:
       ]
     },
     {
-      "intent": "playlist_of_songs",
+      "intent": "playlist",
       "media_goal": "Find a YouTube playlist, mix, or curated song collection that matches the event context.",
       "youtube_type": "playlist",
       "q": "<plain text query before URL encoding>",

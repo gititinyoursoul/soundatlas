@@ -128,7 +128,7 @@ def test_build_dry_run_summary_uses_request_plan_without_secrets() -> None:
 
 def test_validate_request_plan_rejects_unsupported_intent(tmp_path) -> None:
     request_plan = build_valid_request_plan()
-    request_plan["query_candidates"][0]["intent"] = "playlist_of_songs"
+    request_plan["query_candidates"][0]["intent"] = "unsupported_legacy_intent"
 
     with pytest.raises(ValueError, match="unsupported intent"):
         validate_request_plan(request_plan, tmp_path / "request.json")
