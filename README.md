@@ -96,32 +96,33 @@ Die Validierungsregeln sind in `docs/seed-validation.md` dokumentiert. Events ve
 
 ## Medienlinks automatisch anreichern
 
-Das Enrichment-Skript liest `data/seed/events.json`, sucht passende Medienlinks ueber Provider-APIs und schreibt strukturierte `media_links` zurueck.
+Der aktuelle automatische Workflow fuer Medienanreicherung ist auf YouTube fokussiert und in zwei Schritte getrennt:
 
-Erforderliche Env Vars in der externen Secret-Datei je nach Provider:
+1. `run_youtube_search_requests.py` fuehrt kuratierte YouTube-Request-Plaene aus und schreibt normalisierte Draft-Ergebnisse nach `data/enrichment/youtube-search-results/`.
+2. `enrich_media_links.py` liest diese Ergebnisdateien und merged passende YouTube-Kandidaten als strukturierte `media_links` in `data/seed/events.json`.
+
+Erforderliche Env Vars fuer den YouTube-API-Schritt:
 
 - `YOUTUBE_API_KEY`
-- `SOUNDATLAS_OPENAI_API_KEY`
-- `SOUNDATLAS_OPENAI_MODEL`
-- `SPOTIFY_CLIENT_ID`
-- `SPOTIFY_CLIENT_SECRET`
-- `QOBUZ_APP_ID`
-- `QOBUZ_USER_AUTH_TOKEN`
+- `SOUNDATLAS_USE_DUMMY_SERVICES=false`
 
 Empfohlene Secret-Datei ausserhalb des Repos:
 
 ```powershell
 # C:\Users\*\secrets\soundatlas\.env
 YOUTUBE_API_KEY=your-real-youtube-key
-SOUNDATLAS_OPENAI_API_KEY=your-real-openai-key
-SOUNDATLAS_OPENAI_MODEL=gpt-4.1-mini
-SPOTIFY_CLIENT_ID=your-real-spotify-client-id
-SPOTIFY_CLIENT_SECRET=your-real-spotify-client-secret
-QOBUZ_APP_ID=your-real-qobuz-app-id
-QOBUZ_USER_AUTH_TOKEN=your-real-qobuz-user-token
+SOUNDATLAS_USE_DUMMY_SERVICES=false
 ```
 
-Ausfuehren:
+YouTube-Requests ausfuehren:
+
+```powershell
+cd backend
+$env:SOUNDATLAS_ENV_FILE='C:\Users\*\secrets\soundatlas\.env'
+uv run python scripts/run_youtube_search_requests.py
+```
+
+YouTube-Ergebnisse in Seed-Daten mergen:
 
 ```powershell
 cd backend
@@ -139,12 +140,12 @@ Ein einzelnes Event anreichern:
 
 ```powershell
 cd backend
-uv run python scripts/enrich_media_links.py --event-id grandmaster-flash
+uv run python scripts/enrich_media_links.py --event-id grandmaster-flash-dj-techniques
 ```
 
 Alle automatisch erzeugten Medienlinks bleiben `review_status: "draft"` und muessen redaktionell geprueft werden.
 
-Die YouTube-Suche laeuft ueber eine getrennte Content-Analyse-, Such- und Ranking-Pipeline. Der YouTube-Key wird nur im YouTube-Service verwendet; GPT-/LLM-Komponenten erhalten ausschliesslich Seitentext, Suchbegriffe und Video-Metadaten.
+`enrich_media_links.py` ruft keine Provider-APIs direkt auf. Es verarbeitet nur die normalisierten YouTube-Ergebnisse aus `run_youtube_search_requests.py`.
 
 ### Kuratierte YouTube-Search-Requests ausfuehren
 
@@ -165,19 +166,19 @@ $env:SOUNDATLAS_ENV_FILE='C:\Users\*\secrets\soundatlas\.env'
 uv run python scripts/run_youtube_search_requests.py --event-id grandmaster-flash-dj-techniques
 ```
 
-Die Ergebnisdateien sind generiert und bleiben aus Git ausgeschlossen. Uebernehme passende Treffer erst nach Review in `data/seed/events.json`.
+Die Ergebnisdateien sind generierte Draft-Daten. Uebernehme passende Treffer nur als `draft` in `data/seed/events.json` und markiere sie erst nach Review als `reviewed`.
 
 ### Medienlinks mit ChatGPT Plus und Codex Extension kuratieren
 
-Ein ChatGPT Plus Account ist kein API-Key fuer lokale Python-Skripte. Wenn du nur ChatGPT Plus ueber die VS Code Codex Extension verwendest, bleibt GPT ein interaktives Review- und Kurationswerkzeug. Das Enrichment-Skript kann dann weiterhin YouTube, Spotify und Qobuz ueber deren Provider-APIs abfragen, aber es nutzt deinen Plus-Account nicht automatisch als lokale GPT-Schnittstelle.
+Ein ChatGPT Plus Account ist kein API-Key fuer lokale Python-Skripte. Wenn du nur ChatGPT Plus ueber die VS Code Codex Extension verwendest, bleibt GPT ein interaktives Review- und Kurationswerkzeug. Das YouTube-Request-Skript nutzt nur einen echten `YOUTUBE_API_KEY`; dein Plus-Account wird nicht automatisch als lokale GPT-Schnittstelle verwendet.
 
 Empfohlener Plus-only Ablauf:
 
 1. Event im Seed-Datensatz auswaehlen, zum Beispiel aus `data/seed/events.json`.
 2. Codex in VS Code bitten, aus `title`, `summary`, `significance`, `tags`, Route und Jahr passende Suchqueries vorzuschlagen.
-3. Queries redaktionell pruefen und bei Bedarf in den Skript- oder Datenworkflow uebernehmen.
-4. Provider-Enrichment mit echten YouTube-/Spotify-/Qobuz-Keys aus der externen Secret-Datei als Dry Run ausfuehren.
-5. Die erzeugten `draft`-Links mit Codex/ChatGPT Plus bewerten lassen.
+3. Queries redaktionell pruefen und als YouTube-Request-Plan unter `data/enrichment/youtube-search-requests/` speichern.
+4. `run_youtube_search_requests.py --dry-run` ausfuehren und danach bei Bedarf echte YouTube-Ergebnisse abrufen.
+5. `enrich_media_links.py --dry-run` ausfuehren, um den Merge in `media_links` zu pruefen.
 6. Geeignete Links manuell auf `review_status: "reviewed"` setzen oder ungeeignete Links entfernen.
 
 Beispielprompt fuer Codex in VS Code:

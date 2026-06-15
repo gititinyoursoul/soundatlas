@@ -1,4 +1,5 @@
 import argparse
+import html
 import json
 import sys
 from pathlib import Path
@@ -8,69 +9,55 @@ BACKEND_ROOT = Path(__file__).resolve().parents[1]
 if str(BACKEND_ROOT) not in sys.path:
     sys.path.insert(0, str(BACKEND_ROOT))
 
-from app.media_enrichment.models import ContentPage, MediaLinkCandidate
-from app.media_enrichment.pipeline import (
-    ContentRecommendationPipeline,
-    collect_provider_candidates,
-    YouTubeRecommendationPipeline,
-    ranked_videos_to_media_links,
-)
-from app.media_enrichment.ranking import HeuristicVideoRanker
-from app.media_enrichment.services import (
-    AuxiliaryProvider,
-    HeuristicContentAnalyzer,
-    MediaProviderError,
-    YouTubeDataApiSearchService,
-    build_auxiliary_providers,
-)
-from app.media_enrichment.settings import MediaEnrichmentSettings
+from scripts.run_youtube_search_requests import DEFAULT_OUTPUT_DIR
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-SEED_DIR = REPO_ROOT / "data" / "seed"
-EVENTS_PATH = SEED_DIR / "events.json"
-ROUTES_PATH = SEED_DIR / "routes.json"
+EVENTS_PATH = REPO_ROOT / "data" / "seed" / "events.json"
+
+YOUTUBE_CONFIDENCE_HINTS = {
+    "high": 0.75,
+    "medium": 0.55,
+    "low": 0.35,
+}
+SUPPORTED_YOUTUBE_TYPES = {"video", "playlist"}
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Enrich SoundAtlas events with provider media links.",
+        description="Merge YouTube search result candidates into SoundAtlas event media links.",
     )
     parser.add_argument("--event-id", help="Only enrich one event.")
-    parser.add_argument("--limit", type=int, default=3, help="Candidates per provider.")
+    parser.add_argument(
+        "--results-dir",
+        type=Path,
+        default=DEFAULT_OUTPUT_DIR,
+        help="Directory containing normalized YouTube search result JSON files.",
+    )
+    parser.add_argument(
+        "--limit",
+        type=int,
+        default=3,
+        help="Maximum YouTube links to add per event.",
+    )
     parser.add_argument("--dry-run", action="store_true", help="Print changes without writing.")
     args = parser.parse_args()
 
-    try:
-        settings = MediaEnrichmentSettings.from_env()
-    except ValueError as exc:
-        print(str(exc), file=sys.stderr)
-        return 2
-
-    routes_payload = read_json(ROUTES_PATH)
     events_payload = read_json(EVENTS_PATH)
-    route_title_by_id = {
-        route["id"]: route["title"] for route in routes_payload.get("routes", [])
-    }
-    content_pipeline = build_content_pipeline()
-    youtube_pipeline = build_youtube_pipeline(settings, content_pipeline)
-    providers = build_auxiliary_providers(settings, args.limit)
+    youtube_result_payloads = load_youtube_result_payloads(
+        args.results_dir,
+        event_id=args.event_id,
+    )
 
-    if not youtube_pipeline and not providers:
-        print(
-            "No live provider credentials found. Set SOUNDATLAS_ENV_FILE or use mocks in tests.",
-            file=sys.stderr,
-        )
+    if not youtube_result_payloads:
+        print("No YouTube search results found.", file=sys.stderr)
         return 2
 
     changed_events = enrich_events_payload(
         events_payload=events_payload,
-        route_title_by_id=route_title_by_id,
+        youtube_result_payloads=youtube_result_payloads,
         event_id=args.event_id,
-        content_pipeline=content_pipeline,
-        youtube_pipeline=youtube_pipeline,
-        providers=providers,
-        provider_limit=args.limit,
+        limit=args.limit,
     )
 
     if args.dry_run:
@@ -89,95 +76,46 @@ def read_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def build_query(event: dict[str, Any], route_title: str) -> str:
-    years = (
-        str(event["year_start"])
-        if event["year_start"] == event["year_end"]
-        else f'{event["year_start"]} {event["year_end"]}'
-    )
-    terms = [
-        event["title"],
-        route_title,
-        years,
-        " ".join(event.get("tags", [])[:5]),
-        "music",
-    ]
-    return " ".join(term for term in terms if term).strip()
+def load_youtube_result_payloads(
+    results_dir: Path,
+    event_id: str | None = None,
+) -> list[dict[str, Any]]:
+    if not results_dir.exists():
+        return []
 
-
-def build_event_content_page(
-    event: dict[str, Any],
-    route_title: str,
-) -> ContentPage:
-    text_fragments = [
-        event.get("title", ""),
-        route_title,
-        event.get("summary", ""),
-        event.get("significance", ""),
-        " ".join(event.get("tags", [])),
-    ]
-    return ContentPage(
-        identifier=event["id"],
-        title=event["title"],
-        text=" ".join(fragment for fragment in text_fragments if fragment).strip(),
-        route_title=route_title,
-        summary=event.get("summary", ""),
-        tags=tuple(event.get("tags", [])),
-        year_start=event.get("year_start"),
-        year_end=event.get("year_end"),
-    )
+    result_payloads = []
+    for result_path in sorted(results_dir.glob("*.json")):
+        payload = read_json(result_path)
+        if payload.get("provider") != "youtube":
+            continue
+        if event_id and payload.get("event_id") != event_id:
+            continue
+        result_payloads.append(payload)
+    return result_payloads
 
 
 def enrich_events_payload(
     events_payload: dict[str, Any],
-    route_title_by_id: dict[str, str],
+    youtube_result_payloads: list[dict[str, Any]],
     event_id: str | None,
-    content_pipeline: ContentRecommendationPipeline,
-    youtube_pipeline: YouTubeRecommendationPipeline | None,
-    providers: list[AuxiliaryProvider],
-    provider_limit: int,
+    limit: int,
 ) -> int:
+    result_payload_by_event_id = {
+        payload["event_id"]: payload
+        for payload in youtube_result_payloads
+        if isinstance(payload.get("event_id"), str)
+    }
+
     changed_events = 0
     for event in events_payload.get("events", []):
         if event_id and event["id"] != event_id:
             continue
 
-        route_title = route_title_by_id.get(event["route_id"], "")
-        candidates: list[MediaLinkCandidate] = []
-        base_query = build_query(event, route_title)
-        content_page = build_event_content_page(event, route_title)
-        analysis, queries = content_pipeline.analyze_and_build_queries(
-            content_page,
-            fallback_query=base_query,
-            query_limit=max(3, min(provider_limit, 5)),
-        )
+        result_payload = result_payload_by_event_id.get(event["id"])
+        if not result_payload:
+            continue
 
-        if youtube_pipeline:
-            try:
-                _, ranked_videos = youtube_pipeline.recommend(
-                    content_page,
-                    analysis=analysis,
-                    queries=queries,
-                    query_limit=len(queries),
-                    results_per_query=provider_limit,
-                )
-                candidates.extend(ranked_videos_to_media_links(ranked_videos[:provider_limit]))
-            except MediaProviderError as exc:
-                print(f"youtube: {exc}", file=sys.stderr)
-
-        for provider in providers:
-            try:
-                candidates.extend(
-                    collect_provider_candidates(
-                        provider,
-                        queries,
-                        results_per_query=provider_limit,
-                        total_limit=provider_limit,
-                    ),
-                )
-            except MediaProviderError as exc:
-                print(f"{provider.name}: {exc}", file=sys.stderr)
-
+        candidates = extract_media_links_from_youtube_results(result_payload, limit=limit)
         if not candidates:
             continue
 
@@ -186,44 +124,94 @@ def enrich_events_payload(
         if merged_links != existing_links:
             event["media_links"] = merged_links
             changed_events += 1
+
     return changed_events
+
+
+def extract_media_links_from_youtube_results(
+    result_payload: dict[str, Any],
+    limit: int,
+) -> list[dict[str, Any]]:
+    candidates = []
+    for result_group in sorted(
+        result_payload.get("results", []),
+        key=lambda result: int(result.get("review_priority") or 999),
+    ):
+        confidence = confidence_hint_to_score(result_group.get("confidence_hint"))
+        for item in result_group.get("items", []):
+            candidate = build_media_link_from_youtube_item(item, result_group, confidence)
+            if candidate:
+                candidates.append(candidate)
+
+    return dedupe_media_links(candidates)[:limit]
+
+
+def build_media_link_from_youtube_item(
+    item: dict[str, Any],
+    result_group: dict[str, Any],
+    confidence: float,
+) -> dict[str, Any] | None:
+    media_type = str(item.get("type") or "").replace("youtube#", "")
+    if media_type not in SUPPORTED_YOUTUBE_TYPES:
+        return None
+
+    url = item.get("url")
+    title = item.get("title")
+    if not isinstance(url, str) or not url:
+        return None
+    if not isinstance(title, str) or not title:
+        return None
+
+    query = item.get("matched_query") or result_group.get("request", {}).get("params", {}).get("q")
+    if not isinstance(query, str):
+        query = ""
+
+    return {
+        "provider": "youtube",
+        "type": media_type,
+        "title": html.unescape(title),
+        "url": url,
+        "query": query,
+        "confidence": confidence,
+        "review_status": "draft",
+    }
+
+
+def confidence_hint_to_score(confidence_hint: Any) -> float:
+    if not isinstance(confidence_hint, str):
+        return 0.5
+    return YOUTUBE_CONFIDENCE_HINTS.get(confidence_hint.casefold(), 0.5)
 
 
 def merge_media_links(
     existing_links: list[dict[str, Any]],
-    candidates: list[MediaLinkCandidate],
+    candidates: list[dict[str, Any]],
 ) -> list[dict[str, Any]]:
-    links_by_url = {
-        link["url"]: link
+    links = [
+        link
         for link in existing_links
         if isinstance(link, dict) and isinstance(link.get("url"), str)
-    }
+    ]
+    seen_urls = {link["url"] for link in links}
 
     for candidate in candidates:
-        payload = candidate.to_payload()
-        links_by_url.setdefault(payload["url"], payload)
+        if candidate["url"] in seen_urls:
+            continue
+        links.append(candidate)
+        seen_urls.add(candidate["url"])
 
-    return sorted(
-        links_by_url.values(),
-        key=lambda link: (link["provider"], link["type"], -float(link["confidence"])),
-    )
-
-
-def build_content_pipeline() -> ContentRecommendationPipeline:
-    return ContentRecommendationPipeline(analyzer=HeuristicContentAnalyzer())
+    return links
 
 
-def build_youtube_pipeline(
-    settings: MediaEnrichmentSettings,
-    content_pipeline: ContentRecommendationPipeline,
-) -> YouTubeRecommendationPipeline | None:
-    if not settings.has_live_youtube_credentials:
-        return None
-    return YouTubeRecommendationPipeline(
-        analyzer=content_pipeline.analyzer,
-        youtube_search_service=YouTubeDataApiSearchService(settings.youtube_api_key or ""),
-        ranker=HeuristicVideoRanker(),
-    )
+def dedupe_media_links(media_links: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    deduped_links = []
+    seen_urls = set()
+    for media_link in media_links:
+        if media_link["url"] in seen_urls:
+            continue
+        deduped_links.append(media_link)
+        seen_urls.add(media_link["url"])
+    return deduped_links
 
 
 if __name__ == "__main__":

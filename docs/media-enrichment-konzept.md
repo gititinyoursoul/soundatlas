@@ -8,11 +8,10 @@ The MVP does not store audio or video files. It stores only external URLs and me
 
 ## Scope
 
-Media enrichment currently focuses on:
+Media enrichment currently uses a YouTube-first workflow:
 
-- YouTube for videos, performances, interviews, documentary excerpts, and search matches.
-- Spotify for tracks, albums, and playlists.
-- Qobuz for tracks and albums with a more curated music focus.
+- YouTube for videos, performances, interviews, documentary excerpts, playlists, and search matches.
+- Spotify and Qobuz remain part of the `media_links` schema, but are not part of the current automated merge script.
 
 These links are meant as exploration aids, not as a complete editorial discography.
 
@@ -137,6 +136,11 @@ Risks:
 - playlists may change over time
 - historical scenes are often represented only indirectly
 
+Current automation status:
+
+- not queried by `backend/scripts/enrich_media_links.py`
+- kept as a future provider option in the shared data model
+
 ### Qobuz
 
 Useful for:
@@ -150,9 +154,19 @@ Risks:
 - API and auth behavior may vary by account setup
 - catalog coverage is not equally strong across all genres
 
+Current automation status:
+
+- not queried by `backend/scripts/enrich_media_links.py`
+- kept as a future provider option in the shared data model
+
 ## Automation
 
-The current script is located at:
+The current automated workflow has two separate scripts:
+
+1. `backend/scripts/run_youtube_search_requests.py` executes curated YouTube `search.list` request plans.
+2. `backend/scripts/enrich_media_links.py` merges normalized YouTube result files into event `media_links`.
+
+The merge script is located at:
 
 ```powershell
 backend/scripts/enrich_media_links.py
@@ -179,16 +193,17 @@ cd backend
 uv run python scripts/enrich_media_links.py --event-id grandmaster-flash
 ```
 
-The script:
+The merge script:
 
 1. reads `data/seed/events.json`
-2. reads `data/seed/routes.json`
-3. builds a content-page-like input from event and route data
-4. analyzes that content into keywords, genres, and provider-agnostic search queries
-5. uses those queries across configured provider APIs
-6. applies provider-specific normalization and ranking
-7. deduplicates links by URL
-8. writes new links with `review_status: "draft"`
+2. reads normalized YouTube result files from `data/enrichment/youtube-search-results/`
+3. extracts YouTube video and playlist candidates
+4. sorts candidates by `review_priority`
+5. maps `confidence_hint` to the existing numeric `confidence` field
+6. deduplicates links by URL
+7. writes new links with `review_status: "draft"`
+
+It does not call provider APIs directly. YouTube API interaction happens only in `run_youtube_search_requests.py`.
 
 ## Environment Variables
 
@@ -196,48 +211,43 @@ Example values are documented in `.env.example`. For local Codex and test runs, 
 
 ```powershell
 SOUNDATLAS_USE_DUMMY_SERVICES=false
-SOUNDATLAS_OPENAI_MODEL=gpt-4.1-mini
 YOUTUBE_API_KEY=
-SOUNDATLAS_OPENAI_API_KEY=
-SPOTIFY_CLIENT_ID=
-SPOTIFY_CLIENT_SECRET=
-QOBUZ_APP_ID=
-QOBUZ_USER_AUTH_TOKEN=
+SOUNDATLAS_USE_DUMMY_SERVICES=false
 ```
 
 Real secrets must not live in the repository. Instead, an external file path is provided through `SOUNDATLAS_ENV_FILE`.
 
-Providers without live credentials are skipped. In dummy or test mode, mocks may be used without making real network requests.
+The merge script does not need provider credentials. The YouTube request runner needs a live YouTube key unless it is run in dry-run mode.
 
-## Secure Multi-Provider Recommendation Pipeline
+## YouTube Request Pipeline
 
-For content-page-based media recommendations, the following rules apply:
+For YouTube search requests, the following rules apply:
 
-1. Content text is analyzed and converted into topic, mood, keywords, genres, and search queries.
-2. The resulting search queries are reused across YouTube, Spotify, and Qobuz, instead of maintaining a separate content understanding step per provider.
-3. Only content text, generated search queries, and normalized media metadata are passed to GPT or other LLM components, never provider secrets.
-4. The YouTube API key is used only inside the YouTube search service. Spotify and Qobuz credentials stay inside their respective provider services.
-5. Search results are normalized into the shared `media_links` structure, with provider-specific metadata where available.
-6. Ranking can be heuristic or optionally handled through a mockable GPT or OpenAI-compatible interface.
+1. Query planning is stored as JSON request plans under `data/enrichment/youtube-search-requests/`.
+2. Request plans use `YOUTUBE_API_KEY` only as a placeholder.
+3. `run_youtube_search_requests.py` injects the real key at runtime and redacts it from written result files.
+4. Raw YouTube results are normalized into draft result files under `data/enrichment/youtube-search-results/`.
+5. `enrich_media_links.py` merges selected video and playlist candidates into `media_links`.
+6. Generated links remain `review_status: "draft"` until editorial review.
 
 ### Provider Behavior
 
-- `YouTube`: uses the shared content analysis, searches across multiple generated queries, normalizes richer video metadata, and applies explicit ranking with reasons.
-- `Spotify`: uses the same analyzed query set, searches tracks, albums, and playlists, and keeps only the strongest normalized candidates.
-- `Qobuz`: uses the same analyzed query set, searches tracks, albums, and playlists, and keeps only the strongest normalized candidates.
+- `YouTube`: uses curated request plans, supports video and playlist searches, normalizes search results, and keeps review metadata from the request plan.
+- `Spotify`: schema-supported, but not currently automated.
+- `Qobuz`: schema-supported, but not currently automated.
 
 ## ChatGPT Plus-Only Workflow
 
 A ChatGPT Plus account does not provide a local API key for Python scripts. If the project is used only through ChatGPT Plus and the VS Code Codex extension, GPT should be treated as an interactive editorial assistant, not as an automated backend service.
 
-In this mode, the automated script can still call YouTube, Spotify, and Qobuz through their provider APIs. GPT/Codex is used before and after that automated step:
+In this mode, GPT/Codex is used to prepare and review YouTube request plans. The actual YouTube API call still requires a real `YOUTUBE_API_KEY`:
 
 1. Select an event or content page from the curated seed data.
 2. Ask Codex in VS Code to analyze the title, summary, significance, route, tags, years, and known scene terms.
-3. Let Codex propose provider-specific search queries for YouTube, Spotify, and Qobuz.
-4. Review those queries manually before using them as editorial input.
-5. Run `backend/scripts/enrich_media_links.py --dry-run` with provider keys loaded from the external secret file.
-6. Review the generated `draft` links with Codex or ChatGPT Plus.
+3. Let Codex propose intent-based YouTube request-plan entries.
+4. Review those request plans manually before running the YouTube API.
+5. Run `backend/scripts/run_youtube_search_requests.py --dry-run` to inspect planned API calls.
+6. Run `backend/scripts/enrich_media_links.py --dry-run` to inspect the seed merge.
 7. Keep only plausible links, remove weak matches, and promote links to `reviewed` only after editorial review.
 
 Example Codex prompt:
@@ -248,8 +258,7 @@ The current MVP scope is New York 1965-1985. Treat all suggestions as editorial
 drafts, not verified facts.
 
 Task:
-Analyze the SoundAtlas event below and propose search queries for YouTube,
-Spotify, and Qobuz. Focus on historically plausible media that could help users
+Analyze the SoundAtlas event below and propose YouTube search queries. Focus on historically plausible media that could help users
 understand the event through sound, scene context, interviews, performances,
 documentary clips, artists, venues, years, labels, and related cultural terms.
 
@@ -259,8 +268,7 @@ Safety and quality rules:
 - Do not include API keys, local paths, or secrets.
 - Prefer precise historical queries over generic genre queries.
 - Include the year or year range when it improves the query.
-- Use provider-specific intent: YouTube for video/interview/documentary/performance,
-  Spotify for tracks/albums/playlists, Qobuz for tracks/albums.
+- Use YouTube-specific intent: video, interview, documentary, performance, playlist, or DJ mix.
 - If a query is speculative, set confidence_hint to "low".
 - Return only JSON. Do not add prose outside the JSON.
 
@@ -327,7 +335,8 @@ Already implemented:
 - structured `media_links` schema in the backend
 - TypeScript types for `media_links`
 - story panel labels by provider and media type
-- provider-agnostic content analysis pipeline for YouTube, Spotify, and Qobuz
+- curated YouTube request runner
+- YouTube result merge into event `media_links`
 - tests for the media link schema
 - seed validation documentation
 
