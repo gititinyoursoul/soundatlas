@@ -71,6 +71,7 @@ The current automated workflow is a YouTube-only MVP. It generates draft candida
 Important docs:
 
 - Workflow: `docs/media-retrieval/youtube-mvp-workflow.md`
+- Workflow Commands: `docs/media-retrieval/workflow-commands.md`
 - Event Search Components: `docs/media-retrieval/event-search-components.md`
 - Query Planning: `docs/media-retrieval/query-planning.md`
 - Codex Curation: `docs/media-retrieval/codex-query-curation.md`

@@ -29,6 +29,8 @@ Supported query intents:
 - dj_mix: DJ sets, break mixes, party mixes, turntablism demonstrations, or historically framed mixes.
 - documentary: explanatory videos, documentary excerpts, archival context, scene histories, or footage.
 - interview: artist, DJ, producer, venue, or oral-history interviews.
+- venue_context: videos that explain or document a historically relevant venue, club, block, park, neighborhood, or performance space.
+- historical_context: videos that explain or document a named historical event, scene shift, cultural moment, or local context.
 
 Intent selection rules:
 - Include only intents that plausibly fit the event.
@@ -36,13 +38,15 @@ Intent selection rules:
 - If the event is a broader scene, technique, neighborhood, venue, or context event, prefer documentary and playlist.
 - If the event is about DJ practice, sound systems, breaks, parties, clubs, or turntablism, consider dj_mix when a mix could represent the sound-world without claiming to document the exact event.
 - If the event is about a specific release, prioritize song and use the release title in the query.
+- If the event has a strong place, venue, or neighborhood component, consider venue_context.
+- If the event depends on a broader historical moment or named scene shift, consider historical_context.
 - If the event has no clear person to interview, omit interview or set confidence_hint to "low".
 - Do not force every intent into every event.
 
 Required API behavior per query candidate:
 - Use the YouTube Data API v3 search.list endpoint.
 - Use part=snippet.
-- Use type=video for song, dj_mix, documentary, and interview.
+- Use type=video for song, dj_mix, documentary, interview, venue_context, and historical_context.
 - Use type=playlist for playlist.
 - Use maxResults between 5 and 10.
 - Use order=relevance unless there is a clear reason to prefer date or viewCount.
@@ -77,7 +81,29 @@ Input event:
   "summary": "<event summary>",
   "significance": "<why this matters>",
   "tags": ["<tag>", "<tag>"],
-  "known_terms": ["<artist>", "<venue>", "<label>", "<release>"]
+  "event_search_components": {
+    "entities": {
+      "artists": ["<artist>"],
+      "places": ["<place or venue>"],
+      "works": ["<song, album, film, or release>"],
+      "organizations": ["<label, institution, crew, or club>"],
+      "techniques": ["<technique or practice>"],
+      "historical_events": ["<historical event or scene shift>"]
+    },
+    "context": {
+      "genres": ["<genre>"],
+      "scenes": ["<scene>"],
+      "practices": ["<practice>"]
+    },
+    "time_context": {
+      "query_year_phrase": "<year or year range>"
+    },
+    "search_control": {
+      "strong_terms": ["<must-use term>"],
+      "supporting_terms": ["<useful term>"],
+      "avoid_terms": ["<term to avoid>"]
+    }
+  }
 }
 
 Write only this JSON shape to the output file:
@@ -90,6 +116,7 @@ Write only this JSON shape to the output file:
     {
       "intent": "song",
       "media_goal": "Find a concrete song, recording, music video, live clip, or performance-related upload.",
+      "priority": 1,
       "youtube_type": "video",
       "q": "<plain text query before URL encoding>",
       "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=<url-encoded-query>&key=YOUTUBE_API_KEY",
@@ -114,6 +141,7 @@ Write only this JSON shape to the output file:
     {
       "intent": "playlist",
       "media_goal": "Find a YouTube playlist, mix, or curated song collection that matches the event context.",
+      "priority": 2,
       "youtube_type": "playlist",
       "q": "<plain text query before URL encoding>",
       "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=playlist&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=<url-encoded-query>&key=YOUTUBE_API_KEY",
@@ -138,6 +166,7 @@ Write only this JSON shape to the output file:
     {
       "intent": "dj_mix",
       "media_goal": "Find a DJ set, break mix, party mix, turntablism demonstration, or historically framed mix.",
+      "priority": 2,
       "youtube_type": "video",
       "q": "<plain text query before URL encoding>",
       "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=<url-encoded-query>&key=YOUTUBE_API_KEY",
@@ -162,6 +191,7 @@ Write only this JSON shape to the output file:
     {
       "intent": "documentary",
       "media_goal": "Find explanatory video, documentary context, archival footage, or scene history.",
+      "priority": 1,
       "youtube_type": "video",
       "q": "<plain text query before URL encoding>",
       "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=<url-encoded-query>&key=YOUTUBE_API_KEY",
@@ -186,6 +216,57 @@ Write only this JSON shape to the output file:
     {
       "intent": "interview",
       "media_goal": "Find artist, DJ, producer, venue, or oral-history interview material.",
+      "priority": 2,
+      "youtube_type": "video",
+      "q": "<plain text query before URL encoding>",
+      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=<url-encoded-query>&key=YOUTUBE_API_KEY",
+      "request_params": {
+        "part": "snippet",
+        "type": "video",
+        "maxResults": 8,
+        "order": "relevance",
+        "safeSearch": "moderate",
+        "relevanceLanguage": "en",
+        "regionCode": "US",
+        "q": "<plain text query before URL encoding>",
+        "key": "YOUTUBE_API_KEY"
+      },
+      "confidence_hint": "high | medium | low",
+      "review_priority": 2,
+      "reason": "Why this query fits the event and intent.",
+      "review_risks": [
+        "Specific checks an editor should perform for this query."
+      ]
+    },
+    {
+      "intent": "venue_context",
+      "media_goal": "Find context about a relevant venue, club, block, park, neighborhood, or performance space.",
+      "priority": 2,
+      "youtube_type": "video",
+      "q": "<plain text query before URL encoding>",
+      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=<url-encoded-query>&key=YOUTUBE_API_KEY",
+      "request_params": {
+        "part": "snippet",
+        "type": "video",
+        "maxResults": 8,
+        "order": "relevance",
+        "safeSearch": "moderate",
+        "relevanceLanguage": "en",
+        "regionCode": "US",
+        "q": "<plain text query before URL encoding>",
+        "key": "YOUTUBE_API_KEY"
+      },
+      "confidence_hint": "high | medium | low",
+      "review_priority": 2,
+      "reason": "Why this query fits the event and intent.",
+      "review_risks": [
+        "Specific checks an editor should perform for this query."
+      ]
+    },
+    {
+      "intent": "historical_context",
+      "media_goal": "Find context about a named historical event, scene shift, cultural moment, or local history.",
+      "priority": 2,
       "youtube_type": "video",
       "q": "<plain text query before URL encoding>",
       "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=<url-encoded-query>&key=YOUTUBE_API_KEY",
