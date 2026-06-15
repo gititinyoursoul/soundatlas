@@ -23,7 +23,35 @@
       "source_urls": [
         "https://americanhistory.si.edu/press/releases/hip-hop-comes-smithsonian"
       ],
-      "media_links": [],
+      "media_links": [
+        {
+          "provider": "youtube",
+          "type": "video",
+          "title": "The Insane New York Subway's in 1980 #shorts",
+          "url": "https://www.youtube.com/watch?v=1I6d3kOTXBA",
+          "query": "Caribbean sound system culture Bronx hip hop origins 1967 1972 documentary",
+          "confidence": 0.55,
+          "review_status": "draft"
+        },
+        {
+          "provider": "youtube",
+          "type": "video",
+          "title": "Harlem Manhattan, N.Y. Block Party 1967",
+          "url": "https://www.youtube.com/watch?v=IZ47YLP8hH4",
+          "query": "South Bronx neighborhood parties sound system culture hip hop origins 1967 1972",
+          "confidence": 0.35,
+          "review_status": "draft"
+        },
+        {
+          "provider": "youtube",
+          "type": "video",
+          "title": "70's MIX By Bronx Remixer",
+          "url": "https://www.youtube.com/watch?v=8KUgtj3IKTk",
+          "query": "South Bronx neighborhood parties sound system culture hip hop origins 1967 1972",
+          "confidence": 0.35,
+          "review_status": "draft"
+        }
+      ],
       "image_links": []
     },
     {
@@ -46,7 +74,35 @@
         "https://www.museumofplay.org/blog/indelibly-marked-crayons-records-and-grandmaster-flash/",
         "https://www.britannica.com/art/hip-hop"
       ],
-      "media_links": [],
+      "media_links": [
+        {
+          "provider": "youtube",
+          "type": "playlist",
+          "title": "Funk Classics 70's & 80's",
+          "url": "https://www.youtube.com/playlist?list=PLBA986EF6C0FAA1D9",
+          "query": "classic funk disco breaks early hip hop DJ playlist 1970 1973",
+          "confidence": 0.55,
+          "review_status": "draft"
+        },
+        {
+          "provider": "youtube",
+          "type": "playlist",
+          "title": "70s pure raw funk!!",
+          "url": "https://www.youtube.com/playlist?list=PLFK9SMgFPIoCUt9SyJFywfuevkiCbnpkr",
+          "query": "classic funk disco breaks early hip hop DJ playlist 1970 1973",
+          "confidence": 0.55,
+          "review_status": "draft"
+        },
+        {
+          "provider": "youtube",
+          "type": "playlist",
+          "title": "Late 70s Soul, Funk & Disco Music | Playlist | Hits | Best | Soul | Funk | Disco | 1970s | Classics | Late 1970s",
+          "url": "https://www.youtube.com/playlist?list=PLcM4ZwI542CriszmMjt8HSOJ-dVzKo3O3",
+          "query": "classic funk disco breaks early hip hop DJ playlist 1970 1973",
+          "confidence": 0.55,
+          "review_status": "draft"
+        }
+      ],
       "image_links": []
     },
     {
@@ -68,7 +124,35 @@
       "source_urls": [
         "https://www.history.com/this-day-in-history/hip-hop-is-born-at-a-birthday-party-in-the-bronx"
       ],
-      "media_links": [],
+      "media_links": [
+        {
+          "provider": "youtube",
+          "type": "video",
+          "title": "Birthplace of Hip Hop - Sedgwick & Cedar",
+          "url": "https://www.youtube.com/watch?v=eTkbF6dRdoE",
+          "query": "DJ Kool Herc 1520 Sedgwick Avenue 1973 hip hop origins documentary",
+          "confidence": 0.75,
+          "review_status": "draft"
+        },
+        {
+          "provider": "youtube",
+          "type": "video",
+          "title": "DJ Kool Herc and the birth of hip-hop | Christie's",
+          "url": "https://www.youtube.com/watch?v=Jdb3MTz7xXg",
+          "query": "DJ Kool Herc 1520 Sedgwick Avenue 1973 hip hop origins documentary",
+          "confidence": 0.75,
+          "review_status": "draft"
+        },
+        {
+          "provider": "youtube",
+          "type": "video",
+          "title": "#7: The Birthplace of #HipHop, 1520 Sedgwick Avenue - And The Rest is #history  | #popculture #music",
+          "url": "https://www.youtube.com/watch?v=oc2dIuSZY7k",
+          "query": "DJ Kool Herc 1520 Sedgwick Avenue 1973 hip hop origins documentary",
+          "confidence": 0.75,
+          "review_status": "draft"
+        }
+      ],
       "image_links": []
     },
     {
@@ -91,7 +175,35 @@
         "https://americanhistory.si.edu/press/releases/hip-hop-comes-smithsonian",
         "https://www.museumofplay.org/blog/indelibly-marked-crayons-records-and-grandmaster-flash/"
       ],
-      "media_links": [],
+      "media_links": [
+        {
+          "provider": "youtube",
+          "type": "video",
+          "title": "1979 -1984 OLD SCHOOL HIP HOP BLOCK PARTY MIX by DJ TNT SOUNDS",
+          "url": "https://www.youtube.com/watch?v=Zta1Le1Q-iI",
+          "query": "early hip hop breakbeat DJ mix Bronx block party 1974 1976",
+          "confidence": 0.75,
+          "review_status": "draft"
+        },
+        {
+          "provider": "youtube",
+          "type": "video",
+          "title": "Manu Dibango - Senga (DJ Kool Herc REMIX)",
+          "url": "https://www.youtube.com/watch?v=pctbxNrJhvU",
+          "query": "early hip hop breakbeat DJ mix Bronx block party 1974 1976",
+          "confidence": 0.75,
+          "review_status": "draft"
+        },
+        {
+          "provider": "youtube",
+          "type": "video",
+          "title": "Ghetto Disco & Other Galactic Funk 1974-1979 - DJ Destruction (Vinyl Mix)",
+          "url": "https://www.youtube.com/watch?v=jfM3bxtfQSQ",
+          "query": "early hip hop breakbeat DJ mix Bronx block party 1974 1976",
+          "confidence": 0.75,
+          "review_status": "draft"
+        }
+      ],
       "image_links": []
     },
     {
@@ -114,7 +226,35 @@
         "https://www.si.edu/object/technics-turntable-used-grandmaster-flash%3Anmah_1301251",
         "https://www.namm.org/library/oral-history/dj-grandmaster-flash"
       ],
-      "media_links": [],
+      "media_links": [
+        {
+          "provider": "youtube",
+          "type": "video",
+          "title": "Hip-Hop Evolution - \"Grandmaster Flash\" The Origin of Scratching on Vinyl",
+          "url": "https://www.youtube.com/watch?v=oA-OpvH4CIQ",
+          "query": "Grandmaster Flash DJ techniques turntablism backspin documentary 1975 1977",
+          "confidence": 0.75,
+          "review_status": "draft"
+        },
+        {
+          "provider": "youtube",
+          "type": "video",
+          "title": "Grandmaster Flash & The Furious Five • The Story • 1982",
+          "url": "https://www.youtube.com/watch?v=yp7aofqa8CQ",
+          "query": "Grandmaster Flash 1975 1977 interview",
+          "confidence": 0.75,
+          "review_status": "draft"
+        },
+        {
+          "provider": "youtube",
+          "type": "video",
+          "title": "Grandmaster Flash Heats Up The Turn Tables In 1975 #Shorts #BETHipHop50 #HipHop",
+          "url": "https://www.youtube.com/watch?v=qzg6OLk0yrE",
+          "query": "Grandmaster Flash 1975 1977 interview",
+          "confidence": 0.75,
+          "review_status": "draft"
+        }
+      ],
       "image_links": []
     },
     {
