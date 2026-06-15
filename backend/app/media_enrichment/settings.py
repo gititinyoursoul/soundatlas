@@ -7,12 +7,6 @@ from app.config import DEFAULT_CODEX_ENV_FILE
 
 ALLOWED_ENV_KEYS = {
     "YOUTUBE_API_KEY",
-    "SPOTIFY_CLIENT_ID",
-    "SPOTIFY_CLIENT_SECRET",
-    "QOBUZ_APP_ID",
-    "QOBUZ_USER_AUTH_TOKEN",
-    "SOUNDATLAS_OPENAI_API_KEY",
-    "SOUNDATLAS_OPENAI_MODEL",
     "SOUNDATLAS_USE_DUMMY_SERVICES",
 }
 
@@ -43,12 +37,6 @@ class MediaEnrichmentSettings:
     env_file: Path | None
     use_dummy_services: bool
     youtube_api_key: str | None = None
-    spotify_client_id: str | None = None
-    spotify_client_secret: str | None = None
-    qobuz_app_id: str | None = None
-    qobuz_user_auth_token: str | None = None
-    openai_api_key: str | None = None
-    openai_model: str = "gpt-4.1-mini"
 
     @classmethod
     def from_env(
@@ -74,37 +62,11 @@ class MediaEnrichmentSettings:
             env_file=env_file,
             use_dummy_services=use_dummy_services,
             youtube_api_key=merged_values.get("YOUTUBE_API_KEY") or None,
-            spotify_client_id=merged_values.get("SPOTIFY_CLIENT_ID") or None,
-            spotify_client_secret=merged_values.get("SPOTIFY_CLIENT_SECRET") or None,
-            qobuz_app_id=merged_values.get("QOBUZ_APP_ID") or None,
-            qobuz_user_auth_token=merged_values.get("QOBUZ_USER_AUTH_TOKEN") or None,
-            openai_api_key=merged_values.get("SOUNDATLAS_OPENAI_API_KEY") or None,
-            openai_model=merged_values.get("SOUNDATLAS_OPENAI_MODEL", "gpt-4.1-mini"),
         )
 
     @property
     def has_live_youtube_credentials(self) -> bool:
         return bool(self.youtube_api_key) and not self.use_dummy_services
-
-    @property
-    def has_live_spotify_credentials(self) -> bool:
-        return (
-            bool(self.spotify_client_id)
-            and bool(self.spotify_client_secret)
-            and not self.use_dummy_services
-        )
-
-    @property
-    def has_live_qobuz_credentials(self) -> bool:
-        return (
-            bool(self.qobuz_app_id)
-            and bool(self.qobuz_user_auth_token)
-            and not self.use_dummy_services
-        )
-
-    @property
-    def has_openai_credentials(self) -> bool:
-        return bool(self.openai_api_key)
 
 
 def resolve_env_file(
