@@ -66,7 +66,9 @@ The review status is the primary safety boundary. Automation may write links, bu
 
 ## Matching Rules
 
-Queries are built from existing event data:
+Queries should be planned from structured event search components, not directly from raw event text. The reference schema is documented in `docs/media-retrieval-event-search-components.md`.
+
+Search components are derived from existing event data:
 
 - `event.title`
 - `route.title`

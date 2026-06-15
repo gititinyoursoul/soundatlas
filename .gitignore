@@ -56,6 +56,7 @@ Thumbs.db
 .vscode/
 IDEAS.md
 ideas.md
+media_retrieval_pipeline_todo.md
 .github/*
 !.github/copilot-instructions.md
 !.github/prompts/
