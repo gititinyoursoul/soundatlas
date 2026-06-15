@@ -81,7 +81,7 @@
       ]
     },
     {
-      "intent": "song_or_track",
+      "intent": "song",
       "media_goal": "Find a concrete song, recording, music video, live clip, or performance-related upload.",
       "youtube_type": "video",
       "q": "Grandmaster Flash Wheels of Steel turntablism performance 1975 1977",
@@ -106,7 +106,7 @@
       ]
     },
     {
-      "intent": "playlist_of_songs",
+      "intent": "playlist",
       "media_goal": "Find a YouTube playlist, mix, or curated song collection that matches the event context.",
       "youtube_type": "playlist",
       "q": "Grandmaster Flash early hip hop DJ breaks playlist 1975 1977",

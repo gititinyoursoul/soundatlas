@@ -81,7 +81,7 @@
       ]
     },
     {
-      "intent": "playlist_of_songs",
+      "intent": "playlist",
       "media_goal": "Find a YouTube playlist, mix, or curated song collection that matches the event context.",
       "youtube_type": "playlist",
       "q": "DJ Kool Herc early hip hop breaks Bronx party playlist 1973",
@@ -108,7 +108,7 @@
   ],
   "omitted_intents": [
     {
-      "intent": "song_or_track",
+      "intent": "song",
       "reason": "The event is a party and origin-story context, not a specific recording or release."
     }
   ],

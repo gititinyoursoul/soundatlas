@@ -56,7 +56,7 @@
       ]
     },
     {
-      "intent": "playlist_of_songs",
+      "intent": "playlist",
       "media_goal": "Find a YouTube playlist, mix, or curated song collection that matches the event context.",
       "youtube_type": "playlist",
       "q": "early hip hop breakbeat block party playlist Bronx 1974 1976",
@@ -83,7 +83,7 @@
   ],
   "omitted_intents": [
     {
-      "intent": "song_or_track",
+      "intent": "song",
       "reason": "No specific song, artist, or release is named in the event."
     },
     {

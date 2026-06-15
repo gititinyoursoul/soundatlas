@@ -76,7 +76,7 @@ def test_normalize_youtube_search_items_supports_playlists() -> None:
             ],
         },
         {
-            "intent": "playlist_of_songs",
+            "intent": "playlist",
             "youtube_type": "playlist",
             "q": "early hip hop breaks playlist 1973",
         },

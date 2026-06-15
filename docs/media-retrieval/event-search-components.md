@@ -242,13 +242,15 @@ Use to make query planning safer:
 
 ## Query Planning Implications
 
-- `artists` present: consider `interview`, `documentary`, `artist_profile`, `live_performance`, or `official_music_video`.
-- `places` present: consider `venue_context`, `documentary`, `historical_context`, or archival footage.
-- `works` present: consider `official_track`, `official_music_video`, `album_or_film_context`, or `playlist_of_songs`.
-- `organizations` present: consider `documentary`, `label_context`, `scene_context`, or `playlist_of_songs`.
-- `techniques` present: consider `documentary`, `interview`, `dj_mix`, or demonstration-style queries, but watch for tutorials.
+Use only the MVP YouTube intents from `docs/media-retrieval/youtube-mvp-workflow.md`:
+
+- `artists` present: consider `interview` or `documentary`.
+- `places` present: consider `venue_context` or `documentary`.
+- `works` present: consider `song`.
+- `organizations` present: consider `documentary` or `playlist`.
+- `techniques` present: consider `documentary` or `dj_mix`, but watch for tutorials.
 - `historical_events` present: consider `historical_context` or `documentary`, not song search.
-- `context.genres`, `context.scenes`, and `context.practices` present: consider `playlist_of_songs`, `documentary`, or `dj_mix`.
+- `context.genres`, `context.scenes`, and `context.practices` present: consider `playlist`, `documentary`, or `dj_mix`.
 - `search_control.strong_terms` should anchor precise queries.
 - `search_control.supporting_terms` should enrich queries but not dominate them.
 - `search_control.risky_terms` should create review warnings.

@@ -6,7 +6,7 @@
   "query_strategy": "Multiple YouTube search.list requests, each targeting a specific media intent.",
   "query_candidates": [
     {
-      "intent": "playlist_of_songs",
+      "intent": "playlist",
       "media_goal": "Find a YouTube playlist, mix, or curated song collection that matches the event context.",
       "youtube_type": "playlist",
       "q": "classic funk disco breaks early hip hop DJ playlist 1970 1973",
@@ -81,7 +81,7 @@
       ]
     },
     {
-      "intent": "song_or_track",
+      "intent": "song",
       "media_goal": "Find a concrete song, recording, music video, live clip, or performance-related upload.",
       "youtube_type": "video",
       "q": "classic breakbeat funk disco records early hip hop DJs 1970 1973",

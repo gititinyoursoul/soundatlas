@@ -8,10 +8,9 @@ The MVP does not store audio or video files. It stores only external URLs and me
 
 ## Scope
 
-Media enrichment currently uses a YouTube-first workflow:
+Media enrichment currently uses a YouTube-only MVP workflow:
 
 - YouTube for videos, performances, interviews, documentary excerpts, playlists, and search matches.
-- Spotify and Qobuz remain part of the `media_links` schema, but are not part of the current automated merge script.
 
 These links are meant as exploration aids, not as a complete editorial discography.
 
@@ -44,13 +43,9 @@ Events use the `media_links` field. Each entry is a structured object.
 ### Providers
 
 - `youtube`
-- `spotify`
-- `qobuz`
 
 ### Types
 
-- `track`
-- `album`
 - `playlist`
 - `video`
 - `search`
@@ -85,7 +80,15 @@ Examples:
 
 ## Confidence
 
-`confidence` is a value between `0` and `1`.
+`confidence` remains a compatibility field in `media_links`, but it should not be treated as editorial truth.
+
+For the YouTube MVP, request plans use `confidence_hint`:
+
+- `high`
+- `medium`
+- `low`
+
+The merge script maps these hints to numeric values only because the current seed schema still requires `confidence`.
 
 High confidence:
 
@@ -123,43 +126,6 @@ Risks:
 - uploads may disappear
 - rights status and channel quality vary
 - a high number of results requires review
-
-### Spotify
-
-Useful for:
-
-- tracks
-- albums
-- curated or algorithmic playlists
-
-Risks:
-
-- availability varies by country
-- playlists may change over time
-- historical scenes are often represented only indirectly
-
-Current automation status:
-
-- not queried by `backend/scripts/enrich_media_links.py`
-- kept as a future provider option in the shared data model
-
-### Qobuz
-
-Useful for:
-
-- albums
-- tracks
-- more editorially stable catalog entries
-
-Risks:
-
-- API and auth behavior may vary by account setup
-- catalog coverage is not equally strong across all genres
-
-Current automation status:
-
-- not queried by `backend/scripts/enrich_media_links.py`
-- kept as a future provider option in the shared data model
 
 ## Automation
 
@@ -214,7 +180,6 @@ Example values are documented in `.env.example`. For local Codex and test runs, 
 ```powershell
 SOUNDATLAS_USE_DUMMY_SERVICES=false
 YOUTUBE_API_KEY=
-SOUNDATLAS_USE_DUMMY_SERVICES=false
 ```
 
 Real secrets must not live in the repository. Instead, an external file path is provided through `SOUNDATLAS_ENV_FILE`.
@@ -225,20 +190,19 @@ The merge script does not need provider credentials. The YouTube request runner 
 
 For YouTube search requests, the following rules apply:
 
-1. Event search components are documented in `docs/media-retrieval/event-search-components.md`.
-2. Query planning is documented in `docs/media-retrieval/query-planning.md`.
-3. Query plans are stored as JSON request plans under `data/enrichment/youtube-search-requests/`.
-4. Request plans use `YOUTUBE_API_KEY` only as a placeholder.
-5. `run_youtube_search_requests.py` injects the real key at runtime and redacts it from written result files.
-6. Raw YouTube results are normalized into draft result files under `data/enrichment/youtube-search-results/`.
-7. `enrich_media_links.py` merges selected video and playlist candidates into `media_links`.
-8. Generated links remain `review_status: "draft"` until editorial review.
+1. The simplified MVP workflow is documented in `docs/media-retrieval/youtube-mvp-workflow.md`.
+2. Event search components are documented in `docs/media-retrieval/event-search-components.md`.
+3. Query planning is documented in `docs/media-retrieval/query-planning.md`.
+4. Query plans are stored as JSON request plans under `data/enrichment/youtube-search-requests/`.
+5. Request plans use `YOUTUBE_API_KEY` only as a placeholder.
+6. `run_youtube_search_requests.py` injects the real key at runtime and redacts it from written result files.
+7. Raw YouTube results are normalized into draft result files under `data/enrichment/youtube-search-results/`.
+8. `enrich_media_links.py` merges selected video and playlist candidates into `media_links`.
+9. Generated links remain `review_status: "draft"` until editorial review.
 
 ### Provider Behavior
 
 - `YouTube`: uses curated request plans, supports video and playlist searches, normalizes search results, and keeps review metadata from the request plan.
-- `Spotify`: schema-supported, but not currently automated.
-- `Qobuz`: schema-supported, but not currently automated.
 
 ## ChatGPT Plus-Only Workflow
 
@@ -254,7 +218,9 @@ In this mode, GPT/Codex is used to prepare and review YouTube request plans. The
 6. Run `backend/scripts/enrich_media_links.py --dry-run` to inspect the seed merge.
 7. Keep only plausible links, remove weak matches, and promote links to `reviewed` only after editorial review.
 
-Example Codex prompt:
+For the MVP, prefer the dedicated prompt in `.github/prompts/youtube-search-list-media.md` over ad-hoc prompts.
+
+Example minimal Codex prompt:
 
 ```text
 You are helping curate media links for SoundAtlas, an interactive music history app.
@@ -262,17 +228,16 @@ The current MVP scope is New York 1965-1985. Treat all suggestions as editorial
 drafts, not verified facts.
 
 Task:
-Analyze the SoundAtlas event below and propose YouTube search queries. Focus on historically plausible media that could help users
-understand the event through sound, scene context, interviews, performances,
-documentary clips, artists, venues, years, labels, and related cultural terms.
+Analyze the SoundAtlas event below and propose YouTube search queries. Use only these MVP intents:
+song, interview, documentary, playlist, dj_mix, venue_context, historical_context.
 
 Safety and quality rules:
-- Do not invent media links, source URLs, video IDs, album IDs, or API results.
+- Do not invent media links, source URLs, video IDs, playlist IDs, or API results.
 - Do not mark anything as reviewed.
 - Do not include API keys, local paths, or secrets.
 - Prefer precise historical queries over generic genre queries.
 - Include the year or year range when it improves the query.
-- Use YouTube-specific intent: video, interview, documentary, performance, playlist, or DJ mix.
+- Use YouTube-specific intent: song, interview, documentary, playlist, dj_mix, venue_context, or historical_context.
 - If a query is speculative, set confidence_hint to "low".
 - Return only JSON. Do not add prose outside the JSON.
 
@@ -300,7 +265,7 @@ Return this JSON shape:
     {
       "provider": "youtube",
       "query": "search query",
-      "intent": "video | interview | documentary | performance | track | album | playlist",
+      "intent": "song | interview | documentary | playlist | dj_mix | venue_context | historical_context",
       "reason": "why this query fits the event",
       "confidence_hint": "high | medium | low"
     }
@@ -318,9 +283,6 @@ The Plus-only workflow is useful for editorial curation, but it is intentionally
 The story panel displays media links with provider-aware labeling:
 
 - `YouTube video`
-- `Spotify track`
-- `Spotify playlist`
-- `Qobuz album`
 
 In the normal user-facing experience, only `reviewed` links should eventually appear prominently. `draft` links may remain visible in internal review views.
 
@@ -339,6 +301,7 @@ Already implemented:
 - structured `media_links` schema in the backend
 - TypeScript types for `media_links`
 - story panel labels by provider and media type
+- simplified YouTube MVP workflow documentation
 - curated YouTube request runner
 - YouTube result merge into event `media_links`
 - tests for the media link schema
@@ -349,4 +312,4 @@ Still useful:
 - define a review workflow from `draft` to `reviewed`
 - evaluate frontend filtering for unreviewed media links
 - improve logging and reporting for enrichment runs
-- make source quality measurable per provider
+- make YouTube source/channel quality easier to review

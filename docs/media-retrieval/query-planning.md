@@ -4,7 +4,7 @@
 
 Query planning is the step between structured event search components and concrete YouTube API requests.
 
-The planner should not call the YouTube API. It should produce reviewable request plans that explain:
+The planner should not call the YouTube API. For the MVP, it should produce simple reviewable YouTube request plans that explain:
 
 - which provider is searched
 - which media intent is searched
@@ -94,7 +94,7 @@ The query plan should stay close to the existing YouTube request-plan files. The
   ],
   "omitted_intents": [
     {
-      "intent": "official_track",
+      "intent": "song",
       "reason": "The event does not name a specific recording."
     }
   ],
@@ -113,9 +113,9 @@ Use a small set of query types:
 - `context`: targets interviews, documentaries, scene history, or venue context.
 - `discovery`: broad exploration such as playlists, DJ mixes, or scene overviews.
 
-Default storage rule:
+Default MVP storage rule:
 
-- `precise` and strong `context` queries can produce candidates for `media_links`.
+- `precise` and strong `context` queries can produce draft candidates for `media_links`.
 - `discovery` queries should remain lower priority and require stricter review.
 
 ## Intent Selection
@@ -124,30 +124,25 @@ The planner should derive intents from `docs/media-retrieval/event-search-compon
 
 | Component | Eligible YouTube Intents | Default Priority |
 | --- | --- | --- |
-| `entities.artists` | `interview`, `artist_profile`, `live_performance`, `documentary` | 1 |
-| `entities.places` | `venue_context`, `documentary`, `historical_context` | 1-2 |
-| `entities.works` | `official_track`, `official_music_video`, `documentary`, `playlist_of_songs` | 1 |
-| `entities.organizations` | `label_context`, `documentary`, `playlist_of_songs` | 2 |
-| `entities.techniques` | `documentary`, `interview`, `dj_mix` | 1-2 |
+| `entities.artists` | `interview`, `documentary` | 1 |
+| `entities.places` | `venue_context`, `documentary` | 1-2 |
+| `entities.works` | `song` | 1 |
+| `entities.organizations` | `documentary`, `playlist` | 2 |
+| `entities.techniques` | `documentary`, `dj_mix` | 1-2 |
 | `entities.historical_events` | `historical_context`, `documentary` | 1 |
-| `context.genres/scenes/practices` | `playlist_of_songs`, `documentary`, `dj_mix` | 2-3 |
+| `context.genres/scenes/practices` | `playlist`, `documentary`, `dj_mix` | 2-3 |
 
 Do not force every intent onto every event. Empty or weak components should lead to omitted intents.
 
-## Supported YouTube Intents
+## Supported MVP YouTube Intents
 
-- `official_track`
-- `official_music_video`
-- `live_performance`
+- `song`
 - `interview`
 - `documentary`
-- `playlist_of_songs`
+- `playlist`
 - `dj_mix`
-- `artist_profile`
 - `venue_context`
 - `historical_context`
-- `label_context`
-- `album_or_film_context`
 
 ## Term Selection Rules
 
@@ -189,17 +184,15 @@ Input component summary:
 
 Recommended planned intents:
 
-- Priority 1: `official_track`
-- Priority 1: `official_music_video`
+- Priority 1: `song`
 - Priority 2: `interview`
-- Priority 2: `label_context`
+- Priority 2: `documentary`
 - Omit: `venue_context`
 - Omit: `historical_context`
 
 Example queries:
 
 - `The Sugarhill Gang Rapper's Delight 1979`
-- `Rapper's Delight official video 1979`
 - `The Sugarhill Gang 1979 interview`
 - `Sugar Hill Records Rapper's Delight documentary`
 
