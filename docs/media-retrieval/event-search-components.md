@@ -11,7 +11,7 @@ The schema is intentionally separate from `data/seed/events.json`. Core event da
 Use this document as the schema reference first:
 
 ```text
-docs/media-retrieval-event-search-components.md
+docs/media-retrieval/event-search-components.md
 ```
 
 Once the structure is stable, generated or curated component files can live under:
@@ -38,7 +38,7 @@ data/seed/events.json
 
 Only selected media links are merged back into `events.json`. Intermediate search components, request plans, and search results stay in `data/enrichment/`.
 
-The next conceptual step is query planning, documented in `docs/media-retrieval-query-planning.md`.
+The next conceptual step is query planning, documented in `docs/media-retrieval/query-planning.md`.
 
 ## Stable Schema
 

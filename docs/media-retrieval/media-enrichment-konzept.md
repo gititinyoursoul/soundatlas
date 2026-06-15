@@ -66,7 +66,7 @@ The review status is the primary safety boundary. Automation may write links, bu
 
 ## Matching Rules
 
-Queries should be planned from structured event search components, not directly from raw event text. The reference schema is documented in `docs/media-retrieval-event-search-components.md`.
+Queries should be planned from structured event search components, not directly from raw event text. The reference schema is documented in `docs/media-retrieval/event-search-components.md`.
 
 Search components are derived from existing event data:
 
@@ -225,8 +225,8 @@ The merge script does not need provider credentials. The YouTube request runner 
 
 For YouTube search requests, the following rules apply:
 
-1. Event search components are documented in `docs/media-retrieval-event-search-components.md`.
-2. Query planning is documented in `docs/media-retrieval-query-planning.md`.
+1. Event search components are documented in `docs/media-retrieval/event-search-components.md`.
+2. Query planning is documented in `docs/media-retrieval/query-planning.md`.
 3. Query plans are stored as JSON request plans under `data/enrichment/youtube-search-requests/`.
 4. Request plans use `YOUTUBE_API_KEY` only as a placeholder.
 5. `run_youtube_search_requests.py` injects the real key at runtime and redacts it from written result files.
