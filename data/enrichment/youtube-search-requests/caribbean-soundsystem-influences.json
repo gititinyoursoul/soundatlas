@@ -28,7 +28,8 @@
       "review_risks": [
         "Check that results connect Caribbean sound-system practice to Bronx hip-hop rather than only covering Jamaican sound systems in isolation.",
         "Prefer museum, archive, educational, or oral-history channels over unsourced compilations."
-      ]
+      ],
+      "priority": 1
     },
     {
       "intent": "dj_mix",
@@ -53,7 +54,8 @@
       "review_risks": [
         "Check that the mix is historically framed and not only a modern genre blend.",
         "Use as contextual listening, not as evidence for the event."
-      ]
+      ],
+      "priority": 3
     },
     {
       "intent": "playlist",
@@ -78,7 +80,8 @@
       "review_risks": [
         "Check for modern reggae or dancehall playlists that do not fit the 1967-1972 historical context.",
         "Do not treat playlist inclusion as evidence without separate sourcing."
-      ]
+      ],
+      "priority": 3
     }
   ],
   "omitted_intents": [

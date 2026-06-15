@@ -28,7 +28,8 @@
       "review_risks": [
         "Check that results focus on Grandmaster Flash's techniques rather than generic DJ tutorials.",
         "Prefer archival, museum, interview, or documented oral-history sources."
-      ]
+      ],
+      "priority": 1
     },
     {
       "intent": "dj_mix",
@@ -53,7 +54,8 @@
       "review_risks": [
         "Check whether the result is Grandmaster Flash or a historically framed demonstration.",
         "Avoid generic turntablism videos that do not connect to Grandmaster Flash or early hip-hop."
-      ]
+      ],
+      "priority": 1
     },
     {
       "intent": "interview",
@@ -78,7 +80,8 @@
       "review_risks": [
         "Check whether the interview includes technique discussion, not only career overview.",
         "Corroborate technical claims with museum or music-history sources before treating them as authoritative."
-      ]
+      ],
+      "priority": 1
     },
     {
       "intent": "song",
@@ -103,7 +106,8 @@
       "review_risks": [
         "Check the date and framing before linking this to the 1975-1977 event window.",
         "Do not imply the recording itself occurred during the event's date range unless independently sourced."
-      ]
+      ],
+      "priority": 2
     },
     {
       "intent": "playlist",
@@ -128,7 +132,8 @@
       "review_risks": [
         "Check whether playlist contents are historically plausible for the event's technique focus.",
         "Use as contextual listening rather than direct evidence of technique development."
-      ]
+      ],
+      "priority": 3
     }
   ],
   "omitted_intents": [],

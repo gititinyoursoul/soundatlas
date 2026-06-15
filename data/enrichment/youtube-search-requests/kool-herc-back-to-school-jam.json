@@ -28,7 +28,8 @@
       "review_risks": [
         "Check whether videos distinguish the historical event from later anniversary coverage.",
         "Prefer sources that cite the date, 1520 Sedgwick Avenue, or DJ Kool Herc directly."
-      ]
+      ],
+      "priority": 1
     },
     {
       "intent": "interview",
@@ -53,7 +54,8 @@
       "review_risks": [
         "Check whether the interview is with Kool Herc or a reliable historian, not only a generic hip-hop commentator.",
         "Do not treat memory-based claims as sufficient without external source support."
-      ]
+      ],
+      "priority": 1
     },
     {
       "intent": "dj_mix",
@@ -78,7 +80,8 @@
       "review_risks": [
         "Check whether the mix is presented as a reconstruction, tribute, or general context.",
         "Do not imply the mix documents the actual Back-to-School Jam."
-      ]
+      ],
+      "priority": 2
     },
     {
       "intent": "playlist",
@@ -103,7 +106,8 @@
       "review_risks": [
         "Check whether playlist descriptions claim evidence for specific tracks.",
         "Keep playlist links framed as context, not as a documented set list."
-      ]
+      ],
+      "priority": 2
     }
   ],
   "omitted_intents": [

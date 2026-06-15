@@ -28,7 +28,8 @@
       "review_risks": [
         "Check that playlists focus on historically relevant funk, soul, disco, and breakbeat material rather than modern remixes.",
         "Verify whether individual tracks have a plausible relationship to early hip-hop DJ practice."
-      ]
+      ],
+      "priority": 1
     },
     {
       "intent": "dj_mix",
@@ -53,7 +54,8 @@
       "review_risks": [
         "Check that the mix uses historically relevant funk, soul, or disco breaks.",
         "Avoid modern remixes unless clearly framed as contextual reconstruction."
-      ]
+      ],
+      "priority": 1
     },
     {
       "intent": "documentary",
@@ -78,7 +80,8 @@
       "review_risks": [
         "Check that results discuss DJ use of breaks rather than only general funk or disco history.",
         "Prefer results that cite artists, DJs, records, or archival context."
-      ]
+      ],
+      "priority": 2
     },
     {
       "intent": "song",
@@ -103,7 +106,8 @@
       "review_risks": [
         "Check individual tracks against external sources before tying them to the event.",
         "Avoid treating generic breakbeat uploads as curated historical evidence."
-      ]
+      ],
+      "priority": 2
     }
   ],
   "omitted_intents": [

@@ -18,6 +18,17 @@ DEFAULT_REQUEST_DIR = REPO_ROOT / "data" / "enrichment" / "youtube-search-reques
 DEFAULT_OUTPUT_DIR = REPO_ROOT / "data" / "enrichment" / "youtube-search-results"
 YOUTUBE_SEARCH_URL = "https://www.googleapis.com/youtube/v3/search"
 API_KEY_PLACEHOLDER = "YOUTUBE_API_KEY"
+SUPPORTED_YOUTUBE_INTENTS = {
+    "song",
+    "interview",
+    "documentary",
+    "playlist",
+    "dj_mix",
+    "venue_context",
+    "historical_context",
+}
+SUPPORTED_YOUTUBE_TYPES = {"video", "playlist"}
+SUPPORTED_CONFIDENCE_HINTS = {"high", "medium", "low"}
 
 
 def main() -> int:
@@ -123,11 +134,42 @@ def validate_request_plan(request_plan: dict[str, Any], path: Path) -> None:
         raise ValueError(f"{path} must contain query_candidates.")
 
     for index, candidate in enumerate(candidates):
+        intent = candidate.get("intent")
+        if intent not in SUPPORTED_YOUTUBE_INTENTS:
+            raise ValueError(f"{path} candidate {index} has unsupported intent.")
+
+        youtube_type = candidate.get("youtube_type")
+        if youtube_type not in SUPPORTED_YOUTUBE_TYPES:
+            raise ValueError(f"{path} candidate {index} has unsupported youtube_type.")
+
+        query = candidate.get("q")
+        if not isinstance(query, str) or not query.strip():
+            raise ValueError(f"{path} candidate {index} must contain a non-empty q.")
+
+        confidence_hint = candidate.get("confidence_hint")
+        if confidence_hint not in SUPPORTED_CONFIDENCE_HINTS:
+            raise ValueError(f"{path} candidate {index} has unsupported confidence_hint.")
+
+        for priority_field in ["priority", "review_priority"]:
+            priority = candidate.get(priority_field)
+            if not isinstance(priority, int) or priority < 1:
+                raise ValueError(
+                    f"{path} candidate {index} must contain a positive {priority_field}.",
+                )
+
         params = candidate.get("request_params")
         if not isinstance(params, dict):
             raise ValueError(f"{path} candidate {index} must contain request_params.")
         if params.get("part") != "snippet":
             raise ValueError(f"{path} candidate {index} must use part=snippet.")
+        if params.get("type") != youtube_type:
+            raise ValueError(
+                f"{path} candidate {index} request_params.type must match youtube_type.",
+            )
+        if params.get("q") != query:
+            raise ValueError(
+                f"{path} candidate {index} request_params.q must match q.",
+            )
         if params.get("key") != API_KEY_PLACEHOLDER:
             raise ValueError(
                 f"{path} candidate {index} must use {API_KEY_PLACEHOLDER} as key.",

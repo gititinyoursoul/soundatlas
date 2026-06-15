@@ -28,7 +28,8 @@
       "review_risks": [
         "Check that results address Bronx party practice or breakbeat DJing rather than later breakbeat genres.",
         "Prefer results that connect DJing, b-boying, and block-party culture."
-      ]
+      ],
+      "priority": 1
     },
     {
       "intent": "dj_mix",
@@ -53,7 +54,8 @@
       "review_risks": [
         "Check whether the mix is historically framed around early hip-hop rather than later breakbeat styles.",
         "Use it as sound context, not as documentation of a specific party."
-      ]
+      ],
+      "priority": 1
     },
     {
       "intent": "playlist",
@@ -78,7 +80,8 @@
       "review_risks": [
         "Check for modern breakbeat or electronic playlists that do not match the 1974-1976 Bronx context.",
         "Use playlist links as listening context, not as proof of specific party playlists."
-      ]
+      ],
+      "priority": 2
     }
   ],
   "omitted_intents": [

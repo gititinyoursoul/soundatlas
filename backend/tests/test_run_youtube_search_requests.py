@@ -1,7 +1,10 @@
+import pytest
+
 from scripts.run_youtube_search_requests import (
     build_dry_run_summary,
     normalize_youtube_search_items,
     run_request_plan,
+    validate_request_plan,
 )
 
 
@@ -32,6 +35,7 @@ def test_run_request_plan_injects_key_and_writes_redacted_results() -> None:
                 {
                     "intent": "interview",
                     "media_goal": "Find interview material.",
+                    "priority": 1,
                     "confidence_hint": "high",
                     "review_priority": 1,
                     "reason": "Direct artist query.",
@@ -77,7 +81,10 @@ def test_normalize_youtube_search_items_supports_playlists() -> None:
         },
         {
             "intent": "playlist",
+            "priority": 2,
             "youtube_type": "playlist",
+            "confidence_hint": "medium",
+            "review_priority": 2,
             "q": "early hip hop breaks playlist 1973",
         },
     )
@@ -95,7 +102,10 @@ def test_build_dry_run_summary_uses_request_plan_without_secrets() -> None:
             "query_candidates": [
                 {
                     "intent": "documentary",
+                    "priority": 1,
                     "youtube_type": "video",
+                    "confidence_hint": "high",
+                    "review_priority": 1,
                     "q": "DJ Kool Herc 1973 documentary",
                     "get_request": "https://example.test?key=YOUTUBE_API_KEY",
                 },
@@ -111,6 +121,51 @@ def test_build_dry_run_summary_uses_request_plan_without_secrets() -> None:
                 "youtube_type": "video",
                 "q": "DJ Kool Herc 1973 documentary",
                 "get_request": "https://example.test?key=YOUTUBE_API_KEY",
+            },
+        ],
+    }
+
+
+def test_validate_request_plan_rejects_unsupported_intent(tmp_path) -> None:
+    request_plan = build_valid_request_plan()
+    request_plan["query_candidates"][0]["intent"] = "playlist_of_songs"
+
+    with pytest.raises(ValueError, match="unsupported intent"):
+        validate_request_plan(request_plan, tmp_path / "request.json")
+
+
+def test_validate_request_plan_rejects_mismatched_query(tmp_path) -> None:
+    request_plan = build_valid_request_plan()
+    request_plan["query_candidates"][0]["request_params"]["q"] = "different query"
+
+    with pytest.raises(ValueError, match="request_params.q"):
+        validate_request_plan(request_plan, tmp_path / "request.json")
+
+
+def build_valid_request_plan() -> dict:
+    return {
+        "event_id": "grandmaster-flash-dj-techniques",
+        "query_candidates": [
+            {
+                "intent": "interview",
+                "media_goal": "Find interview material.",
+                "priority": 1,
+                "youtube_type": "video",
+                "confidence_hint": "high",
+                "review_priority": 1,
+                "reason": "Direct artist query.",
+                "q": "Grandmaster Flash 1975 1977 interview",
+                "request_params": {
+                    "part": "snippet",
+                    "type": "video",
+                    "maxResults": 8,
+                    "order": "relevance",
+                    "safeSearch": "moderate",
+                    "relevanceLanguage": "en",
+                    "regionCode": "US",
+                    "q": "Grandmaster Flash 1975 1977 interview",
+                    "key": "YOUTUBE_API_KEY",
+                },
             },
         ],
     }
