@@ -22,6 +22,39 @@ uv run python scripts/run_youtube_search_requests.py --event-id <event-id> --dry
 6. Run the live YouTube request only after the plan looks correct.
 7. Merge results with `enrich_media_links.py --dry-run` before writing seed changes.
 
+## Compatibility With `enrich_media_links.py`
+
+`backend/scripts/enrich_media_links.py` is compatible with the Plus-only workflow for the merge step, but it does not replace the YouTube API step.
+
+The script expects normalized YouTube result files under:
+
+```text
+data/enrichment/youtube-search-results/<event-id>.json
+```
+
+It does not read YouTube request plans from:
+
+```text
+data/enrichment/youtube-search-requests/<event-id>.json
+```
+
+This means:
+
+- Codex/ChatGPT Plus can help create and review request plans.
+- `run_youtube_search_requests.py --dry-run` can validate those plans without an API key.
+- Real result files still require either a live `YOUTUBE_API_KEY` run or manually prepared normalized result JSON.
+- `enrich_media_links.py` only merges existing normalized results into `data/seed/events.json`.
+- All merged links stay `review_status: "draft"`.
+
+Recommended Plus-only check:
+
+```powershell
+cd backend
+uv run python scripts/enrich_media_links.py --event-id <event-id> --dry-run
+```
+
+If this returns `No YouTube search results found.`, the merge step is not blocked by Codex. It simply has no normalized result file to consume yet.
+
 ## Prompt Template
 
 ```text

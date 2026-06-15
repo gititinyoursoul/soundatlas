@@ -51,6 +51,7 @@ Required API behavior per query candidate:
 - Use regionCode=US.
 - Use key=YOUTUBE_API_KEY as a placeholder only.
 - URL-encode all query parameters in get_request.
+- Do not use videoDuration=short. The MVP should prefer full videos and playlists over Shorts.
 
 Search quality rules:
 - Build precise q values from historically meaningful terms.
@@ -60,6 +61,8 @@ Search quality rules:
 - Avoid repeating the same qualifier, such as interview, across unrelated intents.
 - For interview queries, use only the explicit artist, DJ, producer, venue, or group plus the event year or year range plus the word "interview". Do not add extra scene, technique, genre, or context keywords to interview queries.
 - Avoid generic queries like "hip hop music" unless the event itself is generic.
+- Do not create queries that target Shorts, short-form clips, reaction shorts, teaser clips, or hashtag-based short videos.
+- Do not include `shorts`, `short`, `#shorts`, `clip`, or `reaction` as positive search terms unless the historical event explicitly requires that term.
 - Do not invent video IDs, playlist IDs, channel IDs, source URLs, or search results.
 - Do not include real API keys, secrets, local paths, or credentials.
 - Do not mark anything as reviewed.
@@ -213,6 +216,7 @@ Write only this JSON shape to the output file:
   ],
   "review_notes": [
     "Check whether results are historically relevant before adding links.",
+    "Reject YouTube Shorts, reaction shorts, teaser clips, and unrelated short-form uploads.",
     "Keep all automatically found links as draft until editorial review.",
     "Verify channel/source quality before promoting any media link to reviewed."
   ]
