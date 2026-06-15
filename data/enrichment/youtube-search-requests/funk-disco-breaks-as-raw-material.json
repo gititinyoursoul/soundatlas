@@ -8,9 +8,10 @@
     {
       "intent": "playlist",
       "media_goal": "Find a YouTube playlist, mix, or curated song collection that matches the event context.",
+      "priority": 1,
       "youtube_type": "playlist",
       "q": "classic funk disco breaks early hip hop DJ playlist 1970 1973",
-      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=playlist&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=classic%20funk%20disco%20breaks%20early%20hip%20hop%20DJ%20playlist%201970%201973&key=YOUTUBE_API_KEY",
+      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=playlist&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=classic+funk+disco+breaks+early+hip+hop+DJ+playlist+1970+1973&key=YOUTUBE_API_KEY",
       "request_params": {
         "part": "snippet",
         "type": "playlist",
@@ -22,21 +23,20 @@
         "q": "classic funk disco breaks early hip hop DJ playlist 1970 1973",
         "key": "YOUTUBE_API_KEY"
       },
-      "confidence_hint": "high",
+      "confidence_hint": "medium",
       "review_priority": 1,
-      "reason": "The event is about records and breaks as raw material, so curated break playlists are a strong media fit.",
+      "reason": "The event is about records and breaks becoming reusable DJ material, so a curated playlist fits the sound context.",
       "review_risks": [
-        "Check that playlists focus on historically relevant funk, soul, disco, and breakbeat material rather than modern remixes.",
-        "Verify whether individual tracks have a plausible relationship to early hip-hop DJ practice."
-      ],
-      "priority": 1
+        "Check for modern generic funk playlists that do not connect to early hip-hop DJ practice."
+      ]
     },
     {
       "intent": "dj_mix",
       "media_goal": "Find a DJ set, break mix, party mix, turntablism demonstration, or historically framed mix.",
+      "priority": 1,
       "youtube_type": "video",
       "q": "classic funk disco breaks early hip hop DJ mix 1970 1973",
-      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=classic%20funk%20disco%20breaks%20early%20hip%20hop%20DJ%20mix%201970%201973&key=YOUTUBE_API_KEY",
+      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=classic+funk+disco+breaks+early+hip+hop+DJ+mix+1970+1973&key=YOUTUBE_API_KEY",
       "request_params": {
         "part": "snippet",
         "type": "video",
@@ -48,21 +48,20 @@
         "q": "classic funk disco breaks early hip hop DJ mix 1970 1973",
         "key": "YOUTUBE_API_KEY"
       },
-      "confidence_hint": "high",
+      "confidence_hint": "medium",
       "review_priority": 1,
-      "reason": "The event is specifically about DJs using breaks, so a break-focused DJ mix is a strong way to represent the sound-world.",
+      "reason": "A DJ mix can represent how breaks were sequenced and extended for dance floors.",
       "review_risks": [
-        "Check that the mix uses historically relevant funk, soul, or disco breaks.",
-        "Avoid modern remixes unless clearly framed as contextual reconstruction."
-      ],
-      "priority": 1
+        "Use as contextual sound material, not as evidence of a specific historical set."
+      ]
     },
     {
       "intent": "documentary",
       "media_goal": "Find explanatory video, documentary context, archival footage, or scene history.",
+      "priority": 2,
       "youtube_type": "video",
       "q": "funk disco breaks early hip hop DJ culture documentary 1970 1973",
-      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=funk%20disco%20breaks%20early%20hip%20hop%20DJ%20culture%20documentary%201970%201973&key=YOUTUBE_API_KEY",
+      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=funk+disco+breaks+early+hip+hop+DJ+culture+documentary+1970+1973&key=YOUTUBE_API_KEY",
       "request_params": {
         "part": "snippet",
         "type": "video",
@@ -76,19 +75,18 @@
       },
       "confidence_hint": "medium",
       "review_priority": 2,
-      "reason": "Documentary material can explain how DJs used breaks and why those records mattered to party practice.",
+      "reason": "Documentary context can explain how breaks became building blocks for DJ culture.",
       "review_risks": [
-        "Check that results discuss DJ use of breaks rather than only general funk or disco history.",
-        "Prefer results that cite artists, DJs, records, or archival context."
-      ],
-      "priority": 2
+        "Reject unrelated funk or disco histories that do not discuss breaks or early hip-hop."
+      ]
     },
     {
       "intent": "song",
       "media_goal": "Find a concrete song, recording, music video, live clip, or performance-related upload.",
+      "priority": 2,
       "youtube_type": "video",
       "q": "classic breakbeat funk disco records early hip hop DJs 1970 1973",
-      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=classic%20breakbeat%20funk%20disco%20records%20early%20hip%20hop%20DJs%201970%201973&key=YOUTUBE_API_KEY",
+      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=classic+breakbeat+funk+disco+records+early+hip+hop+DJs+1970+1973&key=YOUTUBE_API_KEY",
       "request_params": {
         "part": "snippet",
         "type": "video",
@@ -100,24 +98,52 @@
         "q": "classic breakbeat funk disco records early hip hop DJs 1970 1973",
         "key": "YOUTUBE_API_KEY"
       },
-      "confidence_hint": "medium",
+      "confidence_hint": "low",
       "review_priority": 2,
-      "reason": "The event centers on recorded breaks, so track-level results may be useful even though no single release is named.",
+      "reason": "The event references records broadly, not one title; this query may surface representative breakbeat recordings.",
       "review_risks": [
-        "Check individual tracks against external sources before tying them to the event.",
-        "Avoid treating generic breakbeat uploads as curated historical evidence."
-      ],
-      "priority": 2
+        "Do not treat any single result as the definitive source record for the event."
+      ]
+    },
+    {
+      "intent": "historical_context",
+      "media_goal": "Find context about a named historical event, scene shift, cultural moment, or local history.",
+      "priority": 3,
+      "youtube_type": "video",
+      "q": "breakbeats funk disco records hip hop origins 1970 1973 history",
+      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=breakbeats+funk+disco+records+hip+hop+origins+1970+1973+history&key=YOUTUBE_API_KEY",
+      "request_params": {
+        "part": "snippet",
+        "type": "video",
+        "maxResults": 8,
+        "order": "relevance",
+        "safeSearch": "moderate",
+        "relevanceLanguage": "en",
+        "regionCode": "US",
+        "q": "breakbeats funk disco records hip hop origins 1970 1973 history",
+        "key": "YOUTUBE_API_KEY"
+      },
+      "confidence_hint": "medium",
+      "review_priority": 3,
+      "reason": "The event benefits from broader historical explanation of how breakbeats entered hip-hop practice.",
+      "review_risks": [
+        "Check that results discuss DJ use of breaks rather than later breakbeat genres."
+      ]
     }
   ],
   "omitted_intents": [
     {
       "intent": "interview",
-      "reason": "The event names no specific person whose oral history should drive the query."
+      "reason": "The event does not name a specific artist, DJ, producer, or venue."
+    },
+    {
+      "intent": "venue_context",
+      "reason": "The event is music-material focused rather than place-focused."
     }
   ],
   "review_notes": [
     "Check whether results are historically relevant before adding links.",
+    "Reject YouTube Shorts, reaction shorts, teaser clips, and unrelated short-form uploads.",
     "Keep all automatically found links as draft until editorial review.",
     "Verify channel/source quality before promoting any media link to reviewed."
   ]

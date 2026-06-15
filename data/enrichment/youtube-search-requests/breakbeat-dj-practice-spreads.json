@@ -8,9 +8,10 @@
     {
       "intent": "documentary",
       "media_goal": "Find explanatory video, documentary context, archival footage, or scene history.",
+      "priority": 1,
       "youtube_type": "video",
       "q": "breakbeat DJing Bronx block parties 1974 1976 documentary",
-      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=breakbeat%20DJing%20Bronx%20block%20parties%201974%201976%20documentary&key=YOUTUBE_API_KEY",
+      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=breakbeat+DJing+Bronx+block+parties+1974+1976+documentary&key=YOUTUBE_API_KEY",
       "request_params": {
         "part": "snippet",
         "type": "video",
@@ -24,19 +25,18 @@
       },
       "confidence_hint": "medium",
       "review_priority": 1,
-      "reason": "The event is about the spread of a practice across parties and parks, so explanatory documentary material fits better than a single track.",
+      "reason": "The event is about a scene practice spreading through parties and parks, which fits documentary context.",
       "review_risks": [
-        "Check that results address Bronx party practice or breakbeat DJing rather than later breakbeat genres.",
-        "Prefer results that connect DJing, b-boying, and block-party culture."
-      ],
-      "priority": 1
+        "Check that results address Bronx party practice or breakbeat DJing rather than later breakbeat genres."
+      ]
     },
     {
       "intent": "dj_mix",
       "media_goal": "Find a DJ set, break mix, party mix, turntablism demonstration, or historically framed mix.",
+      "priority": 1,
       "youtube_type": "video",
       "q": "early hip hop breakbeat DJ mix Bronx block party 1974 1976",
-      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=early%20hip%20hop%20breakbeat%20DJ%20mix%20Bronx%20block%20party%201974%201976&key=YOUTUBE_API_KEY",
+      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=early+hip+hop+breakbeat+DJ+mix+Bronx+block+party+1974+1976&key=YOUTUBE_API_KEY",
       "request_params": {
         "part": "snippet",
         "type": "video",
@@ -50,19 +50,43 @@
       },
       "confidence_hint": "high",
       "review_priority": 1,
-      "reason": "The event describes breakbeat DJ practice spreading across parties, making a breakbeat DJ mix a strong media-intent match.",
+      "reason": "The event centers on breakbeat DJ practice, so a historically framed mix is a strong sound-context candidate.",
       "review_risks": [
-        "Check whether the mix is historically framed around early hip-hop rather than later breakbeat styles.",
         "Use it as sound context, not as documentation of a specific party."
-      ],
-      "priority": 1
+      ]
+    },
+    {
+      "intent": "venue_context",
+      "media_goal": "Find context about a relevant venue, club, block, park, neighborhood, or performance space.",
+      "priority": 2,
+      "youtube_type": "video",
+      "q": "Cedar Park Bronx block parties early hip hop 1974 1976",
+      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=Cedar+Park+Bronx+block+parties+early+hip+hop+1974+1976&key=YOUTUBE_API_KEY",
+      "request_params": {
+        "part": "snippet",
+        "type": "video",
+        "maxResults": 8,
+        "order": "relevance",
+        "safeSearch": "moderate",
+        "relevanceLanguage": "en",
+        "regionCode": "US",
+        "q": "Cedar Park Bronx block parties early hip hop 1974 1976",
+        "key": "YOUTUBE_API_KEY"
+      },
+      "confidence_hint": "medium",
+      "review_priority": 2,
+      "reason": "The event references parks and community spaces, with Cedar Park as the associated place.",
+      "review_risks": [
+        "Verify that Cedar Park or Bronx park context is connected to early hip-hop culture."
+      ]
     },
     {
       "intent": "playlist",
       "media_goal": "Find a YouTube playlist, mix, or curated song collection that matches the event context.",
+      "priority": 2,
       "youtube_type": "playlist",
       "q": "early hip hop breakbeat block party playlist Bronx 1974 1976",
-      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=playlist&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=early%20hip%20hop%20breakbeat%20block%20party%20playlist%20Bronx%201974%201976&key=YOUTUBE_API_KEY",
+      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=playlist&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=early+hip+hop+breakbeat+block+party+playlist+Bronx+1974+1976&key=YOUTUBE_API_KEY",
       "request_params": {
         "part": "snippet",
         "type": "playlist",
@@ -76,12 +100,35 @@
       },
       "confidence_hint": "medium",
       "review_priority": 2,
-      "reason": "A breakbeat playlist can support the event's sound/culture axis by representing the records and rhythms used in party practice.",
+      "reason": "A breakbeat playlist can represent the sound material circulating through party practice.",
       "review_risks": [
-        "Check for modern breakbeat or electronic playlists that do not match the 1974-1976 Bronx context.",
-        "Use playlist links as listening context, not as proof of specific party playlists."
-      ],
-      "priority": 2
+        "Reject modern breakbeat or electronic playlists that do not match the early Bronx context."
+      ]
+    },
+    {
+      "intent": "historical_context",
+      "media_goal": "Find context about a named historical event, scene shift, cultural moment, or local history.",
+      "priority": 2,
+      "youtube_type": "video",
+      "q": "Bronx block parties b-boying breakbeat DJing history 1974 1976",
+      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=Bronx+block+parties+b-boying+breakbeat+DJing+history+1974+1976&key=YOUTUBE_API_KEY",
+      "request_params": {
+        "part": "snippet",
+        "type": "video",
+        "maxResults": 8,
+        "order": "relevance",
+        "safeSearch": "moderate",
+        "relevanceLanguage": "en",
+        "regionCode": "US",
+        "q": "Bronx block parties b-boying breakbeat DJing history 1974 1976",
+        "key": "YOUTUBE_API_KEY"
+      },
+      "confidence_hint": "medium",
+      "review_priority": 2,
+      "reason": "The event links DJing, b-boying, and block-party culture as repeatable scene practice.",
+      "review_risks": [
+        "Check for overbroad hip-hop history videos that do not focus on the specified practices."
+      ]
     }
   ],
   "omitted_intents": [
@@ -96,6 +143,7 @@
   ],
   "review_notes": [
     "Check whether results are historically relevant before adding links.",
+    "Reject YouTube Shorts, reaction shorts, teaser clips, and unrelated short-form uploads.",
     "Keep all automatically found links as draft until editorial review.",
     "Verify channel/source quality before promoting any media link to reviewed."
   ]

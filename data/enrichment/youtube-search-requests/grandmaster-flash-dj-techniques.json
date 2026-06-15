@@ -8,9 +8,10 @@
     {
       "intent": "documentary",
       "media_goal": "Find explanatory video, documentary context, archival footage, or scene history.",
+      "priority": 1,
       "youtube_type": "video",
       "q": "Grandmaster Flash DJ techniques turntablism backspin documentary 1975 1977",
-      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=Grandmaster%20Flash%20DJ%20techniques%20turntablism%20backspin%20documentary%201975%201977&key=YOUTUBE_API_KEY",
+      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=Grandmaster+Flash+DJ+techniques+turntablism+backspin+documentary+1975+1977&key=YOUTUBE_API_KEY",
       "request_params": {
         "part": "snippet",
         "type": "video",
@@ -24,19 +25,18 @@
       },
       "confidence_hint": "high",
       "review_priority": 1,
-      "reason": "The event is specifically about DJ technique, so explanatory video about turntablism, backspin, and mixing is directly relevant.",
+      "reason": "The event focuses on a named DJ and technical innovations that documentary material can explain.",
       "review_risks": [
-        "Check that results focus on Grandmaster Flash's techniques rather than generic DJ tutorials.",
-        "Prefer archival, museum, interview, or documented oral-history sources."
-      ],
-      "priority": 1
+        "Check that results discuss early DJ technique rather than later general career summaries."
+      ]
     },
     {
       "intent": "dj_mix",
       "media_goal": "Find a DJ set, break mix, party mix, turntablism demonstration, or historically framed mix.",
+      "priority": 1,
       "youtube_type": "video",
       "q": "Grandmaster Flash turntablism DJ mix backspin breaks 1975 1977",
-      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=Grandmaster%20Flash%20turntablism%20DJ%20mix%20backspin%20breaks%201975%201977&key=YOUTUBE_API_KEY",
+      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=Grandmaster+Flash+turntablism+DJ+mix+backspin+breaks+1975+1977&key=YOUTUBE_API_KEY",
       "request_params": {
         "part": "snippet",
         "type": "video",
@@ -48,21 +48,20 @@
         "q": "Grandmaster Flash turntablism DJ mix backspin breaks 1975 1977",
         "key": "YOUTUBE_API_KEY"
       },
-      "confidence_hint": "high",
+      "confidence_hint": "medium",
       "review_priority": 1,
-      "reason": "The event is about DJ technique and turntablism, so a mix or demonstration can directly illustrate the musical practice.",
+      "reason": "A DJ mix or demonstration can represent the technical sound-world of backspins and precise mixing.",
       "review_risks": [
-        "Check whether the result is Grandmaster Flash or a historically framed demonstration.",
-        "Avoid generic turntablism videos that do not connect to Grandmaster Flash or early hip-hop."
-      ],
-      "priority": 1
+        "Use as technique context; reject unrelated modern turntablism tutorials."
+      ]
     },
     {
       "intent": "interview",
       "media_goal": "Find artist, DJ, producer, venue, or oral-history interview material.",
+      "priority": 1,
       "youtube_type": "video",
       "q": "Grandmaster Flash 1975 1977 interview",
-      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=Grandmaster%20Flash%201975%201977%20interview&key=YOUTUBE_API_KEY",
+      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=Grandmaster+Flash+1975+1977+interview&key=YOUTUBE_API_KEY",
       "request_params": {
         "part": "snippet",
         "type": "video",
@@ -76,19 +75,18 @@
       },
       "confidence_hint": "high",
       "review_priority": 1,
-      "reason": "Grandmaster Flash is directly named, and oral-history interviews are a strong fit for explaining technical development.",
+      "reason": "Grandmaster Flash is an explicit interview subject and the year range anchors the early technique period.",
       "review_risks": [
-        "Check whether the interview includes technique discussion, not only career overview.",
-        "Corroborate technical claims with museum or music-history sources before treating them as authoritative."
-      ],
-      "priority": 1
+        "Verify that the interview addresses early technique development or Bronx DJ practice."
+      ]
     },
     {
       "intent": "song",
       "media_goal": "Find a concrete song, recording, music video, live clip, or performance-related upload.",
+      "priority": 2,
       "youtube_type": "video",
       "q": "Grandmaster Flash Wheels of Steel turntablism performance 1975 1977",
-      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=Grandmaster%20Flash%20Wheels%20of%20Steel%20turntablism%20performance%201975%201977&key=YOUTUBE_API_KEY",
+      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=Grandmaster+Flash+Wheels+of+Steel+turntablism+performance+1975+1977&key=YOUTUBE_API_KEY",
       "request_params": {
         "part": "snippet",
         "type": "video",
@@ -100,21 +98,20 @@
         "q": "Grandmaster Flash Wheels of Steel turntablism performance 1975 1977",
         "key": "YOUTUBE_API_KEY"
       },
-      "confidence_hint": "medium",
+      "confidence_hint": "low",
       "review_priority": 2,
-      "reason": "A recording or performance centered on Grandmaster Flash's turntable technique can illustrate the sound of the practice, even if the release is later than the event window.",
+      "reason": "This can surface performance-related material connected to turntablism, though the named record is later than the event period.",
       "review_risks": [
-        "Check the date and framing before linking this to the 1975-1977 event window.",
-        "Do not imply the recording itself occurred during the event's date range unless independently sourced."
-      ],
-      "priority": 2
+        "Do not imply the release belongs to 1975-1977; use only if it helps explain technique."
+      ]
     },
     {
       "intent": "playlist",
       "media_goal": "Find a YouTube playlist, mix, or curated song collection that matches the event context.",
+      "priority": 3,
       "youtube_type": "playlist",
       "q": "Grandmaster Flash early hip hop DJ breaks playlist 1975 1977",
-      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=playlist&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=Grandmaster%20Flash%20early%20hip%20hop%20DJ%20breaks%20playlist%201975%201977&key=YOUTUBE_API_KEY",
+      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=playlist&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=Grandmaster+Flash+early+hip+hop+DJ+breaks+playlist+1975+1977&key=YOUTUBE_API_KEY",
       "request_params": {
         "part": "snippet",
         "type": "playlist",
@@ -128,17 +125,46 @@
       },
       "confidence_hint": "medium",
       "review_priority": 3,
-      "reason": "A playlist can provide listening context around Grandmaster Flash and early hip-hop DJ breaks.",
+      "reason": "A playlist can provide listening context for breaks associated with early DJ practice.",
       "review_risks": [
-        "Check whether playlist contents are historically plausible for the event's technique focus.",
-        "Use as contextual listening rather than direct evidence of technique development."
-      ],
-      "priority": 3
+        "Check for unrelated greatest-hits playlists that do not support technique context."
+      ]
+    },
+    {
+      "intent": "historical_context",
+      "media_goal": "Find context about a named historical event, scene shift, cultural moment, or local history.",
+      "priority": 2,
+      "youtube_type": "video",
+      "q": "Grandmaster Flash backspin punch phrasing hip hop DJ history 1975 1977",
+      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=Grandmaster+Flash+backspin+punch+phrasing+hip+hop+DJ+history+1975+1977&key=YOUTUBE_API_KEY",
+      "request_params": {
+        "part": "snippet",
+        "type": "video",
+        "maxResults": 8,
+        "order": "relevance",
+        "safeSearch": "moderate",
+        "relevanceLanguage": "en",
+        "regionCode": "US",
+        "q": "Grandmaster Flash backspin punch phrasing hip hop DJ history 1975 1977",
+        "key": "YOUTUBE_API_KEY"
+      },
+      "confidence_hint": "medium",
+      "review_priority": 2,
+      "reason": "The event is part of a larger history of turntables becoming playable instruments.",
+      "review_risks": [
+        "Reject generic hip-hop history results that omit DJ technique details."
+      ]
     }
   ],
-  "omitted_intents": [],
+  "omitted_intents": [
+    {
+      "intent": "venue_context",
+      "reason": "The event is primarily about technique and a named DJ rather than one specific venue."
+    }
+  ],
   "review_notes": [
     "Check whether results are historically relevant before adding links.",
+    "Reject YouTube Shorts, reaction shorts, teaser clips, and unrelated short-form uploads.",
     "Keep all automatically found links as draft until editorial review.",
     "Verify channel/source quality before promoting any media link to reviewed."
   ]

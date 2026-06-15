@@ -6,11 +6,12 @@
   "query_strategy": "Multiple YouTube search.list requests, each targeting a specific media intent.",
   "query_candidates": [
     {
-      "intent": "documentary",
-      "media_goal": "Find explanatory video, documentary context, archival footage, or scene history.",
+      "intent": "historical_context",
+      "media_goal": "Find context about a named historical event, scene shift, cultural moment, or local history.",
+      "priority": 1,
       "youtube_type": "video",
-      "q": "Caribbean sound system culture Bronx hip hop origins documentary 1967 1972",
-      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=Caribbean%20sound%20system%20culture%20Bronx%20hip%20hop%20origins%20documentary%201967%201972&key=YOUTUBE_API_KEY",
+      "q": "Caribbean sound system culture Bronx hip hop origins 1967 1972 documentary",
+      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=Caribbean+sound+system+culture+Bronx+hip+hop+origins+1967+1972+documentary&key=YOUTUBE_API_KEY",
       "request_params": {
         "part": "snippet",
         "type": "video",
@@ -19,24 +20,73 @@
         "safeSearch": "moderate",
         "relevanceLanguage": "en",
         "regionCode": "US",
-        "q": "Caribbean sound system culture Bronx hip hop origins documentary 1967 1972",
+        "q": "Caribbean sound system culture Bronx hip hop origins 1967 1972 documentary",
         "key": "YOUTUBE_API_KEY"
       },
       "confidence_hint": "medium",
       "review_priority": 1,
-      "reason": "The event is a broad prehistory context, so documentary material is more likely to explain the Caribbean sound-system influence than a single song result.",
+      "reason": "The event frames Caribbean sound-system practice as historical context for early Bronx hip-hop.",
       "review_risks": [
-        "Check that results connect Caribbean sound-system practice to Bronx hip-hop rather than only covering Jamaican sound systems in isolation.",
-        "Prefer museum, archive, educational, or oral-history channels over unsourced compilations."
-      ],
-      "priority": 1
+        "Check that results discuss Caribbean sound-system culture and early hip-hop context, not generic reggae history."
+      ]
+    },
+    {
+      "intent": "documentary",
+      "media_goal": "Find explanatory video, documentary context, archival footage, or scene history.",
+      "priority": 1,
+      "youtube_type": "video",
+      "q": "Jamaican sound system influence early hip hop Bronx documentary 1967 1972",
+      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=Jamaican+sound+system+influence+early+hip+hop+Bronx+documentary+1967+1972&key=YOUTUBE_API_KEY",
+      "request_params": {
+        "part": "snippet",
+        "type": "video",
+        "maxResults": 8,
+        "order": "relevance",
+        "safeSearch": "moderate",
+        "relevanceLanguage": "en",
+        "regionCode": "US",
+        "q": "Jamaican sound system influence early hip hop Bronx documentary 1967 1972",
+        "key": "YOUTUBE_API_KEY"
+      },
+      "confidence_hint": "medium",
+      "review_priority": 1,
+      "reason": "A documentary query can surface explainers connecting migration, mobile sound systems, and Bronx DJ culture.",
+      "review_risks": [
+        "Reject results that overstate direct causality or ignore the Bronx context."
+      ]
+    },
+    {
+      "intent": "venue_context",
+      "media_goal": "Find context about a relevant venue, club, block, park, neighborhood, or performance space.",
+      "priority": 2,
+      "youtube_type": "video",
+      "q": "South Bronx neighborhood parties sound system culture hip hop origins 1967 1972",
+      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=South+Bronx+neighborhood+parties+sound+system+culture+hip+hop+origins+1967+1972&key=YOUTUBE_API_KEY",
+      "request_params": {
+        "part": "snippet",
+        "type": "video",
+        "maxResults": 8,
+        "order": "relevance",
+        "safeSearch": "moderate",
+        "relevanceLanguage": "en",
+        "regionCode": "US",
+        "q": "South Bronx neighborhood parties sound system culture hip hop origins 1967 1972",
+        "key": "YOUTUBE_API_KEY"
+      },
+      "confidence_hint": "low",
+      "review_priority": 2,
+      "reason": "The event has a strong neighborhood and party-space component that may benefit from local context.",
+      "review_risks": [
+        "Verify that South Bronx content is tied to music culture rather than unrelated urban history."
+      ]
     },
     {
       "intent": "dj_mix",
       "media_goal": "Find a DJ set, break mix, party mix, turntablism demonstration, or historically framed mix.",
+      "priority": 3,
       "youtube_type": "video",
       "q": "Caribbean sound system roots early hip hop DJ mix 1967 1972",
-      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=Caribbean%20sound%20system%20roots%20early%20hip%20hop%20DJ%20mix%201967%201972&key=YOUTUBE_API_KEY",
+      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=Caribbean+sound+system+roots+early+hip+hop+DJ+mix+1967+1972&key=YOUTUBE_API_KEY",
       "request_params": {
         "part": "snippet",
         "type": "video",
@@ -50,19 +100,18 @@
       },
       "confidence_hint": "low",
       "review_priority": 3,
-      "reason": "A DJ mix may convey the sound-system influence as listening context, but it is unlikely to document the exact historical migration context.",
+      "reason": "A mix can provide sound-world context, but it should not be treated as documentation of the exact event.",
       "review_risks": [
-        "Check that the mix is historically framed and not only a modern genre blend.",
-        "Use as contextual listening, not as evidence for the event."
-      ],
-      "priority": 3
+        "Use only as listening context; reject modern mixes without historical framing."
+      ]
     },
     {
       "intent": "playlist",
       "media_goal": "Find a YouTube playlist, mix, or curated song collection that matches the event context.",
+      "priority": 3,
       "youtube_type": "playlist",
       "q": "Caribbean sound system early hip hop Bronx roots playlist 1967 1972",
-      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=playlist&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=Caribbean%20sound%20system%20early%20hip%20hop%20Bronx%20roots%20playlist%201967%201972&key=YOUTUBE_API_KEY",
+      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=playlist&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=Caribbean+sound+system+early+hip+hop+Bronx+roots+playlist+1967+1972&key=YOUTUBE_API_KEY",
       "request_params": {
         "part": "snippet",
         "type": "playlist",
@@ -76,26 +125,25 @@
       },
       "confidence_hint": "low",
       "review_priority": 3,
-      "reason": "A playlist may provide useful listening context, but this event describes influence and migration rather than one defined canon of tracks.",
+      "reason": "A playlist may help represent source traditions and related sound-system culture.",
       "review_risks": [
-        "Check for modern reggae or dancehall playlists that do not fit the 1967-1972 historical context.",
-        "Do not treat playlist inclusion as evidence without separate sourcing."
-      ],
-      "priority": 3
+        "Check for generic reggae playlists with no early hip-hop or Bronx relevance."
+      ]
     }
   ],
   "omitted_intents": [
     {
       "intent": "song",
-      "reason": "The event is about cultural influence and sound-system practice, not a specific recording or release."
+      "reason": "The event does not name a specific recording."
     },
     {
       "intent": "interview",
-      "reason": "No specific artist, DJ, producer, or venue is named in the event."
+      "reason": "The event describes a broad influence context rather than a named interview subject."
     }
   ],
   "review_notes": [
     "Check whether results are historically relevant before adding links.",
+    "Reject YouTube Shorts, reaction shorts, teaser clips, and unrelated short-form uploads.",
     "Keep all automatically found links as draft until editorial review.",
     "Verify channel/source quality before promoting any media link to reviewed."
   ]

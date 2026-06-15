@@ -8,9 +8,10 @@
     {
       "intent": "documentary",
       "media_goal": "Find explanatory video, documentary context, archival footage, or scene history.",
+      "priority": 1,
       "youtube_type": "video",
       "q": "DJ Kool Herc 1520 Sedgwick Avenue 1973 hip hop origins documentary",
-      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=DJ%20Kool%20Herc%201520%20Sedgwick%20Avenue%201973%20hip%20hop%20origins%20documentary&key=YOUTUBE_API_KEY",
+      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=DJ+Kool+Herc+1520+Sedgwick+Avenue+1973+hip+hop+origins+documentary&key=YOUTUBE_API_KEY",
       "request_params": {
         "part": "snippet",
         "type": "video",
@@ -24,19 +25,18 @@
       },
       "confidence_hint": "high",
       "review_priority": 1,
-      "reason": "The event is a canonized origin story tied to a specific person, place, and year, making documentary context a strong fit.",
+      "reason": "The event is a canonical origin-story moment with named artist, venue, year, and place.",
       "review_risks": [
-        "Check whether videos distinguish the historical event from later anniversary coverage.",
-        "Prefer sources that cite the date, 1520 Sedgwick Avenue, or DJ Kool Herc directly."
-      ],
-      "priority": 1
+        "Check that results are historically grounded and not generic hip-hop recap videos."
+      ]
     },
     {
       "intent": "interview",
       "media_goal": "Find artist, DJ, producer, venue, or oral-history interview material.",
+      "priority": 1,
       "youtube_type": "video",
       "q": "DJ Kool Herc 1973 interview",
-      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=DJ%20Kool%20Herc%201973%20interview&key=YOUTUBE_API_KEY",
+      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=DJ+Kool+Herc+1973+interview&key=YOUTUBE_API_KEY",
       "request_params": {
         "part": "snippet",
         "type": "video",
@@ -48,21 +48,45 @@
         "q": "DJ Kool Herc 1973 interview",
         "key": "YOUTUBE_API_KEY"
       },
+      "confidence_hint": "medium",
+      "review_priority": 1,
+      "reason": "DJ Kool Herc is an explicit interview subject and the year anchors the query.",
+      "review_risks": [
+        "Verify that the interview discusses early Bronx parties or the 1973 origin narrative."
+      ]
+    },
+    {
+      "intent": "venue_context",
+      "media_goal": "Find context about a relevant venue, club, block, park, neighborhood, or performance space.",
+      "priority": 1,
+      "youtube_type": "video",
+      "q": "1520 Sedgwick Avenue hip hop birthplace 1973 documentary",
+      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=1520+Sedgwick+Avenue+hip+hop+birthplace+1973+documentary&key=YOUTUBE_API_KEY",
+      "request_params": {
+        "part": "snippet",
+        "type": "video",
+        "maxResults": 8,
+        "order": "relevance",
+        "safeSearch": "moderate",
+        "relevanceLanguage": "en",
+        "regionCode": "US",
+        "q": "1520 Sedgwick Avenue hip hop birthplace 1973 documentary",
+        "key": "YOUTUBE_API_KEY"
+      },
       "confidence_hint": "high",
       "review_priority": 1,
-      "reason": "DJ Kool Herc is directly named, so oral-history material can provide relevant firsthand or retrospective context.",
+      "reason": "The event is tied to a specific building and community room.",
       "review_risks": [
-        "Check whether the interview is with Kool Herc or a reliable historian, not only a generic hip-hop commentator.",
-        "Do not treat memory-based claims as sufficient without external source support."
-      ],
-      "priority": 1
+        "Reject tourism-style clips that do not add useful historical or musical context."
+      ]
     },
     {
       "intent": "dj_mix",
       "media_goal": "Find a DJ set, break mix, party mix, turntablism demonstration, or historically framed mix.",
+      "priority": 2,
       "youtube_type": "video",
       "q": "DJ Kool Herc Bronx breaks party DJ mix 1973",
-      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=DJ%20Kool%20Herc%20Bronx%20breaks%20party%20DJ%20mix%201973&key=YOUTUBE_API_KEY",
+      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=DJ+Kool+Herc+Bronx+breaks+party+DJ+mix+1973&key=YOUTUBE_API_KEY",
       "request_params": {
         "part": "snippet",
         "type": "video",
@@ -76,19 +100,18 @@
       },
       "confidence_hint": "medium",
       "review_priority": 2,
-      "reason": "A DJ mix can represent the break-based party sound associated with Kool Herc, while staying separate from claims about the exact 1973 set.",
+      "reason": "A DJ mix can help represent the sound-world of breaks and party practice around the event.",
       "review_risks": [
-        "Check whether the mix is presented as a reconstruction, tribute, or general context.",
-        "Do not imply the mix documents the actual Back-to-School Jam."
-      ],
-      "priority": 2
+        "Use only as sound context; do not imply it documents the exact party."
+      ]
     },
     {
       "intent": "playlist",
       "media_goal": "Find a YouTube playlist, mix, or curated song collection that matches the event context.",
+      "priority": 2,
       "youtube_type": "playlist",
       "q": "DJ Kool Herc early hip hop breaks Bronx party playlist 1973",
-      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=playlist&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=DJ%20Kool%20Herc%20early%20hip%20hop%20breaks%20Bronx%20party%20playlist%201973&key=YOUTUBE_API_KEY",
+      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=playlist&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=DJ+Kool+Herc+early+hip+hop+breaks+Bronx+party+playlist+1973&key=YOUTUBE_API_KEY",
       "request_params": {
         "part": "snippet",
         "type": "playlist",
@@ -102,22 +125,46 @@
       },
       "confidence_hint": "medium",
       "review_priority": 2,
-      "reason": "A playlist can approximate the sound-world of early Bronx party practice, even though the exact 1973 set list is not the event data.",
+      "reason": "A playlist can support listening context for the breaks associated with early Kool Herc parties.",
       "review_risks": [
-        "Check whether playlist descriptions claim evidence for specific tracks.",
-        "Keep playlist links framed as context, not as a documented set list."
-      ],
-      "priority": 2
+        "Check for historically plausible selections and avoid unrelated modern playlists."
+      ]
+    },
+    {
+      "intent": "historical_context",
+      "media_goal": "Find context about a named historical event, scene shift, cultural moment, or local history.",
+      "priority": 2,
+      "youtube_type": "video",
+      "q": "August 11 1973 Kool Herc back to school jam hip hop history",
+      "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=August+11+1973+Kool+Herc+back+to+school+jam+hip+hop+history&key=YOUTUBE_API_KEY",
+      "request_params": {
+        "part": "snippet",
+        "type": "video",
+        "maxResults": 8,
+        "order": "relevance",
+        "safeSearch": "moderate",
+        "relevanceLanguage": "en",
+        "regionCode": "US",
+        "q": "August 11 1973 Kool Herc back to school jam hip hop history",
+        "key": "YOUTUBE_API_KEY"
+      },
+      "confidence_hint": "high",
+      "review_priority": 2,
+      "reason": "The event is framed as a symbolic historical origin point.",
+      "review_risks": [
+        "Check that the result distinguishes later canonization from direct historical evidence."
+      ]
     }
   ],
   "omitted_intents": [
     {
       "intent": "song",
-      "reason": "The event is a party and origin-story context, not a specific recording or release."
+      "reason": "The event does not name one specific recording."
     }
   ],
   "review_notes": [
     "Check whether results are historically relevant before adding links.",
+    "Reject YouTube Shorts, reaction shorts, teaser clips, and unrelated short-form uploads.",
     "Keep all automatically found links as draft until editorial review.",
     "Verify channel/source quality before promoting any media link to reviewed."
   ]
