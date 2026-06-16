@@ -21,6 +21,27 @@ export async function loadSoundAtlasData(fetcher: typeof fetch = fetch): Promise
   };
 }
 
+export async function reviewEventMediaLink(
+  eventId: string,
+  url: string,
+  action: 'reviewed' | 'reject',
+  fetcher: typeof fetch = fetch
+): Promise<Event> {
+  const response = await fetcher(`${API_BASE_URL}/events/${eventId}/media-links`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ url, action })
+  });
+
+  if (!response.ok) {
+    throw new Error(`API request failed: ${response.status} ${response.statusText}`);
+  }
+
+  return (await response.json()) as Event;
+}
+
 async function requestJson<T>(path: string, fetcher: typeof fetch): Promise<T> {
   const response = await fetcher(`${API_BASE_URL}${path}`);
 

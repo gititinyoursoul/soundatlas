@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { loadSoundAtlasData } from '$lib/api/soundatlas';
+  import { loadSoundAtlasData, reviewEventMediaLink } from '$lib/api/soundatlas';
   import MapView from '$lib/components/MapView.svelte';
   import RouteFilter from '$lib/components/RouteFilter.svelte';
   import StoryPanel from '$lib/components/StoryPanel.svelte';
@@ -74,6 +74,15 @@
 
   function selectEvent(eventId: string): void {
     selectedEventId = eventId;
+  }
+
+  async function handleReviewMediaLink(
+    eventId: string,
+    url: string,
+    action: 'reviewed' | 'reject'
+  ): Promise<void> {
+    const updatedEvent = await reviewEventMediaLink(eventId, url, action);
+    events = events.map((event) => (event.id === updatedEvent.id ? updatedEvent : event));
   }
 
   function handleKeydown(event: KeyboardEvent): void {
@@ -181,6 +190,7 @@
       currentEventIndex={selectedEventIndex}
       eventCount={orderedVisibleEvents.length}
       onNavigateEvent={selectEvent}
+      onReviewMediaLink={handleReviewMediaLink}
     />
   </section>
 </main>

@@ -8,6 +8,8 @@
     Place,
     Route
   } from '$lib/types/soundatlas';
+  import { parseYouTubeEmbed } from '$lib/media/youtube';
+  import MediaEmbed from './MediaEmbed.svelte';
 
   export let event: Event | null = null;
   export let place: Place | null = null;
@@ -18,6 +20,11 @@
   export let currentEventIndex = 0;
   export let eventCount = 0;
   export let onNavigateEvent: (eventId: string) => void = () => {};
+  export let onReviewMediaLink: (
+    eventId: string,
+    url: string,
+    action: 'reviewed' | 'reject'
+  ) => Promise<void> = async () => {};
 
   const providerLabels: Record<MediaProvider, string> = {
     youtube: 'YouTube',
@@ -30,6 +37,8 @@
   }
 
   $: reviewedImageLinks = event?.image_links.filter((imageLink) => imageLink.review_status === 'reviewed') ?? [];
+  $: fallbackMediaLinks =
+    event?.media_links.filter((mediaLink) => !parseYouTubeEmbed(mediaLink.url)) ?? [];
 
   function formatImageAttribution(imageLink: ImageLink): string {
     return [imageLink.creator, imageLink.license].filter(Boolean).join(' · ');
@@ -110,11 +119,18 @@
     {#if event.source_urls.length > 0 || event.media_links.length > 0}
       <section>
         <h3>Sources and media</h3>
+        {#if event.media_links.length > 0}
+          <MediaEmbed
+            eventId={event.id}
+            mediaLinks={event.media_links}
+            {onReviewMediaLink}
+          />
+        {/if}
         <ul class="links">
           {#each event.source_urls as sourceUrl}
             <li><a href={sourceUrl} target="_blank" rel="noreferrer">Source</a></li>
           {/each}
-          {#each event.media_links as mediaLink}
+          {#each fallbackMediaLinks as mediaLink}
             <li>
               <a href={mediaLink.url} target="_blank" rel="noreferrer">
                 {formatMediaLinkLabel(mediaLink.provider, mediaLink.type)}
