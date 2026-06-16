@@ -27,20 +27,11 @@
         {
           "provider": "youtube",
           "type": "video",
-          "title": "The Insane New York Subway's in 1980 #shorts",
-          "url": "https://www.youtube.com/watch?v=1I6d3kOTXBA",
-          "query": "Caribbean sound system culture Bronx hip hop origins 1967 1972 documentary",
-          "confidence": 0.55,
-          "review_status": "draft"
-        },
-        {
-          "provider": "youtube",
-          "type": "video",
           "title": "Harlem Manhattan, N.Y. Block Party 1967",
           "url": "https://www.youtube.com/watch?v=IZ47YLP8hH4",
           "query": "South Bronx neighborhood parties sound system culture hip hop origins 1967 1972",
           "confidence": 0.35,
-          "review_status": "draft"
+          "review_status": "reviewed"
         },
         {
           "provider": "youtube",
@@ -132,7 +123,7 @@
           "url": "https://www.youtube.com/watch?v=eTkbF6dRdoE",
           "query": "DJ Kool Herc 1520 Sedgwick Avenue 1973 hip hop origins documentary",
           "confidence": 0.75,
-          "review_status": "draft"
+          "review_status": "reviewed"
         },
         {
           "provider": "youtube",
@@ -141,7 +132,7 @@
           "url": "https://www.youtube.com/watch?v=Jdb3MTz7xXg",
           "query": "DJ Kool Herc 1520 Sedgwick Avenue 1973 hip hop origins documentary",
           "confidence": 0.75,
-          "review_status": "draft"
+          "review_status": "reviewed"
         },
         {
           "provider": "youtube",
@@ -150,7 +141,7 @@
           "url": "https://www.youtube.com/watch?v=oc2dIuSZY7k",
           "query": "DJ Kool Herc 1520 Sedgwick Avenue 1973 hip hop origins documentary",
           "confidence": 0.75,
-          "review_status": "draft"
+          "review_status": "reviewed"
         }
       ],
       "image_links": []
@@ -188,20 +179,11 @@
         {
           "provider": "youtube",
           "type": "video",
-          "title": "Manu Dibango - Senga (DJ Kool Herc REMIX)",
-          "url": "https://www.youtube.com/watch?v=pctbxNrJhvU",
-          "query": "early hip hop breakbeat DJ mix Bronx block party 1974 1976",
-          "confidence": 0.75,
-          "review_status": "draft"
-        },
-        {
-          "provider": "youtube",
-          "type": "video",
           "title": "Ghetto Disco & Other Galactic Funk 1974-1979 - DJ Destruction (Vinyl Mix)",
           "url": "https://www.youtube.com/watch?v=jfM3bxtfQSQ",
           "query": "early hip hop breakbeat DJ mix Bronx block party 1974 1976",
           "confidence": 0.75,
-          "review_status": "draft"
+          "review_status": "reviewed"
         }
       ],
       "image_links": []
@@ -234,25 +216,7 @@
           "url": "https://www.youtube.com/watch?v=oA-OpvH4CIQ",
           "query": "Grandmaster Flash DJ techniques turntablism backspin documentary 1975 1977",
           "confidence": 0.75,
-          "review_status": "draft"
-        },
-        {
-          "provider": "youtube",
-          "type": "video",
-          "title": "Grandmaster Flash & The Furious Five • The Story • 1982",
-          "url": "https://www.youtube.com/watch?v=yp7aofqa8CQ",
-          "query": "Grandmaster Flash 1975 1977 interview",
-          "confidence": 0.75,
-          "review_status": "draft"
-        },
-        {
-          "provider": "youtube",
-          "type": "video",
-          "title": "Grandmaster Flash Heats Up The Turn Tables In 1975 #Shorts #BETHipHop50 #HipHop",
-          "url": "https://www.youtube.com/watch?v=qzg6OLk0yrE",
-          "query": "Grandmaster Flash 1975 1977 interview",
-          "confidence": 0.75,
-          "review_status": "draft"
+          "review_status": "reviewed"
         }
       ],
       "image_links": []
