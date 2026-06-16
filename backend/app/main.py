@@ -2,7 +2,14 @@ from fastapi import Depends, FastAPI, HTTPException, Query, status
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import LOCAL_CORS_ORIGINS
-from app.schemas import Connection, Event, HealthResponse, Place, Route
+from app.schemas import (
+    Connection,
+    Event,
+    HealthResponse,
+    MediaLinkReviewRequest,
+    Place,
+    Route,
+)
 from app.seed_repository import SeedRepository
 
 
@@ -70,6 +77,31 @@ def create_app(repository: SeedRepository | None = None) -> FastAPI:
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"Event '{event_id}' not found",
             )
+        return event
+
+    @api.patch("/events/{event_id}/media-links", response_model=Event)
+    def review_media_link(
+        event_id: str,
+        request: MediaLinkReviewRequest,
+        seed_repository: SeedRepository = Depends(get_repository),
+    ) -> Event:
+        if seed_repository.get_event(event_id) is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Event '{event_id}' not found",
+            )
+
+        if request.action == "reviewed":
+            event = seed_repository.mark_media_link_reviewed(event_id, request.url)
+        else:
+            event = seed_repository.reject_media_link(event_id, request.url)
+
+        if event is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Media link not found for event '{event_id}'",
+            )
+
         return event
 
     @api.get("/places", response_model=list[Place])

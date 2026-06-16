@@ -19,11 +19,13 @@ class SeedRepository:
         places: list[Place],
         events: list[Event],
         connections: list[Connection],
+        seed_dir: Path | None = None,
     ) -> None:
         self._routes = routes
         self._places = places
         self._events = events
         self._connections = connections
+        self._seed_dir = seed_dir
         self._route_ids = {route.id for route in routes}
         self._place_ids = {place.id for place in places}
         self._event_ids = {event.id for event in events}
@@ -39,7 +41,7 @@ class SeedRepository:
             "connections",
             Connection,
         )
-        repository = cls(routes, places, events, connections)
+        repository = cls(routes, places, events, connections, seed_dir=seed_dir)
         repository.validate_references()
         return repository
 
@@ -95,6 +97,41 @@ class SeedRepository:
     def get_event(self, event_id: str) -> Event | None:
         return self._events_by_id.get(event_id)
 
+    def mark_media_link_reviewed(self, event_id: str, media_url: str) -> Event | None:
+        event = self.get_event(event_id)
+        if event is None:
+            return None
+
+        media_link = next(
+            (
+                media_link
+                for media_link in event.media_links
+                if media_link.url == media_url
+            ),
+            None,
+        )
+        if media_link is None:
+            return None
+
+        media_link.review_status = "reviewed"
+        self._write_media_link_review_status(event_id, media_url, "reviewed")
+        return event
+
+    def reject_media_link(self, event_id: str, media_url: str) -> Event | None:
+        event = self.get_event(event_id)
+        if event is None:
+            return None
+
+        next_media_links = [
+            media_link for media_link in event.media_links if media_link.url != media_url
+        ]
+        if len(next_media_links) == len(event.media_links):
+            return None
+
+        event.media_links = next_media_links
+        self._remove_media_link(event_id, media_url)
+        return event
+
     def list_connections(self, route_id: str | None = None) -> list[Connection]:
         if route_id is None:
             return self._connections
@@ -109,18 +146,50 @@ class SeedRepository:
             and connection.to_event_id in route_event_ids
         ]
 
+    def _write_media_link_review_status(
+        self,
+        event_id: str,
+        media_url: str,
+        review_status: str,
+    ) -> None:
+        if self._seed_dir is None:
+            return
+
+        events_path = self._seed_dir / "events.json"
+        payload = read_json_payload(events_path)
+        for event in payload.get("events", []):
+            if event.get("id") != event_id:
+                continue
+            for media_link in event.get("media_links", []):
+                if media_link.get("url") == media_url:
+                    media_link["review_status"] = review_status
+                    write_json_payload(events_path, payload)
+                    return
+
+    def _remove_media_link(self, event_id: str, media_url: str) -> None:
+        if self._seed_dir is None:
+            return
+
+        events_path = self._seed_dir / "events.json"
+        payload = read_json_payload(events_path)
+        for event in payload.get("events", []):
+            if event.get("id") != event_id:
+                continue
+            event["media_links"] = [
+                media_link
+                for media_link in event.get("media_links", [])
+                if media_link.get("url") != media_url
+            ]
+            write_json_payload(events_path, payload)
+            return
+
 
 def _read_collection(
     path: Path,
     collection_key: str,
     model: type[Route] | type[Place] | type[Event] | type[Connection],
 ) -> list[Any]:
-    try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
-    except FileNotFoundError as exc:
-        raise SeedValidationError(f"Missing seed file: {path}") from exc
-    except json.JSONDecodeError as exc:
-        raise SeedValidationError(f"Invalid JSON in seed file: {path}") from exc
+    payload = read_json_payload(path)
 
     collection = payload.get(collection_key)
     if not isinstance(collection, list):
@@ -134,3 +203,19 @@ def _read_collection(
         raise SeedValidationError(
             f"Seed file '{path}' failed schema validation",
         ) from exc
+
+
+def read_json_payload(path: Path) -> dict[str, Any]:
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except FileNotFoundError as exc:
+        raise SeedValidationError(f"Missing seed file: {path}") from exc
+    except json.JSONDecodeError as exc:
+        raise SeedValidationError(f"Invalid JSON in seed file: {path}") from exc
+
+
+def write_json_payload(path: Path, payload: dict[str, Any]) -> None:
+    path.write_text(
+        json.dumps(payload, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
