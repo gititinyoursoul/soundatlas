@@ -218,7 +218,7 @@ In this mode, GPT/Codex is used to prepare and review YouTube request plans. The
 6. Run `backend/scripts/enrich_media_links.py --dry-run` to inspect the seed merge.
 7. Keep only plausible links, remove weak matches, and promote links to `reviewed` only after editorial review.
 
-For the MVP, prefer the dedicated prompt in `.github/prompts/youtube-search-list-media.md` over ad-hoc prompts.
+For the MVP, prefer the dedicated prompt in `.github/prompts/generate-youtube-search-queries.md` over ad-hoc prompts.
 
 Example minimal Codex prompt:
 

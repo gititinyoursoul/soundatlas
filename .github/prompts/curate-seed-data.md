@@ -1,4 +1,4 @@
-# Seed Data
+# Curate Seed Data
 
 Use this prompt when adding or updating curated SoundAtlas seed data.
 

@@ -1,4 +1,4 @@
-# YouTube Search List Media Queries
+# Generate YouTube Search Queries
 
 Use this prompt to generate intent-based YouTube Data API `search.list` requests for SoundAtlas media enrichment.
 

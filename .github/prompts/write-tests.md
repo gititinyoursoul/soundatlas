@@ -1,4 +1,4 @@
-# Test Writing
+# Write Tests
 
 Use this prompt when adding tests for existing SoundAtlas code.
 

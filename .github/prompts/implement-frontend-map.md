@@ -1,4 +1,4 @@
-# Frontend Map
+# Implement Frontend Map
 
 Use this prompt when building or changing the SoundAtlas SvelteKit frontend map experience.
 
