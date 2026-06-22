@@ -19,3 +19,6 @@ dev = [
 pythonpath = [
     ".",
 ]
+filterwarnings = [
+    "ignore:Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead\\.:Warning:fastapi\\.testclient",
+]
