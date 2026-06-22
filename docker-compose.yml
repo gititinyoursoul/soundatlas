@@ -1,0 +1,87 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    init: true
+    cap_add:
+      - NET_ADMIN
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      SOUNDATLAS_EGRESS_GUARD: enabled
+      SOUNDATLAS_ALLOWED_INBOUND_PORTS: "8000"
+      SOUNDATLAS_WRITABLE_PATHS: /workspace/backend/.venv /workspace/backend/.pytest_cache /home/soundatlas/.cache/uv
+    volumes:
+      - type: bind
+        source: ./backend
+        target: /workspace/backend
+      - type: bind
+        source: ./frontend
+        target: /workspace/frontend
+      - type: bind
+        source: ./data
+        target: /workspace/data
+      - type: bind
+        source: ./docs
+        target: /workspace/docs
+      - type: bind
+        source: ./scripts
+        target: /workspace/scripts
+      - type: bind
+        source: ./README.md
+        target: /workspace/README.md
+      - type: bind
+        source: ./TODO.md
+        target: /workspace/TODO.md
+      - type: bind
+        source: ./.env.example
+        target: /workspace/.env.example
+        read_only: true
+      - backend_venv:/workspace/backend/.venv
+      - backend_uv_cache:/home/soundatlas/.cache/uv
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=2)"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    init: true
+    cap_add:
+      - NET_ADMIN
+    security_opt:
+      - no-new-privileges:true
+    depends_on:
+      backend:
+        condition: service_healthy
+    environment:
+      SOUNDATLAS_EGRESS_GUARD: enabled
+      SOUNDATLAS_ALLOWED_INBOUND_PORTS: "5173"
+      SOUNDATLAS_WRITABLE_PATHS: /workspace/frontend/node_modules /home/soundatlas/.npm
+      HOST: 0.0.0.0
+      VITE_API_BASE_URL: http://localhost:8000
+    volumes:
+      - type: bind
+        source: ./frontend
+        target: /workspace/frontend
+      - frontend_node_modules:/workspace/frontend/node_modules
+      - frontend_npm_cache:/home/soundatlas/.npm
+    ports:
+      - "5173:5173"
+
+volumes:
+  backend_venv:
+  backend_uv_cache:
+  frontend_node_modules:
+  frontend_npm_cache:
