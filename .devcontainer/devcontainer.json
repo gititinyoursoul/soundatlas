@@ -1,0 +1,29 @@
+{
+  "name": "SoundAtlas",
+  "dockerComposeFile": [
+    "../docker-compose.yml",
+    "docker-compose.devcontainer.yml"
+  ],
+  "service": "backend",
+  "runServices": ["backend", "frontend"],
+  "workspaceFolder": "/workspace",
+  "remoteUser": "soundatlas",
+  "shutdownAction": "stopCompose",
+  "overrideCommand": false,
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-azuretools.vscode-docker",
+        "mhutchie.git-graph",
+        "openai.chatgpt",
+        "svelte.svelte-vscode",
+        "tamasfe.even-better-toml",
+        "redhat.vscode-yaml",
+        "humao.rest-client",
+        "yzhang.markdown-all-in-one"
+      ]
+    }
+  }
+}

@@ -1,0 +1,4 @@
+services:
+  backend:
+    environment:
+      SOUNDATLAS_EGRESS_GUARD: disabled
