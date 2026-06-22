@@ -11,14 +11,11 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "httpx>=0.28.1",
+    "httpx2>=0.28.1",
     "pytest>=9.0.3",
 ]
 
 [tool.pytest.ini_options]
 pythonpath = [
     ".",
-]
-filterwarnings = [
-    "ignore:Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead\\.:Warning:fastapi\\.testclient",
 ]
