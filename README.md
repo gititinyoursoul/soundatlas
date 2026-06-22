@@ -37,6 +37,45 @@ $env:VITE_API_BASE_URL='http://127.0.0.1:8000'
 npm run dev -- --host 127.0.0.1 --port 5173
 ```
 
+## Docker Compose Development
+
+Start the containerized development environment:
+
+```powershell
+docker compose up --build
+```
+
+After startup, the app runs locally at:
+
+- Backend: `http://localhost:8000`
+- Backend health: `http://localhost:8000/health`
+- Frontend: `http://localhost:5173`
+
+Stop the environment:
+
+```powershell
+docker compose down
+```
+
+Run checks inside containers:
+
+```powershell
+docker compose run --rm backend uv run pytest
+docker compose run --rm frontend npm run check
+```
+
+The Compose setup mounts only repo-local project paths, runs the app processes
+as the `soundatlas` user, and keeps dependency folders in named volumes. Runtime
+egress is restricted by `docker/egress-guard.sh`: general outbound HTTPS is
+allowed, while common private/internal ranges and metadata IPs are rejected.
+Image builds still use Docker's normal build network.
+
+## VS Code Dev Containers
+
+Open this repository with the VS Code Dev Containers extension and choose
+`Reopen in Container`. The Dev Container uses the Docker Compose setup and
+starts both backend and frontend services.
+
 ## Tests And Checks
 
 Backend:

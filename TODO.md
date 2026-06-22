@@ -46,7 +46,7 @@ Ziel des ersten MVP ist ein vertikaler Slice fuer **Birth of Hip-Hop: Bronx 1970
 - [x] Sichere Media-Enrichment-Settings mit externem Secret-Pfad einfuehren
 - [x] Mockbare YouTube-Analyse-/Search-/Ranking-Pipeline fuer Content Pages umsetzen
 - [ ] OpenAI-Settings im CLI-Media-Enrichment aktiv verdrahten oder aus Env/Doku entfernen
-- [x] YouTube-Search-Prompt `.github/prompts/youtube-search-list-media.md` so anpassen, dass Shorts ausgeschlossen werden
+- [x] YouTube-Search-Prompt `.github/prompts/generate-youtube-search-queries.md` so anpassen, dass Shorts ausgeschlossen werden
 - [x] Pruefen, ob `backend/scripts/enrich_media_links.py` mit dem Plus-only Workflow kompatibel ist
 
 ## 4. Frontend
@@ -101,7 +101,42 @@ Ziel des ersten MVP ist ein vertikaler Slice fuer **Birth of Hip-Hop: Bronx 1970
 - [ ] `docs/image-enrichment-konzept.md` ins Englische uebersetzen und Datei umbenennen
 - [ ] Interne Links nach Dokumentations-Umbenennungen aktualisieren
 - [ ] Entscheiden, ob ein Root-Task-Runner noetig ist
-- [ ] Git-Status vor dem naechsten Commit pruefen
+
+## 6.1 Docker Compose Run Checklist
+
+- [x] Zielmodus festlegen: lokale Development-Container mit Hot Reload fuer Backend und Frontend
+- [x] Backend-Container planen: Python `>=3.13`, `uv`, Arbeitsverzeichnis `/workspace/backend`
+- [x] Backend-`Dockerfile` unter `backend/Dockerfile` anlegen
+- [x] Backend-Abhaengigkeiten ueber `uv sync` oder `uv run` reproduzierbar installieren
+- [x] Backend-Startkommando im Container definieren: `uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000`
+- [x] Sicherstellen, dass der Backend-Container Zugriff auf `data/seed/` aus dem Repo-Root hat
+- [x] Frontend-Container planen: Node.js LTS, npm, Arbeitsverzeichnis `/workspace/frontend`
+- [x] Frontend-`Dockerfile` unter `frontend/Dockerfile` anlegen
+- [x] Frontend-Abhaengigkeiten ueber `npm ci` aus `package-lock.json` installieren
+- [x] Frontend-Startkommando im Container definieren: `npm run dev -- --host 0.0.0.0 --port 5173`
+- [x] Frontend-Env im Compose-Setup setzen: `VITE_API_BASE_URL=http://localhost:8000`
+- [x] Root-`docker-compose.yml` mit Services `backend` und `frontend` anlegen
+- [x] Ports mappen: Backend `8000:8000`, Frontend `5173:5173`
+- [x] Bind Mounts fuer Development definieren: `./backend`, `./frontend` und `./data`
+- [x] Bind Mounts auf Repo-Pfade begrenzen; keine Host-Home-, SSH-, Cloud- oder globalen Config-Verzeichnisse mounten
+- [x] Container-interne Dependency-Ordner gegen Host-Konflikte schuetzen, z. B. eigene Volumes fuer `node_modules` und Python-Umgebung
+- [x] Container als Non-Root-User ausfuehren und Dateirechte fuer gemountete Repo-Pfade pruefen
+- [x] Secrets kontrollieren: keine Secrets ins Image kopieren, nur explizite Env-Dateien oder Docker-Secrets verwenden
+- [x] `.env.example` fuer Container-Variablen aktualisieren, ohne echte Tokens oder lokale Pfade einzutragen
+- [x] Allgemeines ausgehendes HTTPS fuer Dependency-Install und API-Nutzung erlauben
+- [x] Zugriff auf private/interne Netzbereiche und Cloud-Metadata-IPs blockieren, z. B. `169.254.169.254`, RFC1918-Netze und lokale Host-Services, soweit fuer die App nicht noetig
+- [x] `depends_on` fuer Frontend auf Backend ergaenzen
+- [x] Optionalen Backend-Healthcheck fuer `GET /health` im Compose-File definieren
+- [x] VS Code Dev Containers konfigurieren, z. B. `.devcontainer/devcontainer.json` mit Docker-Compose-Anbindung
+- [x] Dev-Container-Workspace auf das Repo begrenzen und keine zusaetzlichen Host-Verzeichnisse automatisch mounten
+- [x] Dev-Container-Extensions nur minimal fuer Python, Svelte/TypeScript und Docker definieren
+- [x] `.dockerignore` fuer Root, Backend und Frontend pruefen oder anlegen
+- [x] Docker Compose Start dokumentieren: `docker compose up --build`
+- [x] Docker Compose Stop dokumentieren: `docker compose down`
+- [x] Smoke-Test dokumentieren: `http://localhost:8000/health` und `http://localhost:5173` im Browser pruefen
+- [x] Backend-Tests im Container dokumentieren: `docker compose run --rm backend uv run pytest`
+- [x] Frontend-Check im Container dokumentieren: `docker compose run --rm frontend npm run check`
+- [x] README um den Docker-Compose-Startweg ergaenzen, sobald die Container lauffaehig sind
 
 ## Naechster konkreter Schritt
 
