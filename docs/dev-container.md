@@ -53,6 +53,10 @@ The container user is:
 soundatlas
 ```
 
+Interactive terminals use Bash by default. The image installs
+`bash-completion` and a small `.bashrc` that enables tab completion plus Git
+branch/status information in the prompt.
+
 ## Workspace Image
 
 The `workspace` service is built from `.devcontainer/Dockerfile`.
@@ -66,6 +70,7 @@ Installed runtime tools:
 - npm
 - Codex CLI `@openai/codex` `0.142.0`
 - Git
+- Bash with programmable completion and Git prompt support
 - basic shell/process tools: `bubblewrap`, `curl`, `less`, `procps`
 
 The workspace image uses `/workspace` as its working directory and runs

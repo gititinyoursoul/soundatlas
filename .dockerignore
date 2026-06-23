@@ -1,7 +1,9 @@
 .git/
 .github/
 .vscode/
-.devcontainer/
+.devcontainer/*
+!.devcontainer/Dockerfile
+!.devcontainer/bashrc
 
 .env
 .env.*

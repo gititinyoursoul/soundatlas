@@ -18,7 +18,13 @@
   "customizations": {
     "vscode": {
       "settings": {
-        "chatgpt.openOnStartup": true
+        "chatgpt.openOnStartup": true,
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "terminal.integrated.profiles.linux": {
+          "bash": {
+            "path": "/bin/bash"
+          }
+        }
       },
       "extensions": [
         "ms-python.python",
