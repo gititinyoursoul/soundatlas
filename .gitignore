@@ -34,7 +34,7 @@ test-results/
 .env
 .env.*
 !.env.example
-!.env.codex
+!.env.codex.example
 
 # Local databases and generated data
 *.db
