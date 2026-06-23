@@ -4,12 +4,17 @@
     "../docker-compose.yml",
     "docker-compose.devcontainer.yml"
   ],
-  "service": "backend",
-  "runServices": ["backend", "frontend"],
+  "service": "workspace",
+  "runServices": ["workspace", "backend", "frontend"],
   "workspaceFolder": "/workspace",
   "remoteUser": "soundatlas",
   "shutdownAction": "stopCompose",
   "overrideCommand": false,
+  "remoteEnv": {
+    "CODEX_HOME": "/home/soundatlas/.codex",
+    "UV_PROJECT_ENVIRONMENT": "/home/soundatlas/.cache/uv/venvs/backend"
+  },
+  "postCreateCommand": "sh .devcontainer/post-create.sh",
   "customizations": {
     "vscode": {
       "extensions": [

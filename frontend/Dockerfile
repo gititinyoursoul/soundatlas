@@ -12,7 +12,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 RUN groupadd --gid 10001 soundatlas \
-    && useradd --uid 10001 --gid soundatlas --create-home --shell /usr/sbin/nologin soundatlas
+    && useradd --uid 10001 --gid soundatlas --create-home --shell /bin/sh soundatlas
 
 WORKDIR /workspace/frontend
 

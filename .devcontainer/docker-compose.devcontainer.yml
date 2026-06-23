@@ -1,4 +1,35 @@
 services:
-  backend:
+  workspace:
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile
+    init: true
+    cap_add:
+      - NET_ADMIN
+    security_opt:
+      - no-new-privileges:true
     environment:
-      SOUNDATLAS_EGRESS_GUARD: disabled
+      CODEX_HOME: /home/soundatlas/.codex
+      SOUNDATLAS_EGRESS_GUARD: enabled
+      SOUNDATLAS_ALLOWED_INBOUND_PORTS: ""
+      SOUNDATLAS_ALLOWED_OUTBOUND_PORTS: "8000 5173"
+      SOUNDATLAS_WRITABLE_PATHS: /workspace/frontend/node_modules /home/soundatlas/.cache/uv /home/soundatlas/.npm /home/soundatlas/.codex
+      UV_PROJECT_ENVIRONMENT: /home/soundatlas/.cache/uv/venvs/backend
+    volumes:
+      - type: bind
+        source: .
+        target: /workspace
+      - workspace_codex_home:/home/soundatlas/.codex
+      - workspace_frontend_node_modules:/workspace/frontend/node_modules
+      - workspace_uv_cache:/home/soundatlas/.cache/uv
+      - workspace_npm_cache:/home/soundatlas/.npm
+    depends_on:
+      backend:
+        condition: service_started
+      frontend:
+        condition: service_started
+volumes:
+  workspace_codex_home:
+  workspace_frontend_node_modules:
+  workspace_uv_cache:
+  workspace_npm_cache:
