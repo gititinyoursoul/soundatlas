@@ -12,9 +12,11 @@ checking the MVP stack without installing all project tooling directly on the
 host machine.
 
 It is intentionally suitable for agent-assisted development: the agent runs
-inside the `workspace` container, sees only the repository and named Docker
-volumes, and does not receive host home-directory, SSH, cloud, or private
-dotfile mounts.
+inside the `workspace` container and sees only the repository plus the explicit
+mounts listed below. Codex credentials and config are mounted from the host so
+the VS Code/Codex extension can reuse the host login without baking credentials
+into an image. Codex runtime state stays in a Docker volume so SQLite state
+files are not written through the Windows bind mount.
 
 It starts three Compose services:
 
@@ -62,8 +64,9 @@ Installed runtime tools:
 - `uv`
 - Node.js `24.11.1`
 - npm
+- Codex CLI `@openai/codex` `0.142.0`
 - Git
-- basic shell/process tools: `curl`, `less`, `procps`
+- basic shell/process tools: `bubblewrap`, `curl`, `less`, `procps`
 
 The workspace image uses `/workspace` as its working directory and runs
 `sleep infinity` by default so VS Code can attach to it.
@@ -139,14 +142,25 @@ SSH keys, private dotfiles, or cloud configuration directories.
 The `workspace` service uses these mounts:
 
 - repository bind mount: `.` to `/workspace`
-- named volume: `workspace_codex_home` to `/home/soundatlas/.codex`
-- named volume: `workspace_frontend_node_modules` to
-  `/workspace/frontend/node_modules`
-- named volume: `workspace_uv_cache` to `/home/soundatlas/.cache/uv`
-- named volume: `workspace_npm_cache` to `/home/soundatlas/.npm`
+- named volume: `frontend_node_modules` to `/workspace/frontend/node_modules`
+- named volume: `backend_uv_cache` to `/home/soundatlas/.cache/uv`
+- named volume: `frontend_npm_cache` to `/home/soundatlas/.npm`
+- named volume: `codex_home` to `/home/soundatlas/.codex`
+- host bind mount: `%USERPROFILE%/.codex/auth.json` to
+  `/home/soundatlas/.codex/auth.json`
+- host bind mount: `%USERPROFILE%/.codex/config.toml` to
+  `/home/soundatlas/.codex/config.toml`
 
-Because `CODEX_HOME` points at a named Docker volume, Codex state persists
-across container rebuilds but is not copied into the repository or image.
+Because `CODEX_HOME` points at the `codex_home` volume, Codex can keep its
+container-local SQLite state on a Linux filesystem. The host `auth.json` and
+`config.toml` are mounted into that directory after the user signs in on the
+host. The credentials are not copied into the repository or Docker image.
+The workspace image also installs the Codex CLI, so the VS Code Codex
+extension and terminal sessions can use the same mounted login cache and
+configuration.
+The workspace intentionally shares dependency/cache volumes with the app
+services so agent-run checks and running services see the same installed
+frontend packages and uv cache.
 
 The app services use repo-local bind mounts and named dependency/cache volumes:
 
@@ -206,6 +220,13 @@ cd /workspace/frontend
 npm ci
 ```
 
+Check Codex inside the workspace container:
+
+```sh
+codex --version
+codex doctor
+```
+
 Check service URLs from the host:
 
 ```text
@@ -213,6 +234,24 @@ Backend:  http://localhost:8000
 Health:   http://localhost:8000/health
 Frontend: http://localhost:5173
 ```
+
+## Codex Startup Troubleshooting
+
+If the dev container starts but Codex does not appear in VS Code:
+
+1. Open the Command Palette and run `Codex: Open Sidebar`.
+2. In the workspace terminal, run `codex --version`.
+3. Confirm the mounted login cache exists at `/home/soundatlas/.codex/auth.json`.
+4. Run `codex doctor` and check the reported auth, config, runtime, and Git
+   diagnostics.
+5. Rebuild the dev container if `codex` is missing; the CLI is installed during
+   the workspace image build.
+
+`auth.json` is only the cached login state. It does not install or start Codex
+by itself.
+If `codex doctor` reports SQLite state errors under `/home/soundatlas/.codex`,
+remove and recreate the `codex_home` Docker volume rather than bind-mounting
+the whole host `%USERPROFILE%/.codex` directory.
 
 ## Security Boundaries
 
@@ -224,7 +263,7 @@ privileges with `gosu`.
 The egress guard:
 
 - allows loopback and established connections
-- allows Docker DNS
+- allows Docker DNS and configured DNS resolvers on port `53`
 - rejects common private/internal IPv4 ranges and metadata-style link-local
   ranges
 - allows outbound TCP `443`
@@ -245,7 +284,9 @@ should not receive direct mounts to host secrets or broader host directories.
 Use `.env.codex.example` for dummy agent/test values. Keep any real
 `.env.codex` file local and untracked. Do not add real tokens, SSH keys,
 private dotfiles, or host-local paths to the repository, Docker images, or
-checked-in environment files.
+checked-in environment files. The host `%USERPROFILE%/.codex/auth.json` bind
+mount is a runtime-only convenience for trusted local development; treat
+`%USERPROFILE%/.codex/auth.json` like a password.
 
 ## Lifecycle Notes
 

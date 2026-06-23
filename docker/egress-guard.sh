@@ -29,6 +29,8 @@ apply_egress_policy() {
   iptables -A OUTPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
   iptables -A OUTPUT -p udp -d 127.0.0.11 --dport 53 -j ACCEPT
   iptables -A OUTPUT -p tcp -d 127.0.0.11 --dport 53 -j ACCEPT
+  iptables -A OUTPUT -p udp --dport 53 -j ACCEPT
+  iptables -A OUTPUT -p tcp --dport 53 -j ACCEPT
 
   for port in $ALLOWED_OUTBOUND_PORTS; do
     iptables -A OUTPUT -p tcp --dport "$port" -j ACCEPT
@@ -52,6 +54,8 @@ apply_egress_policy() {
     ip6tables -A OUTPUT -o lo -j ACCEPT
     ip6tables -A OUTPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
     ip6tables -A OUTPUT -d ::1/128 -j ACCEPT
+    ip6tables -A OUTPUT -p udp --dport 53 -j ACCEPT
+    ip6tables -A OUTPUT -p tcp --dport 53 -j ACCEPT
 
     for port in $ALLOWED_OUTBOUND_PORTS; do
       ip6tables -A OUTPUT -p tcp --dport "$port" -j ACCEPT

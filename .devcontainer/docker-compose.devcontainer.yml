@@ -18,17 +18,23 @@ services:
       - type: bind
         source: .
         target: /workspace
-      - workspace_codex_home:/home/soundatlas/.codex
-      - workspace_frontend_node_modules:/workspace/frontend/node_modules
-      - workspace_uv_cache:/home/soundatlas/.cache/uv
-      - workspace_npm_cache:/home/soundatlas/.npm
+      - type: volume
+        source: codex_home
+        target: /home/soundatlas/.codex
+      - type: bind
+        source: ${USERPROFILE}/.codex/auth.json
+        target: /home/soundatlas/.codex/auth.json
+      - type: bind
+        source: ${USERPROFILE}/.codex/config.toml
+        target: /home/soundatlas/.codex/config.toml
+      - frontend_node_modules:/workspace/frontend/node_modules
+      - backend_uv_cache:/home/soundatlas/.cache/uv
+      - frontend_npm_cache:/home/soundatlas/.npm
     depends_on:
       backend:
         condition: service_started
       frontend:
         condition: service_started
+
 volumes:
-  workspace_codex_home:
-  workspace_frontend_node_modules:
-  workspace_uv_cache:
-  workspace_npm_cache:
+  codex_home:

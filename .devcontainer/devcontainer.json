@@ -17,6 +17,9 @@
   "postCreateCommand": "sh .devcontainer/post-create.sh",
   "customizations": {
     "vscode": {
+      "settings": {
+        "chatgpt.openOnStartup": true
+      },
       "extensions": [
         "ms-python.python",
         "ms-python.vscode-pylance",

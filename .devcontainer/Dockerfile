@@ -3,6 +3,8 @@
 FROM node:24.11.1-bookworm-slim AS node
 FROM ghcr.io/astral-sh/uv:python3.13-bookworm-slim
 
+ARG CODEX_CLI_VERSION=0.142.0
+
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     UV_LINK_MODE=copy \
@@ -15,6 +17,7 @@ RUN ln -sf ../lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
+        bubblewrap \
         ca-certificates \
         curl \
         git \
@@ -23,6 +26,8 @@ RUN apt-get update \
         less \
         procps \
     && rm -rf /var/lib/apt/lists/*
+
+RUN npm install -g "@openai/codex@${CODEX_CLI_VERSION}"
 
 RUN groupadd --gid 10001 soundatlas \
     && useradd --uid 10001 --gid soundatlas --create-home --shell /bin/sh soundatlas \
