@@ -24,6 +24,7 @@ Abgeschlossene Arbeitspakete sind in `docs/done.md` archiviert.
 ### Infrastruktur
 
 - [ ] `AGENTS.md` pruefen und ins Englische uebersetzen
+- [ ] Prompts aus dem Repo beim Start in den Dev Container uebernehmen
 - [ ] `docs/mvp-konzept.md` ins Englische uebersetzen und Datei umbenennen
 - [ ] `docs/image-enrichment-konzept.md` ins Englische uebersetzen und Datei umbenennen
 - [ ] Interne Links nach Dokumentations-Umbenennungen aktualisieren

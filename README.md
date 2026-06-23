@@ -1,35 +1,66 @@
 # SoundAtlas
 
-SoundAtlas is an MVP for an interactive music history app. The current scope is **New York 1965-1985** with curated routes, events, places, connections, and external media links.
+SoundAtlas is an MVP for an interactive music history app. Current scope:
+**New York 1965-1985**, starting with the vertical slice
+**Birth of Hip-Hop: Bronx 1970-1985**.
 
-## Requirements
+## Quick Start
 
-- Python `>=3.13`
-- `uv`
-- Node.js and npm
-- PowerShell for the optional startup script
+### Local
 
-## Local Development
-
-Quick start:
+Requirements: Python `>=3.13`, `uv`, Node.js/npm, PowerShell.
 
 ```powershell
 .\scripts\start-dev.ps1
 ```
 
-After startup, the app runs locally at:
+App URLs:
 
 - Backend: `http://127.0.0.1:8000`
 - Frontend: `http://127.0.0.1:5173`
 
-Start the backend manually:
+### Docker Compose
+
+```powershell
+docker compose up --build
+```
+
+App URLs:
+
+- Backend: `http://localhost:8000`
+- Backend health: `http://localhost:8000/health`
+- Frontend: `http://localhost:5173`
+
+Stop the containers:
+
+```powershell
+docker compose down
+```
+
+### VS Code Dev Container
+
+Use the VS Code Dev Containers extension and run:
+
+```text
+Dev Containers: Reopen in Container
+```
+
+This is the preferred setup for agent-assisted coding. The agent runs inside
+the container, with repo access and isolated Docker volumes instead of direct
+host home-directory mounts.
+
+Details: `docs/dev-container.md`
+
+## Manual Development
+
+Backend:
 
 ```powershell
 cd backend
 uv run uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 ```
 
-Start the frontend manually:
+Frontend:
 
 ```powershell
 cd frontend
@@ -37,47 +68,7 @@ $env:VITE_API_BASE_URL='http://127.0.0.1:8000'
 npm run dev -- --host 127.0.0.1 --port 5173
 ```
 
-## Docker Compose Development
-
-Start the containerized development environment:
-
-```powershell
-docker compose up --build
-```
-
-After startup, the app runs locally at:
-
-- Backend: `http://localhost:8000`
-- Backend health: `http://localhost:8000/health`
-- Frontend: `http://localhost:5173`
-
-Stop the environment:
-
-```powershell
-docker compose down
-```
-
-Run checks inside containers:
-
-```powershell
-docker compose run --rm backend uv run pytest
-docker compose run --rm frontend npm run check
-```
-
-The Compose setup mounts only repo-local project paths, runs the app processes
-as the `soundatlas` user, keeps backend dependencies in the rebuilt image, and
-keeps frontend dependencies in a named volume. Runtime egress is restricted by
-`docker/egress-guard.sh`: general outbound HTTPS is allowed, while common
-private/internal ranges and metadata IPs are rejected. Image builds still use
-Docker's normal build network.
-
-## VS Code Dev Containers
-
-Open this repository with the VS Code Dev Containers extension and choose
-`Reopen in Container`. The Dev Container uses the Docker Compose setup and
-starts both backend and frontend services.
-
-## Tests And Checks
+## Checks
 
 Backend:
 
@@ -93,57 +84,57 @@ cd frontend
 npm run check
 ```
 
+Inside Docker Compose:
+
+```powershell
+docker compose run --rm backend uv run pytest
+docker compose run --rm frontend npm run check
+```
+
 ## Data
 
-The MVP seed data is stored in:
+Seed data lives in `data/seed/`:
 
-- `data/seed/routes.json`
-- `data/seed/places.json`
-- `data/seed/events.json`
-- `data/seed/connections.json`
+- `routes.json`
+- `places.json`
+- `events.json`
+- `connections.json`
 
 Validation rules: `docs/seed-validation.md`
 
 ## Media Retrieval
 
-The current automated workflow is a YouTube-only MVP. It generates draft candidates for `media_links`; no audio or video files are stored.
+The automated media workflow is a YouTube-only MVP. It creates draft
+`media_links`; no audio or video files are stored in the repo.
 
-Important docs:
+Useful docs:
 
-- Workflow: `docs/media-retrieval/youtube-mvp-workflow.md`
-- Workflow Commands: `docs/media-retrieval/workflow-commands.md`
-- Event Search Components: `docs/media-retrieval/event-search-components.md`
-- Query Planning: `docs/media-retrieval/query-planning.md`
-- Codex Curation: `docs/media-retrieval/codex-query-curation.md`
+- `docs/media-retrieval/youtube-mvp-workflow.md`
+- `docs/media-retrieval/workflow-commands.md`
+- `docs/media-retrieval/codex-query-curation.md`
 
-Dry run for curated YouTube request plans:
+Dry run:
 
 ```powershell
 cd backend
 uv run python scripts/run_youtube_search_requests.py --dry-run
 ```
 
-Merge dry run for existing YouTube results:
-
-```powershell
-cd backend
-uv run python scripts/enrich_media_links.py --dry-run
-```
-
-Live YouTube requests require a real `YOUTUBE_API_KEY` via `SOUNDATLAS_ENV_FILE`. See `.env.example`.
+Live YouTube requests require `YOUTUBE_API_KEY` through `SOUNDATLAS_ENV_FILE`.
+See `.env.example`.
 
 ## Project Structure
 
-- `backend/`: FastAPI app, Pydantic schemas, tests, and YouTube retrieval scripts
+- `backend/`: FastAPI app, schemas, tests, and media retrieval scripts
 - `frontend/`: SvelteKit app with map, timeline, route filter, and story panel
-- `data/seed/`: curated JSON data for the MVP
-- `data/enrichment/`: curated query plans and generated retrieval results
-- `docs/`: product, route, data validation, and media retrieval documentation
+- `data/seed/`: curated MVP JSON data
+- `data/enrichment/`: media retrieval plans and results
+- `docs/`: product, data, route, infrastructure, and workflow docs
 - `scripts/`: local helper scripts
 
-## Working Rules
+## Rules
 
-- Do not commit secrets or local paths.
-- Do not store audio or video files in the repository.
-- Keep data sources and media links as external URLs.
-- Automatically generated media links remain `review_status: "draft"` until manually reviewed.
+- Do not commit secrets, tokens, local paths, or private config.
+- Do not store audio or video files in the repo.
+- Keep sources and media as external links.
+- Keep generated media links as `review_status: "draft"` until reviewed.
