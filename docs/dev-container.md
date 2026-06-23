@@ -87,7 +87,6 @@ Important environment variables:
 CODEX_HOME=/home/soundatlas/.codex
 UV_PROJECT_ENVIRONMENT=/home/soundatlas/.cache/uv/venvs/backend
 SOUNDATLAS_EGRESS_GUARD=enabled
-SOUNDATLAS_ALLOWED_INBOUND_PORTS=
 SOUNDATLAS_ALLOWED_OUTBOUND_PORTS=8000 5173
 SOUNDATLAS_WRITABLE_PATHS=/workspace/frontend/node_modules /home/soundatlas/.cache/uv /home/soundatlas/.npm /home/soundatlas/.codex
 ```
@@ -226,7 +225,6 @@ The egress guard:
 
 - allows loopback and established connections
 - allows Docker DNS
-- allows responses from explicitly configured inbound service ports
 - rejects common private/internal IPv4 ranges and metadata-style link-local
   ranges
 - allows outbound TCP `443`

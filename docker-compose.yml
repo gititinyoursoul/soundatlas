@@ -10,7 +10,6 @@ services:
       - no-new-privileges:true
     environment:
       SOUNDATLAS_EGRESS_GUARD: enabled
-      SOUNDATLAS_ALLOWED_INBOUND_PORTS: "8000"
       SOUNDATLAS_WRITABLE_PATHS: /opt/soundatlas/backend/.venv /workspace/backend/.pytest_cache /home/soundatlas/.cache/uv
     volumes:
       - type: bind
@@ -66,7 +65,6 @@ services:
         condition: service_healthy
     environment:
       SOUNDATLAS_EGRESS_GUARD: enabled
-      SOUNDATLAS_ALLOWED_INBOUND_PORTS: "5173"
       SOUNDATLAS_WRITABLE_PATHS: /workspace/frontend/node_modules /home/soundatlas/.npm
       HOST: 0.0.0.0
       VITE_API_BASE_URL: http://localhost:8000

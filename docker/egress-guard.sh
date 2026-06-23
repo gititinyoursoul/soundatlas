@@ -3,7 +3,6 @@ set -eu
 
 APP_USER="${SOUNDATLAS_APP_USER:-soundatlas}"
 WRITABLE_PATHS="${SOUNDATLAS_WRITABLE_PATHS:-}"
-ALLOWED_INBOUND_PORTS="${SOUNDATLAS_ALLOWED_INBOUND_PORTS:-}"
 ALLOWED_OUTBOUND_PORTS="${SOUNDATLAS_ALLOWED_OUTBOUND_PORTS:-}"
 
 prepare_writable_paths() {
@@ -31,10 +30,6 @@ apply_egress_policy() {
   iptables -A OUTPUT -p udp -d 127.0.0.11 --dport 53 -j ACCEPT
   iptables -A OUTPUT -p tcp -d 127.0.0.11 --dport 53 -j ACCEPT
 
-  for port in $ALLOWED_INBOUND_PORTS; do
-    iptables -A OUTPUT -p tcp --sport "$port" -j ACCEPT
-  done
-
   for port in $ALLOWED_OUTBOUND_PORTS; do
     iptables -A OUTPUT -p tcp --dport "$port" -j ACCEPT
   done
@@ -57,10 +52,6 @@ apply_egress_policy() {
     ip6tables -A OUTPUT -o lo -j ACCEPT
     ip6tables -A OUTPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
     ip6tables -A OUTPUT -d ::1/128 -j ACCEPT
-
-    for port in $ALLOWED_INBOUND_PORTS; do
-      ip6tables -A OUTPUT -p tcp --sport "$port" -j ACCEPT
-    done
 
     for port in $ALLOWED_OUTBOUND_PORTS; do
       ip6tables -A OUTPUT -p tcp --dport "$port" -j ACCEPT
