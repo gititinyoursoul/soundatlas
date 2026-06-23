@@ -57,7 +57,3 @@ Thumbs.db
 IDEAS.md
 ideas.md
 media_retrieval_pipeline_todo.md
-.github/*
-!.github/copilot-instructions.md
-!.github/prompts/
-!.github/prompts/*.md

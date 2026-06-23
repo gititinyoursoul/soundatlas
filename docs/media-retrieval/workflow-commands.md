@@ -35,7 +35,7 @@ kool-herc-back-to-school-jam
 Use the prompt:
 
 ```text
-.github/prompts/generate-youtube-search-queries.md
+prompts/generate-youtube-search-queries.md
 ```
 
 Ask Codex to create or update:
@@ -47,7 +47,7 @@ data/enrichment/youtube-search-requests/<event-id>.json
 Example instruction:
 
 ```text
-Use .github/prompts/generate-youtube-search-queries.md for event kool-herc-back-to-school-jam.
+Use prompts/generate-youtube-search-queries.md for event kool-herc-back-to-school-jam.
 Create a YouTube request plan only. Do not edit data/seed/events.json.
 ```
 

@@ -43,7 +43,7 @@ Archiv abgeschlossener Arbeitspakete. Die aktuelle Arbeitsliste liegt in `TODO.m
 - [x] Minimale Backend-Tests fuer Health und Events ergaenzen
 - [x] Sichere Media-Enrichment-Settings mit externem Secret-Pfad einfuehren
 - [x] Mockbare YouTube-Analyse-/Search-/Ranking-Pipeline fuer Content Pages umsetzen
-- [x] YouTube-Search-Prompt `.github/prompts/generate-youtube-search-queries.md` so anpassen, dass Shorts ausgeschlossen werden
+- [x] YouTube-Search-Prompt `prompts/generate-youtube-search-queries.md` so anpassen, dass Shorts ausgeschlossen werden
 - [x] Pruefen, ob `backend/scripts/enrich_media_links.py` mit dem Plus-only Workflow kompatibel ist
 
 ## Frontend

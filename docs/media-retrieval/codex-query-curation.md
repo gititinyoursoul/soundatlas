@@ -10,7 +10,7 @@ Codex should not invent media links, video IDs, playlist IDs, source URLs, or AP
 
 1. Pick an event from `data/seed/events.json`.
 2. Derive or review event search components with `docs/media-retrieval/event-search-components.md`.
-3. Ask Codex to create a YouTube request plan using `.github/prompts/generate-youtube-search-queries.md`.
+3. Ask Codex to create a YouTube request plan using `prompts/generate-youtube-search-queries.md`.
 4. Save the reviewed plan under `data/enrichment/youtube-search-requests/<event-id>.json`.
 5. Validate the plan with:
 

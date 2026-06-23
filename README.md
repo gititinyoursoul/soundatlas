@@ -130,6 +130,8 @@ See `.env.example`.
 - `data/seed/`: curated MVP JSON data
 - `data/enrichment/`: media retrieval plans and results
 - `docs/`: product, data, route, infrastructure, and workflow docs
+- `prompts/`: reusable project prompts for planning, implementation, review,
+  and media retrieval
 - `scripts/`: local helper scripts
 
 ## Rules
