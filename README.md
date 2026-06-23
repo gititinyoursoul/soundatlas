@@ -65,10 +65,11 @@ docker compose run --rm frontend npm run check
 ```
 
 The Compose setup mounts only repo-local project paths, runs the app processes
-as the `soundatlas` user, and keeps dependency folders in named volumes. Runtime
-egress is restricted by `docker/egress-guard.sh`: general outbound HTTPS is
-allowed, while common private/internal ranges and metadata IPs are rejected.
-Image builds still use Docker's normal build network.
+as the `soundatlas` user, keeps backend dependencies in the rebuilt image, and
+keeps frontend dependencies in a named volume. Runtime egress is restricted by
+`docker/egress-guard.sh`: general outbound HTTPS is allowed, while common
+private/internal ranges and metadata IPs are rejected. Image builds still use
+Docker's normal build network.
 
 ## VS Code Dev Containers
 

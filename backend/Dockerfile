@@ -5,8 +5,8 @@ FROM ghcr.io/astral-sh/uv:python3.13-bookworm-slim
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     UV_LINK_MODE=copy \
-    UV_PROJECT_ENVIRONMENT=/workspace/backend/.venv \
-    PATH="/workspace/backend/.venv/bin:$PATH"
+    UV_PROJECT_ENVIRONMENT=/opt/soundatlas/backend/.venv \
+    PATH="/opt/soundatlas/backend/.venv/bin:$PATH"
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -28,7 +28,7 @@ COPY docker/egress-guard.sh /usr/local/bin/egress-guard
 RUN chmod 0755 /usr/local/bin/egress-guard
 
 COPY backend/ ./
-RUN chown -R soundatlas:soundatlas /workspace /home/soundatlas
+RUN chown -R soundatlas:soundatlas /workspace /opt/soundatlas /home/soundatlas
 
 ENTRYPOINT ["egress-guard"]
-CMD ["sh", "-c", "uv sync --frozen && uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000"]
+CMD ["uvicorn", "app.main:app", "--reload", "--host", "0.0.0.0", "--port", "8000"]
