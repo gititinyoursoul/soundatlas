@@ -42,6 +42,7 @@ Archive of completed work packages. The current work list lives in `TODO.md`.
 - [x] Add local CORS configuration for the frontend
 - [x] Add minimal backend tests for health and events
 - [x] Introduce safe media enrichment settings with an external secret path
+- [x] Remove unused OpenAI settings from CLI media enrichment env examples
 - [x] Implement a mockable YouTube analysis/search/ranking pipeline for content pages
 - [x] Adjust the YouTube search prompt `prompts/generate-youtube-search-queries.md` to exclude Shorts
 - [x] Check whether `backend/scripts/enrich_media_links.py` is compatible with the plus-only workflow

@@ -8,10 +8,6 @@ Completed work packages are archived in `docs/done.md`.
 
 ## Open
 
-### Backend
-
-- [ ] Actively wire OpenAI settings into CLI media enrichment or remove them from env/docs
-
 ### UX and Design
 
 - [ ] Run a no-code UX audit of the current frontend app
@@ -25,10 +21,6 @@ Completed work packages are archived in `docs/done.md`.
 
 - [ ] Load prompts from the repo when starting the dev container
 - [ ] Decide whether a root task runner is needed
-
-## Next Concrete Step
-
-- [ ] Evaluate OpenAI settings in CLI media enrichment: actively wire them or remove them from env/docs
 
 ## Acceptance Criteria for Current Open Work
 
