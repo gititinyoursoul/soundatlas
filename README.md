@@ -47,6 +47,10 @@ docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontaine
 docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontainer.yml exec --user soundatlas workspace bash
 ```
 
+The `post-create.sh` step is important for CLI-only startup: it seeds Codex
+auth/config into the container volume, trusts `/workspace`, and applies the
+dev-container Codex permission defaults.
+
 Then start Codex inside the container:
 
 ```sh
