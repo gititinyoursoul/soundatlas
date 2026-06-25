@@ -11,7 +11,7 @@
       "place_type": "region",
       "latitude": 40.8176,
       "longitude": -73.9182,
-      "summary": "Regionaler Kontext fuer viele fruehe Hip-Hop-Partys, Crews und soziale Bedingungen.",
+      "summary": "Regional context for many early hip-hop parties, crews, and social conditions.",
       "review_status": "draft",
       "source_urls": [
         "https://americanhistory.si.edu/press/releases/hip-hop-comes-smithsonian"
@@ -24,7 +24,7 @@
       "place_type": "city",
       "latitude": 40.7128,
       "longitude": -74.006,
-      "summary": "Stadtweiter Kontext fuer Blackout, Medien, Plattenindustrie und Club-Verbreitung.",
+      "summary": "Citywide context for the blackout, media, the record industry, and club circulation.",
       "review_status": "draft",
       "source_urls": [
         "https://www.pbs.org/wgbh/americanexperience/films/blackout/"
@@ -37,7 +37,7 @@
       "place_type": "building",
       "latitude": 40.8471,
       "longitude": -73.9243,
-      "summary": "Apartmenthaus, dessen Gemeinschaftsraum als symbolischer Knotenpunkt der fruehen Hip-Hop-Geschichte gilt.",
+      "summary": "Apartment building whose community room is considered a symbolic node in early hip-hop history.",
       "review_status": "draft",
       "source_urls": [
         "https://www.history.com/this-day-in-history/hip-hop-is-born-at-a-birthday-party-in-the-bronx"
@@ -50,7 +50,7 @@
       "place_type": "park",
       "latitude": 40.856,
       "longitude": -73.9195,
-      "summary": "Oeffentlicher Raum im West Bronx-Kontext, verbunden mit frueher DJ- und Park-Party-Kultur.",
+      "summary": "Public space in the West Bronx context, connected to early DJ and park-party culture.",
       "review_status": "draft",
       "source_urls": []
     },
@@ -61,7 +61,7 @@
       "place_type": "housing_complex",
       "latitude": 40.835,
       "longitude": -73.8769,
-      "summary": "Wohnkomplex im Soundview-Kontext, eng verbunden mit Afrika Bambaataa und frueher Szeneorganisation.",
+      "summary": "Housing complex in the Soundview context, closely connected to Afrika Bambaataa and early scene organization.",
       "review_status": "draft",
       "source_urls": [
         "https://citylore.org/places/bronx-river-houses/",
@@ -75,7 +75,7 @@
       "place_type": "club",
       "latitude": 40.8357,
       "longitude": -73.9247,
-      "summary": "Bronx-Club an Jerome Avenue und 167th Street, wichtig fuer den Uebergang von lokaler Szene zu Club- und Medienpraesenz.",
+      "summary": "Bronx club at Jerome Avenue and 167th Street, important for the transition from local scene to club and media presence.",
       "review_status": "draft",
       "source_urls": [
         "https://digital.library.cornell.edu/catalog/ss%3A927364"
@@ -88,7 +88,7 @@
       "place_type": "club",
       "latitude": 40.7463,
       "longitude": -74.0069,
-      "summary": "Downtown-Club und Roller-Rink an der West 18th Street, relevant fuer Hip-Hop als Club-, Kunst- und Medienphaenomen.",
+      "summary": "Downtown club and roller rink on West 18th Street, relevant to hip-hop as a club, art, and media phenomenon.",
       "review_status": "draft",
       "source_urls": [
         "https://www.filmlinc.org/films/wild-style/"
@@ -101,7 +101,7 @@
       "place_type": "external_node",
       "latitude": 40.8929,
       "longitude": -73.9726,
-      "summary": "Externer Industrie-Knoten in Englewood, New Jersey, verbunden mit Sugar Hill Records und Rapper's Delight.",
+      "summary": "External industry node in Englewood, New Jersey, connected to Sugar Hill Records and Rapper's Delight.",
       "review_status": "draft",
       "source_urls": [
         "https://www.britannica.com/topic/the-Sugarhill-Gang",
