@@ -92,7 +92,7 @@ Installed runtime tools:
 - `uv`
 - Node.js `24.11.1`
 - npm
-- Codex CLI `@openai/codex` `0.142.0`
+- Codex CLI `@openai/codex` `0.142.2`
 - Git
 - Bash with programmable completion and Git prompt support
 - basic shell/process tools: `bubblewrap`, `curl`, `less`, `procps`
@@ -181,11 +181,15 @@ The `workspace` service uses these mounts:
 Because `CODEX_HOME` points at the `codex_home` volume, Codex can keep its
 container-local SQLite state and writable `config.toml` on a Linux filesystem.
 During post-create setup, host `auth.json` is copied into that volume and host
-`config.toml` is copied only if the container does not already have one. This
-lets Codex persist workspace trust and other config changes inside the
-container. The credentials are not copied into the repository or Docker image.
-The workspace image installs the Codex CLI, so terminal sessions inside the
-container use the seeded login cache and configuration.
+`config.toml` is copied only if the container does not already have one. The
+post-create step then applies SoundAtlas dev-container defaults to the
+container-local config: `/workspace` is trusted, Codex starts in
+`workspace-write` with `on-request` approvals, cached web search is used, and
+workspace shell commands can use network access. Network egress is still
+bounded by the container firewall described below. The credentials are not
+copied into the repository or Docker image. The workspace image installs the
+Codex CLI, so terminal sessions inside the container use the seeded login cache
+and configuration.
 The workspace intentionally shares dependency/cache volumes with the app
 services so agent-run checks and running services see the same installed
 frontend packages and uv cache.
@@ -206,6 +210,7 @@ After the container is created, `.devcontainer/post-create.sh` configures Git:
 mkdir -p "$CODEX_HOME"
 # copy /mnt/host-codex/auth.json into CODEX_HOME when present
 # seed /mnt/host-codex/config.toml into CODEX_HOME only when missing
+# apply container-local Codex defaults for /workspace
 git config --global --replace-all safe.directory /workspace
 git config --global credential.useHttpPath true
 git config --global core.autocrlf true
@@ -214,7 +219,9 @@ git config --global core.filemode false
 
 This seeds Codex auth/config into the writable Linux volume, makes the mounted
 workspace safe for Git inside the container, and keeps Windows-oriented
-line-ending and file-mode behavior predictable.
+line-ending and file-mode behavior predictable. Re-running the script updates
+the container-local Codex defaults even when the `codex_home` volume already
+existed from an older setup.
 
 ## Common Commands
 
@@ -271,9 +278,12 @@ terminal:
 2. Confirm `CODEX_HOME` is `/home/soundatlas/.codex`.
 3. Confirm the copied login cache exists at `/home/soundatlas/.codex/auth.json`.
 4. Confirm the writable config exists at `/home/soundatlas/.codex/config.toml`.
-5. Run `codex doctor` and check the reported auth, config, runtime, and Git
+5. Confirm the config contains `[projects."/workspace"]` with
+   `trust_level = "trusted"` and `[sandbox_workspace_write]` with
+   `network_access = true`.
+6. Run `codex doctor` and check the reported auth, config, runtime, and Git
    diagnostics.
-6. Rebuild the dev container if `codex` is missing; the CLI is installed during
+7. Rebuild the dev container if `codex` is missing; the CLI is installed during
    the workspace image build.
 
 `auth.json` is only the cached login state. It does not install or start Codex
