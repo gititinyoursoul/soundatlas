@@ -206,12 +206,12 @@ For YouTube search requests, the following rules apply:
 
 ## ChatGPT Plus-Only Workflow
 
-A ChatGPT Plus account does not provide a local API key for Python scripts. If the project is used only through ChatGPT Plus and the VS Code Codex extension, GPT should be treated as an interactive editorial assistant, not as an automated backend service.
+A ChatGPT Plus account does not provide a local API key for Python scripts. If the project is used only through ChatGPT Plus and Codex CLI, GPT should be treated as an interactive editorial assistant, not as an automated backend service.
 
 In this mode, GPT/Codex is used to prepare and review YouTube request plans. The actual YouTube API call still requires a real `YOUTUBE_API_KEY`:
 
 1. Select an event or content page from the curated seed data.
-2. Ask Codex in VS Code to analyze the title, summary, significance, route, tags, years, and known scene terms.
+2. Ask Codex CLI to analyze the title, summary, significance, route, tags, years, and known scene terms.
 3. Let Codex propose intent-based YouTube request-plan entries.
 4. Review those request plans manually before running the YouTube API.
 5. Run `backend/scripts/run_youtube_search_requests.py --dry-run` to inspect planned API calls.

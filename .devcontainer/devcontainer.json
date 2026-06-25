@@ -5,39 +5,8 @@
     "docker-compose.devcontainer.yml"
   ],
   "service": "workspace",
-  "runServices": ["workspace", "backend", "frontend"],
   "workspaceFolder": "/workspace",
   "remoteUser": "soundatlas",
-  "shutdownAction": "stopCompose",
   "overrideCommand": false,
-  "remoteEnv": {
-    "CODEX_HOME": "/home/soundatlas/.codex",
-    "UV_PROJECT_ENVIRONMENT": "/home/soundatlas/.cache/uv/venvs/backend"
-  },
-  "postCreateCommand": "sh .devcontainer/post-create.sh",
-  "customizations": {
-    "vscode": {
-      "settings": {
-        "chatgpt.openOnStartup": true,
-        "terminal.integrated.defaultProfile.linux": "bash",
-        "terminal.integrated.profiles.linux": {
-          "bash": {
-            "path": "/bin/bash"
-          }
-        }
-      },
-      "extensions": [
-        "ms-python.python",
-        "ms-python.vscode-pylance",
-        "ms-azuretools.vscode-docker",
-        "mhutchie.git-graph",
-        "openai.chatgpt",
-        "svelte.svelte-vscode",
-        "tamasfe.even-better-toml",
-        "redhat.vscode-yaml",
-        "humao.rest-client",
-        "yzhang.markdown-all-in-one"
-      ]
-    }
-  }
+  "postCreateCommand": "sh .devcontainer/post-create.sh"
 }

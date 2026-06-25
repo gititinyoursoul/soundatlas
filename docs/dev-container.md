@@ -1,9 +1,10 @@
-# Dev Container Setup
+# Dev Container And Workspace Setup
 
-This document describes the current VS Code Dev Containers setup for SoundAtlas.
-It is based on `.devcontainer/devcontainer.json`,
-`.devcontainer/docker-compose.devcontainer.yml`, the root `docker-compose.yml`,
-and the related Dockerfiles.
+This document describes the current containerized development setup for
+SoundAtlas. It is based on `.devcontainer/docker-compose.devcontainer.yml`,
+the root `docker-compose.yml`, and the related Dockerfiles. The optional
+`.devcontainer/devcontainer.json` file lets VS Code Dev Containers attach to
+the same Compose workspace.
 
 ## Purpose
 
@@ -13,22 +14,43 @@ host machine.
 
 It is intentionally suitable for agent-assisted development: the agent runs
 inside the `workspace` container and sees only the repository plus the explicit
-mounts listed below. Codex credentials and config are mounted from the host so
-the VS Code/Codex extension can reuse the host login without baking credentials
-into an image. Codex runtime state stays in a Docker volume so SQLite state
-files are not written through the Windows bind mount.
+mounts listed below. The `workspace` container does not require VS Code at
+runtime; it is a long-running tools container that can be entered through plain
+`docker compose exec` or, optionally, VS Code Dev Containers. Codex runs as a
+CLI process inside that container. Codex credentials and config are seeded from
+the host so the container CLI can reuse the host login without baking
+credentials into an image. Codex runtime state and writable config stay in a
+Docker volume so SQLite state files and `config.toml` updates are not written
+through Windows bind mounts.
 
 It starts three Compose services:
 
-- `workspace`: interactive VS Code/Codex workspace
+- `workspace`: interactive shell and Codex CLI workspace
 - `backend`: FastAPI development server on port `8000`
 - `frontend`: SvelteKit/Vite development server on port `5173`
 
 The repository is mounted in the workspace container at `/workspace`.
 
-## Entry Point
+## Entry Points
 
-Open the repository with the VS Code Dev Containers extension and run:
+### Docker Compose CLI
+
+The preferred agent workflow starts the workspace directly with Docker Compose:
+
+```powershell
+docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontainer.yml up -d --build workspace
+docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontainer.yml exec --user soundatlas workspace sh .devcontainer/post-create.sh
+docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontainer.yml exec --user soundatlas workspace bash
+```
+
+The manual `post-create.sh` step is only needed for CLI-only startup. Use
+`--user soundatlas` for manual `exec` commands so shell sessions match the
+container user configured for the workspace.
+
+### VS Code Dev Containers
+
+VS Code is optional. To attach the editor to the same workspace container, open
+the repository with the VS Code Dev Containers extension and run:
 
 ```text
 Dev Containers: Reopen in Container
@@ -41,7 +63,7 @@ docker-compose.yml
 .devcontainer/docker-compose.devcontainer.yml
 ```
 
-The selected VS Code service is:
+When opened through VS Code, the selected service is:
 
 ```sh
 workspace
@@ -56,6 +78,8 @@ soundatlas
 Interactive terminals use Bash by default. The image installs
 `bash-completion` and a small `.bashrc` that enables tab completion plus Git
 branch/status information in the prompt.
+
+VS Code Dev Containers runs the configured `postCreateCommand` automatically.
 
 ## Workspace Image
 
@@ -74,7 +98,8 @@ Installed runtime tools:
 - basic shell/process tools: `bubblewrap`, `curl`, `less`, `procps`
 
 The workspace image uses `/workspace` as its working directory and runs
-`sleep infinity` by default so VS Code can attach to it.
+`sleep infinity` by default so `docker compose exec` or VS Code can attach to
+the already-running tools container.
 
 ## Services
 
@@ -84,7 +109,7 @@ Defined in `.devcontainer/docker-compose.devcontainer.yml`.
 
 Responsibilities:
 
-- host the interactive editor and Codex session
+- host an interactive shell and Codex CLI session
 - provide Python, `uv`, Node.js, npm, and Git in one container
 - mount the full repository at `/workspace`
 - share dependency/cache volumes with the project workflow
@@ -151,18 +176,16 @@ The `workspace` service uses these mounts:
 - named volume: `backend_uv_cache` to `/home/soundatlas/.cache/uv`
 - named volume: `frontend_npm_cache` to `/home/soundatlas/.npm`
 - named volume: `codex_home` to `/home/soundatlas/.codex`
-- host bind mount: `%USERPROFILE%/.codex/auth.json` to
-  `/home/soundatlas/.codex/auth.json`
-- host bind mount: `%USERPROFILE%/.codex/config.toml` to
-  `/home/soundatlas/.codex/config.toml`
+- read-only host bind mount: `%USERPROFILE%/.codex` to `/mnt/host-codex`
 
 Because `CODEX_HOME` points at the `codex_home` volume, Codex can keep its
-container-local SQLite state on a Linux filesystem. The host `auth.json` and
-`config.toml` are mounted into that directory after the user signs in on the
-host. The credentials are not copied into the repository or Docker image.
-The workspace image also installs the Codex CLI, so the VS Code Codex
-extension and terminal sessions can use the same mounted login cache and
-configuration.
+container-local SQLite state and writable `config.toml` on a Linux filesystem.
+During post-create setup, host `auth.json` is copied into that volume and host
+`config.toml` is copied only if the container does not already have one. This
+lets Codex persist workspace trust and other config changes inside the
+container. The credentials are not copied into the repository or Docker image.
+The workspace image installs the Codex CLI, so terminal sessions inside the
+container use the seeded login cache and configuration.
 The workspace intentionally shares dependency/cache volumes with the app
 services so agent-run checks and running services see the same installed
 frontend packages and uv cache.
@@ -180,27 +203,18 @@ The app services use repo-local bind mounts and named dependency/cache volumes:
 After the container is created, `.devcontainer/post-create.sh` configures Git:
 
 ```sh
+mkdir -p "$CODEX_HOME"
+# copy /mnt/host-codex/auth.json into CODEX_HOME when present
+# seed /mnt/host-codex/config.toml into CODEX_HOME only when missing
 git config --global --replace-all safe.directory /workspace
 git config --global credential.useHttpPath true
 git config --global core.autocrlf true
 git config --global core.filemode false
 ```
 
-This makes the mounted workspace safe for Git inside the container and keeps
-Windows-oriented line-ending and file-mode behavior predictable.
-
-## VS Code Extensions
-
-The dev container requests these VS Code extensions:
-
-- Python and Pylance
-- Docker
-- Git Graph
-- ChatGPT
-- Svelte
-- TOML, YAML, REST Client, and Markdown helpers
-
-The extension list is defined in `.devcontainer/devcontainer.json`.
+This seeds Codex auth/config into the writable Linux volume, makes the mounted
+workspace safe for Git inside the container, and keeps Windows-oriented
+line-ending and file-mode behavior predictable.
 
 ## Common Commands
 
@@ -228,8 +242,16 @@ npm ci
 Check Codex inside the workspace container:
 
 ```sh
+cd /workspace
 codex --version
 codex doctor
+```
+
+Start an interactive Codex session inside the workspace container:
+
+```sh
+cd /workspace
+codex
 ```
 
 Check service URLs from the host:
@@ -240,16 +262,18 @@ Health:   http://localhost:8000/health
 Frontend: http://localhost:5173
 ```
 
-## Codex Startup Troubleshooting
+## Codex CLI Troubleshooting
 
-If the dev container starts but Codex does not appear in VS Code:
+If the dev container starts but Codex CLI does not work in the workspace
+terminal:
 
-1. Open the Command Palette and run `Codex: Open Sidebar`.
-2. In the workspace terminal, run `codex --version`.
-3. Confirm the mounted login cache exists at `/home/soundatlas/.codex/auth.json`.
-4. Run `codex doctor` and check the reported auth, config, runtime, and Git
+1. In the workspace terminal, run `codex --version`.
+2. Confirm `CODEX_HOME` is `/home/soundatlas/.codex`.
+3. Confirm the copied login cache exists at `/home/soundatlas/.codex/auth.json`.
+4. Confirm the writable config exists at `/home/soundatlas/.codex/config.toml`.
+5. Run `codex doctor` and check the reported auth, config, runtime, and Git
    diagnostics.
-5. Rebuild the dev container if `codex` is missing; the CLI is installed during
+6. Rebuild the dev container if `codex` is missing; the CLI is installed during
    the workspace image build.
 
 `auth.json` is only the cached login state. It does not install or start Codex
@@ -257,6 +281,11 @@ by itself.
 If `codex doctor` reports SQLite state errors under `/home/soundatlas/.codex`,
 remove and recreate the `codex_home` Docker volume rather than bind-mounting
 the whole host `%USERPROFILE%/.codex` directory.
+
+If Codex asks whether `/workspace` is trusted and then fails with
+`failed to persist config.toml`, rebuild the dev container so `config.toml` is
+written inside the `codex_home` volume instead of being mounted as an
+individual host file.
 
 ## Security Boundaries
 
@@ -285,23 +314,21 @@ edit the repository and use public HTTPS for package installation, Git remotes,
 documentation lookup, and model/API access. The workspace may also call the
 local dev service ports `8000` and `5173` for backend/frontend checks. It
 should not receive direct mounts to host secrets or broader host directories.
+The only host credential mount is the read-only `%USERPROFILE%/.codex` seed
+mount used by the workspace service.
 
 Use `.env.codex.example` for dummy agent/test values. Keep any real
 `.env.codex` file local and untracked. Do not add real tokens, SSH keys,
 private dotfiles, or host-local paths to the repository, Docker images, or
-checked-in environment files. The host `%USERPROFILE%/.codex/auth.json` bind
-mount is a runtime-only convenience for trusted local development; treat
-`%USERPROFILE%/.codex/auth.json` like a password.
+checked-in environment files. The copied Codex `auth.json` gives the container
+Codex login state, so treat the host and container copies of `auth.json` like a
+password.
 
 ## Lifecycle Notes
 
-VS Code controls the Compose lifecycle for the dev container. The configured
-shutdown action is:
-
-```sh
-stopCompose
-```
-
-Stopping or closing the dev container stops the Compose services, but named
-volumes remain available for later rebuilds unless they are explicitly removed
-with Docker volume cleanup commands.
+When using Docker Compose directly, the lifecycle is controlled by normal
+Compose commands such as `docker compose stop`, `docker compose down`, and
+`docker compose up`. When using VS Code Dev Containers, VS Code attaches to the
+same Compose service and manages the editor connection, but named volumes remain
+available for later rebuilds unless they are explicitly removed with Docker
+volume cleanup commands.

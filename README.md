@@ -37,17 +37,28 @@ Stop the containers:
 docker compose down
 ```
 
-### VS Code Dev Container
+### Codex CLI Dev Container
 
-Use the VS Code Dev Containers extension and run:
+Start the containerized Codex workspace:
 
-```text
-Dev Containers: Reopen in Container
+```powershell
+docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontainer.yml up -d --build workspace
+docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontainer.yml exec --user soundatlas workspace sh .devcontainer/post-create.sh
+docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontainer.yml exec --user soundatlas workspace bash
 ```
 
-This is the preferred setup for agent-assisted coding. The agent runs inside
-the container, with repo access and isolated Docker volumes instead of direct
-host home-directory mounts.
+Then start Codex inside the container:
+
+```sh
+cd /workspace
+codex
+```
+
+This is the preferred setup for agent-assisted coding. Codex runs inside the
+same isolated workspace as the app, so it sees the project filesystem,
+dependencies, environment variables, test commands, linters, and build tools
+used by the containers. VS Code can still attach to the same workspace through
+the Dev Containers extension, but it is optional.
 
 Details: `docs/dev-container.md`
 
