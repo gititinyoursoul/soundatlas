@@ -98,6 +98,9 @@ Archive of completed work packages. The current work list lives in `TODO.md`.
 - [x] Document Codex CLI in the dev container as the preferred agent workflow
 - [x] Confirm Codex state uses the `codex_home` Docker volume and host `%USERPROFILE%/.codex` is mounted read-only only as a seed source
 - [x] Automate optional Git author configuration in the dev container from explicit environment variables
+- [x] Confirm repo prompts are available through the `/workspace` mount; no automatic prompt preload is needed
+- [x] Decide not to add a root task runner while README, Compose, and existing scripts cover the MVP workflow
+- [x] Confirm `TODO.md` contains only current open tasks and completed work stays traceable in `docs/done.md`
 - [x] Check `AGENTS.md` and translate it into English
 
 ## Docker Compose Run Checklist
