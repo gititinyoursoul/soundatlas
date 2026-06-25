@@ -72,7 +72,7 @@ Events should contain at least:
 
 - Document product and architecture decisions in `docs/`.
 - The current task list lives in `TODO.md`.
-- If the scope changes, update `docs/mvp-konzept.md` first and then `TODO.md`.
+- If the scope changes, update `docs/mvp-concept.md` first and then `TODO.md`.
 
 ## Git Conventions
 

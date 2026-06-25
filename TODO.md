@@ -1,40 +1,38 @@
 # SoundAtlas TODO
 
-## Aktueller Fokus
+## Current Focus
 
-Ziel des ersten MVP ist ein vertikaler Slice fuer **Birth of Hip-Hop: Bronx 1970-1985**. Dieser Slice soll Karte, Timeline, Story Panel, Route Filter und Backend-Datenfluss einmal vollstaendig demonstrieren.
+The goal of the first MVP is a vertical slice for **Birth of Hip-Hop: Bronx 1970-1985**. This slice should fully demonstrate map, timeline, story panel, route filter, and backend data flow once.
 
-Abgeschlossene Arbeitspakete sind in `docs/done.md` archiviert.
+Completed work packages are archived in `docs/done.md`.
 
-## Offen
+## Open
 
 ### Backend
 
-- [ ] OpenAI-Settings im CLI-Media-Enrichment aktiv verdrahten oder aus Env/Doku entfernen
+- [ ] Actively wire OpenAI settings into CLI media enrichment or remove them from env/docs
 
-### UX und Design
+### UX and Design
 
-- [ ] No-code UX-Audit der aktuellen Frontend-App durchfuehren
-- [ ] UX-Designrichtung fuer den MVP festlegen
-- [ ] UI-Plan fuer die Haupt-Explorationsansicht ausarbeiten
-- [ ] Auswahlfluss Route, Karte, Timeline und Story Panel pruefen
-- [ ] Screenshot-Kritik fuer Desktop und Mobile durchfuehren
-- [ ] UX-Akzeptanzcheck anhand der Design-Checklist dokumentieren
+- [ ] Run a no-code UX audit of the current frontend app
+- [ ] Choose the UX design direction for the MVP
+- [ ] Draft a UI plan for the main exploration view
+- [ ] Review the selection flow across route, map, timeline, and story panel
+- [ ] Run screenshot critique for desktop and mobile
+- [ ] Document the UX acceptance check against the design checklist
 
-### Infrastruktur
+### Infrastructure
 
-- [ ] Prompts aus dem Repo beim Start in den Dev Container uebernehmen
-- [ ] `docs/mvp-konzept.md` ins Englische uebersetzen und Datei umbenennen
-- [ ] `docs/image-enrichment-konzept.md` ins Englische uebersetzen und Datei umbenennen
-- [ ] Interne Links nach Dokumentations-Umbenennungen aktualisieren
-- [ ] Entscheiden, ob ein Root-Task-Runner noetig ist
+- [ ] Load prompts from the repo when starting the dev container
+- [ ] Automate local Git author configuration in the dev container or workspace setup
+- [ ] Decide whether a root task runner is needed
 
-## Naechster konkreter Schritt
+## Next Concrete Step
 
-- [ ] OpenAI-Settings im CLI-Media-Enrichment bewerten: aktiv verdrahten oder aus Env/Doku entfernen
+- [ ] Evaluate OpenAI settings in CLI media enrichment: actively wire them or remove them from env/docs
 
-## Akzeptanzkriterien fuer aktuelle offene Arbeit
+## Acceptance Criteria for Current Open Work
 
-- [ ] `TODO.md` enthaelt nur aktuelle offene Tasks
-- [ ] Abgeschlossene Arbeitspakete bleiben im Archiv nachvollziehbar
-- [ ] Neue Arbeitspakete werden in kleinen, reviewbaren Schritten ergaenzt
+- [x] `TODO.md` contains only current open tasks
+- [x] Completed work packages remain traceable in the archive
+- [x] New work packages are added in small, reviewable steps

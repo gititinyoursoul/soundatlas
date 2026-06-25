@@ -20,7 +20,7 @@ Project constraints
 - Be careful with contested historical claims; mark uncertainty in wording rather than overstating.
 
 Process
-- Check the route concept in `docs/routes/` and MVP scope in `docs/mvp-konzept.md`.
+- Check the route concept in `docs/routes/` and MVP scope in `docs/mvp-concept.md`.
 - Update the smallest necessary set of seed files: routes, places, events, connections.
 - Keep event wording concise: `summary` for what happened, `significance` for why it matters.
 - Validate JSON syntax and cross-references if tooling is available.

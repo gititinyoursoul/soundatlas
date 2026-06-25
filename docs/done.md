@@ -1,150 +1,150 @@
 # SoundAtlas Done
 
-Archiv abgeschlossener Arbeitspakete. Die aktuelle Arbeitsliste liegt in `TODO.md`.
+Archive of completed work packages. The current work list lives in `TODO.md`.
 
-## Produkt und Content
+## Product and Content
 
-- [x] Leitfrage fuer den MVP finalisieren
-- [x] Route `Birth of Hip-Hop` redaktionell ausarbeiten
-- [x] 8-12 Events fuer die Hip-Hop-Route definieren
-- [x] 5-8 Places mit Koordinaten erfassen
-- [x] 8-12 Influence Connections definieren
-- [x] Quellenstruktur fuer Events festlegen
-- [x] Medienlink-Regeln klaeren: YouTube, Spotify, Internet Archive oder externe Links
-- [x] Media-Enrichment-Konzept dokumentieren
-- [x] Offene historische Unsicherheiten markieren
+- [x] Finalize the guiding question for the MVP
+- [x] Editorially develop the `Birth of Hip-Hop` route
+- [x] Define 8-12 events for the hip-hop route
+- [x] Capture 5-8 places with coordinates
+- [x] Define 8-12 influence connections
+- [x] Define the source structure for events
+- [x] Clarify media-link rules: YouTube, Spotify, Internet Archive, or external links
+- [x] Document the media enrichment concept
+- [x] Mark open historical uncertainties
 
-## Seed-Daten
+## Seed Data
 
-- [x] Datenformat fuer Routes, Events, Places und Connections festlegen
-- [x] `data/seed/routes.json` anlegen
-- [x] `data/seed/places.json` anlegen
-- [x] `data/seed/events.json` anlegen
-- [x] `data/seed/connections.json` anlegen
-- [x] Beispiel-Daten fuer `Birth of Hip-Hop` eintragen
-- [x] Einfache Validierung fuer Pflichtfelder definieren
-- [x] Quellen- und Medienlinks als Arrays modellieren
+- [x] Define the data format for routes, events, places, and connections
+- [x] Create `data/seed/routes.json`
+- [x] Create `data/seed/places.json`
+- [x] Create `data/seed/events.json`
+- [x] Create `data/seed/connections.json`
+- [x] Add sample data for `Birth of Hip-Hop`
+- [x] Define simple validation for required fields
+- [x] Model source and media links as arrays
 
 ## Backend
 
-- [x] Backend-Projektbeschreibung in `backend/pyproject.toml` aktualisieren
-- [x] FastAPI-App-Struktur unter `backend/app/` anlegen
-- [x] Pydantic-Schemas fuer API-Responses definieren
-- [x] JSON-Seed-Dateien im Backend laden
-- [x] Seed-Daten gegen `docs/seed-validation.md` validieren
-- [x] `GET /health` implementieren
-- [x] `GET /routes` implementieren
-- [x] `GET /events` mit `from_year`, `to_year` und `route_id` implementieren
-- [x] `GET /events/{event_id}` implementieren
-- [x] `GET /places` implementieren
-- [x] `GET /connections` mit `route_id` implementieren
-- [x] Fehlerverhalten fuer unbekannte IDs und leere Filterergebnisse definieren
-- [x] Lokale CORS-Konfiguration fuer das Frontend ergaenzen
-- [x] Minimale Backend-Tests fuer Health und Events ergaenzen
-- [x] Sichere Media-Enrichment-Settings mit externem Secret-Pfad einfuehren
-- [x] Mockbare YouTube-Analyse-/Search-/Ranking-Pipeline fuer Content Pages umsetzen
-- [x] YouTube-Search-Prompt `prompts/generate-youtube-search-queries.md` so anpassen, dass Shorts ausgeschlossen werden
-- [x] Pruefen, ob `backend/scripts/enrich_media_links.py` mit dem Plus-only Workflow kompatibel ist
+- [x] Update the backend project description in `backend/pyproject.toml`
+- [x] Create the FastAPI app structure under `backend/app/`
+- [x] Define Pydantic schemas for API responses
+- [x] Load JSON seed files in the backend
+- [x] Validate seed data against `docs/seed-validation.md`
+- [x] Implement `GET /health`
+- [x] Implement `GET /routes`
+- [x] Implement `GET /events` with `from_year`, `to_year`, and `route_id`
+- [x] Implement `GET /events/{event_id}`
+- [x] Implement `GET /places`
+- [x] Implement `GET /connections` with `route_id`
+- [x] Define error behavior for unknown IDs and empty filter results
+- [x] Add local CORS configuration for the frontend
+- [x] Add minimal backend tests for health and events
+- [x] Introduce safe media enrichment settings with an external secret path
+- [x] Implement a mockable YouTube analysis/search/ranking pipeline for content pages
+- [x] Adjust the YouTube search prompt `prompts/generate-youtube-search-queries.md` to exclude Shorts
+- [x] Check whether `backend/scripts/enrich_media_links.py` is compatible with the plus-only workflow
 
 ## Frontend
 
-- [x] Bestehendes `frontend/` auf SvelteKit migrieren
-- [x] TypeScript-Konfiguration und SvelteKit-Scripts einrichten
-- [x] Frontend-Dependencies pruefen: SvelteKit, Vite, TypeScript, Leaflet
-- [x] API-Basis-URL fuer lokale Entwicklung definieren
-- [x] TypeScript-Typen fuer `Route`, `Place`, `Event` und `Connection` anlegen
-- [x] API-Client fuer `/routes`, `/events`, `/places` und `/connections` bauen
-- [x] Erste Seite als App-Shell mit Karte, Timeline und Side Panel aufbauen
-- [x] Leaflet browser-sicher in Svelte einbinden
-- [x] `MapView`-Komponente mit Event-Markern erstellen
-- [x] `Timeline`-Komponente fuer Zeitraum `1965-1985` erstellen
-- [x] `RouteFilter`-Komponente fuer aktive Routen erstellen
-- [x] `StoryPanel`-Komponente fuer ausgewähltes Event erstellen
-- [x] Gemeinsamen Frontend-State fuer Route, Zeitraum und ausgewähltes Event definieren
-- [x] Event-Marker nach aktivem Zeitraum und Route filtern
-- [x] Route-Farben konsistent aus API-Daten darstellen
-- [x] Loading-, Error- und Empty-States anzeigen
-- [x] Frontend-Smoke-Check oder Build-Check definieren und ausfuehren
+- [x] Migrate the existing `frontend/` to SvelteKit
+- [x] Set up TypeScript configuration and SvelteKit scripts
+- [x] Check frontend dependencies: SvelteKit, Vite, TypeScript, Leaflet
+- [x] Define the API base URL for local development
+- [x] Create TypeScript types for `Route`, `Place`, `Event`, and `Connection`
+- [x] Build an API client for `/routes`, `/events`, `/places`, and `/connections`
+- [x] Build the first page as an app shell with map, timeline, and side panel
+- [x] Integrate Leaflet safely for browser use in Svelte
+- [x] Create a `MapView` component with event markers
+- [x] Create a `Timeline` component for the `1965-1985` period
+- [x] Create a `RouteFilter` component for active routes
+- [x] Create a `StoryPanel` component for the selected event
+- [x] Define shared frontend state for route, time range, and selected event
+- [x] Filter event markers by active time range and route
+- [x] Render route colors consistently from API data
+- [x] Show loading, error, and empty states
+- [x] Define and run a frontend smoke check or build check
 
-## UX und Design
+## UX and Design
 
-- [x] Erste Bildschirmaufteilung festlegen: Karte, Timeline, Side Panel
-- [x] Farbcode pro Route definieren
-- [x] Marker-Zustaende definieren: default, hover, selected
-- [x] 1977 als dramaturgischen Fokus sichtbar machen
-- [x] Mobile Layout grob pruefen
-- [x] Quellen und Medienlinks im Story Panel darstellen
-- [x] Verbindungen zwischen Events visuell oder textlich anzeigen
-- [x] Frontend-Akzeptanzkriterien pruefen: Karte zeigt Hip-Hop-Events, Timeline filtert, Story Panel reagiert auf Markerauswahl
+- [x] Define the first screen layout: map, timeline, side panel
+- [x] Define color coding per route
+- [x] Define marker states: default, hover, selected
+- [x] Make 1977 visible as a dramatic focus
+- [x] Roughly check the mobile layout
+- [x] Show sources and media links in the story panel
+- [x] Show connections between events visually or textually
+- [x] Check frontend acceptance criteria: map shows hip-hop events, timeline filters, story panel reacts to marker selection
 
-## Bildmaterial
+## Image Material
 
-- [x] Konzept fuer Event-Bildmaterial dokumentieren
-- [x] `image_links` im Event-Schema definieren
-- [x] Seed-Validierungsregeln fuer Bildlinks dokumentieren
-- [x] Bestehende Events mit leeren `image_links` initialisieren
-- [x] Story Panel fuer reviewed Bildmaterial erweitern
-- [x] Tests fuer Bildlink-Schema und Seed-Daten ergaenzen
-- [x] Optionales Skript fuer automatische Bildkandidaten planen
+- [x] Document the concept for event image material
+- [x] Define `image_links` in the event schema
+- [x] Document seed validation rules for image links
+- [x] Initialize existing events with empty `image_links`
+- [x] Extend the story panel for reviewed image material
+- [x] Add tests for image-link schema and seed data
+- [x] Plan an optional script for automatic image candidates
 
-## Infrastruktur
+## Infrastructure
 
-- [x] Root-README fuer Projektstart anlegen
-- [x] Backend-Startbefehl dokumentieren
-- [x] Frontend-Startbefehl dokumentieren
-- [x] Gemeinsame Entwicklungsbefehle definieren
-- [x] Containerisierte lokale Entwicklungsumgebung fuer Backend und Frontend mit Docker Compose definieren
-- [x] Codex CLI im Dev Container als bevorzugten Agenten-Workflow dokumentieren
-- [x] `AGENTS.md` pruefen und ins Englische uebersetzen
+- [x] Create a root README for project start
+- [x] Document the backend start command
+- [x] Document the frontend start command
+- [x] Define shared development commands
+- [x] Define a containerized local development environment for backend and frontend with Docker Compose
+- [x] Document Codex CLI in the dev container as the preferred agent workflow
+- [x] Check `AGENTS.md` and translate it into English
 
 ## Docker Compose Run Checklist
 
-- [x] Zielmodus festlegen: lokale Development-Container mit Hot Reload fuer Backend und Frontend
-- [x] Backend-Container planen: Python `>=3.13`, `uv`, Arbeitsverzeichnis `/workspace/backend`
-- [x] Backend-`Dockerfile` unter `backend/Dockerfile` anlegen
-- [x] Backend-Abhaengigkeiten ueber `uv sync` oder `uv run` reproduzierbar installieren
-- [x] Backend-Startkommando im Container definieren: `uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000`
-- [x] Sicherstellen, dass der Backend-Container Zugriff auf `data/seed/` aus dem Repo-Root hat
-- [x] Frontend-Container planen: Node.js LTS, npm, Arbeitsverzeichnis `/workspace/frontend`
-- [x] Frontend-`Dockerfile` unter `frontend/Dockerfile` anlegen
-- [x] Frontend-Abhaengigkeiten ueber `npm ci` aus `package-lock.json` installieren
-- [x] Frontend-Startkommando im Container definieren: `npm run dev -- --host 0.0.0.0 --port 5173`
-- [x] Frontend-Env im Compose-Setup setzen: `VITE_API_BASE_URL=http://localhost:8000`
-- [x] Root-`docker-compose.yml` mit Services `backend` und `frontend` anlegen
-- [x] Ports mappen: Backend `8000:8000`, Frontend `5173:5173`
-- [x] Bind Mounts fuer Development definieren: `./backend`, `./frontend` und `./data`
-- [x] Bind Mounts auf Repo-Pfade begrenzen; keine Host-Home-, SSH-, Cloud- oder globalen Config-Verzeichnisse mounten
-- [x] Container-interne Dependency-Ordner gegen Host-Konflikte schuetzen, z. B. eigene Volumes fuer `node_modules` und Python-Umgebung
-- [x] Container als Non-Root-User ausfuehren und Dateirechte fuer gemountete Repo-Pfade pruefen
-- [x] Secrets kontrollieren: keine Secrets ins Image kopieren, nur explizite Env-Dateien oder Docker-Secrets verwenden
-- [x] `.env.example` fuer Container-Variablen aktualisieren, ohne echte Tokens oder lokale Pfade einzutragen
-- [x] Allgemeines ausgehendes HTTPS fuer Dependency-Install und API-Nutzung erlauben
-- [x] Zugriff auf private/interne Netzbereiche und Cloud-Metadata-IPs blockieren, z. B. `169.254.169.254`, RFC1918-Netze und lokale Host-Services, soweit fuer die App nicht noetig
-- [x] `depends_on` fuer Frontend auf Backend ergaenzen
-- [x] Optionalen Backend-Healthcheck fuer `GET /health` im Compose-File definieren
-- [x] VS Code Dev Containers konfigurieren, z. B. `.devcontainer/devcontainer.json` mit Docker-Compose-Anbindung
-- [x] Dev-Container-Workspace auf das Repo begrenzen und keine zusaetzlichen Host-Verzeichnisse automatisch mounten
-- [x] Dev-Container-Extensions nur minimal fuer Python, Svelte/TypeScript und Docker definieren
-- [x] `.dockerignore` fuer Root, Backend und Frontend pruefen oder anlegen
-- [x] Docker Compose Start dokumentieren: `docker compose up --build`
-- [x] Docker Compose Stop dokumentieren: `docker compose down`
-- [x] Smoke-Test dokumentieren: `http://localhost:8000/health` und `http://localhost:5173` im Browser pruefen
-- [x] Backend-Tests im Container dokumentieren: `docker compose run --rm backend uv run pytest`
-- [x] Frontend-Check im Container dokumentieren: `docker compose run --rm frontend npm run check`
-- [x] README um den Docker-Compose-Startweg ergaenzen, sobald die Container lauffaehig sind
+- [x] Define the target mode: local development containers with hot reload for backend and frontend
+- [x] Plan the backend container: Python `>=3.13`, `uv`, working directory `/workspace/backend`
+- [x] Create the backend `Dockerfile` under `backend/Dockerfile`
+- [x] Install backend dependencies reproducibly through `uv sync` or `uv run`
+- [x] Define the backend start command in the container: `uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000`
+- [x] Ensure the backend container has access to `data/seed/` from the repo root
+- [x] Plan the frontend container: Node.js LTS, npm, working directory `/workspace/frontend`
+- [x] Create the frontend `Dockerfile` under `frontend/Dockerfile`
+- [x] Install frontend dependencies through `npm ci` from `package-lock.json`
+- [x] Define the frontend start command in the container: `npm run dev -- --host 0.0.0.0 --port 5173`
+- [x] Set frontend env in Compose: `VITE_API_BASE_URL=http://localhost:8000`
+- [x] Create root `docker-compose.yml` with `backend` and `frontend` services
+- [x] Map ports: backend `8000:8000`, frontend `5173:5173`
+- [x] Define bind mounts for development: `./backend`, `./frontend`, and `./data`
+- [x] Limit bind mounts to repo paths; do not mount host home, SSH, cloud, or global config directories
+- [x] Protect container-internal dependency directories from host conflicts, for example with separate volumes for `node_modules` and the Python environment
+- [x] Run containers as a non-root user and check file permissions for mounted repo paths
+- [x] Control secrets: do not copy secrets into the image; use only explicit env files or Docker secrets
+- [x] Update `.env.example` for container variables without real tokens or local paths
+- [x] Allow general outgoing HTTPS for dependency installation and API usage
+- [x] Block access to private/internal networks and cloud metadata IPs, for example `169.254.169.254`, RFC1918 networks, and local host services where not needed by the app
+- [x] Add `depends_on` from frontend to backend
+- [x] Define an optional backend health check for `GET /health` in the Compose file
+- [x] Configure VS Code Dev Containers, for example `.devcontainer/devcontainer.json` with Docker Compose integration
+- [x] Limit the dev-container workspace to the repo and do not automatically mount extra host directories
+- [x] Define only minimal dev-container extensions for Python, Svelte/TypeScript, and Docker
+- [x] Check or create `.dockerignore` for root, backend, and frontend
+- [x] Document Docker Compose start: `docker compose up --build`
+- [x] Document Docker Compose stop: `docker compose down`
+- [x] Document smoke test: check `http://localhost:8000/health` and `http://localhost:5173` in the browser
+- [x] Document backend tests in the container: `docker compose run --rm backend uv run pytest`
+- [x] Document frontend check in the container: `docker compose run --rm frontend npm run check`
+- [x] Extend the README with the Docker Compose startup path once the containers are runnable
 
-## Naechster konkreter Schritt
+## Next Concrete Step
 
-- [x] Seed-Datenstruktur fuer `Birth of Hip-Hop` anlegen und mit den ersten Events befuellen
-- [x] FastAPI-App-Struktur anlegen und Seed-Daten laden
-- [x] Frontend-Grundstruktur auf SvelteKit migrieren und API-Client anbinden
+- [x] Create the seed data structure for `Birth of Hip-Hop` and fill it with the first events
+- [x] Create the FastAPI app structure and load seed data
+- [x] Migrate the frontend base structure to SvelteKit and connect the API client
 
-## Frontend-Akzeptanzkriterien fuer den naechsten Slice
+## Frontend Acceptance Criteria for the Next Slice
 
-- [x] App startet lokal mit SvelteKit
-- [x] Backend-Daten werden ueber die FastAPI-Endpunkte geladen
-- [x] Karte zeigt Marker fuer `birth-of-hip-hop`
-- [x] Timeline filtert sichtbare Events nach Zeitraum
-- [x] Route Filter kann `Birth of Hip-Hop` ein- und ausblenden
-- [x] Klick auf Marker oeffnet Eventdetails im Story Panel
-- [x] Leere und fehlerhafte API-Zustaende sind sichtbar behandelt
+- [x] App starts locally with SvelteKit
+- [x] Backend data is loaded through the FastAPI endpoints
+- [x] Map shows markers for `birth-of-hip-hop`
+- [x] Timeline filters visible events by time range
+- [x] Route filter can show and hide `Birth of Hip-Hop`
+- [x] Clicking a marker opens event details in the story panel
+- [x] Empty and failed API states are visibly handled
