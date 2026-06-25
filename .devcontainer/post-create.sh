@@ -135,3 +135,8 @@ git config --global --replace-all safe.directory /workspace
 git config --global credential.useHttpPath true
 git config --global core.autocrlf true
 git config --global core.filemode false
+
+if [ -n "${SOUNDATLAS_GIT_AUTHOR_NAME:-}" ] && [ -n "${SOUNDATLAS_GIT_AUTHOR_EMAIL:-}" ]; then
+  git config --global user.name "$SOUNDATLAS_GIT_AUTHOR_NAME"
+  git config --global user.email "$SOUNDATLAS_GIT_AUTHOR_EMAIL"
+fi

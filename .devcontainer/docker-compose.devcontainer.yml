@@ -11,6 +11,8 @@ services:
       - seccomp=unconfined
     environment:
       CODEX_HOME: /home/soundatlas/.codex
+      SOUNDATLAS_GIT_AUTHOR_NAME: ${SOUNDATLAS_GIT_AUTHOR_NAME:-}
+      SOUNDATLAS_GIT_AUTHOR_EMAIL: ${SOUNDATLAS_GIT_AUTHOR_EMAIL:-}
       SOUNDATLAS_EGRESS_GUARD: enabled
       SOUNDATLAS_ALLOWED_OUTBOUND_PORTS: "8000 5173"
       SOUNDATLAS_WRITABLE_PATHS: /workspace/frontend/node_modules /home/soundatlas/.cache/uv /home/soundatlas/.npm /home/soundatlas/.codex

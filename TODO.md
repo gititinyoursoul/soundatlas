@@ -24,7 +24,6 @@ Completed work packages are archived in `docs/done.md`.
 ### Infrastructure
 
 - [ ] Load prompts from the repo when starting the dev container
-- [ ] Automate local Git author configuration in the dev container or workspace setup
 - [ ] Decide whether a root task runner is needed
 
 ## Next Concrete Step

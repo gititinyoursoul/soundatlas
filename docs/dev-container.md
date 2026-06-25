@@ -118,6 +118,8 @@ Important environment variables:
 
 ```sh
 CODEX_HOME=/home/soundatlas/.codex
+SOUNDATLAS_GIT_AUTHOR_NAME=
+SOUNDATLAS_GIT_AUTHOR_EMAIL=
 UV_PROJECT_ENVIRONMENT=/home/soundatlas/.cache/uv/venvs/backend
 SOUNDATLAS_EGRESS_GUARD=enabled
 SOUNDATLAS_ALLOWED_OUTBOUND_PORTS=8000 5173
@@ -221,6 +223,7 @@ git config --global --replace-all safe.directory /workspace
 git config --global credential.useHttpPath true
 git config --global core.autocrlf true
 git config --global core.filemode false
+# set git user.name and user.email when SOUNDATLAS_GIT_AUTHOR_* are present
 ```
 
 This seeds Codex auth/config into the writable Linux volume, makes the mounted
@@ -228,6 +231,13 @@ workspace safe for Git inside the container, and keeps Windows-oriented
 line-ending and file-mode behavior predictable. Re-running the script updates
 the container-local Codex defaults even when the `codex_home` volume already
 existed from an older setup.
+
+Git author configuration is intentionally opt-in. If both
+`SOUNDATLAS_GIT_AUTHOR_NAME` and `SOUNDATLAS_GIT_AUTHOR_EMAIL` are provided to
+the `workspace` service, `post-create.sh` writes them to the container user's
+global Git config. If either value is empty, the script leaves `user.name` and
+`user.email` untouched. This avoids mounting or copying the host `~/.gitconfig`
+while still allowing repeatable commits inside the dev container.
 
 ## Common Commands
 
