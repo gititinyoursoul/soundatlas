@@ -126,6 +126,12 @@ SOUNDATLAS_WRITABLE_PATHS=/workspace/frontend/node_modules /home/soundatlas/.cac
 
 The workspace waits for the `backend` and `frontend` services to start.
 
+The `workspace` service also sets `seccomp=unconfined` so Codex's Linux
+sandbox helper can create the user namespaces required by Bubblewrap inside
+Docker Desktop/WSL2. Without that option, normal Codex tool calls and
+`apply_patch` can fail before touching the workspace with a Bubblewrap
+namespace error.
+
 ### `backend`
 
 Defined in the root `docker-compose.yml` and extended by the dev container

@@ -8,6 +8,7 @@ services:
       - NET_ADMIN
     security_opt:
       - no-new-privileges:true
+      - seccomp=unconfined
     environment:
       CODEX_HOME: /home/soundatlas/.codex
       SOUNDATLAS_EGRESS_GUARD: enabled

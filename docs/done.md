@@ -95,6 +95,7 @@ Archive of completed work packages. The current work list lives in `TODO.md`.
 - [x] Define shared development commands
 - [x] Define a containerized local development environment for backend and frontend with Docker Compose
 - [x] Document Codex CLI in the dev container as the preferred agent workflow
+- [x] Confirm Codex state uses the `codex_home` Docker volume and host `%USERPROFILE%/.codex` is mounted read-only only as a seed source
 - [x] Check `AGENTS.md` and translate it into English
 
 ## Docker Compose Run Checklist
