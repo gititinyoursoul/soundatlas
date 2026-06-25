@@ -10,7 +10,7 @@ services:
       - no-new-privileges:true
     environment:
       SOUNDATLAS_EGRESS_GUARD: enabled
-      SOUNDATLAS_WRITABLE_PATHS: /opt/soundatlas/backend/.venv /workspace/backend/.pytest_cache /home/soundatlas/.cache/uv
+      SOUNDATLAS_WRITABLE_PATHS: /opt/soundatlas/backend/.venv /workspace/backend/.pytest_cache /home/soundatlas/.cache/uv /home/soundatlas/.codex
     volumes:
       - type: bind
         source: ./backend
@@ -38,6 +38,7 @@ services:
         target: /workspace/.env.example
         read_only: true
       - backend_uv_cache:/home/soundatlas/.cache/uv
+      - codex_home:/home/soundatlas/.codex
     ports:
       - "8000:8000"
     healthcheck:
@@ -65,7 +66,7 @@ services:
         condition: service_healthy
     environment:
       SOUNDATLAS_EGRESS_GUARD: enabled
-      SOUNDATLAS_WRITABLE_PATHS: /workspace/frontend/node_modules /home/soundatlas/.npm
+      SOUNDATLAS_WRITABLE_PATHS: /workspace/frontend/node_modules /home/soundatlas/.npm /home/soundatlas/.codex
       HOST: 0.0.0.0
       VITE_API_BASE_URL: http://localhost:8000
     volumes:
@@ -74,6 +75,7 @@ services:
         target: /workspace/frontend
       - frontend_node_modules:/workspace/frontend/node_modules
       - frontend_npm_cache:/home/soundatlas/.npm
+      - codex_home:/home/soundatlas/.codex
     ports:
       - "5173:5173"
 
@@ -81,3 +83,4 @@ volumes:
   backend_uv_cache:
   frontend_node_modules:
   frontend_npm_cache:
+  codex_home:

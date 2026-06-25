@@ -22,11 +22,9 @@ services:
         source: codex_home
         target: /home/soundatlas/.codex
       - type: bind
-        source: ${USERPROFILE}/.codex/auth.json
-        target: /home/soundatlas/.codex/auth.json
-      - type: bind
-        source: ${USERPROFILE}/.codex/config.toml
-        target: /home/soundatlas/.codex/config.toml
+        source: ${USERPROFILE}/.codex
+        target: /mnt/host-codex
+        read_only: true
       - frontend_node_modules:/workspace/frontend/node_modules
       - backend_uv_cache:/home/soundatlas/.cache/uv
       - frontend_npm_cache:/home/soundatlas/.npm
