@@ -95,6 +95,7 @@ Archiv abgeschlossener Arbeitspakete. Die aktuelle Arbeitsliste liegt in `TODO.m
 - [x] Gemeinsame Entwicklungsbefehle definieren
 - [x] Containerisierte lokale Entwicklungsumgebung fuer Backend und Frontend mit Docker Compose definieren
 - [x] Codex CLI im Dev Container als bevorzugten Agenten-Workflow dokumentieren
+- [x] `AGENTS.md` pruefen und ins Englische uebersetzen
 
 ## Docker Compose Run Checklist
 
