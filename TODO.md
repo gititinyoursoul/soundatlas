@@ -30,7 +30,7 @@ Completed work packages are archived in `docs/done.md`.
 - [x] Make the desktop timeline show clickable route event ticks instead of only the route year range
 - [ ] Track timeline density risk for future routes with many events and define when to switch from individual labels to clustering or compact ticks
 - [x] Add selected route context to the desktop workspace, including summary or thesis, date range, and visible event count
-- [ ] Reduce desktop route filter prominence so the active route narrative leads the first view
-- [ ] Add a compact desktop map legend for route colors and selected event state
+- [x] Reduce desktop route filter prominence so the active route narrative leads the first view
+- [x] Add a compact desktop map legend for route colors and selected event state
 - [ ] Add `@todo` follow-up in the media review UI noting that internal admin actions should be hidden or gated before a public explorer view
 - [ ] Improve desktop loading, empty, and API error states across map, timeline, and story panel

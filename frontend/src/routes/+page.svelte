@@ -350,9 +350,9 @@
   }
 
   .controls {
-    padding: 0.85rem 1rem;
+    padding: 0.55rem 1rem;
     border-bottom: 1px solid #d9e0e7;
-    background: #f8fafb;
+    background: #ffffff;
   }
 
   .notice {

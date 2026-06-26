@@ -18,6 +18,9 @@
     renderMarkers(selectedEventId, events, places, routes);
   }
 
+  $: visibleRouteIds = new Set(events.map((event) => event.route_id));
+  $: visibleRoutes = routes.filter((route) => visibleRouteIds.has(route.id));
+
   onMount(async () => {
     leaflet = await import('leaflet');
 
@@ -138,6 +141,21 @@
 <div class="map-shell">
   <div bind:this={mapContainer} class="map" aria-label="SoundAtlas map"></div>
 
+  {#if visibleRoutes.length > 0}
+    <div class="map-legend" aria-label="Map legend">
+      <div class="legend-row">
+        <span class="legend-marker selected"></span>
+        <span>Selected event</span>
+      </div>
+      {#each visibleRoutes as route}
+        <div class="legend-row">
+          <span class="legend-marker" style={`--route-color: ${route.color}`}></span>
+          <span>{route.title}</span>
+        </div>
+      {/each}
+    </div>
+  {/if}
+
   {#if events.length === 0}
     <div class="map-empty">No events in the active time range.</div>
   {/if}
@@ -156,6 +174,53 @@
     width: 100%;
     height: 100%;
     min-height: 480px;
+  }
+
+  .map-legend {
+    position: absolute;
+    z-index: 500;
+    top: 1rem;
+    left: 1rem;
+    display: grid;
+    gap: 0.35rem;
+    max-width: min(18rem, calc(100% - 2rem));
+    padding: 0.6rem 0.7rem;
+    border: 1px solid rgba(207, 215, 223, 0.9);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.94);
+    color: #314151;
+    font-size: 0.78rem;
+    font-weight: 700;
+    box-shadow: 0 8px 24px rgba(23, 32, 42, 0.12);
+  }
+
+  .legend-row {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-width: 0;
+  }
+
+  .legend-row span:last-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .legend-marker {
+    flex: 0 0 auto;
+    width: 0.8rem;
+    height: 0.8rem;
+    border: 1px solid #17202a;
+    border-radius: 999px;
+    background: var(--route-color, #314151);
+  }
+
+  .legend-marker.selected {
+    width: 0.95rem;
+    height: 0.95rem;
+    border: 2px solid #17202a;
+    background: #2e7d32;
   }
 
   .map-empty {

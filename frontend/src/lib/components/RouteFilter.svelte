@@ -7,7 +7,7 @@
 </script>
 
 <section class="route-filter" aria-label="Route filter">
-  <div class="section-label">Routes</div>
+  <div class="section-label">Switch route</div>
 
   {#if routes.length === 0}
     <p class="empty">No routes loaded.</p>
@@ -24,7 +24,6 @@
           <span class="swatch" style={`--route-color: ${route.color}`}></span>
           <span class="route-copy">
             <span>{route.title}</span>
-            <small>Creator: {route.creator}</small>
           </span>
         </button>
       {/each}
@@ -35,7 +34,7 @@
 <style>
   .route-filter {
     display: grid;
-    gap: 0.65rem;
+    gap: 0.45rem;
   }
 
   .section-label {
@@ -56,11 +55,13 @@
     display: inline-flex;
     align-items: center;
     gap: 0.45rem;
-    padding: 0.45rem 0.65rem;
+    padding: 0.35rem 0.55rem;
     border: 1px solid #cfd7df;
     border-radius: 999px;
     background: #ffffff;
     color: #314151;
+    font-size: 0.85rem;
+    font-weight: 700;
     text-align: left;
   }
 
@@ -81,12 +82,6 @@
   .route-copy {
     display: grid;
     gap: 0.05rem;
-  }
-
-  small {
-    color: currentColor;
-    font-size: 0.68rem;
-    opacity: 0.72;
   }
 
   .empty {
