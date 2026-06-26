@@ -161,6 +161,23 @@
         </div>
       </header>
 
+      {#if activeRoute}
+        <section class="route-context" aria-label="Selected route context">
+          <div class="route-heading">
+            <div>
+              <p>Active route</p>
+              <h2>{activeRoute.title}</h2>
+            </div>
+            <span>{activeRoute.year_start}-{activeRoute.year_end}</span>
+          </div>
+          <p class="route-summary">{activeRoute.thesis || activeRoute.summary}</p>
+          <div class="route-meta">
+            <span>{orderedVisibleEvents.length} events</span>
+            <span>{activeRoute.tags.slice(0, 4).join(' / ')}</span>
+          </div>
+        </section>
+      {/if}
+
       <div class="controls">
         <RouteFilter {routes} {selectedRouteId} onSelectRoute={selectRoute} />
       </div>
@@ -186,6 +203,9 @@
         routeEndYear={timelineEndYear}
         eventStartYear={selectedEvent?.year_start ?? null}
         eventEndYear={selectedEvent?.year_end ?? null}
+        events={orderedVisibleEvents}
+        {selectedEventId}
+        onSelectEvent={selectEvent}
       />
     </div>
 
@@ -223,7 +243,7 @@
 
   .map-column {
     display: grid;
-    grid-template-rows: auto auto minmax(30rem, 1fr) auto;
+    grid-template-rows: auto auto auto minmax(30rem, 1fr) auto;
     min-width: 0;
   }
 
@@ -263,6 +283,70 @@
     border-radius: 999px;
     color: #314151;
     font-size: 0.85rem;
+  }
+
+  .route-context {
+    display: grid;
+    gap: 0.55rem;
+    padding: 0.9rem 1rem;
+    border-bottom: 1px solid #d9e0e7;
+    background: #fffaf7;
+  }
+
+  .route-heading {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .route-heading p,
+  .route-heading h2,
+  .route-summary {
+    margin: 0;
+  }
+
+  .route-heading p {
+    color: #6b7785;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .route-heading h2 {
+    color: #17202a;
+    font-size: 1.05rem;
+    line-height: 1.2;
+  }
+
+  .route-heading span {
+    flex: 0 0 auto;
+    color: #314151;
+    font-size: 0.85rem;
+    font-weight: 800;
+  }
+
+  .route-summary {
+    max-width: 68rem;
+    color: #314151;
+    font-size: 0.92rem;
+    line-height: 1.45;
+  }
+
+  .route-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .route-meta span {
+    padding: 0.2rem 0.45rem;
+    border: 1px solid #efc8be;
+    border-radius: 999px;
+    color: #7e2d19;
+    font-size: 0.76rem;
+    font-weight: 700;
   }
 
   .controls {
