@@ -28,9 +28,9 @@ Completed work packages are archived in `docs/done.md`.
 - [x] Default the desktop app to the `birth-of-hip-hop` route and select the first route event on load
 - [x] Change desktop route selection from multi-select toggles to single-select route selection for the MVP
 - [x] Make the desktop timeline show clickable route event ticks instead of only the route year range
-- [ ] Track timeline density risk for future routes with many events and define when to switch from individual labels to clustering or compact ticks
+- [x] Track timeline density risk for future routes with many events and define when to switch from individual labels to clustering or compact ticks
 - [x] Add selected route context to the desktop workspace, including summary or thesis, date range, and visible event count
 - [x] Reduce desktop route filter prominence so the active route narrative leads the first view
 - [x] Add a compact desktop map legend for route colors and selected event state
-- [ ] Add `@todo` follow-up in the media review UI noting that internal admin actions should be hidden or gated before a public explorer view
-- [ ] Improve desktop loading, empty, and API error states across map, timeline, and story panel
+- [x] Add `@todo` follow-up in the media review UI noting that internal admin actions should be hidden or gated before a public explorer view
+- [x] Improve desktop loading, empty, and API error states across map, timeline, and story panel

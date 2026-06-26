@@ -19,6 +19,8 @@
   export let nextEvent: Event | null = null;
   export let currentEventIndex = 0;
   export let eventCount = 0;
+  export let isLoading = false;
+  export let errorMessage: string | null = null;
   export let onNavigateEvent: (eventId: string) => void = () => {};
   export let onReviewMediaLink: (
     eventId: string,
@@ -46,7 +48,17 @@
 </script>
 
 <aside class="story-panel" aria-label="Event details">
-  {#if event}
+  {#if isLoading}
+    <div class="empty">
+      <h2>Loading route events</h2>
+      <p>Fetching curated places, events, sources, and media links.</p>
+    </div>
+  {:else if errorMessage}
+    <div class="empty error">
+      <h2>Event details unavailable</h2>
+      <p>{errorMessage}</p>
+    </div>
+  {:else if event}
     <div class="eyebrow">
       <span>{event.year_start}{event.year_start !== event.year_end ? `-${event.year_end}` : ''}</span>
       {#if route}
@@ -143,7 +155,7 @@
   {:else}
     <div class="empty">
       <h2>Select an event</h2>
-      <p>Click a marker on the map to see context, significance, and connections.</p>
+      <p>Select a timeline item or map marker to see context, significance, and connections.</p>
     </div>
   {/if}
 </aside>
@@ -305,5 +317,10 @@
     display: grid;
     gap: 0.5rem;
     color: #536170;
+  }
+
+  .empty.error h2,
+  .empty.error p {
+    color: #8f2d16;
   }
 </style>

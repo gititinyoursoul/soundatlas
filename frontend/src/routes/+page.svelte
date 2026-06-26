@@ -176,6 +176,16 @@
             <span>{activeRoute.tags.slice(0, 4).join(' / ')}</span>
           </div>
         </section>
+      {:else if isLoading}
+        <section class="route-context loading" aria-label="Selected route context">
+          <div class="route-heading">
+            <div>
+              <p>Active route</p>
+              <h2>Loading route context</h2>
+            </div>
+          </div>
+          <p class="route-summary">Fetching the curated route, event sequence, and map places.</p>
+        </section>
       {/if}
 
       <div class="controls">
@@ -184,8 +194,9 @@
 
       {#if errorMessage}
         <div class="notice error">
-          <strong>Backend unavailable.</strong>
+          <strong>Backend unavailable</strong>
           <span>{errorMessage}</span>
+          <small>Start the FastAPI backend on http://127.0.0.1:8000, then refresh this page.</small>
         </div>
       {:else}
         <MapView
@@ -220,6 +231,8 @@
       eventCount={orderedVisibleEvents.length}
       onNavigateEvent={selectEvent}
       onReviewMediaLink={handleReviewMediaLink}
+      {isLoading}
+      {errorMessage}
     />
   </section>
 </main>
@@ -291,6 +304,10 @@
     padding: 0.9rem 1rem;
     border-bottom: 1px solid #d9e0e7;
     background: #fffaf7;
+  }
+
+  .route-context.loading {
+    background: #f8fafb;
   }
 
   .route-heading {
@@ -368,8 +385,13 @@
     color: #17202a;
   }
 
-  .notice span {
+  .notice span,
+  .notice small {
     color: #536170;
+  }
+
+  .notice small {
+    font-size: 0.82rem;
   }
 
   .error {

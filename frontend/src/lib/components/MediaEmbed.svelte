@@ -53,7 +53,7 @@
         loading="lazy"
         allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         allowfullscreen
-      />
+      ></iframe>
     </div>
 
     <div class="media-meta">
@@ -63,6 +63,7 @@
       </div>
     </div>
 
+    <!-- @todo Hide or gate these admin-only review actions before a public explorer view. -->
     <div class="review-actions" aria-label="Media review actions">
       <button
         type="button"

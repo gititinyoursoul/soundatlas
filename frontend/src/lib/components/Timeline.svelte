@@ -55,6 +55,7 @@
       <div class="tick start" style:left={`${toPercent(axisStart)}%`} aria-hidden="true"></div>
       <div class="tick end" style:left={`${toPercent(axisEnd)}%`} aria-hidden="true"></div>
 
+      <!-- @todo Switch to clustered or compact ticks when route event density makes labels overlap. -->
       {#each events as event}
         <button
           class:active={selectedEventId === event.id}
@@ -77,6 +78,7 @@
     </div>
 
     {#if events.length > 0}
+      <!-- @todo Revisit this horizontal list when future routes contain many more events. -->
       <div class="event-list" aria-label="Route events">
         {#each events as event}
           <button
