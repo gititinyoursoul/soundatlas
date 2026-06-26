@@ -16,6 +16,8 @@ Completed work packages are archived in `docs/done.md`.
 ### Repository Maintenance
 
 - [ ] Resolve Git line-ending warning: `warning: in the working copy of 'TODO.md', LF will be replaced by CRLF the next time Git touches it`
+- [ ] Add frontend test infrastructure and an `npm test` script; current frontend validation is limited to `npm run check` and `npm run build`
+- [ ] Add frontend behavior tests for route selection, timeline selection, map/story synchronization, loading/error states, and admin media controls
 
 ### UX and Design
 
