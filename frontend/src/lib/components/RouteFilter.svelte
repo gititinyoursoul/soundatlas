@@ -2,8 +2,8 @@
   import type { Route } from '$lib/types/soundatlas';
 
   export let routes: Route[] = [];
-  export let activeRouteIds: Set<string> = new Set();
-  export let onToggleRoute: (routeId: string) => void = () => {};
+  export let selectedRouteId: string | null = null;
+  export let onSelectRoute: (routeId: string) => void = () => {};
 </script>
 
 <section class="route-filter" aria-label="Route filter">
@@ -15,9 +15,10 @@
     <div class="routes">
       {#each routes as route}
         <button
-          class:active={activeRouteIds.has(route.id)}
+          class:active={selectedRouteId === route.id}
           type="button"
-          on:click={() => onToggleRoute(route.id)}
+          aria-pressed={selectedRouteId === route.id}
+          on:click={() => onSelectRoute(route.id)}
           title={route.summary}
         >
           <span class="swatch" style={`--route-color: ${route.color}`}></span>

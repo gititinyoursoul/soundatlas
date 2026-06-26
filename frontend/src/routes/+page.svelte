@@ -8,16 +8,18 @@
   import { filterEvents } from '$lib/data/filters';
   import type { Connection, Event, Place, Route } from '$lib/types/soundatlas';
 
+  const DEFAULT_ROUTE_ID = 'birth-of-hip-hop';
+
   let routes: Route[] = [];
   let places: Place[] = [];
   let events: Event[] = [];
   let connections: Connection[] = [];
-  let activeRouteIds = new Set<string>();
+  let selectedRouteId: string | null = null;
   let selectedEventId: string | null = null;
   let isLoading = true;
   let errorMessage: string | null = null;
 
-  $: visibleEvents = filterEvents(events, activeRouteIds);
+  $: visibleEvents = filterEvents(events, selectedRouteId);
   $: orderedVisibleEvents = [...visibleEvents].sort(compareEvents);
   $: selectedEvent = orderedVisibleEvents.find((event) => event.id === selectedEventId) ?? null;
   $: selectedEventIndex = selectedEvent
@@ -34,7 +36,8 @@
   $: selectedRoute = selectedEvent
     ? routes.find((route) => route.id === selectedEvent?.route_id) ?? null
     : null;
-  $: timelineRoute = selectedRoute ?? routes.find((route) => activeRouteIds.has(route.id)) ?? routes[0] ?? null;
+  $: activeRoute = routes.find((route) => route.id === selectedRouteId) ?? null;
+  $: timelineRoute = selectedRoute ?? activeRoute ?? routes[0] ?? null;
   $: timelineStartYear = timelineRoute?.year_start ?? 1965;
   $: timelineEndYear = timelineRoute?.year_end ?? 1985;
   $: selectedConnections = selectedEvent
@@ -52,7 +55,8 @@
       places = data.places;
       events = data.events;
       connections = data.connections;
-      activeRouteIds = new Set(data.routes.map((route) => route.id));
+      selectedRouteId = getInitialRouteId(data.routes);
+      selectedEventId = getFirstEventIdForRoute(data.events, selectedRouteId);
     } catch (error) {
       errorMessage = error instanceof Error ? error.message : 'Frontend konnte API-Daten nicht laden.';
     } finally {
@@ -60,16 +64,21 @@
     }
   });
 
-  function toggleRoute(routeId: string): void {
-    const nextRouteIds = new Set(activeRouteIds);
+  function selectRoute(routeId: string): void {
+    selectedRouteId = routeId;
+    selectedEventId = getFirstEventIdForRoute(events, routeId);
+  }
 
-    if (nextRouteIds.has(routeId)) {
-      nextRouteIds.delete(routeId);
-    } else {
-      nextRouteIds.add(routeId);
-    }
+  function getInitialRouteId(currentRoutes: Route[]): string | null {
+    return (
+      currentRoutes.find((route) => route.id === DEFAULT_ROUTE_ID)?.id ??
+      currentRoutes[0]?.id ??
+      null
+    );
+  }
 
-    activeRouteIds = nextRouteIds;
+  function getFirstEventIdForRoute(currentEvents: Event[], routeId: string | null): string | null {
+    return [...filterEvents(currentEvents, routeId)].sort(compareEvents)[0]?.id ?? null;
   }
 
   function selectEvent(eventId: string): void {
@@ -153,7 +162,7 @@
       </header>
 
       <div class="controls">
-        <RouteFilter {routes} {activeRouteIds} onToggleRoute={toggleRoute} />
+        <RouteFilter {routes} {selectedRouteId} onSelectRoute={selectRoute} />
       </div>
 
       {#if errorMessage}
