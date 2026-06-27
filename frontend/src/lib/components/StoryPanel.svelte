@@ -38,8 +38,6 @@
   export let connections: Connection[] = [];
   export let previousEvent: Event | null = null;
   export let nextEvent: Event | null = null;
-  export let currentEventIndex = 0;
-  export let eventCount = 0;
   export let isLoading = false;
   export let errorMessage: string | null = null;
   export let onNavigateEvent: (eventId: string) => void = () => {};
@@ -152,7 +150,6 @@
     <header class="inspector-header">
       <div class="eyebrow">
         <span>Selected event</span>
-        <span>{currentEventIndex + 1} / {eventCount}</span>
       </div>
 
       <div class="title-block">

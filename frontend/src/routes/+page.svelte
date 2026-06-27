@@ -367,8 +367,6 @@
         connections={selectedConnections}
         {previousEvent}
         {nextEvent}
-        currentEventIndex={selectedEventIndex}
-        eventCount={orderedVisibleEvents.length}
         onNavigateEvent={selectEvent}
         {isLoading}
         {errorMessage}
