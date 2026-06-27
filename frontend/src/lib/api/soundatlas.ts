@@ -1,4 +1,12 @@
-import type { Connection, Event, Place, Route, SoundAtlasData } from '$lib/types/soundatlas';
+import type {
+  Connection,
+  Event,
+  Place,
+  ReviewAction,
+  ReviewLinkKind,
+  Route,
+  SoundAtlasData
+} from '$lib/types/soundatlas';
 
 const DEFAULT_API_BASE_URL = 'http://127.0.0.1:8000';
 
@@ -24,15 +32,25 @@ export async function loadSoundAtlasData(fetcher: typeof fetch = fetch): Promise
 export async function reviewEventMediaLink(
   eventId: string,
   url: string,
-  action: 'reviewed' | 'reject',
+  action: ReviewAction,
   fetcher: typeof fetch = fetch
 ): Promise<Event> {
-  const response = await fetcher(`${API_BASE_URL}/events/${eventId}/media-links`, {
+  return reviewEventLink(eventId, 'media', url, action, fetcher);
+}
+
+export async function reviewEventLink(
+  eventId: string,
+  kind: ReviewLinkKind,
+  url: string,
+  action: ReviewAction,
+  fetcher: typeof fetch = fetch
+): Promise<Event> {
+  const response = await fetcher(`${API_BASE_URL}/events/${eventId}/links`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ url, action })
+    body: JSON.stringify({ kind, url, action })
   });
 
   if (!response.ok) {

@@ -1,10 +1,10 @@
 <script lang="ts">
   import { tick } from 'svelte';
-  import type { Route } from '$lib/types/soundatlas';
+  import type { ReviewAction, ReviewQueueItem, Route } from '$lib/types/soundatlas';
   import Icon from './Icon.svelte';
 
   type DrawerVariant = 'expanded' | 'collapsed';
-  type DrawerPanel = 'main' | 'routes';
+  type DrawerPanel = 'main' | 'routes' | 'media-review';
   type NavIcon = 'book' | 'circle' | 'layers' | 'map' | 'route' | 'settings' | 'sparkles' | 'timeline';
 
   type NavItem = {
@@ -30,20 +30,25 @@
   export let routes: Route[] = [];
   export let selectedRouteId: string | null = null;
   export let routeEventCounts: Record<string, number> = {};
-  export let eventCount = 0;
+  export let reviewQueueItems: ReviewQueueItem[] = [];
+  export let reviewSavingItemId: string | null = null;
+  export let reviewErrorMessage: string | null = null;
   export let isLoading = false;
   export let errorMessage: string | null = null;
   export let onClose: () => void = () => {};
   export let onToggleVariant: () => void = () => {};
   export let onSelectItem: (itemId: string) => void = () => {};
   export let onSelectRoute: (routeId: string) => void = () => {};
+  export let onSelectReviewItem: (item: ReviewQueueItem) => void = () => {};
+  export let onReviewQueueItem: (item: ReviewQueueItem, action: ReviewAction) => Promise<void> =
+    async () => {};
 
   let drawerElement: HTMLDivElement;
   let panelHeadingElement: HTMLHeadingElement;
   let didFocusForOpen = false;
   let activePanel: DrawerPanel = 'main';
 
-  $: sections = buildSections(routes.length, eventCount, errorMessage);
+  $: sections = buildSections(routes.length, reviewQueueItems.length, errorMessage);
   $: if (open && !didFocusForOpen) {
     didFocusForOpen = true;
     void focusDrawer();
@@ -53,7 +58,7 @@
     activePanel = 'main';
   }
 
-  function buildSections(routes: number, events: number, error: string | null): NavSection[] {
+  function buildSections(routes: number, reviewItems: number, error: string | null): NavSection[] {
     return [
       {
         id: 'explore',
@@ -70,36 +75,14 @@
         errorMessage: error
       },
       {
-        id: 'research',
-        title: 'Research',
-        items: [
-          {
-            id: 'events',
-            label: 'Events',
-            icon: 'layers',
-            badge: events > 0 ? String(events) : undefined
-          },
-          { id: 'connections', label: 'Connections', icon: 'sparkles' },
-          { id: 'sources', label: 'Sources', icon: 'book' }
-        ]
-      },
-      {
-        id: 'workflow',
-        title: 'Workflow',
+        id: 'admin',
+        title: 'Admin',
         items: [
           {
             id: 'media-review',
             label: 'Media Review',
             icon: 'settings',
-            disabled: true,
-            disabledReason: 'Admin access required'
-          },
-          {
-            id: 'validation',
-            label: 'Validation',
-            icon: 'circle',
-            disabled: true,
-            disabledReason: 'Admin access required'
+            badge: reviewItems > 0 ? String(reviewItems) : undefined
           }
         ]
       }
@@ -125,6 +108,11 @@
       return;
     }
 
+    if (item.id === 'media-review') {
+      openMediaReviewPanel();
+      return;
+    }
+
     onSelectItem(item.id);
   }
 
@@ -146,8 +134,24 @@
     panelHeadingElement?.focus();
   }
 
+  async function openMediaReviewPanel(): Promise<void> {
+    activePanel = 'media-review';
+    onSelectItem('media-review');
+
+    if (variant === 'collapsed') {
+      onToggleVariant();
+    }
+
+    await tick();
+    panelHeadingElement?.focus();
+  }
+
   function handleRouteClick(routeId: string): void {
     onSelectRoute(routeId);
+  }
+
+  function formatReviewKind(item: ReviewQueueItem): string {
+    return item.kind === 'media' ? 'Media' : 'Image';
   }
 
   function handleKeydown(event: KeyboardEvent): void {
@@ -302,6 +306,79 @@
               </div>
             {/if}
           </section>
+        {:else if activePanel === 'media-review'}
+          <section class="review-panel" aria-labelledby="drawer-review-heading">
+            <button type="button" class="back-button" on:click={returnToMainPanel}>
+              <Icon name="collapse" />
+              <span>Back to navigation</span>
+            </button>
+
+            <div class="panel-heading">
+              <span>Admin</span>
+              <h2 id="drawer-review-heading" bind:this={panelHeadingElement} tabindex="-1">
+                Media Review
+              </h2>
+              <p>
+                {reviewQueueItems.length}
+                {reviewQueueItems.length === 1 ? 'draft item' : 'draft items'}
+              </p>
+            </div>
+
+            {#if reviewErrorMessage}
+              <div class="section-error">
+                <Icon name="warning" />
+                <div>
+                  <strong>Review action failed</strong>
+                  <p>{reviewErrorMessage}</p>
+                </div>
+              </div>
+            {/if}
+
+            {#if reviewQueueItems.length === 0}
+              <div class="section-empty">
+                <Icon name="circle" />
+                <span>No draft media or image links to review.</span>
+              </div>
+            {:else}
+              <div class="review-list" aria-label="Draft media and image review queue">
+                {#each reviewQueueItems as item}
+                  <article class="review-item">
+                    <button
+                      type="button"
+                      class="review-summary"
+                      on:click={() => onSelectReviewItem(item)}
+                    >
+                      <span class="kind" class:media-kind={item.kind === 'media'}>
+                        {formatReviewKind(item)}
+                      </span>
+                      <strong>{item.title}</strong>
+                      <span>{item.provider} {item.type}</span>
+                      <small>{item.eventTitle}</small>
+                    </button>
+
+                    <div class="review-actions" aria-label={`Review actions for ${item.title}`}>
+                      <a href={item.url} target="_blank" rel="noreferrer">Open</a>
+                      <button
+                        type="button"
+                        disabled={reviewSavingItemId === item.id}
+                        on:click={() => onReviewQueueItem(item, 'reviewed')}
+                      >
+                        {reviewSavingItemId === item.id ? 'Saving' : 'Mark reviewed'}
+                      </button>
+                      <button
+                        type="button"
+                        class="reject"
+                        disabled={reviewSavingItemId === item.id}
+                        on:click={() => onReviewQueueItem(item, 'reject')}
+                      >
+                        Reject
+                      </button>
+                    </div>
+                  </article>
+                {/each}
+              </div>
+            {/if}
+          </section>
         {:else}
           <h2 class="visually-hidden" bind:this={panelHeadingElement} tabindex="-1">
             Main navigation
@@ -370,11 +447,11 @@
       <footer class="drawer-footer">
         {#if variant === 'expanded'}
           <div class="session">
-            <span>Access</span>
-            <strong>Public explorer</strong>
+            <span>Mode</span>
+            <strong>Admin review</strong>
           </div>
         {:else}
-          <span class="access-mark" aria-label="Public explorer" data-tooltip="Public explorer">
+          <span class="access-mark" aria-label="Admin review mode" data-tooltip="Admin review">
             <Icon name="circle" />
           </span>
         {/if}
@@ -517,7 +594,8 @@
     gap: 0.45rem;
   }
 
-  .routes-panel {
+  .routes-panel,
+  .review-panel {
     display: grid;
     gap: 0.8rem;
   }
@@ -565,6 +643,14 @@
 
   .panel-heading h2:focus {
     outline: none;
+  }
+
+  .panel-heading p {
+    margin: 0;
+    color: #536170;
+    font-size: 0.78rem;
+    font-weight: 700;
+    line-height: 1.35;
   }
 
   .route-list {
@@ -640,6 +726,113 @@
     font-weight: 800;
     letter-spacing: 0.06em;
     text-transform: uppercase;
+  }
+
+  .review-list {
+    display: grid;
+    gap: 0.65rem;
+  }
+
+  .review-item {
+    display: grid;
+    gap: 0.55rem;
+    padding: 0.7rem;
+    border: 1px solid #d9e0e7;
+    border-radius: 8px;
+    background: #ffffff;
+  }
+
+  .review-summary {
+    display: grid;
+    gap: 0.25rem;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #314151;
+    font: inherit;
+    text-align: left;
+  }
+
+  .review-summary:hover strong {
+    color: #bb3f22;
+  }
+
+  .kind {
+    width: max-content;
+    padding: 0.14rem 0.42rem;
+    border: 1px solid #cfd7df;
+    border-radius: 999px;
+    background: #f8fafb;
+    color: #536170;
+    font-size: 0.66rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .kind.media-kind {
+    border-color: #efc8be;
+    background: #fff7f4;
+    color: #bb3f22;
+  }
+
+  .review-summary strong {
+    overflow: hidden;
+    color: #17202a;
+    font-size: 0.88rem;
+    font-weight: 800;
+    line-height: 1.25;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .review-summary span:not(.kind),
+  .review-summary small {
+    overflow: hidden;
+    color: #536170;
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1.3;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .review-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+
+  .review-actions a,
+  .review-actions button {
+    min-height: 1.9rem;
+    padding: 0.3rem 0.5rem;
+    border: 1px solid #d9e0e7;
+    border-radius: 999px;
+    background: #f8fafb;
+    color: #314151;
+    font: inherit;
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-decoration: none;
+  }
+
+  .review-actions button:not(.reject) {
+    border-color: #b9d7c6;
+    background: #f2faf5;
+    color: #1f6f43;
+  }
+
+  .review-actions .reject {
+    border-color: #efc8be;
+    background: #fff7f4;
+    color: #bb3f22;
+  }
+
+  .review-actions button:disabled {
+    cursor: default;
+    opacity: 0.58;
   }
 
   .nav-section h2 {
@@ -862,6 +1055,9 @@
   .back-button:focus-visible,
   .nav-item:focus-visible,
   .route-option:focus-visible,
+  .review-summary:focus-visible,
+  .review-actions a:focus-visible,
+  .review-actions button:focus-visible,
   .section-error button:focus-visible {
     outline: 2px solid #2454d6;
     outline-offset: 2px;

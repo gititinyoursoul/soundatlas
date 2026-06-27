@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { makeConnection, makeEvent, makePlace, makeRoute } from '$lib/test/fixtures';
-import { API_BASE_URL, loadSoundAtlasData, reviewEventMediaLink } from './soundatlas';
+import { API_BASE_URL, loadSoundAtlasData, reviewEventLink } from './soundatlas';
 
 function jsonResponse(body: unknown, init: ResponseInit = {}): Response {
   return new Response(JSON.stringify(body), {
@@ -73,8 +73,9 @@ describe('SoundAtlas API client', () => {
     const fetcher = vi.fn<typeof fetch>().mockResolvedValueOnce(jsonResponse(updatedEvent));
 
     await expect(
-      reviewEventMediaLink(
+      reviewEventLink(
         'kool-herc-back-to-school-jam',
+        'media',
         'https://www.youtube.com/watch?v=example',
         'reviewed',
         fetcher
@@ -82,13 +83,14 @@ describe('SoundAtlas API client', () => {
     ).resolves.toEqual(updatedEvent);
 
     expect(fetcher).toHaveBeenCalledWith(
-      `${API_BASE_URL}/events/kool-herc-back-to-school-jam/media-links`,
+      `${API_BASE_URL}/events/kool-herc-back-to-school-jam/links`,
       {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
+          kind: 'media',
           url: 'https://www.youtube.com/watch?v=example',
           action: 'reviewed'
         })

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount, tick } from 'svelte';
-  import { loadSoundAtlasData } from '$lib/api/soundatlas';
+  import { loadSoundAtlasData, reviewEventLink } from '$lib/api/soundatlas';
   import Icon from '$lib/components/Icon.svelte';
   import MapView from '$lib/components/MapView.svelte';
   import NavigationDrawer from '$lib/components/NavigationDrawer.svelte';
@@ -8,7 +8,14 @@
   import Timeline from '$lib/components/Timeline.svelte';
   import { filterEvents } from '$lib/data/filters';
   import { compareEvents, getFirstEventIdForRoute, getInitialRouteId } from '$lib/data/selection';
-  import type { Connection, Event, Place, Route } from '$lib/types/soundatlas';
+  import type {
+    Connection,
+    Event,
+    Place,
+    ReviewAction,
+    ReviewQueueItem,
+    Route
+  } from '$lib/types/soundatlas';
 
   let routes: Route[] = [];
   let places: Place[] = [];
@@ -24,6 +31,8 @@
   let navigationTriggerElement: HTMLButtonElement;
   let headerRegionElement: HTMLElement;
   let storyRegionElement: HTMLElement;
+  let reviewSavingItemId: string | null = null;
+  let reviewErrorMessage: string | null = null;
 
   $: visibleEvents = filterEvents(events, selectedRouteId);
   $: orderedVisibleEvents = [...visibleEvents].sort(compareEvents);
@@ -31,6 +40,35 @@
     counts[route.id] = events.filter((event) => event.route_id === route.id).length;
     return counts;
   }, {});
+  $: reviewQueueItems = events.flatMap((event) => [
+    ...event.media_links
+      .filter((mediaLink) => mediaLink.review_status === 'draft')
+      .map<ReviewQueueItem>((mediaLink) => ({
+        id: `media:${event.id}:${mediaLink.url}`,
+        kind: 'media',
+        eventId: event.id,
+        eventTitle: event.title,
+        routeId: event.route_id,
+        title: mediaLink.title,
+        provider: mediaLink.provider,
+        type: mediaLink.type,
+        url: mediaLink.url
+      })),
+    ...event.image_links
+      .filter((imageLink) => imageLink.review_status === 'draft')
+      .map<ReviewQueueItem>((imageLink) => ({
+        id: `image:${event.id}:${imageLink.image_url}`,
+        kind: 'image',
+        eventId: event.id,
+        eventTitle: event.title,
+        routeId: event.route_id,
+        title: imageLink.title,
+        provider: imageLink.provider,
+        type: imageLink.type,
+        url: imageLink.image_url,
+        previewUrl: imageLink.thumbnail_url ?? imageLink.image_url
+      }))
+  ]);
   $: selectedEvent = orderedVisibleEvents.find((event) => event.id === selectedEventId) ?? null;
   $: selectedEventIndex = selectedEvent
     ? orderedVisibleEvents.findIndex((event) => event.id === selectedEvent.id)
@@ -97,6 +135,29 @@
     activeNavigationItemId = 'routes';
   }
 
+  function selectReviewItem(item: ReviewQueueItem): void {
+    selectedRouteId = item.routeId;
+    selectedEventId = item.eventId;
+    activeNavigationItemId = 'media-review';
+  }
+
+  async function reviewQueueItem(item: ReviewQueueItem, action: ReviewAction): Promise<void> {
+    reviewSavingItemId = item.id;
+    reviewErrorMessage = null;
+    selectedRouteId = item.routeId;
+    selectedEventId = item.eventId;
+    activeNavigationItemId = 'media-review';
+
+    try {
+      const updatedEvent = await reviewEventLink(item.eventId, item.kind, item.url, action);
+      events = events.map((event) => (event.id === updatedEvent.id ? updatedEvent : event));
+    } catch (error) {
+      reviewErrorMessage = error instanceof Error ? error.message : 'Review action failed.';
+    } finally {
+      reviewSavingItemId = null;
+    }
+  }
+
   function openNavigation(): void {
     isNavigationOpen = true;
   }
@@ -138,7 +199,7 @@
   }
 
   function markStoryNavigationActive(): void {
-    if (!['events', 'connections', 'sources'].includes(activeNavigationItemId)) {
+    if (!['media-review'].includes(activeNavigationItemId)) {
       activeNavigationItemId = 'routes';
     }
   }
@@ -192,13 +253,17 @@
     {routes}
     {selectedRouteId}
     {routeEventCounts}
-    eventCount={orderedVisibleEvents.length}
+    {reviewQueueItems}
+    {reviewSavingItemId}
+    {reviewErrorMessage}
     {isLoading}
     {errorMessage}
     onClose={closeNavigation}
     onToggleVariant={toggleNavigationVariant}
     onSelectItem={selectNavigationItem}
     onSelectRoute={selectRoute}
+    onSelectReviewItem={selectReviewItem}
+    onReviewQueueItem={reviewQueueItem}
   />
 
   <section class="workspace" aria-label="SoundAtlas workspace">

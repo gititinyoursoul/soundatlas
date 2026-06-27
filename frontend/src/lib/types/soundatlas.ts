@@ -1,4 +1,6 @@
 export type ReviewStatus = 'draft' | 'reviewed';
+export type ReviewAction = 'reviewed' | 'reject';
+export type ReviewLinkKind = 'media' | 'image';
 export type MediaProvider = 'youtube' | 'spotify' | 'qobuz';
 export type MediaType = 'track' | 'album' | 'playlist' | 'video' | 'search';
 export type ImageProvider =
@@ -115,4 +117,17 @@ export type SoundAtlasData = {
   places: Place[];
   events: Event[];
   connections: Connection[];
+};
+
+export type ReviewQueueItem = {
+  id: string;
+  kind: ReviewLinkKind;
+  eventId: string;
+  eventTitle: string;
+  routeId: string;
+  title: string;
+  provider: MediaProvider | ImageProvider;
+  type: MediaType | ImageType;
+  url: string;
+  previewUrl?: string | null;
 };
