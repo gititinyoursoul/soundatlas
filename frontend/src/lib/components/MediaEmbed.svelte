@@ -4,6 +4,7 @@
 
   export let mediaLinks: MediaLink[] = [];
   export let eventId = '';
+  export let showReviewActions = true;
   export let onReviewMediaLink: (
     eventId: string,
     url: string,
@@ -63,27 +64,29 @@
       </div>
     </div>
 
-    <!-- @todo Hide or gate these admin-only review actions before a public explorer view. -->
-    <div class="review-actions" aria-label="Media review actions">
-      <button
-        type="button"
-        disabled={isSaving || selectedEntry.mediaLink.review_status === 'reviewed'}
-        on:click={() => reviewSelectedMediaLink('reviewed')}
-      >
-        Mark reviewed
-      </button>
-      <button
-        class="reject"
-        type="button"
-        disabled={isSaving}
-        on:click={() => reviewSelectedMediaLink('reject')}
-      >
-        Reject
-      </button>
-    </div>
+    {#if showReviewActions}
+      <!-- @todo Hide or gate these admin-only review actions before a public explorer view. -->
+      <div class="review-actions" aria-label="Media review actions">
+        <button
+          type="button"
+          disabled={isSaving || selectedEntry.mediaLink.review_status === 'reviewed'}
+          on:click={() => reviewSelectedMediaLink('reviewed')}
+        >
+          Mark reviewed
+        </button>
+        <button
+          class="reject"
+          type="button"
+          disabled={isSaving}
+          on:click={() => reviewSelectedMediaLink('reject')}
+        >
+          Reject
+        </button>
+      </div>
 
-    {#if errorMessage}
-      <p class="review-error">{errorMessage}</p>
+      {#if errorMessage}
+        <p class="review-error">{errorMessage}</p>
+      {/if}
     {/if}
 
     {#if playableLinks.length > 1}

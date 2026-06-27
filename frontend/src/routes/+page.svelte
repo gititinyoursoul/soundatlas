@@ -357,7 +357,7 @@
       bind:this={storyRegionElement}
       class="story-region"
       tabindex="-1"
-      aria-label="Story and research details"
+      aria-label="Event inspector"
       on:focusin={markStoryNavigationActive}
     >
       <StoryPanel
