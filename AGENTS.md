@@ -73,6 +73,8 @@ Events should contain at least:
 - Document product and architecture decisions in `docs/`.
 - The current task list lives in `TODO.md`.
 - For feature work, follow the spec-first workflow in `docs/spec-first-agent-workflow.md` and keep implementation-driving specs in `specs/<feature-slug>/rNN-<short-desc>.md`.
+- Use `docs/skills-workflow.md` as the routing guide for repeatable execution work that should live in skills or prompt wrappers.
+- Use the repo skill at `.codex/skills/soundatlas-spec-planning` for non-trivial feature planning before implementation.
 - If the scope changes, update `docs/mvp-concept.md` first and then `TODO.md`.
 
 ## Git Conventions

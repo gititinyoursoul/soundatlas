@@ -1,12 +1,12 @@
 # Spec-First Agent Workflow
 
-This document defines the lightweight spec-first workflow for agent-driven development in SoundAtlas.
+This document defines the lightweight spec-first workflow for agent-driven development in SoundAtlas and how it connects to reusable skills.
 
 The goal is to prevent agents from jumping directly from vague requests into implementation. For non-trivial feature work, behavior changes, data workflow changes, UX changes, backend changes, or cross-cutting changes, the agent should first draft a new spec revision in the feature's spec folder, then implement against that approved revision.
 
 Core rule:
 
-> Do not implement directly from a prompt. Implement only from an approved spec with acceptance criteria.
+> Do not implement directly from a prompt or skill. Implement only from an approved spec with acceptance criteria.
 
 ## When to use this workflow
 
@@ -57,7 +57,7 @@ The verification report proves whether the implementation satisfies the acceptan
 
 ## Prompt structure
 
-SoundAtlas uses three main prompt types:
+SoundAtlas uses prompt entrypoints for the most common workflows:
 
 | Prompt                             | Purpose                                                       |
 | ---------------------------------- | ------------------------------------------------------------- |
@@ -66,6 +66,18 @@ SoundAtlas uses three main prompt types:
 | `Implement Frontend Map From Spec` | Implements frontend behavior from an approved spec            |
 
 The implementation prompts should not redefine product behavior. They should read the approved spec revision, implement only the relevant slice, and verify against acceptance criteria.
+
+Additional prompt entrypoints may exist for specialized tasks such as UX auditing, test planning, documentation updates, route creation, or seed curation. Keep those prompts thin and aligned with the same spec-first rules.
+
+## Skills layer
+
+Skills are the reusable execution layer for repeatable work such as planning, implementation, testing, docs, and UX review.
+
+- Specs stay authoritative for product intent.
+- Skills consume approved specs and turn them into concrete implementation steps.
+- Prompts in `prompts/` are thin entrypoints and compatibility wrappers around that work.
+- The current spec-planning skill is `soundatlas-spec-planning` at `.codex/skills/soundatlas-spec-planning`.
+- The current mapping between specs, skills, and prompts lives in `docs/skills-workflow.md`.
 
 ## Recommended repo structure
 
