@@ -1,7 +1,8 @@
 <script lang="ts">
+  import { browser } from '$app/environment';
+  import { afterUpdate, onMount } from 'svelte';
   import type { Event } from '$lib/types/soundatlas';
 
-  export let routeTitle = 'Route';
   export let routeStartYear = 1965;
   export let routeEndYear = 1985;
   export let eventStartYear: number | null = null;
@@ -9,6 +10,11 @@
   export let events: Event[] = [];
   export let selectedEventId: string | null = null;
   export let onSelectEvent: (eventId: string) => void = () => {};
+
+  let eventListElement: HTMLDivElement | null = null;
+  let eventListResizeVersion = 0;
+  let lastCenteredKey: string | null = null;
+  let centerAnimationFrame: number | null = null;
 
   $: axisStart = Math.min(routeStartYear, routeEndYear);
   $: axisEnd = Math.max(routeStartYear, routeEndYear);
@@ -22,8 +28,47 @@
     : axisStart;
   $: highlightedStart = ((highlightedStartYear - axisStart) / axisSpan) * 100;
   $: highlightedWidth = Math.max(((highlightedEndYear - highlightedStartYear) / axisSpan) * 100, 0);
-  $: selectedEventIndex = events.findIndex((event) => event.id === selectedEventId);
-  $: selectedEvent = selectedEventIndex >= 0 ? events[selectedEventIndex] : null;
+  $: selectedEventCenteringKey = selectedEventId
+    ? `${selectedEventId}:${events.length}:${eventListResizeVersion}`
+    : '';
+  onMount(() => {
+    if (!eventListElement || typeof ResizeObserver === 'undefined') {
+      return;
+    }
+
+    const observer = new ResizeObserver(() => {
+      eventListResizeVersion += 1;
+    });
+
+    observer.observe(eventListElement);
+
+    return () => {
+      if (centerAnimationFrame !== null) {
+        cancelAnimationFrame(centerAnimationFrame);
+      }
+      observer.disconnect();
+    };
+  });
+
+  afterUpdate(() => {
+    if (!browser || !eventListElement || !selectedEventCenteringKey) {
+      return;
+    }
+
+    if (selectedEventCenteringKey === lastCenteredKey) {
+      return;
+    }
+
+    if (centerAnimationFrame !== null) {
+      cancelAnimationFrame(centerAnimationFrame);
+    }
+
+    const centeringKey = selectedEventCenteringKey;
+    centerAnimationFrame = requestAnimationFrame(() => {
+      centerAnimationFrame = null;
+      void centerSelectedEvent(centeringKey);
+    });
+  });
 
   function toPercent(year: number): number {
     return ((year - axisStart) / axisSpan) * 100;
@@ -34,22 +79,34 @@
       ? `${event.year_start}`
       : `${event.year_start}-${event.year_end}`;
   }
+
+  async function centerSelectedEvent(centeringKey: string): Promise<void> {
+    if (!selectedEventId || !eventListElement) {
+      return;
+    }
+
+    const selectedButton = eventListElement.querySelector<HTMLButtonElement>(
+      `button[data-event-id="${selectedEventId}"]`
+    );
+
+    if (!selectedButton) {
+      return;
+    }
+
+    const containerRect = eventListElement.getBoundingClientRect();
+    const buttonRect = selectedButton.getBoundingClientRect();
+    const desiredScrollLeft =
+      eventListElement.scrollLeft +
+      (buttonRect.left - containerRect.left) -
+      (containerRect.width - buttonRect.width) / 2;
+    const maxScrollLeft = eventListElement.scrollWidth - eventListElement.clientWidth;
+
+    eventListElement.scrollLeft = Math.max(0, Math.min(maxScrollLeft, desiredScrollLeft));
+    lastCenteredKey = centeringKey;
+  }
 </script>
 
-<section class="timeline" aria-label={`Timeline for route ${routeTitle}`}>
-  <div class="timeline-header">
-    <div class="title-block">
-      <span>Sequence</span>
-      <strong>{routeTitle}</strong>
-    </div>
-    <div class="timeline-state">
-      {#if selectedEvent}
-        <span>{selectedEventIndex + 1} / {events.length}</span>
-      {/if}
-      <span class="year-range">{axisStart} - {axisEnd}</span>
-    </div>
-  </div>
-
+<section class="timeline" aria-label="Timeline">
   <div class="track">
     <div class="axis">
       <div class="line"></div>
@@ -87,10 +144,11 @@
 
     {#if events.length > 0}
       <!-- @todo Revisit this horizontal list when future routes contain many more events. -->
-      <div class="event-list" aria-label="Route events">
+      <div bind:this={eventListElement} class="event-list" aria-label="Route events">
         {#each events as event}
           <button
             class:active={selectedEventId === event.id}
+            data-event-id={event.id}
             type="button"
             on:click={() => onSelectEvent(event.id)}
           >
@@ -116,48 +174,6 @@
     padding: 0.85rem 1rem;
     border-top: 1px solid #d9e0e7;
     background: linear-gradient(180deg, #ffffff 0%, #f9fbfc 100%);
-  }
-
-  .timeline-header {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 1rem;
-  }
-
-  .title-block {
-    display: grid;
-    gap: 0.1rem;
-  }
-
-  .title-block span {
-    color: #6b7785;
-    font-size: 0.78rem;
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-
-  .title-block strong {
-    color: #17202a;
-    font-size: 0.98rem;
-  }
-
-  .year-range {
-    color: #314151;
-    font-size: 0.9rem;
-    font-weight: 700;
-    white-space: nowrap;
-  }
-
-  .timeline-state {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    gap: 0.45rem;
-    color: #6b7785;
-    font-size: 0.82rem;
-    font-weight: 800;
   }
 
   .track {

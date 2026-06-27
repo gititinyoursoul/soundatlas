@@ -338,10 +338,9 @@
       <section
         class="timeline-region"
         tabindex="-1"
-        aria-label="Timeline sequence"
+        aria-label="Timeline"
       >
         <Timeline
-          routeTitle={timelineRoute?.title ?? 'Route'}
           routeStartYear={timelineStartYear}
           routeEndYear={timelineEndYear}
           eventStartYear={selectedEvent?.year_start ?? null}
