@@ -1,7 +1,9 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onMount, tick } from 'svelte';
   import { loadSoundAtlasData } from '$lib/api/soundatlas';
+  import Icon from '$lib/components/Icon.svelte';
   import MapView from '$lib/components/MapView.svelte';
+  import NavigationDrawer from '$lib/components/NavigationDrawer.svelte';
   import StoryPanel from '$lib/components/StoryPanel.svelte';
   import Timeline from '$lib/components/Timeline.svelte';
   import { filterEvents } from '$lib/data/filters';
@@ -16,9 +18,19 @@
   let selectedEventId: string | null = null;
   let isLoading = true;
   let errorMessage: string | null = null;
+  let isNavigationOpen = false;
+  let navigationVariant: 'expanded' | 'collapsed' = 'expanded';
+  let activeNavigationItemId = 'routes';
+  let navigationTriggerElement: HTMLButtonElement;
+  let headerRegionElement: HTMLElement;
+  let storyRegionElement: HTMLElement;
 
   $: visibleEvents = filterEvents(events, selectedRouteId);
   $: orderedVisibleEvents = [...visibleEvents].sort(compareEvents);
+  $: routeEventCounts = routes.reduce<Record<string, number>>((counts, route) => {
+    counts[route.id] = events.filter((event) => event.route_id === route.id).length;
+    return counts;
+  }, {});
   $: selectedEvent = orderedVisibleEvents.find((event) => event.id === selectedEventId) ?? null;
   $: selectedEventIndex = selectedEvent
     ? orderedVisibleEvents.findIndex((event) => event.id === selectedEvent.id)
@@ -34,10 +46,10 @@
   $: selectedPlaceEventCount = selectedPlace
     ? orderedVisibleEvents.filter((event) => event.place_id === selectedPlace?.id).length
     : 0;
-  $: selectedRoute = selectedEvent
-    ? routes.find((route) => route.id === selectedEvent?.route_id) ?? null
-    : null;
   $: activeRoute = routes.find((route) => route.id === selectedRouteId) ?? null;
+  $: selectedRoute = selectedEvent
+    ? routes.find((route) => route.id === selectedEvent?.route_id) ?? activeRoute
+    : activeRoute;
   $: timelineRoute = selectedRoute ?? activeRoute ?? routes[0] ?? null;
   $: timelineStartYear = timelineRoute?.year_start ?? 1965;
   $: timelineEndYear = timelineRoute?.year_end ?? 1985;
@@ -77,6 +89,58 @@
 
   function selectEvent(eventId: string): void {
     selectedEventId = eventId;
+  }
+
+  function selectRoute(routeId: string): void {
+    selectedRouteId = routeId;
+    selectedEventId = getFirstEventIdForRoute(events, routeId);
+    activeNavigationItemId = 'routes';
+  }
+
+  function openNavigation(): void {
+    isNavigationOpen = true;
+  }
+
+  async function closeNavigation(): Promise<void> {
+    isNavigationOpen = false;
+    await tick();
+    navigationTriggerElement?.focus();
+  }
+
+  function toggleNavigationVariant(): void {
+    navigationVariant = navigationVariant === 'expanded' ? 'collapsed' : 'expanded';
+  }
+
+  async function selectNavigationItem(itemId: string): Promise<void> {
+    activeNavigationItemId = itemId;
+
+    if (itemId === 'routes') {
+      return;
+    }
+
+    const target = getNavigationTarget(itemId);
+
+    if (!target) {
+      return;
+    }
+
+    target.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    await tick();
+    target.focus({ preventScroll: true });
+  }
+
+  function getNavigationTarget(itemId: string): HTMLElement | null {
+    if (itemId === 'events' || itemId === 'connections' || itemId === 'sources') {
+      return storyRegionElement;
+    }
+
+    return headerRegionElement;
+  }
+
+  function markStoryNavigationActive(): void {
+    if (!['events', 'connections', 'sources'].includes(activeNavigationItemId)) {
+      activeNavigationItemId = 'routes';
+    }
   }
 
   function handleKeydown(event: KeyboardEvent): void {
@@ -121,12 +185,42 @@
 </svelte:head>
 
 <main class="app-shell">
+  <NavigationDrawer
+    open={isNavigationOpen}
+    variant={navigationVariant}
+    activeItemId={activeNavigationItemId}
+    {routes}
+    {selectedRouteId}
+    {routeEventCounts}
+    eventCount={orderedVisibleEvents.length}
+    {isLoading}
+    {errorMessage}
+    onClose={closeNavigation}
+    onToggleVariant={toggleNavigationVariant}
+    onSelectItem={selectNavigationItem}
+    onSelectRoute={selectRoute}
+  />
+
   <section class="workspace" aria-label="SoundAtlas workspace">
     <div class="map-column">
-      <header class="app-header">
-        <div class="scope-block">
-          <p>SoundAtlas</p>
-          <h1>New York 1965-1985</h1>
+      <header class="app-header" bind:this={headerRegionElement} tabindex="-1">
+        <div class="scope-cluster">
+          <button
+            bind:this={navigationTriggerElement}
+            type="button"
+            class="drawer-trigger"
+            aria-label="Open navigation"
+            aria-haspopup="dialog"
+            aria-expanded={isNavigationOpen}
+            on:click={openNavigation}
+          >
+            <Icon name="layers" />
+          </button>
+
+          <div class="scope-block">
+            <p>SoundAtlas</p>
+            <h1>New York 1965-1985</h1>
+          </div>
         </div>
 
         <div class="route-context" aria-label="Selected route context">
@@ -158,43 +252,63 @@
           <small>Start the FastAPI backend on http://127.0.0.1:8000, then refresh this page.</small>
         </div>
       {:else}
-        <MapView
-          events={orderedVisibleEvents}
-          {places}
-          {routes}
-          {selectedEventId}
-          {selectedPlace}
-          {selectedRoute}
-          {selectedPlaceEventCount}
-          onSelectEvent={selectEvent}
-        />
+        <section
+          class="map-region"
+          tabindex="-1"
+          aria-label="Map exploration"
+        >
+          <MapView
+            events={orderedVisibleEvents}
+            {places}
+            {routes}
+            {selectedEventId}
+            {selectedPlace}
+            {selectedRoute}
+            {selectedPlaceEventCount}
+            onSelectEvent={selectEvent}
+          />
+        </section>
       {/if}
 
-      <Timeline
-        routeTitle={timelineRoute?.title ?? 'Route'}
-        routeStartYear={timelineStartYear}
-        routeEndYear={timelineEndYear}
-        eventStartYear={selectedEvent?.year_start ?? null}
-        eventEndYear={selectedEvent?.year_end ?? null}
-        events={orderedVisibleEvents}
-        {selectedEventId}
-        onSelectEvent={selectEvent}
-      />
+      <section
+        class="timeline-region"
+        tabindex="-1"
+        aria-label="Timeline sequence"
+      >
+        <Timeline
+          routeTitle={timelineRoute?.title ?? 'Route'}
+          routeStartYear={timelineStartYear}
+          routeEndYear={timelineEndYear}
+          eventStartYear={selectedEvent?.year_start ?? null}
+          eventEndYear={selectedEvent?.year_end ?? null}
+          events={orderedVisibleEvents}
+          {selectedEventId}
+          onSelectEvent={selectEvent}
+        />
+      </section>
     </div>
 
-    <StoryPanel
-      event={selectedEvent}
-      place={selectedPlace}
-      route={selectedRoute}
-      connections={selectedConnections}
-      {previousEvent}
-      {nextEvent}
-      currentEventIndex={selectedEventIndex}
-      eventCount={orderedVisibleEvents.length}
-      onNavigateEvent={selectEvent}
-      {isLoading}
-      {errorMessage}
-    />
+    <section
+      bind:this={storyRegionElement}
+      class="story-region"
+      tabindex="-1"
+      aria-label="Story and research details"
+      on:focusin={markStoryNavigationActive}
+    >
+      <StoryPanel
+        event={selectedEvent}
+        place={selectedPlace}
+        route={selectedRoute}
+        connections={selectedConnections}
+        {previousEvent}
+        {nextEvent}
+        currentEventIndex={selectedEventIndex}
+        eventCount={orderedVisibleEvents.length}
+        onNavigateEvent={selectEvent}
+        {isLoading}
+        {errorMessage}
+      />
+    </section>
   </section>
 </main>
 
@@ -232,6 +346,43 @@
     padding: 0.75rem 1rem;
     border-bottom: 1px solid #d9e0e7;
     background: #ffffff;
+  }
+
+  .app-header:focus,
+  .map-region:focus,
+  .timeline-region:focus,
+  .story-region:focus {
+    outline: 2px solid #2454d6;
+    outline-offset: -2px;
+  }
+
+  .scope-cluster {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 0;
+  }
+
+  .drawer-trigger {
+    display: grid;
+    flex: 0 0 auto;
+    place-items: center;
+    width: 2.35rem;
+    height: 2.35rem;
+    border: 1px solid #cfd7df;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #314151;
+    font-size: 1.1rem;
+  }
+
+  .drawer-trigger:hover {
+    background: #f3f6f8;
+  }
+
+  .drawer-trigger:focus-visible {
+    outline: 2px solid #2454d6;
+    outline-offset: 2px;
   }
 
   .scope-block p,
@@ -367,6 +518,26 @@
     background: #fff7f4;
   }
 
+  .map-region,
+  .timeline-region,
+  .story-region {
+    min-width: 0;
+    min-height: 0;
+  }
+
+  .map-region {
+    display: grid;
+  }
+
+  .timeline-region {
+    display: grid;
+  }
+
+  .story-region {
+    display: grid;
+    min-height: 0;
+  }
+
   @media (max-width: 900px) {
     .app-shell {
       padding: 0;
@@ -385,6 +556,10 @@
       grid-template-columns: 1fr;
       align-items: flex-start;
       gap: 0.7rem;
+    }
+
+    .drawer-trigger {
+      display: none;
     }
 
     .map-column {

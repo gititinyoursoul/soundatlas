@@ -38,6 +38,7 @@ This means:
 The current main screen is organized around:
 
 - Compact app header: product name, geographic/time scope, active route title, route years, short route context, route metadata, and API/status summary
+- Desktop overlay navigation drawer: icon trigger in the header, expanded/collapsed states, grouped workspace navigation, disabled admin/workflow affordances, and dim overlay behavior
 - Map: primary spatial exploration surface
 - Timeline: route sequence and selected event range
 - Story panel: selected event details, navigation, sources, and media
@@ -80,7 +81,15 @@ Map marker clicks, timeline clicks, route selection, story navigation, and keybo
 
 ### `frontend/src/routes/+page.svelte`
 
-Owns data loading, shared selection state, derived selected event/place/route state, keyboard navigation, compact app header, and top-level layout.
+Owns data loading, shared selection state, derived selected event/place/route state, keyboard navigation, compact app header, desktop drawer state, and top-level layout.
+
+### `NavigationDrawer`
+
+Provides the desktop-only overlay drawer for route switching plus secondary research/admin entry points. It supports expanded and collapsed icon-only states, a real-data route list subview, dim overlay close behavior, `Esc` close behavior, focus return, active item state, loading/error/empty patterns, and disabled permission affordances for workflow/admin entries.
+
+### `Icon`
+
+Provides the local line icons used by the drawer trigger and navigation drawer until a shared icon package or design system is introduced.
 
 ### `MapView`
 
@@ -92,7 +101,7 @@ Shows the route chronology and lets users select events. It should clarify event
 
 ### `RouteFilter`
 
-Currently exists as a reusable component for route switching, but it is not part of the main desktop surface. The intended design is a compact route discovery mechanism rather than a prominent control block. It should remain single-select while the MVP uses one active route at a time.
+Currently exists as a reusable component for route switching, but it is not part of the main desktop surface. Desktop route discovery and route switching now live in the navigation drawer route list. It should remain single-select while the MVP uses one active route at a time.
 
 ### `StoryPanel`
 
@@ -116,7 +125,7 @@ Embeds playable media links when available. Current media review controls are us
 ## Known Design Gaps
 
 - The map does not yet feel dominant enough in the first viewport.
-- Route discovery is unresolved; route switching is temporarily removed from the main desktop surface until it has a compact discovery pattern.
+- The drawer route list needs screenshot critique to decide whether route selection should keep the overlay open or close after selection.
 - The Birth of Hip-Hop route range starts at 1970, while an early route event starts in 1967.
 - Timeline selection has both ticks and event cards, which can feel visually busy.
 - Map selected-event context is mostly marker styling and tooltip-based.
@@ -126,7 +135,7 @@ Embeds playable media links when available. Current media review controls are us
 ## Open Decisions
 
 - How should pre-1970 hip-hop context be represented in route ranges and timeline layout?
-- Where should route discovery live: top utility, dropdown, drawer, sidebar, or separate route overview?
+- Should drawer route selection keep the overlay open on desktop, or close after a route is selected?
 - When and how should admin media review controls be gated?
 - Should the map include a persistent selected-event caption or overlay?
 - Should timeline event cards remain, become more compact, or move into the story panel?

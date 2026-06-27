@@ -32,7 +32,9 @@ Completed work packages are archived in `docs/done.md`.
 - [ ] Run screenshot critique after the first map-first UX pass
 - [x] Reduce route controls/topbar footprint after first map-first pass; current route controls take more topbar space than intended
 - [x] Consolidate the topbar and route context into a single compact app header without settings or saved controls
-- [ ] Rework route discovery so users can find/switch routes without route controls dominating the desktop header
+- [x] Implement a desktop overlay navigation drawer with expanded and collapsed icon-only states
+- [ ] Rework navigation pane: decide which user actions should be possible from the drawer, including route switching, workspace jumps, source/media access, and admin validation entry points
+- [x] Rework route discovery so users can find/switch routes without route controls dominating the desktop header
 - [x] Rework selected-event map caption so it adds map-specific context instead of duplicating story panel information
 - [x] Fix map layout height so switching between events does not resize the map
 - [x] Reduce duplicated route event surfaces; events are currently visible in at least four UI locations
