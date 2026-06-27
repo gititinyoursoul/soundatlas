@@ -7,6 +7,9 @@
   export let places: Place[] = [];
   export let routes: Route[] = [];
   export let selectedEventId: string | null = null;
+  export let selectedPlace: Place | null = null;
+  export let selectedRoute: Route | null = null;
+  export let selectedPlaceEventCount = 0;
   export let onSelectEvent: (eventId: string) => void = () => {};
 
   let mapContainer: HTMLDivElement;
@@ -159,6 +162,24 @@
   {#if events.length === 0}
     <div class="map-empty">No events in the active time range.</div>
   {/if}
+
+  {#if selectedPlace}
+    <aside
+      class="selected-place"
+      style={`--route-color: ${selectedRoute?.color ?? '#e4572e'}`}
+      aria-label="Selected map place"
+      aria-live="polite"
+    >
+      <span>Selected place</span>
+      <strong>{selectedPlace.name}</strong>
+      <p>
+        {selectedPlace.borough}
+        {#if selectedPlaceEventCount > 0}
+          · {selectedPlaceEventCount} {selectedPlaceEventCount === 1 ? 'route event' : 'route events'}
+        {/if}
+      </p>
+    </aside>
+  {/if}
 </div>
 
 <style>
@@ -192,6 +213,43 @@
     font-size: 0.78rem;
     font-weight: 700;
     box-shadow: 0 8px 24px rgba(23, 32, 42, 0.12);
+  }
+
+  .selected-place {
+    position: absolute;
+    z-index: 500;
+    left: 1rem;
+    bottom: 1rem;
+    display: grid;
+    gap: 0.18rem;
+    width: min(24rem, calc(100% - 2rem));
+    padding: 0.75rem 0.85rem;
+    border: 1px solid rgba(23, 32, 42, 0.14);
+    border-left: 0.35rem solid var(--route-color);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 12px 30px rgba(23, 32, 42, 0.16);
+  }
+
+  .selected-place span {
+    color: #6b7785;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .selected-place strong {
+    color: #17202a;
+    font-size: 0.98rem;
+    line-height: 1.2;
+  }
+
+  .selected-place p {
+    margin: 0;
+    color: #536170;
+    font-size: 0.82rem;
+    line-height: 1.35;
   }
 
   .legend-row {
@@ -236,5 +294,16 @@
     color: #314151;
     font-size: 0.9rem;
     box-shadow: 0 8px 24px rgba(23, 32, 42, 0.12);
+  }
+
+  @media (max-width: 640px) {
+    .map-legend {
+      max-width: min(15rem, calc(100% - 2rem));
+    }
+
+    .selected-place {
+      right: 1rem;
+      width: auto;
+    }
   }
 </style>

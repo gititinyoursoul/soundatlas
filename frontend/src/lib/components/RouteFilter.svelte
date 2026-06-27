@@ -7,7 +7,7 @@
 </script>
 
 <section class="route-filter" aria-label="Route filter">
-  <div class="section-label">Switch route</div>
+  <div class="section-label">Routes</div>
 
   {#if routes.length === 0}
     <p class="empty">No routes loaded.</p>
@@ -55,20 +55,21 @@
     display: inline-flex;
     align-items: center;
     gap: 0.45rem;
-    padding: 0.35rem 0.55rem;
+    padding: 0.28rem 0.48rem;
     border: 1px solid #cfd7df;
     border-radius: 999px;
     background: #ffffff;
     color: #314151;
-    font-size: 0.85rem;
+    font-size: 0.78rem;
     font-weight: 700;
     text-align: left;
   }
 
   button.active {
-    border-color: #17202a;
-    background: #17202a;
-    color: #ffffff;
+    border-color: #314151;
+    background: #f8fafb;
+    color: #17202a;
+    box-shadow: inset 0 0 0 1px rgba(23, 32, 42, 0.18);
   }
 
   .swatch {

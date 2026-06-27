@@ -2,14 +2,11 @@
   import type {
     Connection,
     Event,
-    ImageLink,
     MediaProvider,
     MediaType,
     Place,
     Route
   } from '$lib/types/soundatlas';
-  import { parseYouTubeEmbed } from '$lib/media/youtube';
-  import MediaEmbed from './MediaEmbed.svelte';
 
   export let event: Event | null = null;
   export let place: Place | null = null;
@@ -22,11 +19,6 @@
   export let isLoading = false;
   export let errorMessage: string | null = null;
   export let onNavigateEvent: (eventId: string) => void = () => {};
-  export let onReviewMediaLink: (
-    eventId: string,
-    url: string,
-    action: 'reviewed' | 'reject'
-  ) => Promise<void> = async () => {};
 
   const providerLabels: Record<MediaProvider, string> = {
     youtube: 'YouTube',
@@ -36,14 +28,6 @@
 
   function formatMediaLinkLabel(provider: MediaProvider, type: MediaType): string {
     return `${providerLabels[provider]} ${type}`;
-  }
-
-  $: reviewedImageLinks = event?.image_links.filter((imageLink) => imageLink.review_status === 'reviewed') ?? [];
-  $: fallbackMediaLinks =
-    event?.media_links.filter((mediaLink) => !parseYouTubeEmbed(mediaLink.url)) ?? [];
-
-  function formatImageAttribution(imageLink: ImageLink): string {
-    return [imageLink.creator, imageLink.license].filter(Boolean).join(' · ');
   }
 </script>
 
@@ -59,90 +43,80 @@
       <p>{errorMessage}</p>
     </div>
   {:else if event}
-    <div class="eyebrow">
-      <span>{event.year_start}{event.year_start !== event.year_end ? `-${event.year_end}` : ''}</span>
-      {#if route}
-        <span class="route" style={`--route-color: ${route.color}`}>{route.title}</span>
-      {/if}
-    </div>
+    <header class="inspector-header">
+      <div class="eyebrow">
+        <span>Selected event</span>
+        <span>{currentEventIndex + 1} / {eventCount}</span>
+      </div>
 
-    <h2>{event.title}</h2>
+      <h2>{event.title}</h2>
 
-    {#if reviewedImageLinks.length > 0}
-      <figure class="event-image">
-        <a href={reviewedImageLinks[0].source_url} target="_blank" rel="noreferrer">
-          <img
-            src={reviewedImageLinks[0].thumbnail_url ?? reviewedImageLinks[0].image_url}
-            alt={reviewedImageLinks[0].alt_text}
-          />
-        </a>
-        <figcaption>
-          <span>{reviewedImageLinks[0].title}</span>
-          {#if formatImageAttribution(reviewedImageLinks[0])}
-            <small>{formatImageAttribution(reviewedImageLinks[0])}</small>
-          {/if}
-        </figcaption>
-      </figure>
-    {/if}
+      <dl class="event-meta">
+        <div>
+          <dt>Year</dt>
+          <dd>{event.year_start}{event.year_start !== event.year_end ? `-${event.year_end}` : ''}</dd>
+        </div>
+        {#if place}
+          <div>
+            <dt>Place</dt>
+            <dd>{place.name}, {place.borough}</dd>
+          </div>
+        {/if}
+        {#if route}
+          <div>
+            <dt>Route</dt>
+            <dd><span class="route-dot" style={`--route-color: ${route.color}`}></span>{route.title}</dd>
+          </div>
+        {/if}
+      </dl>
 
-    {#if place}
-      <p class="place">{place.name}, {place.borough}</p>
-    {/if}
+      <nav class="event-nav" aria-label="Event navigation">
+        <button
+          type="button"
+          disabled={!previousEvent}
+          on:click={() => previousEvent && onNavigateEvent(previousEvent.id)}
+        >
+          Previous
+        </button>
+        <button
+          type="button"
+          disabled={!nextEvent}
+          on:click={() => nextEvent && onNavigateEvent(nextEvent.id)}
+        >
+          Next
+        </button>
+      </nav>
+    </header>
 
-    <nav class="event-nav" aria-label="Event navigation">
-      <button
-        type="button"
-        disabled={!previousEvent}
-        on:click={() => previousEvent && onNavigateEvent(previousEvent.id)}
-      >
-        Previous event
-      </button>
-      <span>{currentEventIndex + 1} / {eventCount}</span>
-      <button
-        type="button"
-        disabled={!nextEvent}
-        on:click={() => nextEvent && onNavigateEvent(nextEvent.id)}
-      >
-        Next event
-      </button>
-    </nav>
-
-    <section>
-      <h3>What happens?</h3>
+    <section class="detail-block">
+      <h3>What happened</h3>
       <p>{event.summary}</p>
     </section>
 
-    <section>
-      <h3>Why does it matter?</h3>
+    <section class="detail-block emphasis">
+      <h3>Why it matters</h3>
       <p>{event.significance}</p>
     </section>
 
     {#if connections.length > 0}
-      <section>
-        <h3>Connections</h3>
+      <details class="foldout">
+        <summary>Connections</summary>
         <ul>
           {#each connections as connection}
             <li>{connection.summary}</li>
           {/each}
         </ul>
-      </section>
+      </details>
     {/if}
 
     {#if event.source_urls.length > 0 || event.media_links.length > 0}
-      <section>
+      <section class="resources">
         <h3>Sources and media</h3>
-        {#if event.media_links.length > 0}
-          <MediaEmbed
-            eventId={event.id}
-            mediaLinks={event.media_links}
-            {onReviewMediaLink}
-          />
-        {/if}
         <ul class="links">
-          {#each event.source_urls as sourceUrl}
-            <li><a href={sourceUrl} target="_blank" rel="noreferrer">Source</a></li>
+          {#each event.source_urls as sourceUrl, index}
+            <li><a href={sourceUrl} target="_blank" rel="noreferrer">Source {index + 1}</a></li>
           {/each}
-          {#each fallbackMediaLinks as mediaLink}
+          {#each event.media_links as mediaLink}
             <li>
               <a href={mediaLink.url} target="_blank" rel="noreferrer">
                 {formatMediaLinkLabel(mediaLink.provider, mediaLink.type)}
@@ -164,12 +138,27 @@
   .story-panel {
     display: grid;
     align-content: start;
-    gap: 1rem;
+    gap: 0.85rem;
     min-height: 0;
-    padding: 1.25rem;
+    padding: 1rem;
     overflow: auto;
     border-left: 1px solid #d9e0e7;
+    background: #fbfcfd;
+  }
+
+  .inspector-header,
+  .detail-block,
+  .foldout,
+  .resources {
+    border: 1px solid #e0e6ec;
+    border-radius: 8px;
     background: #ffffff;
+  }
+
+  .inspector-header {
+    display: grid;
+    gap: 0.85rem;
+    padding: 0.95rem;
   }
 
   .eyebrow {
@@ -178,15 +167,19 @@
     gap: 0.5rem;
     align-items: center;
     color: #6b7785;
-    font-size: 0.82rem;
+    font-size: 0.75rem;
     font-weight: 700;
   }
 
-  .route {
-    padding: 0.15rem 0.45rem;
+  .route-dot {
+    display: inline-block;
+    width: 0.65rem;
+    height: 0.65rem;
+    margin-right: 0.35rem;
+    border: 1px solid #17202a;
     border-radius: 999px;
     background: var(--route-color);
-    color: #ffffff;
+    vertical-align: -0.05rem;
   }
 
   h2,
@@ -197,76 +190,71 @@
 
   h2 {
     color: #17202a;
-    font-size: clamp(1.4rem, 2vw, 2rem);
-    line-height: 1.1;
+    font-size: clamp(1.1rem, 1.35vw, 1.45rem);
+    line-height: 1.15;
   }
 
   h3 {
-    margin-bottom: 0.35rem;
     color: #314151;
-    font-size: 0.9rem;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
   }
 
   p,
   li {
     color: #536170;
-    line-height: 1.5;
+    font-size: 0.9rem;
+    line-height: 1.45;
   }
 
-  .place {
-    color: #314151;
-    font-weight: 700;
-  }
-
-  .event-image {
+  .event-meta {
     display: grid;
-    gap: 0.45rem;
+    gap: 0.55rem;
     margin: 0;
   }
 
-  .event-image a {
-    display: block;
-    overflow: hidden;
-    border-radius: 12px;
-    background: #e5ebf0;
-  }
-
-  .event-image img {
-    display: block;
-    width: 100%;
-    max-height: 15rem;
-    object-fit: cover;
-  }
-
-  figcaption {
+  .event-meta div {
     display: grid;
-    gap: 0.15rem;
-    color: #6b7785;
-    font-size: 0.78rem;
-    line-height: 1.35;
+    gap: 0.1rem;
   }
 
-  figcaption span {
+  dt {
+    color: #6b7785;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  dd {
+    margin: 0;
     color: #314151;
+    font-size: 0.88rem;
     font-weight: 700;
+    line-height: 1.3;
   }
 
-  figcaption small {
-    color: #6b7785;
-    font-size: inherit;
+  .detail-block {
+    display: grid;
+    gap: 0.4rem;
+    padding: 0.85rem;
+  }
+
+  .detail-block.emphasis {
+    border-color: #efc8be;
+    background: #fff7f4;
   }
 
   .event-nav {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.75rem 0;
-    border-top: 1px solid #e5ebf0;
-    border-bottom: 1px solid #e5ebf0;
   }
 
   .event-nav button {
+    flex: 1 1 0;
     min-width: 0;
     padding: 0.5rem 0.6rem;
     border: 1px solid #cfd7df;
@@ -286,11 +274,17 @@
     opacity: 0.45;
   }
 
-  .event-nav span {
-    color: #6b7785;
-    font-size: 0.85rem;
-    font-weight: 700;
-    white-space: nowrap;
+  .foldout {
+    padding: 0.8rem 0.85rem;
+  }
+
+  summary {
+    cursor: pointer;
+    color: #314151;
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
   }
 
   ul {
@@ -300,17 +294,32 @@
     padding-left: 1.15rem;
   }
 
+  .resources {
+    display: grid;
+    gap: 0.55rem;
+    padding: 0.85rem;
+  }
+
   .links {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: 0.4rem;
     padding: 0;
     list-style: none;
   }
 
   a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 1.8rem;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid #efc8be;
+    border-radius: 999px;
+    background: #fff7f4;
     color: #bb3f22;
+    font-size: 0.78rem;
     font-weight: 700;
+    text-decoration: none;
   }
 
   .empty {

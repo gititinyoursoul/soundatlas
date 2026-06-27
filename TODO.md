@@ -16,17 +16,30 @@ Completed work packages are archived in `docs/done.md`.
 ### Repository Maintenance
 
 - [ ] Resolve Git line-ending warning: `warning: in the working copy of 'TODO.md', LF will be replaced by CRLF the next time Git touches it`
-- [ ] Add frontend test infrastructure and an `npm test` script; current frontend validation is limited to `npm run check` and `npm run build`
+- [x] Add frontend test infrastructure and an `npm test` script
 - [ ] Add frontend behavior tests for route selection, timeline selection, map/story synchronization, loading/error states, and admin media controls
 
 ### UX and Design
 
-- [ ] Run a no-code UX audit of the current frontend app
-- [ ] Choose the UX design direction for the MVP
-- [ ] Draft a UI plan for the main exploration view
+- [x] Plan the first map-first UX pass from `docs/design/2026-06-27-frontend-ux-audit.md` and `docs/design/current-frontend-design.md`
+- [x] Draft a UI plan for the main exploration view
+- [x] Compress the topbar and active route context so the map becomes more dominant in the first viewport
+- [x] Add a persistent selected-event summary, caption, or overlay to the map
+- [x] Clarify timeline sequence navigation and selected-event emphasis
+- [ ] Decide how pre-1970 hip-hop context should appear in route ranges and timeline layout
+- [x] Define and implement a mobile ordering strategy for map, timeline, and story panel
+- [ ] Gate or remove admin media review controls before a public explorer surface
+- [ ] Run screenshot critique after the first map-first UX pass
+- [x] Reduce route controls/topbar footprint after first map-first pass; current route controls take more topbar space than intended
+- [x] Consolidate the topbar and route context into a single compact app header without settings or saved controls
+- [ ] Rework route discovery so users can find/switch routes without route controls dominating the desktop header
+- [x] Rework selected-event map caption so it adds map-specific context instead of duplicating story panel information
+- [x] Fix map layout height so switching between events does not resize the map
+- [x] Reduce duplicated route event surfaces; events are currently visible in at least four UI locations
 - [ ] Review the selection flow across route, map, timeline, and story panel
-- [ ] Run screenshot critique for desktop
 - [ ] Document the UX acceptance check against the design checklist
+- [x] Run a no-code UX audit of the current frontend app
+- [x] Choose the UX design direction for the MVP
 - [x] Default the desktop app to the `birth-of-hip-hop` route and select the first route event on load
 - [x] Change desktop route selection from multi-select toggles to single-select route selection for the MVP
 - [x] Make the desktop timeline show clickable route event ticks instead of only the route year range

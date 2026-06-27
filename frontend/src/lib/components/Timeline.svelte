@@ -22,6 +22,9 @@
     : axisStart;
   $: highlightedStart = ((highlightedStartYear - axisStart) / axisSpan) * 100;
   $: highlightedWidth = Math.max(((highlightedEndYear - highlightedStartYear) / axisSpan) * 100, 0);
+  $: selectedEventIndex = events.findIndex((event) => event.id === selectedEventId);
+  $: selectedEvent = selectedEventIndex >= 0 ? events[selectedEventIndex] : null;
+
   function toPercent(year: number): number {
     return ((year - axisStart) / axisSpan) * 100;
   }
@@ -36,10 +39,15 @@
 <section class="timeline" aria-label={`Timeline for route ${routeTitle}`}>
   <div class="timeline-header">
     <div class="title-block">
-      <span>Route</span>
+      <span>Sequence</span>
       <strong>{routeTitle}</strong>
     </div>
-    <span class="year-range">{axisStart} - {axisEnd}</span>
+    <div class="timeline-state">
+      {#if selectedEvent}
+        <span>{selectedEventIndex + 1} / {events.length}</span>
+      {/if}
+      <span class="year-range">{axisStart} - {axisEnd}</span>
+    </div>
   </div>
 
   <div class="track">
@@ -88,6 +96,9 @@
           >
             <span>{formatEventYears(event)}</span>
             <strong>{event.title}</strong>
+            {#if selectedEventId === event.id}
+              <em>Selected</em>
+            {/if}
           </button>
         {/each}
       </div>
@@ -101,8 +112,8 @@
 <style>
   .timeline {
     display: grid;
-    gap: 0.75rem;
-    padding: 1rem;
+    gap: 0.65rem;
+    padding: 0.85rem 1rem;
     border-top: 1px solid #d9e0e7;
     background: linear-gradient(180deg, #ffffff 0%, #f9fbfc 100%);
   }
@@ -137,6 +148,16 @@
     font-size: 0.9rem;
     font-weight: 700;
     white-space: nowrap;
+  }
+
+  .timeline-state {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.45rem;
+    color: #6b7785;
+    font-size: 0.82rem;
+    font-weight: 800;
   }
 
   .track {
@@ -203,10 +224,13 @@
   }
 
   .event-tick.active {
-    width: 2rem;
-    height: 2rem;
+    z-index: 2;
+    width: 2.1rem;
+    height: 2.1rem;
     background: #e4572e;
-    box-shadow: 0 0 0 3px rgba(228, 87, 46, 0.2);
+    box-shadow:
+      0 0 0 3px rgba(228, 87, 46, 0.22),
+      0 6px 18px rgba(23, 32, 42, 0.18);
   }
 
   .event-tick span {
@@ -252,6 +276,7 @@
   .event-list button.active {
     border-color: #e4572e;
     background: #fff7f4;
+    box-shadow: inset 0 0 0 1px rgba(228, 87, 46, 0.24);
   }
 
   .event-list span {
@@ -264,6 +289,16 @@
     color: #17202a;
     font-size: 0.82rem;
     line-height: 1.25;
+  }
+
+  .event-list em {
+    width: max-content;
+    color: #bb3f22;
+    font-size: 0.68rem;
+    font-style: normal;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
   }
 
   .empty {
