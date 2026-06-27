@@ -2,6 +2,12 @@
 
 Reusable prompts for UX and design work on SoundAtlas. These are working templates, not project documentation.
 
+This prompt set is the UX entrypoint for the current workflow. If the repo has a matching UX skill, use that skill's instructions and keep these prompts as the compatibility wrapper.
+
+Design UX prompts produce audit findings, critique, and UX slice proposals.
+They do not authorize implementation.
+Use `prompts/plan-feature.md` to turn a selected UX slice into a spec revision and implementation plan.
+
 ## Shared Context
 
 Use this context at the top of UX/design prompts when the session does not already have enough project context:
@@ -52,21 +58,28 @@ Identify the biggest usability and visual design issues. Cover:
 - Missing states
 - Visual hierarchy and design inconsistencies
 
+Ground findings in:
+- Current implementation files or components
+- `docs/design/current-frontend-design.md`
+- Screenshots if available
+- Real seed/API data where relevant
+
 Do not make changes yet. Return:
-- Top usability issues
-- Top visual hierarchy issues
+- Findings ordered by severity
+- Evidence for each finding
 - Gaps between implementation and current design baseline
 - Recommended design direction
-- Proposed first redesign pass
+- Candidate UX slices
+- Suggested first UX slice
 - Files and components likely affected
 ```
 
-## Main Screen Redesign Plan
+## UX Pass Plan
 
-Use this after the UX audit, before implementation:
+Use this after a UX audit or screenshot critique, before `prompts/plan-feature.md`.
 
 ```text
-Design the main SoundAtlas exploration screen.
+Plan one SoundAtlas UX pass.
 
 Constraints:
 - SvelteKit + TypeScript
@@ -78,21 +91,20 @@ Constraints:
 - Dense, documentary, usable MVP style
 - The first screen should be the product experience, not a landing page
 
-Primary workflow:
-1. User selects the Birth of Hip-Hop route.
-2. The map shows Bronx places relevant to the route.
-3. The timeline shows the route event sequence from 1970 to 1985.
-4. User selects an event from the map or timeline.
-5. Map, timeline, and story panel update from the same central state.
-6. User can inspect summary, significance, sources, and media links.
+Plan exactly one workflow slice. Do not redesign the whole app unless explicitly requested.
 
-Give me a component/layout plan before coding. Include:
-- Layout structure
-- Interaction model
-- Shared state model
+Return:
+- UX target
+- User workflow slice
+- Affected surfaces/components
+- State/data flow impact
+- Visual/layout changes
 - Responsive behavior
-- Implementation passes
+- Accessibility considerations
+- Out of scope
+- Acceptance criteria candidates
 - Risks or open questions
+- Recommended spec revision name
 ```
 
 ## Screenshot Critique
@@ -114,4 +126,12 @@ Focus on:
 
 Suggest specific changes, not general advice.
 Prioritize the changes by user impact and implementation size.
+
+Return:
+- Prioritized visual/UX findings
+- Screenshot evidence
+- Whether each finding is bug, polish, or design-direction issue
+- Recommended follow-up UX slice
+- Whether a new spec revision is needed
+- Whether `docs/design/current-frontend-design.md` should change
 ```

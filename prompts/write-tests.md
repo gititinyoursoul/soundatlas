@@ -2,6 +2,8 @@
 
 Use this prompt when adding tests for existing SoundAtlas code.
 
+This prompt is the test-planning and test-implementation entrypoint for the current workflow. If the repo has a matching testing skill, use that skill's instructions and keep this prompt as the compatibility wrapper.
+
 The goal is to prevent agents from jumping straight from "add tests" into broad or brittle test changes. First produce a focused test plan, then implement only the approved test slice.
 
 Core rule:

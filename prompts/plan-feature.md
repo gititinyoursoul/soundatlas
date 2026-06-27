@@ -2,6 +2,8 @@
 
 Use this prompt before implementing a new SoundAtlas feature, UX change, data workflow, or cross-cutting change.
 
+This prompt is the planning entrypoint for the current spec-first workflow. Use the `soundatlas-spec-planning` skill for this task and keep this prompt as the compatibility wrapper.
+
 The goal is to prevent implementation from starting from a vague request. First draft a new spec revision, then produce a practical implementation plan from that revision.
 
 Core rule:

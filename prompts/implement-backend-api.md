@@ -2,6 +2,8 @@
 
 Use this prompt when implementing or changing the SoundAtlas FastAPI backend from an approved spec.
 
+This prompt is the backend implementation entrypoint for the current workflow. If the repo has a matching backend skill, use that skill's instructions and keep this prompt as the compatibility wrapper.
+
 ## Context to provide
 
 * Approved spec revision path, for example `specs/<feature-slug>/rNN-<short-desc>.md`.
