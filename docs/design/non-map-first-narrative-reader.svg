@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900" role="img" aria-labelledby="title desc">
+  <title id="title">SoundAtlas non map first concept: Narrative Reader</title>
+  <desc id="desc">A desktop concept where the main surface is a route story reader with chapter navigation, while map and place context are secondary.</desc>
+
+  <rect width="1440" height="900" fill="#eef2f5"/>
+  <rect x="24" y="24" width="1392" height="852" rx="8" fill="#ffffff" stroke="#d9e0e7"/>
+
+  <rect x="24" y="24" width="1392" height="72" rx="8" fill="#ffffff"/>
+  <line x1="24" y1="96" x2="1416" y2="96" stroke="#d9e0e7"/>
+  <rect x="48" y="44" width="36" height="32" rx="8" fill="#ffffff" stroke="#cfd7df"/>
+  <path d="M59 53 H73 M59 60 H73 M59 67 H73" stroke="#314151" stroke-width="2" stroke-linecap="round"/>
+  <text x="104" y="54" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="800" fill="#6b7785">SOUNDATLAS</text>
+  <text x="104" y="78" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="800" fill="#17202a">Birth of Hip-Hop: Bronx 1970-1985</text>
+  <text x="1006" y="65" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="800" fill="#536170">Narrative Reader concept</text>
+
+  <rect x="24" y="96" width="286" height="780" fill="#fbfcfd" stroke="#d9e0e7"/>
+  <text x="48" y="136" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="800" fill="#6b7785">ROUTE OUTLINE</text>
+  <rect x="44" y="158" width="238" height="58" rx="8" fill="#fff7f4" stroke="#efc8be"/>
+  <rect x="44" y="158" width="5" height="58" rx="2.5" fill="#e4572e"/>
+  <text x="66" y="183" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="800" fill="#7e2d19">1973: Back-to-school party</text>
+  <text x="66" y="203" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="800" fill="#bb3f22">Current chapter</text>
+  <rect x="44" y="228" width="238" height="50" rx="8" fill="#ffffff" stroke="#d9e0e7"/>
+  <text x="66" y="258" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="800" fill="#17202a">1974: Breakbeat practice</text>
+  <rect x="44" y="288" width="238" height="50" rx="8" fill="#ffffff" stroke="#d9e0e7"/>
+  <text x="66" y="318" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="800" fill="#17202a">1977: Blackout context</text>
+  <rect x="44" y="348" width="238" height="50" rx="8" fill="#ffffff" stroke="#d9e0e7"/>
+  <text x="66" y="378" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="800" fill="#17202a">1979: Records and reach</text>
+  <line x1="48" y1="438" x2="282" y2="438" stroke="#d9e0e7"/>
+  <text x="48" y="470" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="800" fill="#6b7785">ROUTE PROGRESS</text>
+  <line x1="62" y1="526" x2="264" y2="526" stroke="#cfd7df" stroke-width="4"/>
+  <circle cx="96" cy="526" r="10" fill="#e4572e"/>
+  <circle cx="146" cy="526" r="7" fill="#314151"/>
+  <circle cx="198" cy="526" r="7" fill="#314151"/>
+  <circle cx="246" cy="526" r="7" fill="#314151"/>
+
+  <rect x="310" y="96" width="690" height="780" fill="#ffffff"/>
+  <text x="356" y="148" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="800" fill="#6b7785">SELECTED CHAPTER</text>
+  <text x="356" y="192" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="800" fill="#17202a">DJ Kool Herc's back-to-school party</text>
+  <text x="356" y="222" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="700" fill="#536170">1520 Sedgwick Avenue · 1973 · Bronx</text>
+  <rect x="356" y="252" width="594" height="134" rx="8" fill="#f8fafb" stroke="#d9e0e7"/>
+  <text x="386" y="292" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="700" fill="#17202a">The primary surface reads like a dense route story.</text>
+  <text x="386" y="324" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="700" fill="#17202a">The map supports the chapter instead of owning the screen.</text>
+  <text x="386" y="356" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="700" fill="#17202a">Images and media can be attached to each chapter.</text>
+  <rect x="356" y="420" width="284" height="132" rx="8" fill="#fff7f4" stroke="#efc8be"/>
+  <text x="382" y="454" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="800" fill="#bb3f22">SIGNIFICANCE</text>
+  <text x="382" y="488" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="700" fill="#7e2d19">Narrative context stays visible</text>
+  <text x="382" y="512" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="700" fill="#7e2d19">before the user opens media.</text>
+  <rect x="666" y="420" width="284" height="132" rx="8" fill="#ffffff" stroke="#d9e0e7"/>
+  <text x="692" y="454" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="800" fill="#6b7785">MEDIA SUMMARY</text>
+  <rect x="692" y="478" width="70" height="24" rx="12" fill="#eef2f5"/>
+  <text x="712" y="495" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="800" fill="#536170">3 images</text>
+  <rect x="772" y="478" width="66" height="24" rx="12" fill="#eef2f5"/>
+  <text x="790" y="495" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="800" fill="#536170">2 links</text>
+  <text x="692" y="528" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="800" fill="#e4572e">Open chapter media</text>
+  <text x="356" y="604" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="800" fill="#6b7785">SOURCE-AWARE READING AREA</text>
+  <line x1="356" y1="630" x2="950" y2="630" stroke="#d9e0e7"/>
+  <line x1="356" y1="670" x2="920" y2="670" stroke="#d9e0e7"/>
+  <line x1="356" y1="710" x2="900" y2="710" stroke="#d9e0e7"/>
+
+  <rect x="1000" y="96" width="416" height="780" fill="#fbfcfd" stroke="#d9e0e7"/>
+  <text x="1030" y="136" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="800" fill="#6b7785">PLACE CONTEXT</text>
+  <rect x="1030" y="158" width="356" height="218" rx="8" fill="#dfe9e2" stroke="#d9e0e7"/>
+  <path d="M1060 330 C1120 280 1170 286 1210 250 C1260 205 1312 230 1360 190" fill="none" stroke="#8ca79a" stroke-width="12" opacity=".55"/>
+  <circle cx="1184" cy="258" r="13" fill="#e4572e" stroke="#ffffff" stroke-width="4"/>
+  <rect x="1030" y="396" width="356" height="98" rx="8" fill="#ffffff" stroke="#d9e0e7"/>
+  <text x="1054" y="430" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="800" fill="#17202a">1520 Sedgwick Avenue</text>
+  <text x="1054" y="456" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="700" fill="#536170">Mini map stays available as evidence.</text>
+  <rect x="1030" y="526" width="356" height="132" rx="8" fill="#ffffff" stroke="#d9e0e7"/>
+  <text x="1054" y="560" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="800" fill="#6b7785">RELATED EVENTS</text>
+  <text x="1054" y="594" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="800" fill="#17202a">Breakbeat practice</text>
+  <text x="1054" y="626" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="800" fill="#17202a">Early Bronx parties</text>
+</svg>
