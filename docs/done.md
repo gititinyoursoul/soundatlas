@@ -51,6 +51,7 @@ Archive of completed work packages. The current work list lives in `TODO.md`.
 
 - [x] Migrate the existing `frontend/` to SvelteKit
 - [x] Set up TypeScript configuration and SvelteKit scripts
+- [x] Add frontend test infrastructure and an `npm test` script
 - [x] Check frontend dependencies: SvelteKit, Vite, TypeScript, Leaflet
 - [x] Define the API base URL for local development
 - [x] Create TypeScript types for `Route`, `Place`, `Event`, and `Connection`
@@ -72,6 +73,32 @@ Archive of completed work packages. The current work list lives in `TODO.md`.
 - [x] Define the first screen layout: map, timeline, side panel
 - [x] Define color coding per route
 - [x] Define marker states: default, hover, selected
+- [x] Run a no-code UX audit of the current frontend app
+- [x] Plan the first map-first UX pass from `docs/design/2026-06-27-frontend-ux-audit.md` and `docs/design/current-frontend-design.md`
+- [x] Choose the UX design direction for the MVP
+- [x] Draft a UI plan for the main exploration view
+- [x] Compress the topbar and active route context so the map becomes more dominant in the first viewport
+- [x] Reduce route controls/topbar footprint after first map-first pass; current route controls take more topbar space than intended
+- [x] Consolidate the topbar and route context into a single compact app header without settings or saved controls
+- [x] Rework route discovery so users can find/switch routes without route controls dominating the desktop header
+- [x] Add selected route context to the desktop workspace, including summary or thesis, date range, and visible event count
+- [x] Reduce desktop route filter prominence so the active route narrative leads the first view
+- [x] Change desktop route selection from multi-select toggles to single-select route selection for the MVP
+- [x] Default the desktop app to the `birth-of-hip-hop` route and select the first route event on load
+- [x] Make the desktop timeline show clickable route event ticks instead of only the route year range
+- [x] Clarify timeline sequence navigation and selected-event emphasis
+- [x] Track timeline density risk for future routes with many events and define when to switch from individual labels to clustering or compact ticks
+- [x] Define and implement a mobile ordering strategy for map, timeline, and story panel
+- [x] Implement a desktop overlay navigation drawer with expanded and collapsed icon-only states
+- [x] Rework navigation pane for current admin mode: keep route switching and media/image review, remove Research and Validation for now
+- [x] Add a persistent selected-event summary, caption, or overlay to the map
+- [x] Rework selected-event map caption so it adds map-specific context instead of duplicating story panel information
+- [x] Add a compact desktop map legend for route colors and selected event state
+- [x] Fix map layout height so switching between events does not resize the map
+- [x] Reduce duplicated route event surfaces; events are currently visible in at least four UI locations
+- [x] Refactor the story surface into a tabbed event inspector with Story, Media, and Sources tabs
+- [x] Add `@todo` follow-up in the media review UI noting that internal admin actions should be hidden or gated before a public explorer view
+- [x] Improve desktop loading, empty, and API error states across map, timeline, and story panel
 - [x] Make 1977 visible as a dramatic focus
 - [x] Roughly check the mobile layout
 - [x] Show sources and media links in the story panel
@@ -102,6 +129,7 @@ Archive of completed work packages. The current work list lives in `TODO.md`.
 - [x] Decide not to add a root task runner while README, Compose, and existing scripts cover the MVP workflow
 - [x] Confirm `TODO.md` contains only current open tasks and completed work stays traceable in `docs/done.md`
 - [x] Check `AGENTS.md` and translate it into English
+- [x] Rebuild the dev container and verify Playwright Chromium screenshot capture now that the workspace image installs the required browser runtime libraries and exposes a writable Playwright cache
 
 ## Docker Compose Run Checklist
 
