@@ -57,8 +57,14 @@ The MVP includes five curated routes:
 - No complete music encyclopedia
 - No global world map in the first step
 - No proprietary audio or streaming infrastructure
-- No user accounts, playlists, or social features
+- No public user login, user accounts, playlists, or social features
 - No automated data aggregation without editorial review
+
+## Access Model
+
+The public MVP does not require login. A user should be able to open the app, select routes, inspect places and events, read sources, and follow external media links without creating an account.
+
+The MVP may still include an internal admin or editor workflow for validation. That workflow is not a public user feature; it exists to review curated data, validate seed structure, inspect draft media/source links, and mark content as ready for publication. Admin validation controls should be gated, hidden, or clearly separated from the public explorer surface.
 
 ## Core Experience
 
@@ -325,6 +331,7 @@ The MVP is successful if a user understands within five minutes:
 - Create JSON seed data
 - Provide endpoints for routes, events, places, and connections
 - Add simple validation for the seed data
+- Keep public read endpoints usable without login; reserve any validation/admin actions for internal use
 
 ### Phase 3: Frontend Slice
 
@@ -333,6 +340,7 @@ The MVP is successful if a user understands within five minutes:
 - Build the timeline filter
 - Connect the story panel
 - Add the route filter
+- Keep the public explorer usable without authentication and separate admin validation controls from the main user flow
 
 ### Phase 4: Editorial Expansion
 
@@ -348,6 +356,7 @@ The MVP is successful if a user understands within five minutes:
 - How strict do sources need to be in the first internal prototype?
 - Which map base should be used: OpenStreetMap tiles, MapLibre, or a custom style?
 - Should audio initially appear only as an external link or be embedded directly?
+- What is the minimal admin validation workflow: seed validation only, media/source review, publication status, or all of these?
 
 ## Next Concrete Step
 
