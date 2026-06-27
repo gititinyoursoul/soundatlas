@@ -6,9 +6,8 @@
   import StoryPanel from '$lib/components/StoryPanel.svelte';
   import Timeline from '$lib/components/Timeline.svelte';
   import { filterEvents } from '$lib/data/filters';
+  import { compareEvents, getFirstEventIdForRoute, getInitialRouteId } from '$lib/data/selection';
   import type { Connection, Event, Place, Route } from '$lib/types/soundatlas';
-
-  const DEFAULT_ROUTE_ID = 'birth-of-hip-hop';
 
   let routes: Route[] = [];
   let places: Place[] = [];
@@ -69,18 +68,6 @@
     selectedEventId = getFirstEventIdForRoute(events, routeId);
   }
 
-  function getInitialRouteId(currentRoutes: Route[]): string | null {
-    return (
-      currentRoutes.find((route) => route.id === DEFAULT_ROUTE_ID)?.id ??
-      currentRoutes[0]?.id ??
-      null
-    );
-  }
-
-  function getFirstEventIdForRoute(currentEvents: Event[], routeId: string | null): string | null {
-    return [...filterEvents(currentEvents, routeId)].sort(compareEvents)[0]?.id ?? null;
-  }
-
   function selectEvent(eventId: string): void {
     selectedEventId = eventId;
   }
@@ -123,13 +110,6 @@
     );
   }
 
-  function compareEvents(left: Event, right: Event): number {
-    return (
-      left.year_start - right.year_start ||
-      left.year_end - right.year_end ||
-      left.title.localeCompare(right.title)
-    );
-  }
 </script>
 
 <svelte:window on:keydown={handleKeydown} />
