@@ -1,166 +1,335 @@
-# UX and Design Workflow with GPT
+# UX Improvement Workflow
 
-This note describes a practical GPT-assisted workflow for improving the SoundAtlas UX and visual design. The goal is to use GPT as a product and design partner for small, inspectable iterations, not as a vague "make it pretty" generator.
+This document describes a repeatable GPT-assisted process for improving the SoundAtlas UX. Use it as a step-by-step workflow for audits, redesign passes, screenshot critique, and implementation planning.
 
-## Product Frame
+The goal is not to ask for a vague redesign. The goal is to run small, inspectable UX cycles that produce clear findings, one focused implementation pass, and validation before moving on.
 
-SoundAtlas should answer one core MVP question first:
+## SoundAtlas UX Frame
 
-> How should a user explore Birth of Hip-Hop: Bronx 1970-1985 through place, time, and story?
+SoundAtlas is an interactive music history app. The MVP scope is **New York 1965-1985**, with the first vertical slice **Birth of Hip-Hop: Bronx 1970-1985**.
 
-The first screen should be the actual exploration surface, not a landing page. For the MVP, the primary interface is:
+The first screen should be the actual exploration surface, not a landing page. The primary interface is:
 
 - Map
 - Timeline
 - Route filter
 - Story panel
 
-The design should make music history understandable across three axes:
+The app should make music history understandable across three axes:
 
 - Place: map, places, neighborhoods, venues, and movement
 - Time: event years, periods, and sequence
 - Sound and culture: events, routes, connections, sources, and media links
 
-## Recommended Workflow
+The default design posture is **Research Atlas with selected Story Explorer behavior**:
 
-### 1. Audit the Current App
+- Dense, documentary, source-aware, and usable
+- Map-first, with route and timeline support
+- Guided enough for a user to follow a narrative route
+- Grounded in real seed/API data, not mock-only UI
 
-Start by asking GPT or Codex to inspect the frontend without changing code.
+Use `docs/design/current-frontend-design.md` as the baseline for the current intended frontend design. UX audits should compare the implemented app against that baseline, and design passes should update it when the intended design changes.
 
-Useful prompt:
+## Core Rules
 
-```text
-Review the current SvelteKit frontend as a UX/product engineer.
-Focus on the MVP: map-first exploration of New York 1965-1985.
-Identify the biggest usability and visual design issues.
-Do not make changes yet.
-```
+Follow these rules for every UX cycle:
 
-The audit should cover:
+- Start with an audit before proposing broad redesigns.
+- Compare proposed changes against `docs/design/current-frontend-design.md`.
+- Work on one screen, workflow, or interaction slice at a time.
+- Keep each implementation pass small enough to review independently.
+- Preserve central route/event selection state unless the pass explicitly changes it.
+- Use real seed/API-backed data where possible.
+- Cover loading, empty, error, selected, and responsive states.
+- Validate frontend changes with tests and type checks.
+- Use screenshots for visual critique after implementation.
+- Document durable findings or decisions in `docs/`.
 
-- Current layout structure
-- Data flow and shared selection state
-- Component boundaries
-- UX friction
-- Missing states
-- Visual hierarchy and design inconsistencies
+## Prompt Stack
 
-### 2. Choose a Design Direction
+Use the existing prompts in this order:
 
-Before coding, ask for a small set of concrete design directions. Avoid generic style words.
+1. `prompts/design-ux.md` - UX audit, main screen design plan, screenshot critique
+2. `prompts/plan-feature.md` - convert a design idea into one implementation pass
+3. `prompts/implement-frontend-map.md` - implement frontend/map-related changes
+4. `prompts/write-tests.md` - add or update focused tests
 
-Useful prompt:
+Avoid creating one-off prompts for audit, design direction, or screenshot critique unless `prompts/design-ux.md` no longer covers the work.
 
-```text
-Propose 3 UX/design directions for SoundAtlas.
-Each should describe layout, interaction model, visual tone, information density,
-and tradeoffs. Keep them realistic for an MVP.
-```
+## Reusable UX Cycle
 
-Possible directions:
+### Step 1: Define the UX Target
 
-- Research Atlas: dense, map-first, documentary, source-aware
-- Story Explorer: guided narrative route with map and timeline support
-- Cultural Network: emphasizes relationships between events, places, artists, scenes, and media
+Before auditing or redesigning, define the exact target.
 
-For the current MVP, the safest default is probably Research Atlas with selected Story Explorer behaviors.
+Inputs:
 
-### 3. Work on One Screen and One Workflow
+- Screen, component, or workflow to improve
+- Current design baseline from `docs/design/current-frontend-design.md`
+- Primary user goal
+- Target viewport: desktop, mobile, or both
+- Surface type: public-facing, admin-only, or mixed
+- Constraints and non-goals
 
-Do not redesign the whole app at once. Start with the main exploration view.
+Output:
 
-Primary workflow:
+- One-sentence UX target
+- List of affected surfaces or components
+- Explicit non-goals
 
-1. User selects the "Birth of Hip-Hop" route.
-2. The map shows Bronx places relevant to the route.
-3. The timeline shows the route's event sequence from 1970 to 1985.
-4. User selects an event from the map or timeline.
-5. Map, timeline, and story panel update from the same central state.
-6. User can inspect summary, significance, sources, and media links.
-
-### 4. Ask for a Concrete UI Plan
-
-Before implementation, ask GPT for a layout and component plan that respects the existing stack.
-
-Useful prompt:
+Example:
 
 ```text
-Design the main SoundAtlas exploration screen.
-Constraints:
-- SvelteKit + TypeScript
-- Leaflet map is primary
-- Use existing seed data
-- Components should stay small: MapView, Timeline, RouteFilter, StoryPanel
-- No mock-only UI
-- Dense, documentary, usable MVP style
-Give me a component/layout plan before coding.
+Improve the main exploration screen so a user can follow the Birth of Hip-Hop route through map, timeline, and story without losing selected-event context.
 ```
 
-### 5. Implement in Small Passes
+### Step 2: Audit Without Editing
 
-Recommended implementation order:
+Use the **UX Audit** template in `prompts/design-ux.md`.
 
-1. Layout shell: map, side panel, bottom timeline
-2. Shared selection state: selected route, event, place, and year range
-3. Map marker states and interactions
-4. Timeline interactions
-5. Story panel content and hierarchy
-6. Empty, loading, and error states
-7. Responsive layout
+Rules:
 
-Each pass should remain reviewable and should use the existing seed data rather than mock-only data.
+- Do not make code changes.
+- Inspect current layout, data flow, component boundaries, visual hierarchy, and missing states.
+- Ground findings in current code and real seed/API data.
+- Compare implementation against `docs/design/current-frontend-design.md`.
+- If screenshots are unavailable, state that the audit is source-based.
 
-### 6. Critique with Screenshots
+Output:
 
-After a visual pass, run the app and use screenshots for critique.
+- Top usability issues
+- Top visual hierarchy issues
+- Data/state-flow issues
+- Missing loading, empty, error, selected, or responsive states
+- Recommended design direction
+- Proposed first UX pass
+- Files and components likely affected
 
-Useful prompt:
+Store durable audits in `docs/design/` with a date or frontend version in the filename, for example:
 
 ```text
-Critique this screen like a senior product designer.
-Focus on hierarchy, spacing, affordances, readability, and whether the map feels primary.
-Suggest specific changes, not general advice.
+docs/design/2026-06-27-frontend-ux-audit.md
 ```
 
-Repeat in small loops: implement, screenshot, critique, adjust.
+### Step 3: Choose the Design Direction
+
+Choose a direction before implementation. The design direction is a decision lens, not the implementation scope. It describes what the experience should optimize for and how tradeoffs should be resolved.
+
+Output:
+
+- Chosen direction
+- Why it fits the current UX target
+- Tradeoffs
+- What should not change in this pass
+
+For the current MVP, the default direction is:
+
+```text
+Research Atlas with selected Story Explorer behavior.
+```
+
+This means the map remains primary, the timeline clarifies sequence, the story panel explains the selected event, and source/media links stay visible but secondary.
+
+Use the direction to evaluate workflow slices. For example, if the direction is Research Atlas with selected Story Explorer behavior, a proposed slice should strengthen map-first exploration, selected-event context, sequence clarity, or source-aware storytelling.
+
+### Step 4: Select One Workflow Slice
+
+Define the exact user path for the next pass. The workflow slice is the unit of work: it turns the design direction into one concrete user action path.
+
+Candidate workflow slices should come from:
+
+- Product goal: what the app must help the user accomplish
+- Current app behavior: what users can already click, select, navigate, or inspect
+- Audit findings: where the current experience breaks down
+- Expected user tasks: what a first-time or returning user is likely trying to understand
+
+Pick one workflow slice based on:
+
+- Highest user value
+- Smallest reviewable implementation size
+- Highest audit severity
+- Lowest implementation risk
+
+Do not improve the whole app at once.
+
+Output:
+
+- Workflow steps
+- Primary state changes
+- Expected visible state after each action
+- Success criteria
+
+Example candidate workflow slices for the current MVP:
+
+- First arrival path: user opens the app, sees the default route, and understands the relationship between map, timeline, and story.
+- Event selection path: user selects a timeline event, then map and story panel update with clear selected-event context.
+- Map exploration path: user selects a map marker, then story panel and timeline show what happened there and where it sits in sequence.
+- Source/media inspection path: user reads an event, inspects sources/media, then returns to the route sequence.
+
+Example detailed workflow slice:
+
+1. User opens the app.
+2. The Birth of Hip-Hop route is selected by default.
+3. The map shows relevant places.
+4. The timeline shows the event sequence.
+5. User selects an event from the map or timeline.
+6. Map, timeline, and story panel update from the same selected event state.
+7. User inspects summary, significance, sources, and media.
+
+### Step 5: Plan One UX Pass
+
+Use the **Main Screen Redesign Plan** template in `prompts/design-ux.md` when the pass changes the main exploration screen. Then use `prompts/plan-feature.md` to turn the design idea into one implementation plan.
+
+Plan only one pass at a time.
+
+Useful pass types:
+
+- Layout and visual hierarchy pass
+- Shared state and interaction pass
+- Map marker or map context pass
+- Timeline sequence/navigation pass
+- Story panel readability/content pass
+- Loading, empty, and error states pass
+- Responsive layout pass
+- Final polish pass
+
+Output:
+
+- Affected files/components
+- State changes
+- Layout and interaction changes
+- Responsive behavior
+- Test plan
+- Acceptance criteria
+- Risks and open questions
+- Suggested commit grouping
+
+### Step 6: Implement One Pass
+
+Use `prompts/implement-frontend-map.md` for frontend map or exploration-surface changes.
+
+Rules:
+
+- Implement only the planned pass.
+- Keep components small and domain-named.
+- Use existing seed/API-backed data.
+- Do not introduce unrelated refactors.
+- Do not add mock-only UI when real data exists.
+- Keep route filter, timeline, map, and story panel synchronized through shared state.
+- Add TODOs only for real follow-up work that is out of scope for the pass.
+
+If the pass changes shared state, filtering, API behavior, or interaction logic, use `prompts/write-tests.md` to add or update focused tests.
+
+### Step 7: Validate
+
+For frontend changes, run:
+
+```bash
+npm test
+npm run check
+```
+
+For larger visual, layout, or build-impacting changes, also run:
+
+```bash
+npm run build
+```
+
+For active local frontend test development, use:
+
+```bash
+npm run test:watch
+```
+
+When possible, inspect the running app in desktop and mobile viewports before considering a UX pass complete.
+
+### Step 8: Critique With Screenshots
+
+After a visual pass, run the app and capture desktop and mobile screenshots where practical.
+
+Use the **Screenshot Critique** template in `prompts/design-ux.md`.
+
+Output:
+
+- Whether the map still feels primary
+- Place/time/story clarity issues
+- Visual hierarchy issues
+- Spacing, density, and readability issues
+- Affordance and interaction cue issues
+- Responsive issues
+- Prioritized polish items
+
+Do not implement every critique item automatically. Pick the highest-impact small item, plan it as a new pass, or stop if the pass is good enough.
+
+### Step 9: Document and Commit
+
+Before committing, decide whether the cycle produced durable knowledge.
+
+Update documentation when:
+
+- A UX audit identifies reusable findings.
+- A design direction changes.
+- The intended frontend design changes.
+- A product or architecture decision is made.
+- New work packages arise.
+
+Likely docs:
+
+- `docs/design/`
+- `docs/design/current-frontend-design.md`
+- `docs/mvp-concept.md`
+- `TODO.md`
+
+Commit in small groups, for example:
+
+```text
+docs(design): add frontend UX audit
+feat(frontend): improve map-first layout hierarchy
+fix(frontend): clarify timeline prehistory event state
+test(frontend): cover route event selection
+```
+
+Do not commit unless explicitly requested.
+
+## Stop Conditions
+
+Stop a UX cycle when:
+
+- The planned pass is implemented.
+- Acceptance criteria pass.
+- `npm test` and `npm run check` pass for frontend changes.
+- Screenshot critique shows no high-impact issue that belongs in the same pass.
+- Remaining issues can be captured as follow-up work.
+
+Avoid rolling multiple UX passes into one large change unless the user explicitly asks for a broader redesign.
 
 ## Design Checklist
 
-Use this checklist for each UX change:
+Use this checklist before finishing each UX pass:
 
 - Can the user immediately tell this is about music history in place and time?
 - Is the map clearly the main surface?
 - Does selecting a place or event update map, timeline, and story together?
 - Does the timeline clarify sequence rather than just decorate the page?
 - Are source links visible but not dominant?
-- Does the UI work with the real seed data?
+- Does the UI work with real seed/API data?
 - Are empty, loading, and error states handled?
 - Is the app usable on laptop-size screens first?
 - Does the responsive version preserve the exploration workflow?
+- Are admin-only controls clearly gated or marked for gating?
+- Are follow-up tasks documented when they are not part of the current pass?
 
-## Technical Validation
+## Starting a New UX Cycle
 
-When frontend code changes, run:
+Use this sequence:
 
-```bash
-npm run check
-```
-
-For larger visual or layout changes, also run:
-
-```bash
-npm run build
-```
-
-When possible, inspect the running app in desktop and mobile viewports before considering a UX pass complete.
-
-## Immediate Next Step
-
-The next useful step is a no-code UX audit of the current frontend. That audit should produce:
-
-- Top usability issues
-- Top visual hierarchy issues
-- Recommended design direction
-- Proposed first redesign pass
-- Files and components likely affected
-
+1. Define the UX target.
+2. Read `docs/design/current-frontend-design.md`.
+3. Run a no-code audit with `prompts/design-ux.md`.
+4. Save durable audit findings in `docs/design/`.
+5. Choose one design direction.
+6. Select one workflow slice.
+7. Plan one UX pass.
+8. Implement that pass.
+9. Validate with tests/checks and screenshots.
+10. Critique, polish, document, and commit if requested.

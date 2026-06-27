@@ -17,6 +17,7 @@ Project context:
 - Timeline, route filter, and story panel should share one central selection state.
 - Use real seed data where possible; avoid mock-only UI.
 - The visual tone should be dense, documentary, source-aware, and usable.
+- Treat `docs/design/current-frontend-design.md` as the current intended frontend design baseline when available.
 
 When reviewing or designing, focus on:
 - Map-first exploration
@@ -29,6 +30,7 @@ When reviewing or designing, focus on:
 
 Do not suggest a landing page unless explicitly requested.
 Do not propose broad redesigns before auditing the current frontend.
+If the intended design changes, recommend updating `docs/design/current-frontend-design.md`.
 ```
 
 ## UX Audit
@@ -39,6 +41,8 @@ Use this before changing frontend code:
 Review the current SvelteKit frontend as a UX/product engineer.
 
 Focus on the MVP: map-first exploration of New York 1965-1985, with the first vertical slice being Birth of Hip-Hop: Bronx 1970-1985.
+
+Use `docs/design/current-frontend-design.md` as the design baseline when available.
 
 Identify the biggest usability and visual design issues. Cover:
 - Current layout structure
@@ -51,6 +55,7 @@ Identify the biggest usability and visual design issues. Cover:
 Do not make changes yet. Return:
 - Top usability issues
 - Top visual hierarchy issues
+- Gaps between implementation and current design baseline
 - Recommended design direction
 - Proposed first redesign pass
 - Files and components likely affected
@@ -67,6 +72,7 @@ Constraints:
 - SvelteKit + TypeScript
 - Leaflet map is primary
 - Use existing seed data
+- Respect `docs/design/current-frontend-design.md` unless the plan explicitly recommends changing the design baseline
 - Components should stay small and domain-named, such as MapView, Timeline, RouteFilter, and StoryPanel
 - No mock-only UI
 - Dense, documentary, usable MVP style
