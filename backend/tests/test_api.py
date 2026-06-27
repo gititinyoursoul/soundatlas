@@ -97,6 +97,45 @@ def test_media_link_can_be_rejected(tmp_path) -> None:
     )
 
 
+def test_event_link_can_mark_image_reviewed(tmp_path) -> None:
+    write_review_seed_files(tmp_path)
+    review_client = TestClient(create_app(SeedRepository.from_seed_dir(tmp_path)))
+
+    response = review_client.patch(
+        "/events/review-event/links",
+        json={
+            "kind": "image",
+            "url": "https://example.com/draft-image.jpg",
+            "action": "reviewed",
+        },
+    )
+
+    assert response.status_code == 200
+    image_link = response.json()["image_links"][0]
+    assert image_link["review_status"] == "reviewed"
+    assert "reviewed" in (tmp_path / "events.json").read_text(encoding="utf-8")
+
+
+def test_event_link_can_reject_image(tmp_path) -> None:
+    write_review_seed_files(tmp_path)
+    review_client = TestClient(create_app(SeedRepository.from_seed_dir(tmp_path)))
+
+    response = review_client.patch(
+        "/events/review-event/links",
+        json={
+            "kind": "image",
+            "url": "https://example.com/draft-image.jpg",
+            "action": "reject",
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.json()["image_links"] == []
+    assert "draft-image.jpg" not in (tmp_path / "events.json").read_text(
+        encoding="utf-8",
+    )
+
+
 def write_review_seed_files(seed_dir) -> None:
     (seed_dir / "routes.json").write_text(
         """
@@ -167,7 +206,20 @@ def write_review_seed_files(seed_dir) -> None:
           "review_status": "draft"
         }
       ],
-      "image_links": []
+      "image_links": [
+        {
+          "provider": "manual",
+          "type": "venue_photo",
+          "title": "Draft Image",
+          "image_url": "https://example.com/draft-image.jpg",
+          "source_url": "https://example.com/source",
+          "rights_status": "unknown",
+          "alt_text": "Draft image",
+          "query": "draft image query",
+          "confidence": 0.5,
+          "review_status": "draft"
+        }
+      ]
     }
   ]
 }

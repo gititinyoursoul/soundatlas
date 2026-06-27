@@ -5,6 +5,7 @@ from pydantic import BaseModel, Field, field_validator, model_validator
 
 ReviewStatus = Literal["draft", "reviewed"]
 MediaReviewAction = Literal["reviewed", "reject"]
+LinkReviewKind = Literal["media", "image"]
 MediaProvider = Literal["youtube", "spotify", "qobuz"]
 MediaType = Literal["track", "album", "playlist", "video", "search"]
 ImageProvider = Literal[
@@ -167,3 +168,7 @@ class ErrorResponse(BaseModel):
 class MediaLinkReviewRequest(BaseModel):
     url: str
     action: MediaReviewAction
+
+
+class LinkReviewRequest(MediaLinkReviewRequest):
+    kind: LinkReviewKind

@@ -6,6 +6,7 @@ from app.schemas import (
     Connection,
     Event,
     HealthResponse,
+    LinkReviewRequest,
     MediaLinkReviewRequest,
     Place,
     Route,
@@ -100,6 +101,39 @@ def create_app(repository: SeedRepository | None = None) -> FastAPI:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"Media link not found for event '{event_id}'",
+            )
+
+        return event
+
+    @api.patch("/events/{event_id}/links", response_model=Event)
+    def review_event_link(
+        event_id: str,
+        request: LinkReviewRequest,
+        seed_repository: SeedRepository = Depends(get_repository),
+    ) -> Event:
+        if seed_repository.get_event(event_id) is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Event '{event_id}' not found",
+            )
+
+        if request.action == "reviewed":
+            event = seed_repository.mark_event_link_reviewed(
+                event_id,
+                request.kind,
+                request.url,
+            )
+        else:
+            event = seed_repository.reject_event_link(
+                event_id,
+                request.kind,
+                request.url,
+            )
+
+        if event is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"{request.kind.title()} link not found for event '{event_id}'",
             )
 
         return event
