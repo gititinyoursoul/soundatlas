@@ -38,7 +38,7 @@ This means:
 The current main screen is organized around:
 
 - Compact app header: product name, geographic/time scope, active route title, route years, short route context, route metadata, and API/status summary
-- Desktop overlay navigation drawer: icon trigger in the header, expanded/collapsed states, grouped workspace navigation, disabled admin/workflow affordances, and dim overlay behavior
+- Desktop overlay navigation drawer: icon trigger in the header, expanded/collapsed states, route switching, admin media/image review queue, direct review actions, and dim overlay behavior
 - Map: primary spatial exploration surface
 - Timeline: route sequence and selected event range
 - Story panel: selected event details, navigation, sources, and media
@@ -85,7 +85,7 @@ Owns data loading, shared selection state, derived selected event/place/route st
 
 ### `NavigationDrawer`
 
-Provides the desktop-only overlay drawer for route switching plus secondary research/admin entry points. It supports expanded and collapsed icon-only states, a real-data route list subview, dim overlay close behavior, `Esc` close behavior, focus return, active item state, loading/error/empty patterns, and disabled permission affordances for workflow/admin entries.
+Provides the desktop-only overlay drawer for route switching and the current admin media/image review workflow. It supports expanded and collapsed icon-only states, a real-data route list subview, a draft media/image review queue with direct review/reject actions, dim overlay close behavior, `Esc` close behavior, focus return, active item state, and loading/error/empty patterns.
 
 ### `Icon`
 
@@ -109,7 +109,7 @@ Explains the selected event with year, route, place, summary, significance, conn
 
 ### `MediaEmbed`
 
-Embeds playable media links when available. Current media review controls are useful for internal/admin workflows but should be gated or removed before a public explorer surface.
+Embeds playable media links when available. The active admin review workflow now lives in the navigation drawer; any embedded media controls should stay secondary to the public story-reading surface.
 
 ## Visual Principles
 
@@ -130,13 +130,13 @@ Embeds playable media links when available. Current media review controls are us
 - Timeline selection has both ticks and event cards, which can feel visually busy.
 - Map selected-event context is mostly marker styling and tooltip-based.
 - Mobile behavior needs a clearer ordering strategy for map, timeline, and story panel.
-- Media review controls are still visible in the current mixed internal/public surface.
+- The drawer is currently admin-oriented; a later public mode must hide or gate media/image review actions.
 
 ## Open Decisions
 
 - How should pre-1970 hip-hop context be represented in route ranges and timeline layout?
 - Should drawer route selection keep the overlay open on desktop, or close after a route is selected?
-- When and how should admin media review controls be gated?
+- What is the public-mode boundary for hiding or gating the admin drawer media/image review workflow?
 - Should the map include a persistent selected-event caption or overlay?
 - Should timeline event cards remain, become more compact, or move into the story panel?
 

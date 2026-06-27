@@ -28,12 +28,13 @@ Completed work packages are archived in `docs/done.md`.
 - [x] Clarify timeline sequence navigation and selected-event emphasis
 - [ ] Decide how pre-1970 hip-hop context should appear in route ranges and timeline layout
 - [x] Define and implement a mobile ordering strategy for map, timeline, and story panel
-- [ ] Gate or remove admin media review controls before a public explorer surface
+- [ ] Gate or remove admin media/image review controls before a public explorer surface
 - [ ] Run screenshot critique after the first map-first UX pass
 - [x] Reduce route controls/topbar footprint after first map-first pass; current route controls take more topbar space than intended
 - [x] Consolidate the topbar and route context into a single compact app header without settings or saved controls
 - [x] Implement a desktop overlay navigation drawer with expanded and collapsed icon-only states
-- [ ] Rework navigation pane: decide which user actions should be possible from the drawer, including route switching, workspace jumps, source/media access, and admin validation entry points
+- [x] Rework navigation pane for current admin mode: keep route switching and media/image review, remove Research and Validation for now
+- [ ] Define a separate admin validation workflow before adding Validation back to the drawer
 - [x] Rework route discovery so users can find/switch routes without route controls dominating the desktop header
 - [x] Rework selected-event map caption so it adds map-specific context instead of duplicating story panel information
 - [x] Fix map layout height so switching between events does not resize the map

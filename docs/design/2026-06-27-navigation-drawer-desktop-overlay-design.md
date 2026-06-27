@@ -63,30 +63,18 @@ The user opens the navigation drawer from a visible trigger in the compact app h
 Recommended group structure for SoundAtlas:
 
 - Explore
-  - Map
   - Routes
-  - Timeline
-  - Places
-- Research
-  - Events
-  - Connections
-  - Sources
-  - Media
-- Workflow
+- Admin
   - Media Review
-  - Import Queue
-  - Validation
-- Support
-  - Docs
-  - Settings
 
 Actions are visually separated from navigation:
 
 - Separator before action area.
-- Footer status group clarifies that the current surface is the public explorer.
-- Admin actions, when introduced, should be visually separated from route navigation and hidden or gated from public users.
+- Footer status group clarifies that the current surface is admin review mode.
+- Research, source browsing, and validation are intentionally out of the drawer until those workflows are concrete.
+- Media Review lists draft media links and image links and supports direct review/reject actions.
 
-Permission patterns:
+Future permission patterns:
 
 - Disabled: visible item, reduced opacity, no route transition, tooltip or subtext explains "Admin access required".
 - Hidden: item omitted when the user should not know the capability exists or when it has no value in the current product surface.
@@ -185,7 +173,7 @@ Loading failed:
    - Visual divider between navigation groups and action/footer group.
 
 8. `DrawerFooter`
-   - Public explorer/access summary.
+   - Admin review mode summary.
    - No logout control until authentication exists.
 
 ## (d) Styling Guide
@@ -256,19 +244,20 @@ Alignment:
 1. Confirm product scope for drawer entries and permission visibility policy.
 2. Add drawer state to the top-level frontend shell: `open`, `variant`, and active-route derived state.
 3. Create `DrawerTrigger`, `NavigationDrawer`, `DimOverlay`, `NavSection`, and `NavItem` components.
-4. Wire active state to the current SvelteKit route and existing SoundAtlas route/event selection where applicable.
-5. Implement expanded and collapsed layouts with stable dimensions and no app-content reflow.
-6. Add loading, empty, error, disabled, hover, active, and focus states.
-7. Add keyboard handling: trigger, `Esc`, focus return, tab order, and background inert behavior.
-8. Validate with desktop screenshots, `npm run check`, and focused component tests if test infrastructure is available.
+4. Wire Routes to the existing SoundAtlas route/event selection state.
+5. Wire Media Review to draft media/image links from loaded events and backend review actions.
+6. Implement expanded and collapsed layouts with stable dimensions and no app-content reflow.
+7. Add loading, empty, error, disabled, hover, active, saving, and focus states.
+8. Add keyboard handling: trigger, `Esc`, focus return, tab order, and background inert behavior.
+9. Validate with desktop screenshots, `npm run check`, `npm run build`, and backend/frontend tests.
 
 ## Acceptance Criteria
 
 - Drawer opens from a visible desktop trigger and overlays the existing app without resizing the map.
-- Expanded state shows section headers and icon+text nav items.
+- Expanded state shows Routes and Media Review nav items.
 - Collapsed state shows icons only, with tooltips and accessible names.
 - Active item matches the current route consistently.
-- Navigation and actions are visually separated.
+- Media Review lists draft media and image links and supports direct review/reject actions.
 - Disabled, loading, error, and empty states are defined and visually stable.
 - Dim overlay blocks background interaction and closes on outside click.
 - `Esc` closes the drawer and focus returns to the trigger.
