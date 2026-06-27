@@ -2,7 +2,7 @@
 
 Use this prompt before implementing a new SoundAtlas feature, UX change, data workflow, or cross-cutting change.
 
-The goal is to prevent implementation from starting from a vague request. First create or update a small spec, then produce a practical implementation plan from that spec.
+The goal is to prevent implementation from starting from a vague request. First draft a new spec revision, then produce a practical implementation plan from that revision.
 
 Core rule:
 
@@ -31,7 +31,7 @@ Core rule:
   * `docs/media-retrieval/youtube-mvp-workflow.md`
 * Constraints and non-goals.
 * Whether implementation or planning-only is requested.
-* Existing spec path, if updating a previous spec.
+* Existing approved spec revision path, if updating a previous revision.
 
 ## Task
 
@@ -39,7 +39,7 @@ Produce a small spec and a practical implementation plan.
 
 Do not write code unless explicitly asked.
 
-If implementation is requested, still create or update the spec first. Then produce the plan. Only proceed to code after the spec is explicit enough to implement safely.
+If implementation is requested, still draft a new spec revision first. Then produce the plan. Only proceed to code after the revision is explicit enough to implement safely.
 
 If the input is incomplete, do not stop immediately. State reasonable assumptions, list open questions, and produce a spec and plan that can be refined. Only block when missing information would make implementation unsafe, destructive, likely to violate the project data model, or likely to create incorrect historical/data behavior.
 
@@ -70,7 +70,7 @@ Before planning implementation, create or update a lightweight spec.
 Recommended location:
 
 ```text
-specs/<short-feature-name>.md
+specs/<feature-slug>/rNN-<short-desc>.md
 ```
 
 If the repository already has a better convention for specs or feature docs, follow that convention instead.
@@ -260,8 +260,8 @@ Example:
 Return:
 
 1. A short summary of the intended change.
-2. A proposed spec path.
-3. The spec content, or a summary of changes to the existing spec.
+2. A proposed spec revision path.
+3. The spec content, or a summary of changes to the existing approved revision.
 4. A numbered implementation plan with 5-9 reviewable steps.
 5. Acceptance criteria.
 6. Validation commands.
@@ -278,4 +278,4 @@ Return:
 * If the request is ambiguous, state assumptions before the spec.
 * Do not write code unless explicitly asked.
 * Do not modify product behavior outside the spec.
-* If implementation reveals needed behavior not covered by the spec, update the spec first and stop for approval.
+* If implementation reveals needed behavior not covered by the spec, draft a new revision first and stop for approval.

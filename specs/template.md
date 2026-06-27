@@ -12,6 +12,18 @@ Use one of:
 - Superseded
 -->
 
+## Revision
+
+r01
+
+<!--
+Filename: rNN-<short-desc>.md
+-->
+
+## Supersedes
+
+None
+
 ## Request
 
 What the human asked for.

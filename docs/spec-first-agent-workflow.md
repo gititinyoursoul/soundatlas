@@ -2,7 +2,7 @@
 
 This document defines the lightweight spec-first workflow for agent-driven development in SoundAtlas.
 
-The goal is to prevent agents from jumping directly from vague requests into implementation. For non-trivial feature work, behavior changes, data workflow changes, UX changes, backend changes, or cross-cutting changes, the agent should first create or update a small spec, then implement against that approved spec.
+The goal is to prevent agents from jumping directly from vague requests into implementation. For non-trivial feature work, behavior changes, data workflow changes, UX changes, backend changes, or cross-cutting changes, the agent should first draft a new spec revision in the feature's spec folder, then implement against that approved revision.
 
 Core rule:
 
@@ -40,16 +40,16 @@ The current MVP workflow is:
 
 ```text
 1. Human gives a feature/change request.
-2. Agent creates or updates a small spec.
+2. Agent drafts a new spec revision in the feature's spec folder.
 3. Agent lists assumptions and open questions.
-4. Human reviews and approves the spec.
-5. Agent creates or uses an implementation plan from the spec.
-6. Agent implements only what is in the approved spec.
+4. Human reviews and approves the spec revision.
+5. Agent creates or uses an implementation plan from the approved revision.
+6. Agent implements only what is in the approved revision.
 7. Agent verifies implementation against acceptance criteria.
-8. Agent updates the spec first if implementation reveals missing behavior.
+8. If implementation reveals missing behavior, agent drafts a new revision instead of editing the approved file.
 ```
 
-The spec is the source of truth for intended behavior.
+The approved revision is the source of truth for intended behavior.
 
 The implementation plan explains how to make the spec real.
 
@@ -65,7 +65,7 @@ SoundAtlas uses three main prompt types:
 | `Implement Backend API From Spec`  | Implements backend behavior from an approved spec             |
 | `Implement Frontend Map From Spec` | Implements frontend behavior from an approved spec            |
 
-The implementation prompts should not redefine product behavior. They should read the approved spec, implement only the relevant slice, and verify against acceptance criteria.
+The implementation prompts should not redefine product behavior. They should read the approved spec revision, implement only the relevant slice, and verify against acceptance criteria.
 
 ## Recommended repo structure
 
@@ -75,7 +75,9 @@ docs/
   spec-first-agent-workflow.md
 specs/
   template.md
-  <feature-name>.md
+  <feature-slug>/
+    r01-<short-desc>.md
+    r02-<short-desc>.md
 ```
 
 `AGENTS.md` should contain only a short pointer to this workflow:
@@ -93,17 +95,19 @@ Do not implement directly from a vague request. Create or update a spec first, t
 Place feature specs under:
 
 ```text
-specs/<short-feature-name>.md
+specs/<feature-slug>/rNN-<short-desc>.md
 ```
 
 Examples:
 
 ```text
-specs/route-filtering.md
-specs/story-panel-selection.md
-specs/youtube-draft-review.md
-specs/event-time-range-filtering.md
+specs/route-filtering/r01-selection-behavior.md
+specs/story-panel-selection/r01-tabbed-inspector.md
+specs/youtube-draft-review/r01-draft-review-flow.md
+specs/event-time-range-filtering/r01-year-range-filtering.md
 ```
+
+Spec families live in feature directories. Revision files are immutable once approved.
 
 If a future repository convention provides a better home for specs, use that convention consistently.
 
@@ -171,14 +175,14 @@ Prefer concrete acceptance criteria such as:
 
 Implementation may proceed only when:
 
-* A spec path is provided, or the change is explicitly marked as trivial.
+* An approved spec revision path is provided, or the change is explicitly marked as trivial.
 * The spec has clear requirements.
 * The spec has testable acceptance criteria.
 * Blocking questions are resolved or intentionally deferred.
 
 The agent must not implement behavior outside the spec.
 
-If implementation reveals required behavior not described in the spec, the agent must update the spec first and stop for approval before continuing.
+If implementation reveals required behavior not described in the approved revision, the agent must draft a new revision first and stop for approval before continuing.
 
 ## Blocking questions
 
@@ -238,14 +242,14 @@ Example:
 
 When implementation begins, the agent should:
 
-1. Read the approved spec.
+1. Read the approved spec revision.
 2. Identify relevant requirements and acceptance criteria.
 3. Inspect the existing code before editing.
 4. Implement only the behavior described in the spec.
 5. Keep changes small and reviewable.
 6. Add or update tests/checks where appropriate.
 7. Update `TODO.md` only if a TODO item is completed or workflow expectations change.
-8. Stop and update the spec first if new behavior is required.
+8. Stop and draft a new spec revision first if new behavior is required.
 
 ## Backend implementation expectations
 
@@ -373,12 +377,12 @@ Expected output:
 After reviewing and editing the spec, explicitly approve it:
 
 ```text
-The spec `specs/<feature-name>.md` is approved.
+The spec revision `specs/<feature-slug>/rNN-<short-desc>.md` is approved.
 
 Implement only what is described in the spec.
 Map changes to requirements.
 Validate against the acceptance criteria.
-Stop and update the spec first if behavior needs to change.
+Stop and draft a new spec revision first if behavior needs to change.
 ```
 
 ### Step 3: run the relevant implementation prompt
@@ -388,7 +392,7 @@ For backend work:
 ```text
 Use Implement Backend API From Spec.
 
-Approved spec: `specs/<feature-name>.md`.
+Approved spec revision: `specs/<feature-slug>/rNN-<short-desc>.md`.
 
 Implement only the backend requirements from the spec.
 Verify against the backend-relevant acceptance criteria.
@@ -399,7 +403,7 @@ For frontend map work:
 ```text
 Use Implement Frontend Map From Spec.
 
-Approved spec: `specs/<feature-name>.md`.
+Approved spec revision: `specs/<feature-slug>/rNN-<short-desc>.md`.
 
 Implement only the frontend requirements from the spec.
 Verify against the frontend-relevant acceptance criteria.
@@ -410,7 +414,7 @@ Verify against the frontend-relevant acceptance criteria.
 After implementation, require a verification report:
 
 ```text
-Verify the completed work against `specs/<feature-name>.md`.
+Verify the completed work against `specs/<feature-slug>/rNN-<short-desc>.md`.
 
 Report:
 - each acceptance criterion as Pass/Fail
@@ -467,4 +471,4 @@ At minimum, every non-trivial feature/change needs:
 
 The MVP is intentionally lightweight:
 
-> One spec, one approval gate, implementation from that spec, verification against acceptance criteria.
+> One spec family, one approved revision, implementation from that revision, verification against acceptance criteria.

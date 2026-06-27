@@ -4,7 +4,7 @@ Use this prompt when implementing or changing the SoundAtlas FastAPI backend fro
 
 ## Context to provide
 
-* Approved spec path, for example `specs/<feature-name>.md`.
+* Approved spec revision path, for example `specs/<feature-slug>/rNN-<short-desc>.md`.
 * Endpoint or backend behavior to implement.
 * Relevant seed data and expected API response shape.
 * Error behavior and filtering requirements.
@@ -12,18 +12,18 @@ Use this prompt when implementing or changing the SoundAtlas FastAPI backend fro
 
 ## Spec Gate
 
-Before implementing, read the approved spec.
+Before implementing, read the approved spec revision.
 
 Implementation may proceed only when:
 
-* A spec path is provided, or the change is explicitly marked as trivial.
+* An approved spec revision path is provided, or the change is explicitly marked as trivial.
 * The spec has clear requirements.
 * The spec has testable acceptance criteria.
 * Blocking questions are resolved or intentionally deferred.
 
 Do not implement behavior outside the spec.
 
-If implementation reveals required behavior that is not described in the spec, update the spec first and stop for approval before continuing.
+If implementation reveals required behavior that is not described in the spec revision, draft a new revision first and stop for approval before continuing.
 
 Map implementation work to spec requirements using requirement IDs such as `R1`, `R2`, and `R3`.
 
@@ -57,7 +57,7 @@ Do not rewrite the product behavior from the prompt. Treat the approved spec as 
 
 ## Process
 
-1. Read the approved spec and identify backend-relevant requirements and acceptance criteria.
+1. Read the approved spec revision and identify backend-relevant requirements and acceptance criteria.
 2. Inspect existing backend structure under `backend/app/`.
 3. Inspect relevant seed data under `data/seed/`.
 4. Check `docs/seed-validation.md` before changing seed-related behavior.

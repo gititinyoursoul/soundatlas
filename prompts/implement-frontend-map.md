@@ -4,7 +4,7 @@ Use this prompt when building or changing the SoundAtlas SvelteKit frontend map 
 
 ## Context to provide
 
-* Approved spec path, for example `specs/<feature-name>.md`.
+* Approved spec revision path, for example `specs/<feature-slug>/rNN-<short-desc>.md`.
 * Desired frontend behavior or component.
 * Related backend endpoints or seed fields.
 * Expected interaction:
@@ -31,18 +31,18 @@ Use this prompt when building or changing the SoundAtlas SvelteKit frontend map 
 
 ## Spec Gate
 
-Before implementing, read the approved spec.
+Before implementing, read the approved spec revision.
 
 Implementation may proceed only when:
 
-* A spec path is provided, or the change is explicitly marked as trivial.
+* An approved spec revision path is provided, or the change is explicitly marked as trivial.
 * The spec has clear frontend-relevant requirements.
 * The spec has testable frontend-relevant acceptance criteria.
 * Blocking questions are resolved or intentionally deferred.
 
 Do not implement behavior outside the spec.
 
-If implementation reveals required behavior that is not described in the spec, update the spec first and stop for approval before continuing.
+If implementation reveals required behavior that is not described in the spec revision, draft a new revision first and stop for approval before continuing.
 
 Map implementation work to spec requirements using requirement IDs such as `R1`, `R2`, and `R3`.
 
@@ -84,7 +84,7 @@ Do not redefine the product behavior from the prompt. Treat the approved spec as
 
 ## Process
 
-1. Read the approved spec and identify frontend-relevant requirements and acceptance criteria.
+1. Read the approved spec revision and identify frontend-relevant requirements and acceptance criteria.
 2. Inspect the existing SvelteKit route, components, and state ownership before editing.
 3. Inspect related backend response shapes or seed-backed data.
 4. Define TypeScript types that mirror backend response shapes.
