@@ -2,6 +2,7 @@
   import { browser } from '$app/environment';
   import { afterUpdate, onMount } from 'svelte';
   import type { Event } from '$lib/types/soundatlas';
+  import { getCenteredScrollLeftFromRects } from './timeline-centering';
 
   export let routeStartYear = 1965;
   export let routeEndYear = 1985;
@@ -95,13 +96,15 @@
 
     const containerRect = eventListElement.getBoundingClientRect();
     const buttonRect = selectedButton.getBoundingClientRect();
-    const desiredScrollLeft =
-      eventListElement.scrollLeft +
-      (buttonRect.left - containerRect.left) -
-      (containerRect.width - buttonRect.width) / 2;
-    const maxScrollLeft = eventListElement.scrollWidth - eventListElement.clientWidth;
 
-    eventListElement.scrollLeft = Math.max(0, Math.min(maxScrollLeft, desiredScrollLeft));
+    eventListElement.scrollLeft = getCenteredScrollLeftFromRects({
+      containerLeft: containerRect.left,
+      containerWidth: containerRect.width,
+      scrollLeft: eventListElement.scrollLeft,
+      scrollWidth: eventListElement.scrollWidth,
+      itemLeft: buttonRect.left,
+      itemWidth: buttonRect.width
+    });
     lastCenteredKey = centeringKey;
   }
 </script>
@@ -135,11 +138,6 @@
           <span>{event.year_start}</span>
         </button>
       {/each}
-    </div>
-
-    <div class="labels" aria-hidden="true">
-      <span>{axisStart}</span>
-      <span>{axisEnd}</span>
     </div>
 
     {#if events.length > 0}
@@ -253,14 +251,6 @@
     font-size: 0.58rem;
     font-weight: 800;
     line-height: 1;
-  }
-
-  .labels {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    color: #536170;
-    font-size: 0.8rem;
   }
 
   .event-list {

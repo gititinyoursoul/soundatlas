@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getCenteredScrollLeft } from './timeline-centering';
+import { getCenteredScrollLeft, getCenteredScrollLeftFromRects } from './timeline-centering';
 
 describe('getCenteredScrollLeft', () => {
   it('centers the selected item when there is room to scroll', () => {
@@ -44,5 +44,31 @@ describe('getCenteredScrollLeft', () => {
         itemWidth: 160
       })
     ).toBe(0);
+  });
+
+  it('re-centers a selected card using live container and item geometry', () => {
+    expect(
+      getCenteredScrollLeftFromRects({
+        containerLeft: 100,
+        containerWidth: 400,
+        scrollLeft: 240,
+        scrollWidth: 1200,
+        itemLeft: 760,
+        itemWidth: 160
+      })
+    ).toBe(780);
+  });
+
+  it('clamps the geometry-based calculation when the selected card is near the end', () => {
+    expect(
+      getCenteredScrollLeftFromRects({
+        containerLeft: 100,
+        containerWidth: 400,
+        scrollLeft: 700,
+        scrollWidth: 1200,
+        itemLeft: 1260,
+        itemWidth: 160
+      })
+    ).toBe(800);
   });
 });
