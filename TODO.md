@@ -11,7 +11,7 @@ Completed work packages are archived in `docs/done.md`.
 ### AI Agent Setup and Security
 
 - [ ] Check current AI agent setup and documentation, including current security and rights
-- [ ] Fix Playwright Chromium screenshot capture in the agent/dev environment: Chromium downloads successfully, but cannot launch because required OS libraries such as `libglib-2.0.so.0` are missing, and `npx playwright install-deps chromium` cannot switch to root in the current container
+- [x] Rebuild the dev container and verify Playwright Chromium screenshot capture now that the workspace image installs the required browser runtime libraries and exposes a writable Playwright cache
 
 ### Repository Maintenance
 

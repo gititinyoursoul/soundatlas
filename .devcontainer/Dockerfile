@@ -22,18 +22,44 @@ RUN apt-get update \
         bubblewrap \
         ca-certificates \
         curl \
+        fonts-liberation \
         git \
         gosu \
         iptables \
         less \
+        libasound2 \
+        libatk-bridge2.0-0 \
+        libatk1.0-0 \
+        libatspi2.0-0 \
+        libcairo2 \
+        libcups2 \
+        libdbus-1-3 \
+        libdrm2 \
+        libexpat1 \
+        libfontconfig1 \
+        libgbm1 \
+        libglib2.0-0 \
+        libgtk-3-0 \
+        libnspr4 \
+        libnss3 \
+        libpango-1.0-0 \
+        libx11-6 \
+        libxcb1 \
+        libxcomposite1 \
+        libxdamage1 \
+        libxext6 \
+        libxfixes3 \
+        libxkbcommon0 \
+        libxrandr2 \
         procps \
+        xdg-utils \
     && rm -rf /var/lib/apt/lists/*
 
 RUN npm install -g "@openai/codex@${CODEX_CLI_VERSION}"
 
 RUN groupadd --gid 10001 soundatlas \
     && useradd --uid 10001 --gid soundatlas --create-home --shell /bin/bash soundatlas \
-    && mkdir -p /workspace /home/soundatlas/.cache/uv /home/soundatlas/.npm /home/soundatlas/.codex \
+    && mkdir -p /workspace /home/soundatlas/.cache/ms-playwright /home/soundatlas/.cache/uv /home/soundatlas/.npm /home/soundatlas/.codex \
     && chown -R soundatlas:soundatlas /workspace /home/soundatlas
 
 COPY .devcontainer/bashrc /home/soundatlas/.bashrc

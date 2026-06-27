@@ -96,6 +96,8 @@ Installed runtime tools:
 - Git
 - Bash with programmable completion and Git prompt support
 - basic shell/process tools: `bubblewrap`, `curl`, `less`, `procps`
+- shared libraries needed to launch Playwright-managed Chromium for headless
+  screenshots and browser checks
 
 The workspace image uses `/workspace` as its working directory and runs
 `sleep infinity` by default so `docker compose exec` or VS Code can attach to
@@ -123,7 +125,7 @@ SOUNDATLAS_GIT_AUTHOR_EMAIL=
 UV_PROJECT_ENVIRONMENT=/home/soundatlas/.cache/uv/venvs/backend
 SOUNDATLAS_EGRESS_GUARD=enabled
 SOUNDATLAS_ALLOWED_OUTBOUND_PORTS=8000 5173
-SOUNDATLAS_WRITABLE_PATHS=/workspace/frontend/node_modules /home/soundatlas/.cache/uv /home/soundatlas/.npm /home/soundatlas/.codex
+SOUNDATLAS_WRITABLE_PATHS=/workspace/frontend/node_modules /home/soundatlas/.cache/ms-playwright /home/soundatlas/.cache/uv /home/soundatlas/.npm /home/soundatlas/.codex
 ```
 
 The workspace waits for the `backend` and `frontend` services to start.
@@ -181,6 +183,7 @@ The `workspace` service uses these mounts:
 
 - repository bind mount: `.` to `/workspace`
 - named volume: `frontend_node_modules` to `/workspace/frontend/node_modules`
+- named volume: `playwright_cache` to `/home/soundatlas/.cache/ms-playwright`
 - named volume: `backend_uv_cache` to `/home/soundatlas/.cache/uv`
 - named volume: `frontend_npm_cache` to `/home/soundatlas/.npm`
 - named volume: `codex_home` to `/home/soundatlas/.codex`
@@ -276,6 +279,48 @@ Start an interactive Codex session inside the workspace container:
 cd /workspace
 codex
 ```
+
+## Browser Screenshot Checks
+
+The workspace image includes the OS libraries required by Playwright-managed
+Chromium. The browser binary itself is intentionally kept out of the image and
+is downloaded into the `playwright_cache` Docker volume when needed.
+
+After changing the browser runtime setup, rebuild the workspace image:
+
+```powershell
+docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontainer.yml up -d --build workspace
+```
+
+From inside the workspace container, install Chromium into the cache volume and
+start a workspace-local frontend server that points browser requests at the
+Compose backend service:
+
+```sh
+cd /workspace/frontend
+npx playwright install chromium
+VITE_API_BASE_URL=http://backend:8000 npm run dev -- --host 127.0.0.1 --port 5173 --strictPort
+```
+
+In another workspace shell, capture a desktop screenshot:
+
+```sh
+cd /workspace/frontend
+npx playwright screenshot --browser chromium --viewport-size=1440,1000 --wait-for-selector main.app-shell --wait-for-timeout 3000 http://127.0.0.1:5173 ../screenshots/desktop.png
+```
+
+Capture a mobile-sized screenshot with:
+
+```sh
+cd /workspace/frontend
+npx playwright screenshot --browser chromium --viewport-size=390,844 --wait-for-selector main.app-shell --wait-for-timeout 3000 http://127.0.0.1:5173 ../screenshots/mobile.png
+```
+
+Generated screenshots belong in `/workspace/screenshots/`, which is ignored by
+Git. Use them for local UX critique, then delete or regenerate them as needed.
+The `--strictPort` flag is intentional: if a previous dev server is still
+running, Vite should fail loudly instead of moving to a different port while
+Playwright captures the wrong page.
 
 Check service URLs from the host:
 

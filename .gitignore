@@ -28,6 +28,7 @@ build/
 dist/
 coverage/
 playwright-report/
+screenshots/
 test-results/
 
 # Environment files
