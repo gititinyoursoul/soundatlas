@@ -30,7 +30,7 @@ The timeline should clearly show route chronology, selected-event position, and 
 ## Requirements
 
 * R1: The timeline must present route span and event positions as a compact sequence band.
-* R2: The selected event must be obvious without relying on a separate event-card list.
+* R2: The selected event must be obvious without relying on a separate event-card list; if that strip remains as a fallback, it must center the selected card in the strip viewport.
 * R3: The timeline must support keyboard and pointer selection.
 * R4: The timeline must handle denser future routes without collapsing into clutter.
 * R5: The timeline must support the current pre-1970 Birth of Hip-Hop context without making the component feel like a chronology board.
@@ -38,7 +38,7 @@ The timeline should clearly show route chronology, selected-event position, and 
 ## Acceptance criteria
 
 * AC1: The timeline reads as compact sequence context rather than a separate content panel.
-* AC2: Event selection is clear and usable from the timeline.
+* AC2: Event selection is clear and usable from the timeline, and any retained event-card strip keeps the selected card centered in view.
 * AC3: Route span and chronology remain legible.
 * AC4: The component remains subordinate to the map and event inspector in the first viewport.
 * AC5: The design can accommodate denser future routes without becoming cluttered.
@@ -50,6 +50,5 @@ The timeline should clearly show route chronology, selected-event position, and 
 
 ## Open questions
 
-* Q1: Should the timeline keep the horizontal event-card strip at all?
+* Q1: Should the timeline keep the horizontal event-card strip at all, or should it be removed once density no longer requires it?
 * Q2: Should the pre-1970 event be clamped, shown in a prehistory band, or called out in the header?
-

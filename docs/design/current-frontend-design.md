@@ -97,7 +97,7 @@ Displays places/events spatially with route color and selected marker state. It 
 
 ### `Timeline`
 
-Shows the route chronology and lets users select events. It should clarify event sequence and selected-event position.
+Shows the route chronology and lets users select events. It should clarify event sequence and selected-event position. If the horizontal event-card strip remains as a fallback, it should keep the selected card centered in view.
 
 ### `RouteFilter`
 
@@ -128,6 +128,7 @@ Embeds playable media links when available. The active admin review workflow now
 - The drawer route list needs screenshot critique to decide whether route selection should keep the overlay open or close after selection.
 - The Birth of Hip-Hop route range starts at 1970, while an early route event starts in 1967.
 - Timeline selection has both ticks and event cards, which can feel visually busy.
+- If the horizontal event-card strip remains, selected cards should stay centered so the fallback does not feel detached from the active selection.
 - Map selected-event context is mostly marker styling and tooltip-based.
 - Mobile behavior needs a clearer ordering strategy for map, timeline, and story panel.
 - The drawer is currently admin-oriented; a later public mode must hide or gate media/image review actions.
