@@ -50,8 +50,8 @@ Follow these rules for every UX cycle:
 Use the existing prompts in this order:
 
 1. `prompts/design-ux.md` - UX audit, main screen design plan, screenshot critique
-2. `prompts/plan-feature.md` - convert a design idea into one implementation pass
-3. `prompts/implement-frontend-map.md` - implement frontend/map-related changes
+2. `prompts/plan-feature.md` - create or update a spec, then convert the design idea into one implementation pass
+3. `prompts/implement-frontend-map.md` - implement frontend/map-related changes from an approved spec
 4. `prompts/write-tests.md` - add or update focused tests
 
 Avoid creating one-off prompts for audit, design direction, or screenshot critique unless `prompts/design-ux.md` no longer covers the work.
@@ -178,7 +178,7 @@ Example detailed workflow slice:
 
 ### Step 5: Plan One UX Pass
 
-Use the **Main Screen Redesign Plan** template in `prompts/design-ux.md` when the pass changes the main exploration screen. Then use `prompts/plan-feature.md` to turn the design idea into one implementation plan.
+Use the **Main Screen Redesign Plan** template in `prompts/design-ux.md` when the pass changes the main exploration screen. Then use `prompts/plan-feature.md` to create or update a spec and turn the design idea into one implementation plan.
 
 Plan only one pass at a time.
 
@@ -206,7 +206,7 @@ Output:
 
 ### Step 6: Implement One Pass
 
-Use `prompts/implement-frontend-map.md` for frontend map or exploration-surface changes.
+Use `prompts/implement-frontend-map.md` for frontend map or exploration-surface changes from an approved spec.
 
 Rules:
 
