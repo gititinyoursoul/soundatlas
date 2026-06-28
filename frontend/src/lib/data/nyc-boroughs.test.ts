@@ -1,16 +1,28 @@
 import { describe, expect, it } from 'vitest';
-import { boroughColors, nycBoroughs, type BoroughName } from './nyc-boroughs';
+import { boroughColors, nycBoroughs, type BoroughFeature, type BoroughName } from './nyc-boroughs';
 
 const expectedBoroughs: BoroughName[] = ['Bronx', 'Manhattan', 'Brooklyn', 'Queens', 'Staten Island'];
 
-function getOuterRing(boroughName: BoroughName): [number, number][] {
+function getBorough(boroughName: BoroughName): BoroughFeature {
   const borough = nycBoroughs.features.find((feature) => feature.properties.name === boroughName);
 
   if (!borough) {
     throw new Error(`Missing borough: ${boroughName}`);
   }
 
-  return borough.geometry.coordinates[0];
+  return borough;
+}
+
+function getRings(feature: BoroughFeature): [number, number][][] {
+  if (feature.geometry.type === 'Polygon') {
+    return feature.geometry.coordinates;
+  }
+
+  return feature.geometry.coordinates.flat();
+}
+
+function getCoordinates(feature: BoroughFeature): [number, number][] {
+  return getRings(feature).flat();
 }
 
 function getBounds(coordinates: [number, number][]): {
@@ -49,23 +61,25 @@ describe('NYC borough map data', () => {
 
   it('uses closed polygon rings for every borough', () => {
     for (const boroughName of expectedBoroughs) {
-      const coordinates = getOuterRing(boroughName);
+      const borough = getBorough(boroughName);
 
-      expect(coordinates.at(0)).toEqual(coordinates.at(-1));
+      for (const ring of getRings(borough)) {
+        expect(ring.at(0)).toEqual(ring.at(-1));
+      }
     }
   });
 
   it('keeps borough shapes more detailed than simple boxes', () => {
     for (const boroughName of expectedBoroughs) {
-      const coordinates = getOuterRing(boroughName);
+      const borough = getBorough(boroughName);
 
-      expect(coordinates.length).toBeGreaterThanOrEqual(9);
+      expect(getCoordinates(borough).length).toBeGreaterThanOrEqual(30);
     }
   });
 
   it('places borough labels inside each polygon bounding box', () => {
     for (const feature of nycBoroughs.features) {
-      const bounds = getBounds(feature.geometry.coordinates[0]);
+      const bounds = getBounds(getCoordinates(feature));
       const { latitude, longitude } = feature.properties.label;
 
       expect(latitude).toBeGreaterThanOrEqual(bounds.minLatitude);
@@ -75,13 +89,13 @@ describe('NYC borough map data', () => {
     }
   });
 
-  it('keeps all borough features as GeoJSON polygons', () => {
+  it('keeps all borough features as GeoJSON polygon geometry', () => {
     expect(nycBoroughs.type).toBe('FeatureCollection');
 
     for (const feature of nycBoroughs.features) {
       expect(feature.type).toBe('Feature');
-      expect(feature.geometry.type).toBe('Polygon');
-      expect(feature.geometry.coordinates).toHaveLength(1);
+      expect(['Polygon', 'MultiPolygon']).toContain(feature.geometry.type);
+      expect(getRings(feature).length).toBeGreaterThanOrEqual(1);
     }
   });
 });
