@@ -12,6 +12,10 @@ Completed work packages are archived in `docs/done.md`.
 
 - [ ] Check current AI agent setup and documentation, including current security and rights
 - [ ] Configure Playwright screenshot capture to use a different dev server port than the local browser so both can run at the same time
+- [ ] Turn plan-feature prompt into a skill
+- [ ] Turn backend and frontend implementation prompts into skills
+- [ ] Turn write-tests prompt into a skill
+- [ ] Turn update-docs prompt into a skill
 
 ### Repository Maintenance
 

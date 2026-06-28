@@ -77,6 +77,12 @@ Events should contain at least:
 - Use the repo skill at `.codex/skills/soundatlas-spec-planning` for non-trivial feature planning before implementation.
 - If the scope changes, update `docs/mvp-concept.md` first and then `TODO.md`.
 
+## Prompt Authorization Rules
+
+- When the user asks to use a prompt file, read and follow that prompt's stated output boundary.
+- If a prompt says it produces audit findings, critique, plans, or proposals, do not edit code, data, or docs in that turn unless the user explicitly authorizes implementation after receiving the plan.
+- For UX/design prompts, default to inspection, findings, and a proposed UX slice, then stop.
+
 ## Git Conventions
 
 - Do not make commits without an explicit user request.

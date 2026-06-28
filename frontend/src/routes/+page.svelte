@@ -95,7 +95,6 @@
   $: headerRouteYears = activeRoute ? `${activeRoute.year_start}-${activeRoute.year_end}` : '';
   $: headerRouteSummary =
     activeRoute?.thesis || activeRoute?.summary || 'Fetching the curated route, event sequence, and map places.';
-  $: headerRouteTags = activeRoute?.tags.slice(0, 3).join(' / ') ?? 'Route loading';
   $: statusLabel = isLoading
     ? 'Loading API data'
     : errorMessage
@@ -288,21 +287,19 @@
           </div>
         </div>
 
-        <div class="route-context" aria-label="Selected route context">
+        <div
+          class="route-context"
+          style={`--route-color: ${activeRoute?.color ?? '#314151'}`}
+          aria-label="Selected route context"
+        >
+          <span class="route-accent" aria-hidden="true"></span>
           <div class="route-heading">
-            <p>Active route</p>
-            <div>
-              <h2>{headerRouteTitle}</h2>
-              {#if headerRouteYears}
-                <span>{headerRouteYears}</span>
-              {/if}
-            </div>
+            <h2>{headerRouteTitle}</h2>
+            {#if headerRouteYears}
+              <span>{headerRouteYears}</span>
+            {/if}
           </div>
           <p class="route-summary">{headerRouteSummary}</p>
-          <div class="route-meta">
-            <span>{orderedVisibleEvents.length} events</span>
-            <span>{headerRouteTags}</span>
-          </div>
         </div>
 
         <div class="status">
@@ -479,43 +476,38 @@
 
   .route-context {
     display: grid;
-    gap: 0.28rem;
+    grid-template-columns: 0.28rem minmax(0, 1fr);
+    column-gap: 0.55rem;
+    row-gap: 0.24rem;
+    align-items: start;
     min-width: 0;
+  }
+
+  .route-accent {
+    grid-row: 1 / span 2;
+    width: 100%;
+    min-height: 2.2rem;
+    border-radius: 999px;
+    background: var(--route-color);
   }
 
   .route-heading {
-    display: flex;
-    align-items: baseline;
-    gap: 0.6rem;
-    min-width: 0;
-  }
-
-  .route-heading p,
-  .route-heading h2,
-  .route-summary {
-    margin: 0;
-  }
-
-  .route-heading p {
-    flex: 0 0 auto;
-    color: #6b7785;
-    font-size: 0.7rem;
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-
-  .route-heading div {
+    grid-column: 2;
     display: flex;
     align-items: baseline;
     gap: 0.55rem;
     min-width: 0;
   }
 
+  .route-heading h2,
+  .route-summary {
+    margin: 0;
+  }
+
   .route-heading h2 {
     overflow: hidden;
     color: #17202a;
-    font-size: 0.98rem;
+    font-size: 1rem;
     line-height: 1.2;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -529,6 +521,7 @@
   }
 
   .route-summary {
+    grid-column: 2;
     max-width: 68rem;
     color: #314151;
     font-size: 0.8rem;
@@ -537,21 +530,6 @@
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1;
-  }
-
-  .route-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.45rem;
-  }
-
-  .route-meta span {
-    padding: 0.16rem 0.4rem;
-    border: 1px solid #efc8be;
-    border-radius: 999px;
-    color: #7e2d19;
-    font-size: 0.68rem;
-    font-weight: 700;
   }
 
   .notice {
@@ -629,8 +607,7 @@
       min-height: 100vh;
     }
 
-    .route-heading,
-    .route-heading div {
+    .route-heading {
       align-items: flex-start;
       flex-direction: column;
       gap: 0.2rem;
