@@ -104,6 +104,13 @@ Provides the local line icons used by the drawer trigger and navigation drawer u
 
 Displays places/events spatially with route color and selected marker state. It should remain browser-safe around Leaflet loading and should not require real map tiles for tests. It currently renders avatar-style markers, contextual borough/place geometry overlays, and selected-place chrome, and it no longer carries the old top-left legend.
 
+Map color hierarchy:
+
+- Borough color describes ambient geography.
+- Contextual place polygon color describes place type or area context.
+- Route color describes narrative selection through marker rings, selected-place chrome, and selected contextual polygon outlines.
+- Route color should not dominate large map polygon fills; selected contextual polygons should keep semantic fills and use route color as an accent.
+
 ### `Timeline`
 
 Shows the route chronology and lets users select events. It should clarify event sequence and selected-event position. If the horizontal event-card strip remains as a fallback, it should keep the selected card centered in view.

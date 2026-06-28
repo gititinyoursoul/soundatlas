@@ -300,16 +300,17 @@
     const properties = (feature as PlaceGeometryFeature | undefined)?.properties;
     const kind = properties?.kind ?? 'cultural_area';
     const isSelected = properties?.placeId === selectedPlaceId;
-    const color = isSelected && selectedRouteColor ? selectedRouteColor : placeGeometryColors[kind];
+    const fillColor = placeGeometryColors[kind];
+    const strokeColor = isSelected && selectedRouteColor ? selectedRouteColor : fillColor;
     const isSite = kind === 'site';
 
     return {
-      color,
+      color: strokeColor,
       dashArray: properties?.precision === 'interpretive' ? (isSelected ? '8 5' : '5 5') : undefined,
-      fillColor: color,
-      fillOpacity: isSelected ? (isSite ? 0.32 : 0.14) : isSite ? 0.2 : 0.07,
+      fillColor,
+      fillOpacity: isSelected ? (isSite ? 0.26 : 0.12) : isSite ? 0.2 : 0.07,
       opacity: isSelected ? 0.95 : 0.58,
-      weight: isSelected ? 2.2 : 1.3
+      weight: isSelected ? 2.4 : 1.3
     };
   }
 

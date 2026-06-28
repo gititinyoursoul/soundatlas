@@ -145,7 +145,7 @@ export const nycPlaceGeometries: PlaceGeometryFeatureCollection = {
 };
 
 export const placeGeometryColors: Record<PlaceGeometryKind, string> = {
-  cultural_area: '#c77940',
+  cultural_area: '#8f7353',
   site: '#3b9468'
 };
 
