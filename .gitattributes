@@ -1,2 +1,21 @@
+# Keep the repository normalized to LF across Linux/devcontainer and Windows workspaces.
+# Docker, shell, Python, TypeScript, JSON, Markdown, and config files should not churn
+# between LF and CRLF when different environments touch them.
+* text=auto eol=lf
+
 *.sh text eol=lf
 .devcontainer/bashrc text eol=lf
+
+# Windows command scripts may use CRLF because they are executed by Windows shells.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Binary assets must never be line-ending normalized.
+*.ico binary
+*.jpg binary
+*.jpeg binary
+*.png binary
+*.gif binary
+*.webp binary
+*.pdf binary
+*.zip binary
