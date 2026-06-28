@@ -22,6 +22,7 @@ This means:
 - Timeline clarifies chronology and sequence.
 - Story panel explains the selected event in plain, source-aware language.
 - Sources and media are discoverable but secondary to place/time/story understanding.
+- Route context should stay compact and visible above the map without duplicating the inspector.
 - The visual tone is dense, documentary, restrained, and useful.
 
 ## Primary User Workflow
@@ -38,7 +39,7 @@ This means:
 
 The current main screen is organized around:
 
-- Compact app header: product name, geographic/time scope, active route title, route years, short route context, route metadata, and API/status summary
+- Compact app header: product name, geographic/time scope, active route title, route years, short route context, and API/status summary
 - Desktop overlay navigation drawer: icon trigger in the header, expanded/collapsed states, route switching, admin media/image review queue, direct review actions, and dim overlay behavior
 - Map: primary spatial exploration surface
 - Timeline: route sequence and selected event range
@@ -64,6 +65,11 @@ The main page owns the shared exploration state:
 - `selectedEventId`
 - `isLoading`
 - `errorMessage`
+- `isNavigationOpen`
+- `navigationVariant`
+- `activeNavigationItemId`
+- `reviewSavingItemId`
+- `reviewErrorMessage`
 
 Derived state includes:
 
@@ -75,6 +81,8 @@ Derived state includes:
 - previous and next event
 - selected-event connections
 - timeline route and year range
+- route event counts
+- review queue items
 
 Map marker clicks, timeline clicks, route selection, story navigation, and keyboard navigation should continue to use this shared state rather than creating separate local selection models.
 
@@ -94,7 +102,7 @@ Provides the local line icons used by the drawer trigger and navigation drawer u
 
 ### `MapView`
 
-Displays places/events spatially with route color and selected marker state. It should remain browser-safe around Leaflet loading and should not require real map tiles for tests.
+Displays places/events spatially with route color and selected marker state. It should remain browser-safe around Leaflet loading and should not require real map tiles for tests. It currently renders avatar-style markers, contextual borough/place geometry overlays, and selected-place chrome, and it no longer carries the old top-left legend.
 
 ### `Timeline`
 
@@ -130,7 +138,7 @@ Embeds playable media links when available. The active admin review workflow now
 - The Birth of Hip-Hop route range starts at 1970, while an early route event starts in 1967.
 - Timeline selection has both ticks and event cards, which can feel visually busy.
 - If the horizontal event-card strip remains, selected cards should stay centered so the fallback does not feel detached from the active selection.
-- Map selected-event context is mostly marker styling and tooltip-based.
+- Map selected-event context is split between the compact route header, selected marker, and story inspector; it may still need a better single focal cue.
 - Mobile behavior needs a clearer ordering strategy for map, timeline, and story panel.
 - The drawer is currently admin-oriented; a later public mode must hide or gate media/image review actions.
 
@@ -141,6 +149,7 @@ Embeds playable media links when available. The active admin review workflow now
 - What is the public-mode boundary for hiding or gating the admin drawer media/image review workflow?
 - Should the map include a persistent selected-event caption or overlay?
 - Should timeline event cards remain, become more compact, or move into the story panel?
+- Should the route header be reduced further once the story inspector becomes more self-contained?
 
 ## Related Documents
 

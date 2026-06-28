@@ -82,7 +82,7 @@ export function getMarkerPosition(
 }
 
 export function getMarkerOptions(isSelected: boolean, routeColor: string, event: Event): MarkerOptions {
-  const size = isSelected ? 44 : 32;
+  const size = isSelected ? 38 : 30;
   const initials = getEventInitials(event.title);
   const accentColor = getAccentColor(event.id);
   const avatarUrl = getEventAvatarUrl(event, accentColor, initials);

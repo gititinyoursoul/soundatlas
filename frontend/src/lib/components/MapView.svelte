@@ -464,7 +464,7 @@
     border: 2px solid var(--route-color);
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.9);
-    box-shadow: 0 8px 16px rgba(23, 32, 42, 0.16);
+    box-shadow: 0 6px 12px rgba(23, 32, 42, 0.16);
     transition:
       transform 140ms ease,
       box-shadow 140ms ease,
@@ -472,9 +472,11 @@
   }
 
   :global(.event-avatar-marker.selected .event-avatar) {
-    transform: scale(1.08);
-    border-width: 3px;
-    box-shadow: 0 10px 20px rgba(23, 32, 42, 0.2);
+    transform: scale(1.06);
+    border-width: 2px;
+    box-shadow:
+      0 0 0 2px rgba(255, 255, 255, 0.86),
+      0 8px 16px rgba(23, 32, 42, 0.2);
   }
 
   :global(.event-avatar-marker .event-avatar-image) {
@@ -487,22 +489,23 @@
   .selected-place {
     position: absolute;
     z-index: 500;
-    left: 1rem;
-    bottom: 1rem;
+    left: 0.85rem;
+    bottom: 0.85rem;
     display: grid;
-    gap: 0.18rem;
-    width: min(22rem, calc(100% - 2rem));
-    padding: 0.62rem 0.72rem;
+    gap: 0.12rem;
+    width: min(18rem, calc(100% - 2rem));
+    padding: 0.48rem 0.6rem;
     border: 1px solid rgba(23, 32, 42, 0.14);
-    border-left: 0.35rem solid var(--route-color);
+    border-left: 0.25rem solid var(--route-color);
     border-radius: 8px;
-    background: rgba(255, 255, 255, 0.95);
-    box-shadow: 0 12px 30px rgba(23, 32, 42, 0.16);
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 8px 20px rgba(23, 32, 42, 0.14);
+    backdrop-filter: blur(3px);
   }
 
   .selected-place span {
     color: #6b7785;
-    font-size: 0.75rem;
+    font-size: 0.66rem;
     font-weight: 800;
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -510,14 +513,14 @@
 
   .selected-place strong {
     color: #17202a;
-    font-size: 0.94rem;
+    font-size: 0.88rem;
     line-height: 1.2;
   }
 
   .selected-place p {
     margin: 0;
     color: #536170;
-    font-size: 0.78rem;
+    font-size: 0.72rem;
     line-height: 1.35;
   }
 
@@ -538,8 +541,10 @@
 
   @media (max-width: 640px) {
     .selected-place {
-      right: 1rem;
-      width: auto;
+      left: 0.75rem;
+      bottom: 0.75rem;
+      width: min(16.5rem, calc(100% - 4.75rem));
+      padding: 0.44rem 0.55rem;
     }
   }
 </style>

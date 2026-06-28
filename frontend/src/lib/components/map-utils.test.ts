@@ -54,8 +54,8 @@ describe('map utils', () => {
     const avatar = getMarkerOptions(false, '#e4572e', makeEvent({ id: 'first-event', title: 'Grand Opening' }));
 
     expect(avatar.className).toBe('event-avatar-marker');
-    expect(avatar.iconSize).toEqual([32, 32]);
-    expect(avatar.iconAnchor).toEqual([16, 16]);
+    expect(avatar.iconSize).toEqual([30, 30]);
+    expect(avatar.iconAnchor).toEqual([15, 15]);
     expect(avatar.html).toContain('--route-color: #e4572e');
     expect(avatar.html).toContain('data:image/svg+xml');
     expect(avatar.html).toContain('GO');
@@ -94,8 +94,8 @@ describe('map utils', () => {
     const avatar = getMarkerOptions(true, '#e4572e', makeEvent({ id: 'first-event', title: 'Grand Opening' }));
 
     expect(avatar.className).toBe('event-avatar-marker selected');
-    expect(avatar.iconSize).toEqual([44, 44]);
-    expect(avatar.iconAnchor).toEqual([22, 22]);
+    expect(avatar.iconSize).toEqual([38, 38]);
+    expect(avatar.iconAnchor).toEqual([19, 19]);
   });
 
   it('builds marker placements only for events with known places and routes', () => {
