@@ -1,7 +1,7 @@
 from fastapi import Depends, FastAPI, HTTPException, Query, status
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.config import LOCAL_CORS_ORIGINS
+from app.config import LOCAL_CORS_ORIGIN_REGEX, LOCAL_CORS_ORIGINS
 from app.schemas import (
     Connection,
     Event,
@@ -26,6 +26,7 @@ def create_app(repository: SeedRepository | None = None) -> FastAPI:
     api.add_middleware(
         CORSMiddleware,
         allow_origins=LOCAL_CORS_ORIGINS,
+        allow_origin_regex=LOCAL_CORS_ORIGIN_REGEX,
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],

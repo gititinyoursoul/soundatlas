@@ -50,22 +50,52 @@ describe('map utils', () => {
     expect(firstOffset).not.toEqual(secondOffset);
   });
 
-  it('gives the selected marker stronger visual emphasis', () => {
-    expect(getMarkerOptions(false, '#e4572e')).toEqual({
-      radius: 7,
-      color: '#24313d',
-      weight: 1.5,
-      fillColor: '#e4572e',
-      fillOpacity: 0.82
-    });
+  it('builds a generated avatar marker with route color and initials', () => {
+    const avatar = getMarkerOptions(false, '#e4572e', makeEvent({ id: 'first-event', title: 'Grand Opening' }));
 
-    expect(getMarkerOptions(true, '#e4572e')).toEqual({
-      radius: 12,
-      color: '#101820',
-      weight: 3,
-      fillColor: '#2e7d32',
-      fillOpacity: 0.98
-    });
+    expect(avatar.className).toBe('event-avatar-marker');
+    expect(avatar.iconSize).toEqual([32, 32]);
+    expect(avatar.iconAnchor).toEqual([16, 16]);
+    expect(avatar.html).toContain('--route-color: #e4572e');
+    expect(avatar.html).toContain('data:image/svg+xml');
+    expect(avatar.html).toContain('GO');
+  });
+
+  it('prefers a provided image link over a generated avatar', () => {
+    const avatar = getMarkerOptions(
+      false,
+      '#e4572e',
+      makeEvent({
+        id: 'first-event',
+        title: 'Grand Opening',
+        image_links: [
+          {
+            provider: 'wikimedia',
+            type: 'archive_photo',
+            title: 'Archive photo',
+            image_url: 'https://example.com/avatar.jpg',
+            thumbnail_url: 'https://example.com/avatar-thumb.jpg',
+            source_url: 'https://example.com/source',
+            rights_status: 'unknown',
+            alt_text: 'Avatar image',
+            query: 'Grand Opening',
+            confidence: 0.9,
+            review_status: 'draft'
+          }
+        ]
+      })
+    );
+
+    expect(avatar.html).toContain('https://example.com/avatar-thumb.jpg');
+    expect(avatar.html).not.toContain('data:image/svg+xml');
+  });
+
+  it('grows the selected avatar marker', () => {
+    const avatar = getMarkerOptions(true, '#e4572e', makeEvent({ id: 'first-event', title: 'Grand Opening' }));
+
+    expect(avatar.className).toBe('event-avatar-marker selected');
+    expect(avatar.iconSize).toEqual([44, 44]);
+    expect(avatar.iconAnchor).toEqual([22, 22]);
   });
 
   it('builds marker placements only for events with known places and routes', () => {

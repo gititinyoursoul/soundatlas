@@ -9,3 +9,5 @@ LOCAL_CORS_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
 ]
+
+LOCAL_CORS_ORIGIN_REGEX = r"^http://(localhost|127\.0\.0\.1):517[0-9]$"

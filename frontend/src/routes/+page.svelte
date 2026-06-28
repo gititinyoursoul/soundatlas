@@ -34,8 +34,7 @@
   let reviewSavingItemId: string | null = null;
   let reviewErrorMessage: string | null = null;
 
-  $: visibleEvents = filterEvents(events, selectedRouteId);
-  $: orderedVisibleEvents = [...visibleEvents].sort(compareEvents);
+  $: routeEvents = [...filterEvents(events, selectedRouteId)].sort(compareEvents);
   $: routeEventCounts = routes.reduce<Record<string, number>>((counts, route) => {
     counts[route.id] = events.filter((event) => event.route_id === route.id).length;
     return counts;
@@ -69,25 +68,28 @@
         previewUrl: imageLink.thumbnail_url ?? imageLink.image_url
       }))
   ]);
-  $: selectedEvent = orderedVisibleEvents.find((event) => event.id === selectedEventId) ?? null;
+  $: selectedEventIsVisible = routeEvents.some((event) => event.id === selectedEventId);
+  $: activeSelectedEventId =
+    selectedEventIsVisible || routeEvents.length === 0
+      ? selectedEventId
+      : routeEvents[0].id;
+  $: selectedEvent = routeEvents.find((event) => event.id === activeSelectedEventId) ?? null;
   $: selectedEventIndex = selectedEvent
-    ? orderedVisibleEvents.findIndex((event) => event.id === selectedEvent.id)
+    ? routeEvents.findIndex((event) => event.id === selectedEvent.id)
     : -1;
-  $: previousEvent = selectedEventIndex > 0 ? orderedVisibleEvents[selectedEventIndex - 1] : null;
+  $: previousEvent = selectedEventIndex > 0 ? routeEvents[selectedEventIndex - 1] : null;
   $: nextEvent =
-    selectedEventIndex >= 0 && selectedEventIndex < orderedVisibleEvents.length - 1
-      ? orderedVisibleEvents[selectedEventIndex + 1]
+    selectedEventIndex >= 0 && selectedEventIndex < routeEvents.length - 1
+      ? routeEvents[selectedEventIndex + 1]
       : null;
   $: selectedPlace = selectedEvent
     ? places.find((place) => place.id === selectedEvent?.place_id) ?? null
     : null;
   $: selectedPlaceEventCount = selectedPlace
-    ? orderedVisibleEvents.filter((event) => event.place_id === selectedPlace?.id).length
+    ? routeEvents.filter((event) => event.place_id === selectedPlace?.id).length
     : 0;
   $: activeRoute = routes.find((route) => route.id === selectedRouteId) ?? null;
-  $: selectedRoute = selectedEvent
-    ? routes.find((route) => route.id === selectedEvent?.route_id) ?? activeRoute
-    : activeRoute;
+  $: selectedRoute = activeRoute;
   $: timelineRoute = selectedRoute ?? activeRoute ?? routes[0] ?? null;
   $: timelineStartYear = timelineRoute?.year_start ?? 1965;
   $: timelineEndYear = timelineRoute?.year_end ?? 1985;
@@ -99,7 +101,7 @@
     ? 'Loading API data'
     : errorMessage
       ? 'API unavailable'
-      : `${visibleEvents.length} events visible`;
+      : `${routeEvents.length} events visible`;
   $: selectedConnections = selectedEvent
     ? connections.filter(
         (connection) =>
@@ -115,8 +117,12 @@
       places = data.places;
       events = data.events;
       connections = data.connections;
-      selectedRouteId = getInitialRouteId(data.routes);
-      selectedEventId = getFirstEventIdForRoute(data.events, selectedRouteId);
+      const initialRouteId = selectedRouteId ?? getInitialRouteId(data.routes);
+      selectedRouteId = initialRouteId;
+
+      if (!selectedEventId || !data.events.some((event) => event.id === selectedEventId && event.route_id === initialRouteId)) {
+        selectedEventId = getFirstEventIdForRoute(data.events, initialRouteId);
+      }
     } catch (error) {
       errorMessage = error instanceof Error ? error.message : 'Frontend konnte API-Daten nicht laden.';
     } finally {
@@ -214,7 +220,7 @@
     }
 
     if (event.key === 'ArrowRight') {
-      const eventToSelect = nextEvent ?? (!selectedEvent ? orderedVisibleEvents[0] : null);
+      const eventToSelect = nextEvent ?? (!selectedEvent ? routeEvents[0] : null);
 
       if (eventToSelect) {
         event.preventDefault();
@@ -320,11 +326,11 @@
           aria-label="Map exploration"
         >
           <MapView
-            events={orderedVisibleEvents}
+            events={routeEvents}
             {places}
             {routes}
             {selectedRouteId}
-            {selectedEventId}
+            selectedEventId={activeSelectedEventId}
             {selectedPlace}
             {selectedRoute}
             {selectedPlaceEventCount}
@@ -343,8 +349,8 @@
           routeEndYear={timelineEndYear}
           eventStartYear={selectedEvent?.year_start ?? null}
           eventEndYear={selectedEvent?.year_end ?? null}
-          events={orderedVisibleEvents}
-          {selectedEventId}
+          events={routeEvents}
+          selectedEventId={activeSelectedEventId}
           onSelectEvent={selectEvent}
         />
       </section>

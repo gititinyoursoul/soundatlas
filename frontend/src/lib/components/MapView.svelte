@@ -11,7 +11,6 @@
   import {
     getEventMarkerPlacements,
     getMarkerOptions,
-    getVisibleRoutes,
     type EventMarkerPlacement
   } from './map-utils';
 
@@ -39,16 +38,19 @@
   let placeGeometryLabelLayer: import('leaflet').LayerGroup | null = null;
   let leaflet: typeof import('leaflet') | null = null;
   let lastFramedRouteId: string | null = null;
+  let computedMarkerCount = 0;
+  let renderedMarkerCount = 0;
+  let markerRenderError: string | null = null;
 
-  $: if (leaflet && markerLayer && map) {
-    syncMapState(selectedRouteId, selectedEventId, events, places, routes);
-  }
+  $: computedMarkerCount = getEventMarkerPlacements(events, places, routes).length;
 
   $: if (leaflet && placeGeometryLayer && placeGeometryLabelLayer && map) {
     renderPlaceGeometries(events, selectedPlace?.id ?? null, selectedRoute?.color ?? null);
   }
 
-  $: visibleRoutes = getVisibleRoutes(routes, events);
+  $: if (leaflet && markerLayer && map) {
+    syncMapState(selectedRouteId, selectedEventId, events, places, routes);
+  }
 
   onMount(async () => {
     leaflet = await import('leaflet');
@@ -113,6 +115,7 @@
 
     leaflet.control.zoom({ position: 'bottomright' }).addTo(map);
     markerLayer = leaflet.layerGroup().addTo(map);
+    syncMapState(selectedRouteId, selectedEventId, events, places, routes);
 
     return () => {
       boroughLayer?.remove();
@@ -146,19 +149,28 @@
 
     for (const placement of placements) {
       const isSelected = activeEventId === placement.event.id;
+      const avatarOptions = getMarkerOptions(isSelected, placement.route.color, placement.event);
       const marker = leaflet
-        .circleMarker(placement.position, getMarkerOptions(isSelected, placement.route.color))
+        .marker(placement.position, {
+          riseOnHover: true,
+          zIndexOffset: isSelected ? 1000 : 0,
+          icon: leaflet.divIcon({
+            className: avatarOptions.className,
+            html: avatarOptions.html,
+            iconAnchor: avatarOptions.iconAnchor,
+            iconSize: avatarOptions.iconSize
+          })
+        })
         .bindTooltip(`${placement.event.title} (${placement.event.year_start})`, {
           className: 'event-tooltip',
           direction: 'top',
-          offset: [0, -8]
+          offset: [0, -20]
         });
 
       marker.on('click', () => onSelectEvent(placement.event.id));
       marker.addTo(markerLayer);
 
       if (isSelected) {
-        marker.bringToFront();
         selectedMarkerPosition = placement.position;
       }
     }
@@ -184,14 +196,21 @@
       return;
     }
 
-    const routeChanged = currentSelectedRouteId !== lastFramedRouteId;
-    const placements = renderMarkers(currentSelectedEventId, currentEvents, currentPlaces, currentRoutes, {
-      panToSelectedEvent: !routeChanged
-    });
+    try {
+      const routeChanged = currentSelectedRouteId !== lastFramedRouteId;
+      const placements = renderMarkers(currentSelectedEventId, currentEvents, currentPlaces, currentRoutes, {
+        panToSelectedEvent: !routeChanged
+      });
+      renderedMarkerCount = placements.length;
+      markerRenderError = null;
 
-    if (routeChanged) {
-      frameRouteBounds(placements);
-      lastFramedRouteId = currentSelectedRouteId;
+      if (routeChanged) {
+        frameRouteBounds(placements);
+        lastFramedRouteId = currentSelectedRouteId;
+      }
+    } catch (error) {
+      renderedMarkerCount = 0;
+      markerRenderError = error instanceof Error ? error.message : 'Marker rendering failed';
     }
   }
 
@@ -331,20 +350,16 @@
 <div class="map-shell">
   <div bind:this={mapContainer} class="map" aria-label="SoundAtlas map"></div>
 
-  {#if visibleRoutes.length > 0}
-    <div class="map-legend" aria-label="Map legend">
-      <div class="legend-row">
-        <span class="legend-marker selected"></span>
-        <span>Selected event</span>
-      </div>
-      {#each visibleRoutes as route}
-        <div class="legend-row">
-          <span class="legend-marker" style={`--route-color: ${route.color}`}></span>
-          <span>{route.title}</span>
-        </div>
-      {/each}
-    </div>
-  {/if}
+  <div class="map-debug" aria-label="Map debug state">
+    <span>route: {selectedRouteId ?? 'none'}</span>
+    <span>event: {selectedEventId ?? 'none'}</span>
+    <span>route events: {events.length}</span>
+    <span>placements: {computedMarkerCount}</span>
+    <span>markers: {renderedMarkerCount}</span>
+    {#if markerRenderError}
+      <span class="error">error: {markerRenderError}</span>
+    {/if}
+  </div>
 
   {#if events.length === 0}
     <div class="map-empty">No events in the active time range.</div>
@@ -382,6 +397,30 @@
     width: 100%;
     height: 100%;
     min-height: 480px;
+  }
+
+  .map-debug {
+    position: absolute;
+    z-index: 500;
+    top: 1rem;
+    right: 1rem;
+    display: grid;
+    gap: 0.18rem;
+    padding: 0.55rem 0.68rem;
+    border: 1px solid rgba(23, 32, 42, 0.14);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.92);
+    color: #314151;
+    font-size: 0.72rem;
+    font-weight: 700;
+    line-height: 1.2;
+    font-family: ui-monospace, SFMono-Regular, SF Mono, Consolas, Liberation Mono, Menlo, monospace;
+    box-shadow: 0 8px 24px rgba(23, 32, 42, 0.12);
+    pointer-events: none;
+  }
+
+  .map-debug .error {
+    color: #8e1f1f;
   }
 
   :global(.research-atlas-tiles) {
@@ -456,23 +495,36 @@
     border-top-color: rgba(255, 255, 255, 0.94);
   }
 
-  .map-legend {
-    position: absolute;
-    z-index: 500;
-    top: 1rem;
-    left: 1rem;
-    display: grid;
-    gap: 0.35rem;
-    max-width: min(16.5rem, calc(100% - 2rem));
-    padding: 0.46rem 0.55rem;
-    border: 1px solid rgba(49, 65, 81, 0.12);
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.86);
-    color: #314151;
-    font-size: 0.75rem;
-    font-weight: 700;
-    backdrop-filter: blur(4px);
-    box-shadow: 0 8px 22px rgba(23, 32, 42, 0.1);
+  :global(.event-avatar-marker) {
+    background: transparent;
+    border: 0;
+  }
+
+  :global(.event-avatar-marker .event-avatar) {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border: 2px solid var(--route-color);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 8px 16px rgba(23, 32, 42, 0.16);
+    transition:
+      transform 140ms ease,
+      box-shadow 140ms ease,
+      border-width 140ms ease;
+  }
+
+  :global(.event-avatar-marker.selected .event-avatar) {
+    transform: scale(1.08);
+    border-width: 3px;
+    box-shadow: 0 10px 20px rgba(23, 32, 42, 0.2);
+  }
+
+  :global(.event-avatar-marker .event-avatar-image) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   .selected-place {
@@ -512,35 +564,6 @@
     line-height: 1.35;
   }
 
-  .legend-row {
-    display: flex;
-    align-items: center;
-    gap: 0.45rem;
-    min-width: 0;
-  }
-
-  .legend-row span:last-child {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .legend-marker {
-    flex: 0 0 auto;
-    width: 0.8rem;
-    height: 0.8rem;
-    border: 1.5px solid #24313d;
-    border-radius: 999px;
-    background: var(--route-color, #314151);
-  }
-
-  .legend-marker.selected {
-    width: 0.95rem;
-    height: 0.95rem;
-    border: 2.5px solid #101820;
-    background: #2e7d32;
-  }
-
   .map-empty {
     position: absolute;
     top: 1rem;
@@ -557,10 +580,6 @@
   }
 
   @media (max-width: 640px) {
-    .map-legend {
-      max-width: min(15rem, calc(100% - 2rem));
-    }
-
     .selected-place {
       right: 1rem;
       width: auto;
