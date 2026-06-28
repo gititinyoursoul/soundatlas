@@ -2,6 +2,12 @@
   import { onMount } from 'svelte';
   import 'leaflet/dist/leaflet.css';
   import type { Event, Place, Route } from '$lib/types/soundatlas';
+  import {
+    getMarkerOptions,
+    getMarkerPosition,
+    getVisibleRoutes,
+    groupEventsByPlaceId
+  } from './map-utils';
 
   export let events: Event[] = [];
   export let places: Place[] = [];
@@ -21,8 +27,7 @@
     renderMarkers(selectedEventId, events, places, routes);
   }
 
-  $: visibleRouteIds = new Set(events.map((event) => event.route_id));
-  $: visibleRoutes = routes.filter((route) => visibleRouteIds.has(route.id));
+  $: visibleRoutes = getVisibleRoutes(routes, events);
 
   onMount(async () => {
     leaflet = await import('leaflet');
@@ -82,13 +87,7 @@
       const eventIndex = colocatedEvents.findIndex((colocatedEvent) => colocatedEvent.id === event.id);
       const markerPosition = getMarkerPosition(place, eventIndex, colocatedEvents.length);
       const marker = leaflet
-        .circleMarker(markerPosition, {
-          radius: isSelected ? 13 : 7,
-          color: '#17202a',
-          weight: isSelected ? 3 : 1,
-          fillColor: isSelected ? '#2e7d32' : route.color,
-          fillOpacity: isSelected ? 1 : 0.75
-        })
+        .circleMarker(markerPosition, getMarkerOptions(isSelected, route.color))
         .bindTooltip(`${event.title} (${event.year_start})`, {
           direction: 'top',
           offset: [0, -8]
@@ -111,34 +110,6 @@
     }
   }
 
-  function groupEventsByPlaceId(eventsToGroup: Event[]): Map<string, Event[]> {
-    const groupedEvents = new Map<string, Event[]>();
-
-    for (const event of eventsToGroup) {
-      groupedEvents.set(event.place_id, [...(groupedEvents.get(event.place_id) ?? []), event]);
-    }
-
-    return groupedEvents;
-  }
-
-  function getMarkerPosition(
-    place: Place,
-    eventIndex: number,
-    colocatedEventCount: number
-  ): [number, number] {
-    if (colocatedEventCount <= 1 || eventIndex < 0) {
-      return [place.latitude, place.longitude];
-    }
-
-    const angle = (2 * Math.PI * eventIndex) / colocatedEventCount;
-    const radiusInMeters = 70;
-    const latitudeOffset = (Math.sin(angle) * radiusInMeters) / 111_320;
-    const longitudeOffset =
-      (Math.cos(angle) * radiusInMeters) /
-      (111_320 * Math.cos((place.latitude * Math.PI) / 180));
-
-    return [place.latitude + latitudeOffset, place.longitude + longitudeOffset];
-  }
 </script>
 
 <div class="map-shell">
@@ -204,8 +175,8 @@
     left: 1rem;
     display: grid;
     gap: 0.35rem;
-    max-width: min(18rem, calc(100% - 2rem));
-    padding: 0.6rem 0.7rem;
+    max-width: min(16.5rem, calc(100% - 2rem));
+    padding: 0.5rem 0.6rem;
     border: 1px solid rgba(207, 215, 223, 0.9);
     border-radius: 8px;
     background: rgba(255, 255, 255, 0.94);
@@ -222,8 +193,8 @@
     bottom: 1rem;
     display: grid;
     gap: 0.18rem;
-    width: min(24rem, calc(100% - 2rem));
-    padding: 0.75rem 0.85rem;
+    width: min(22rem, calc(100% - 2rem));
+    padding: 0.62rem 0.72rem;
     border: 1px solid rgba(23, 32, 42, 0.14);
     border-left: 0.35rem solid var(--route-color);
     border-radius: 8px;
@@ -241,14 +212,14 @@
 
   .selected-place strong {
     color: #17202a;
-    font-size: 0.98rem;
+    font-size: 0.94rem;
     line-height: 1.2;
   }
 
   .selected-place p {
     margin: 0;
     color: #536170;
-    font-size: 0.82rem;
+    font-size: 0.78rem;
     line-height: 1.35;
   }
 
