@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { makeEvent, makePlace, makeRoute } from '$lib/test/fixtures';
 import {
+  getEventMarkerPlacements,
   getMarkerOptions,
   getMarkerPosition,
   getVisibleRoutes,
@@ -65,5 +66,25 @@ describe('map utils', () => {
       fillColor: '#2e7d32',
       fillOpacity: 1
     });
+  });
+
+  it('builds marker placements only for events with known places and routes', () => {
+    const routes = [makeRoute({ id: 'birth-of-hip-hop' })];
+    const places = [makePlace({ id: 'same-place', latitude: 40.82, longitude: -73.93 })];
+    const events = [
+      makeEvent({ id: 'first', place_id: 'same-place' }),
+      makeEvent({ id: 'second', place_id: 'same-place' }),
+      makeEvent({ id: 'missing-place', place_id: 'unknown-place' }),
+      makeEvent({ id: 'missing-route', route_id: 'downtown-experiment' })
+    ];
+
+    expect(getEventMarkerPlacements(events, places, routes).map((placement) => placement.event.id)).toEqual([
+      'first',
+      'second'
+    ]);
+    expect(getEventMarkerPlacements(events, places, routes)[0].position).not.toEqual([
+      40.82,
+      -73.93
+    ]);
   });
 });

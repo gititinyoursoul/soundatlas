@@ -3,28 +3,35 @@
   import 'leaflet/dist/leaflet.css';
   import type { Event, Place, Route } from '$lib/types/soundatlas';
   import {
+    getEventMarkerPlacements,
     getMarkerOptions,
-    getMarkerPosition,
     getVisibleRoutes,
-    groupEventsByPlaceId
+    type EventMarkerPlacement
   } from './map-utils';
 
   export let events: Event[] = [];
   export let places: Place[] = [];
   export let routes: Route[] = [];
+  export let selectedRouteId: string | null = null;
   export let selectedEventId: string | null = null;
   export let selectedPlace: Place | null = null;
   export let selectedRoute: Route | null = null;
   export let selectedPlaceEventCount = 0;
   export let onSelectEvent: (eventId: string) => void = () => {};
 
+  const defaultMapCenter: [number, number] = [40.82, -73.93];
+  const defaultMapZoom = 12;
+  const routeFitPadding: [number, number] = [64, 64];
+  const routeFitMaxZoom = 18;
+
   let mapContainer: HTMLDivElement;
   let map: import('leaflet').Map | null = null;
   let markerLayer: import('leaflet').LayerGroup | null = null;
   let leaflet: typeof import('leaflet') | null = null;
+  let lastFramedRouteId: string | null = null;
 
-  $: if (leaflet && markerLayer) {
-    renderMarkers(selectedEventId, events, places, routes);
+  $: if (leaflet && markerLayer && map) {
+    syncMapState(selectedRouteId, selectedEventId, events, places, routes);
   }
 
   $: visibleRoutes = getVisibleRoutes(routes, events);
@@ -37,7 +44,7 @@
       attributionControl: true
     });
 
-    map.setView([40.82, -73.93], 12);
+    map.setView(defaultMapCenter, defaultMapZoom);
 
     leaflet
       .tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -48,7 +55,6 @@
 
     leaflet.control.zoom({ position: 'bottomright' }).addTo(map);
     markerLayer = leaflet.layerGroup().addTo(map);
-    renderMarkers(selectedEventId, events, places, routes);
 
     return () => {
       map?.remove();
@@ -60,54 +66,91 @@
     activeEventId = selectedEventId,
     currentEvents = events,
     currentPlaces = places,
-    currentRoutes = routes
-  ): void {
+    currentRoutes = routes,
+    options: { panToSelectedEvent?: boolean } = {}
+  ): EventMarkerPlacement[] {
     if (!leaflet || !markerLayer) {
-      return;
+      return [];
     }
 
     markerLayer.clearLayers();
 
-    const eventsByPlaceId = groupEventsByPlaceId(currentEvents);
+    const placements = getEventMarkerPlacements(currentEvents, currentPlaces, currentRoutes);
     let selectedMarkerPosition: [number, number] | null = null;
 
-    const currentPlaceById = new Map(currentPlaces.map((place) => [place.id, place]));
-    const currentRouteById = new Map(currentRoutes.map((route) => [route.id, route]));
-
-    for (const event of currentEvents) {
-      const place = currentPlaceById.get(event.place_id);
-      const route = currentRouteById.get(event.route_id);
-
-      if (!place || !route) {
-        continue;
-      }
-
-      const isSelected = activeEventId === event.id;
-      const colocatedEvents = eventsByPlaceId.get(event.place_id) ?? [event];
-      const eventIndex = colocatedEvents.findIndex((colocatedEvent) => colocatedEvent.id === event.id);
-      const markerPosition = getMarkerPosition(place, eventIndex, colocatedEvents.length);
+    for (const placement of placements) {
+      const isSelected = activeEventId === placement.event.id;
       const marker = leaflet
-        .circleMarker(markerPosition, getMarkerOptions(isSelected, route.color))
-        .bindTooltip(`${event.title} (${event.year_start})`, {
+        .circleMarker(placement.position, getMarkerOptions(isSelected, placement.route.color))
+        .bindTooltip(`${placement.event.title} (${placement.event.year_start})`, {
           direction: 'top',
           offset: [0, -8]
         });
 
-      marker.on('click', () => onSelectEvent(event.id));
+      marker.on('click', () => onSelectEvent(placement.event.id));
       marker.addTo(markerLayer);
 
       if (isSelected) {
         marker.bringToFront();
-        selectedMarkerPosition = markerPosition;
+        selectedMarkerPosition = placement.position;
       }
     }
 
-    if (selectedMarkerPosition && map) {
+    if (options.panToSelectedEvent !== false && selectedMarkerPosition && map) {
       map.panTo(selectedMarkerPosition, {
         animate: true,
         duration: 0.35
       });
     }
+
+    return placements;
+  }
+
+  function syncMapState(
+    currentSelectedRouteId: string | null,
+    currentSelectedEventId: string | null,
+    currentEvents: Event[],
+    currentPlaces: Place[],
+    currentRoutes: Route[]
+  ): void {
+    if (!map || !leaflet || !markerLayer) {
+      return;
+    }
+
+    const routeChanged = currentSelectedRouteId !== lastFramedRouteId;
+    const placements = renderMarkers(currentSelectedEventId, currentEvents, currentPlaces, currentRoutes, {
+      panToSelectedEvent: !routeChanged
+    });
+
+    if (routeChanged) {
+      frameRouteBounds(placements);
+      lastFramedRouteId = currentSelectedRouteId;
+    }
+  }
+
+  function frameRouteBounds(routePlacements: EventMarkerPlacement[]): void {
+    if (!leaflet || !map) {
+      return;
+    }
+
+    if (routePlacements.length === 0) {
+      map.setView(defaultMapCenter, defaultMapZoom);
+      return;
+    }
+
+    const bounds = leaflet.latLngBounds(routePlacements.map((placement) => placement.position));
+
+    if (!bounds.isValid()) {
+      map.setView(defaultMapCenter, defaultMapZoom);
+      return;
+    }
+
+    map.fitBounds(bounds, {
+      padding: routeFitPadding,
+      maxZoom: routeFitMaxZoom,
+      animate: true,
+      duration: 0.35
+    });
   }
 
 </script>

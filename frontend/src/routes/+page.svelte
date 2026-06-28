@@ -323,6 +323,7 @@
             events={orderedVisibleEvents}
             {places}
             {routes}
+            {selectedRouteId}
             {selectedEventId}
             {selectedPlace}
             {selectedRoute}

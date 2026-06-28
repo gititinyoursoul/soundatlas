@@ -24,6 +24,46 @@ export function groupEventsByPlaceId(eventsToGroup: Event[]): Map<string, Event[
   return groupedEvents;
 }
 
+export type EventMarkerPlacement = {
+  event: Event;
+  place: Place;
+  route: Route;
+  position: [number, number];
+};
+
+export function getEventMarkerPlacements(
+  eventsToPlace: Event[],
+  currentPlaces: Place[],
+  currentRoutes: Route[]
+): EventMarkerPlacement[] {
+  const eventsByPlaceId = groupEventsByPlaceId(eventsToPlace);
+  const currentPlaceById = new Map(currentPlaces.map((place) => [place.id, place]));
+  const currentRouteById = new Map(currentRoutes.map((route) => [route.id, route]));
+  const placements: EventMarkerPlacement[] = [];
+
+  for (const event of eventsToPlace) {
+    const place = currentPlaceById.get(event.place_id);
+    const route = currentRouteById.get(event.route_id);
+
+    if (!place || !route) {
+      continue;
+    }
+
+    const colocatedEvents = eventsByPlaceId.get(event.place_id) ?? [event];
+    const eventIndex = colocatedEvents.findIndex((colocatedEvent) => colocatedEvent.id === event.id);
+    const position = getMarkerPosition(place, eventIndex, colocatedEvents.length);
+
+    placements.push({
+      event,
+      place,
+      route,
+      position
+    });
+  }
+
+  return placements;
+}
+
 export function getMarkerPosition(
   place: Place,
   eventIndex: number,
