@@ -26,7 +26,7 @@ This document records how agent instructions should be interpreted in this repos
 
    SoundAtlas example: `use prompts/design-ux.md on the active route display above the map` should be interpreted through that prompt's output boundary. A later request such as `revert this change` explicitly authorizes reverting the prior implementation.
 
-   Configurable: yes, through clear request wording such as `plan only`, `do not edit files`, or `implement from this approved spec`.
+   Configurable: yes, through clear request wording such as `plan only`, `do not edit files`, `implement this approved plan`, or `implement from this provided spec`.
 
 4. Repo instructions in `AGENTS.md`
 
@@ -34,7 +34,7 @@ This document records how agent instructions should be interpreted in this repos
 
    SoundAtlas examples:
 
-   - Feature work follows `docs/spec-first-agent-workflow.md`.
+   - Feature work follows the plan-led workflow in `docs/spec-first-agent-workflow.md`.
    - The map is the primary interface.
    - Frontend changes run `npm run check`.
    - Backend changes run `uv run pytest`.
@@ -64,7 +64,7 @@ This document records how agent instructions should be interpreted in this repos
 
    SoundAtlas examples:
 
-   - `docs/spec-first-agent-workflow.md` says not to implement directly from a prompt or skill, and to implement only from an approved spec with acceptance criteria.
+   - `docs/spec-first-agent-workflow.md` says not to implement from vague requests, and to implement from approved plans, provided specs, or clearly trivial requests.
    - `docs/skills-workflow.md` maps UX audit work to `prompts/design-ux.md`.
    - `docs/design/current-frontend-design.md` records the intended frontend design baseline.
 

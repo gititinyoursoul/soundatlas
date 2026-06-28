@@ -75,6 +75,7 @@ Archive of completed work packages. The current work list lives in `TODO.md`.
 - [x] Define marker states: default, hover, selected
 - [x] Run a no-code UX audit of the current frontend app
 - [x] Plan the first map-first UX pass from `docs/design/2026-06-27-frontend-ux-audit.md` and `docs/design/current-frontend-design.md`
+- [x] Run screenshot critique after the first map-first UX pass
 - [x] Choose the UX design direction for the MVP
 - [x] Draft a UI plan for the main exploration view
 - [x] Compress the topbar and active route context so the map becomes more dominant in the first viewport
@@ -130,6 +131,7 @@ Archive of completed work packages. The current work list lives in `TODO.md`.
 - [x] Confirm `TODO.md` contains only current open tasks and completed work stays traceable in `docs/done.md`
 - [x] Check `AGENTS.md` and translate it into English
 - [x] Rebuild the dev container and verify Playwright Chromium screenshot capture now that the workspace image installs the required browser runtime libraries and exposes a writable Playwright cache
+- [x] Normalize repository line endings and configure the workspace for LF checkouts
 
 ## Docker Compose Run Checklist
 

@@ -1,14 +1,14 @@
-# Spec + Plan Feature
+# Plan Feature
 
 Use this prompt before implementing a new SoundAtlas feature, UX change, data workflow, or cross-cutting change.
 
-This prompt is the planning entrypoint for the current spec-first workflow. Use the `soundatlas-spec-planning` skill for this task and keep this prompt as the compatibility wrapper.
+This prompt is the planning entrypoint for the current plan-led workflow.
 
-The goal is to prevent implementation from starting from a vague request. First draft a new spec revision, then produce a practical implementation plan from that revision.
+The goal is to prevent implementation from starting from a vague request. First produce a practical implementation plan. Create a spec record only when the human asks for one or when the work needs later analysis.
 
 Core rule:
 
-> Do not implement directly from a prompt. Implementation may only proceed from an explicit spec and acceptance criteria.
+> Do not implement directly from a vague prompt. Implementation may proceed from an approved plan, a provided spec, or a clearly trivial request.
 
 ## Context To Provide
 
@@ -33,15 +33,15 @@ Core rule:
   * `docs/media-retrieval/youtube-mvp-workflow.md`
 * Constraints and non-goals.
 * Whether implementation or planning-only is requested.
-* Existing approved spec revision path, if updating a previous revision.
+* Existing spec path, if using or updating a previous record.
 
 ## Task
 
-Produce a small spec and a practical implementation plan.
+Produce a practical implementation plan. If requested or useful for later analysis, also produce a small spec record.
 
 Do not write code unless explicitly asked.
 
-If implementation is requested, still draft a new spec revision first. Then produce the plan. Only proceed to code after the revision is explicit enough to implement safely.
+If implementation is requested in the same turn, produce the plan first and proceed only after implementation is clearly approved. If a spec record is requested, create it before or during implementation and update it after verification.
 
 If the input is incomplete, do not stop immediately. State reasonable assumptions, list open questions, and produce a spec and plan that can be refined. Only block when missing information would make implementation unsafe, destructive, likely to violate the project data model, or likely to create incorrect historical/data behavior.
 
@@ -65,9 +65,9 @@ If the input is incomplete, do not stop immediately. State reasonable assumption
 * Media retrieval: YouTube-only MVP using `data/enrichment/`.
 * Media workflow commands are documented in `docs/media-retrieval/workflow-commands.md`.
 
-## Spec Rules
+## Optional Spec Record Rules
 
-Before planning implementation, create or update a lightweight spec.
+When a spec record is requested or useful for later analysis, create or update a lightweight spec.
 
 Recommended location:
 
@@ -205,9 +205,9 @@ For media retrieval changes, define:
 * review boundary
 * whether `data/seed/events.json` should change
 
-## Linking Plan To Spec
+## Linking Plan To Spec Records
 
-The implementation plan must reference spec requirements.
+If a spec record exists, the implementation plan should reference spec requirements.
 
 Use requirement IDs from the spec:
 
@@ -223,7 +223,7 @@ Use requirement IDs from the spec:
    - Files likely affected: `src/lib/components/...`
 ```
 
-Tests and validation must reference acceptance criteria:
+When a spec exists, tests and validation should reference acceptance criteria:
 
 ```md
 ## Validation
@@ -235,9 +235,9 @@ Tests and validation must reference acceptance criteria:
 
 ## Handling Incomplete Input
 
-* State assumptions explicitly before the spec.
+* State assumptions explicitly before the plan or spec record.
 * Separate assumptions from open questions.
-* Continue with a conservative spec and plan when assumptions are safe.
+* Continue with a conservative plan when assumptions are safe.
 * Keep risky or irreversible steps behind confirmation.
 * Prefer planning small checkpoints over designing a large speculative solution.
 
@@ -262,15 +262,15 @@ Example:
 Return:
 
 1. A short summary of the intended change.
-2. A proposed spec revision path.
-3. The spec content, or a summary of changes to the existing approved revision.
+2. A proposed spec record path, if a spec record is requested or useful.
+3. The spec content or summary, if a spec record is included.
 4. A numbered implementation plan with 5-9 reviewable steps.
 5. Acceptance criteria.
 6. Validation commands.
 7. Risks or open questions.
 8. Suggested file groups for review.
 9. Suggested commit grouping and Conventional Commit messages.
-10. Next step: the concrete follow-up action, usually spec review/approval followed by the relevant implementation prompt.
+10. Next step: the concrete follow-up action, usually plan approval followed by implementation.
 
 ## Output Rules
 
@@ -278,8 +278,8 @@ Return:
 * Avoid generic filler.
 * Prefer explicit file paths.
 * Do not invent APIs, schema fields, or data.
-* If the request is ambiguous, state assumptions before the spec.
+* If the request is ambiguous, state assumptions before the plan.
 * Do not write code unless explicitly asked.
-* Do not modify product behavior outside the spec.
-* If implementation reveals needed behavior not covered by the spec, draft a new revision first and stop for approval.
+* Do not modify product behavior outside the approved plan or provided spec.
+* If implementation reveals needed behavior outside the approved plan, stop for approval when the difference changes product intent or another high-risk boundary.
 * End with a `Next step` line naming the next prompt, skill, or human action.

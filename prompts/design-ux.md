@@ -6,7 +6,7 @@ This prompt set is the UX entrypoint for the current workflow. If the repo has a
 
 Design UX prompts produce audit findings, critique, and UX slice proposals.
 They do not authorize implementation.
-Use `prompts/plan-feature.md` to turn a selected UX slice into a spec revision and implementation plan.
+Use `prompts/plan-feature.md` or direct conversation to turn a selected UX slice into an implementation plan. Create a spec record only when requested or useful for later analysis.
 
 ## Shared Context
 
@@ -72,12 +72,12 @@ Do not make changes yet. Return:
 - Candidate UX slices
 - Suggested first UX slice
 - Files and components likely affected
-- Next step: usually turn the selected UX slice into a spec with `prompts/plan-feature.md`
+- Next step: usually turn the selected UX slice into an implementation plan with `prompts/plan-feature.md`
 ```
 
 ## UX Pass Plan
 
-Use this after a UX audit or screenshot critique, before `prompts/plan-feature.md`.
+Use this after a UX audit or screenshot critique, before implementation planning.
 
 ```text
 Plan one SoundAtlas UX pass.
@@ -105,8 +105,8 @@ Return:
 - Out of scope
 - Acceptance criteria candidates
 - Risks or open questions
-- Recommended spec revision name
-- Next step: create or update the spec with `prompts/plan-feature.md`
+- Recommended plan or spec-record name
+- Next step: create or update the implementation plan with `prompts/plan-feature.md`
 ```
 
 ## Screenshot Critique
@@ -134,7 +134,7 @@ Return:
 - Screenshot evidence
 - Whether each finding is bug, polish, or design-direction issue
 - Recommended follow-up UX slice
-- Whether a new spec revision is needed
+- Whether a spec record is needed
 - Whether `docs/design/current-frontend-design.md` should change
-- Next step: usually create the follow-up spec with `prompts/plan-feature.md`, or update the design baseline with `prompts/update-docs.md`
+- Next step: usually create the follow-up plan with `prompts/plan-feature.md`, or update the design baseline with `prompts/update-docs.md`
 ```

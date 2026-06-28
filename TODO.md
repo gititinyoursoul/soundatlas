@@ -19,7 +19,6 @@ Completed work packages are archived in `docs/done.md`.
 
 ### Repository Maintenance
 
-- [ ] Resolve Git line-ending warning: `warning: in the working copy of 'TODO.md', LF will be replaced by CRLF the next time Git touches it`
 - [ ] Add frontend behavior tests for route selection, timeline selection, map/story synchronization, loading/error states, and admin media controls
 - [ ] Find a test coverage setup for `uv` and `npm`
 - [ ] Split environment dependency management into prod and dev
@@ -35,7 +34,6 @@ Completed work packages are archived in `docs/done.md`.
 - [ ] Check out Leaflet controls and map chrome design options
 - [ ] Decide how pre-1970 hip-hop context should appear in route ranges and timeline layout
 - [ ] Gate or remove admin media/image review controls before a public explorer surface
-- [ ] Run screenshot critique after the first map-first UX pass
 - [ ] Define a separate admin validation workflow before adding Validation back to the drawer
 - [ ] Review the selection flow across route, map, timeline, and story panel
 - [ ] Document the UX acceptance check against the design checklist

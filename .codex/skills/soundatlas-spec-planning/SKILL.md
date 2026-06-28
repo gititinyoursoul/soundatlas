@@ -1,6 +1,6 @@
 ---
 name: soundatlas-spec-planning
-description: Draft or revise SoundAtlas feature specs and implementation plans for non-trivial frontend, backend, data, documentation, UX, or cross-cutting changes. Use when a request should become an approved spec revision under the SoundAtlas specs directory before implementation, or when an existing SoundAtlas spec family needs a new revision, clarified assumptions, or a requirement-mapped plan.
+description: Draft or revise SoundAtlas spec records and implementation plans for frontend, backend, data, documentation, UX, or cross-cutting changes. Use when the user explicitly asks for a spec, when a generated spec record would help later analysis, or when an existing SoundAtlas spec family needs a new revision, clarified assumptions, or a requirement-mapped plan.
 ---
 
 # SoundAtlas Spec Planning
@@ -18,7 +18,7 @@ Read `prompts/plan-feature.md` only when you need the legacy wrapper wording or 
 ## Workflow
 
 1. Classify the request.
-   Treat the skill as the default path for non-trivial feature work, UX behavior changes, backend/API changes, seed or enrichment workflow changes, documentation behavior changes, and cross-cutting work.
+   Use this skill when a spec record is requested or useful. The default day-to-day workflow is plan-led and does not require a spec gate.
 
 2. Inspect for an existing spec family before creating a new one.
    Reuse an existing feature slug when the request extends the same user-facing behavior, workflow, or ownership boundary.
@@ -43,7 +43,7 @@ Read `prompts/plan-feature.md` only when you need the legacy wrapper wording or 
    Separate assumptions from open questions.
    Block only on high-risk uncertainty such as destructive writes, schema changes, seed shape changes, security, privacy, external API behavior, historically sensitive claims, or irreversible workflow changes.
 
-7. Produce the implementation plan after the spec.
+7. Produce the implementation plan after the spec record.
    Map implementation steps to requirement IDs such as `R1`, `R2`, `R3`.
    Map validation to acceptance criteria such as `AC1`, `AC2`, `AC3`.
    Keep the plan decision-complete enough that an implementation skill or engineer can execute without inventing product behavior.
@@ -53,10 +53,10 @@ Read `prompts/plan-feature.md` only when you need the legacy wrapper wording or 
 
 ## Planning Rules
 
-- Keep specs as the source of truth for product intent.
+- Keep approved plans as the default source of truth for implementation. Use specs as records for product intent, verification, and later analysis.
 - Do not define behavior outside the requested change.
 - Prefer small, reviewable revisions over broad rewrites.
-- If implementation reveals missing behavior, draft a new revision instead of editing the approved revision in place.
+- If implementation reveals missing behavior, update the generated spec record when the detail is low-risk; stop for approval when the change affects product intent or another high-risk boundary.
 - For cross-cutting changes, plan in this order: data or schema impact, backend impact, frontend state impact, UX impact, tests or checks, docs or TODO updates.
 
 ## Output
@@ -69,6 +69,6 @@ Return the planning result in this order:
 4. Spec draft
 5. Implementation plan mapped to `R*`
 6. Validation plan mapped to `AC*`
-7. Next step: usually review and approve the proposed spec revision, then use the relevant implementation, test, docs, or UX workflow
+7. Next step: approve the plan for implementation, or review the spec record if the user asked for one
 
 If the request is truly trivial, say so briefly and explain why a spec is not needed.

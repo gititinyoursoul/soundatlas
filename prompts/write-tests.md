@@ -13,7 +13,7 @@ Core rule:
 ## Context To Provide
 
 * Target module, component, endpoint, data workflow, or seed validation behavior.
-* Approved spec revision path, if the tests verify a spec-driven change.
+* Provided spec path, if the tests verify a spec-recorded change.
 * Expected behavior, edge cases, and any known bug.
 * Whether the target is backend, frontend, data validation, or cross-cutting.
 * Existing test runner or whether test infrastructure must be added first.
@@ -85,7 +85,7 @@ Prefer a small first test slice before broad coverage.
 
 When implementation is approved:
 
-1. Read the test plan and any approved spec revision it references.
+1. Read the test plan and any provided spec it references.
 2. Inspect the existing tests and target code before editing.
 3. Add only the tests described in the plan.
 4. Keep fixtures minimal and local to the test when possible.

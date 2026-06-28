@@ -1,35 +1,40 @@
-# Specs and Skills Workflow
+# Plans, Specs, and Skills Workflow
 
-SoundAtlas uses two layers for agent-driven work:
+SoundAtlas uses three lightweight layers for agent-driven work:
 
-- Specs define product intent, scope, requirements, and acceptance criteria.
-- Skills define reusable execution patterns for planning, implementation, tests, docs, and UX.
+* Plans define the next implementation move and are the normal approval artifact.
+* Specs under `specs/` are optional records for analysis, traceability, and later verification.
+* Skills and prompts define reusable execution patterns for planning, implementation, tests, docs, and UX.
 
-Prompts are compatibility entrypoints into those workflows. They stay thin and should not redefine product behavior.
+Prompts are compatibility entrypoints into those workflows. They should stay thin and should not redefine product behavior.
 
-## Workflow rules
+## Workflow Rules
 
-- Keep specs as the source of truth for feature intent.
-- Implement only from an approved spec revision with clear acceptance criteria.
-- Use a skill or prompt entrypoint only to carry out the approved spec.
-- When a workflow repeats across multiple features, extract the repeatable part into a skill and leave the prompt as a wrapper if needed.
-- Keep feature names stable in spec paths and revision names.
-- End every workflow result with a short `Next step` handoff naming the next prompt, skill, or human action when useful.
+* Do not implement from a vague request. Inspect the repo and create a concrete plan for non-trivial work.
+* Implement from an approved plan, an explicitly provided spec, or a clearly trivial request.
+* Create a spec record when the human asks for one or when non-trivial work would benefit from later analysis.
+* A generated spec record does not need a separate approval step.
+* Use a skill or prompt entrypoint to carry out the approved plan or provided spec.
+* When a workflow repeats across multiple features, extract the repeatable part into a skill and leave the prompt as a wrapper if needed.
+* Keep feature names stable in spec paths and revision names.
+* End every workflow result with a short `Next step` handoff when useful.
 
-## Current mapping
+## Current Mapping
 
 | Work type | Source of truth | Current entrypoint |
 | --- | --- | --- |
-| Spec planning | feature request + approved revision path | `soundatlas-spec-planning` at `.codex/skills/soundatlas-spec-planning`, wrapped by `prompts/plan-feature.md` |
-| Backend implementation | approved spec revision | `prompts/implement-backend-api.md` |
-| Frontend implementation | approved spec revision | `prompts/implement-frontend-map.md` |
-| Test planning and implementation | approved spec revision | `prompts/write-tests.md` |
-| Durable documentation | approved spec revision or workflow change | `prompts/update-docs.md` |
+| Conversational planning | feature request + repo inspection | direct agent plan, optionally supported by `prompts/plan-feature.md` |
+| Spec record creation | approved plan or explicit spec request | `soundatlas-spec-planning` at `.codex/skills/soundatlas-spec-planning`, wrapped by `prompts/plan-feature.md` |
+| Backend implementation | approved plan or provided spec | `prompts/implement-backend-api.md` when useful |
+| Frontend implementation | approved plan or provided spec | `prompts/implement-frontend-map.md` when useful |
+| Test planning and implementation | approved plan or provided spec | `prompts/write-tests.md` |
+| Durable documentation | approved plan, provided spec, or workflow change | `prompts/update-docs.md` |
 | UX audit and critique | current frontend and design baseline | `prompts/design-ux.md` |
 
-## Migration guidance
+## Migration Guidance
 
-1. Prefer specs for durable product decisions.
-2. Prefer skills for repeatable execution steps.
-3. Keep prompts as short, stable wrappers while the repo transitions toward skills.
-4. Update workflow docs together when a skill or prompt boundary changes.
+1. Prefer conversational plans for day-to-day development.
+2. Use specs as records for later analysis, not as mandatory gates.
+3. Prefer skills for repeatable execution steps.
+4. Keep prompts as short, stable wrappers while the repo transitions toward skills.
+5. Update workflow docs together when a skill or prompt boundary changes.

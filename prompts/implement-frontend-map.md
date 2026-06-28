@@ -1,12 +1,12 @@
-# Implement Frontend Map From Spec
+# Implement Frontend Map From Plan Or Spec
 
-Use this prompt when building or changing the SoundAtlas SvelteKit frontend map experience from an approved spec.
+Use this prompt when building or changing the SoundAtlas SvelteKit frontend map experience from an approved plan or provided spec.
 
 This prompt is the frontend implementation entrypoint for the current workflow. If the repo has a matching frontend skill, use that skill's instructions and keep this prompt as the compatibility wrapper.
 
 ## Context to provide
 
-* Approved spec revision path, for example `specs/<feature-slug>/rNN-<short-desc>.md`.
+* Approved plan summary or provided spec path, for example `specs/<feature-slug>/rNN-<short-desc>.md`.
 * Desired frontend behavior or component.
 * Related backend endpoints or seed fields.
 * Expected interaction:
@@ -31,30 +31,28 @@ This prompt is the frontend implementation entrypoint for the current workflow. 
   * mixed
 * Whether implementation is approved now or frontend planning only.
 
-## Spec Gate
+## Implementation Gate
 
-Before implementing, read the approved spec revision.
+Before implementing, read the approved plan or provided spec.
 
 Implementation may proceed only when:
 
-* An approved spec revision path is provided, or the change is explicitly marked as trivial.
-* The spec has clear frontend-relevant requirements.
-* The spec has testable frontend-relevant acceptance criteria.
+* An approved plan, provided spec path, or clearly trivial request exists.
+* The requirements are clear enough to implement.
+* Acceptance criteria are testable enough to verify.
 * Blocking questions are resolved or intentionally deferred.
 
-Do not implement behavior outside the spec.
+Do not implement behavior outside the approved plan or provided spec.
 
-If implementation reveals required behavior that is not described in the spec revision, draft a new revision first and stop for approval before continuing.
+If implementation reveals required behavior outside the approved plan or provided spec, stop for approval when the change affects product behavior or another high-risk boundary. For low-risk implementation detail, record the assumption and continue.
 
-Map implementation work to spec requirements using requirement IDs such as `R1`, `R2`, and `R3`.
-
-Verify completed work against acceptance criteria such as `AC1`, `AC2`, and `AC3`.
+When a spec exists, map implementation work to requirement IDs and verify against acceptance criteria.
 
 ## Task
 
 Implement frontend behavior using SvelteKit, TypeScript, and Leaflet.
 
-Do not redefine the product behavior from the prompt. Treat the approved spec as the source of truth.
+Do not redefine the product behavior from the prompt. Treat the approved plan or provided spec as the source of truth.
 
 ## Project constraints
 
@@ -86,7 +84,7 @@ Do not redefine the product behavior from the prompt. Treat the approved spec as
 
 ## Process
 
-1. Read the approved spec revision and identify frontend-relevant requirements and acceptance criteria.
+1. Read the approved plan or provided spec and identify frontend-relevant requirements and acceptance criteria.
 2. Inspect the existing SvelteKit route, components, and state ownership before editing.
 3. Inspect related backend response shapes or seed-backed data.
 4. Define TypeScript types that mirror backend response shapes.

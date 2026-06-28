@@ -2,7 +2,7 @@
 
 This document describes a repeatable GPT-assisted process for improving the SoundAtlas UX. Use it as a step-by-step workflow for audits, redesign passes, screenshot critique, and implementation planning.
 
-Use `docs/skills-workflow.md` as the routing guide for when UX work should stay in a prompt, move into a skill, or remain anchored to a spec revision.
+Use `docs/skills-workflow.md` as the routing guide for when UX work should stay in a prompt, move into a skill, or create a spec record for analysis.
 
 The goal is not to ask for a vague redesign. The goal is to run small, inspectable UX cycles that produce clear findings, one focused implementation pass, and validation before moving on.
 
@@ -52,8 +52,8 @@ Follow these rules for every UX cycle:
 Use the existing prompts in this order:
 
 1. `prompts/design-ux.md` - UX audit, main screen design plan, screenshot critique
-2. `prompts/plan-feature.md` - create or update a spec, then convert the design idea into one implementation pass
-3. `prompts/implement-frontend-map.md` - implement frontend/map-related changes from an approved spec
+2. `prompts/plan-feature.md` - turn the design idea into one implementation pass, with an optional spec record
+3. `prompts/implement-frontend-map.md` - implement frontend/map-related changes from an approved plan or provided spec
 4. `prompts/write-tests.md` - add or update focused tests
 5. `prompts/update-docs.md` - update durable docs that the UX change relies on or changes
 
@@ -181,7 +181,7 @@ Example detailed workflow slice:
 
 ### Step 5: Plan One UX Pass
 
-Use the **UX Pass Plan** template in `prompts/design-ux.md` to narrow the selected workflow slice before implementation planning. Then use the `soundatlas-spec-planning` skill through `prompts/plan-feature.md` to create a spec revision and turn the UX slice into one implementation plan.
+Use the **UX Pass Plan** template in `prompts/design-ux.md` to narrow the selected workflow slice before implementation planning. Then use `prompts/plan-feature.md` or direct conversation to turn the UX slice into one implementation plan. Create a spec record only when the human asks for one or the work needs later analysis.
 
 Plan only one pass at a time.
 
@@ -209,7 +209,7 @@ Output:
 
 ### Step 6: Implement One Pass
 
-Use `prompts/implement-frontend-map.md` for frontend map or exploration-surface changes from an approved spec, or the matching skill if that workflow has already been extracted.
+Use `prompts/implement-frontend-map.md` for frontend map or exploration-surface changes from an approved plan or provided spec, or the matching skill if that workflow has already been extracted.
 
 Rules:
 

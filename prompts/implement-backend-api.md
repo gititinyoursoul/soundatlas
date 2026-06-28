@@ -1,41 +1,39 @@
-# Implement Backend API From Spec
+# Implement Backend API From Plan Or Spec
 
-Use this prompt when implementing or changing the SoundAtlas FastAPI backend from an approved spec.
+Use this prompt when implementing or changing the SoundAtlas FastAPI backend from an approved plan or provided spec.
 
 This prompt is the backend implementation entrypoint for the current workflow. If the repo has a matching backend skill, use that skill's instructions and keep this prompt as the compatibility wrapper.
 
 ## Context to provide
 
-* Approved spec revision path, for example `specs/<feature-slug>/rNN-<short-desc>.md`.
+* Approved plan summary or provided spec path, for example `specs/<feature-slug>/rNN-<short-desc>.md`.
 * Endpoint or backend behavior to implement.
 * Relevant seed data and expected API response shape.
 * Error behavior and filtering requirements.
 * Whether implementation is approved now or backend planning only.
 
-## Spec Gate
+## Implementation Gate
 
-Before implementing, read the approved spec revision.
+Before implementing, read the approved plan or provided spec.
 
 Implementation may proceed only when:
 
-* An approved spec revision path is provided, or the change is explicitly marked as trivial.
-* The spec has clear requirements.
-* The spec has testable acceptance criteria.
+* An approved plan, provided spec path, or clearly trivial request exists.
+* Requirements are clear enough to implement.
+* Acceptance criteria are testable enough to verify.
 * Blocking questions are resolved or intentionally deferred.
 
-Do not implement behavior outside the spec.
+Do not implement behavior outside the approved plan or provided spec.
 
-If implementation reveals required behavior that is not described in the spec revision, draft a new revision first and stop for approval before continuing.
+If implementation reveals required behavior outside the approved plan or provided spec, stop for approval when the change affects product behavior or another high-risk boundary. For low-risk implementation detail, record the assumption and continue.
 
-Map implementation work to spec requirements using requirement IDs such as `R1`, `R2`, and `R3`.
-
-Verify completed work against acceptance criteria such as `AC1`, `AC2`, and `AC3`.
+When a spec exists, map implementation work to requirement IDs and verify against acceptance criteria.
 
 ## Task
 
 Implement backend behavior using Python, `uv`, FastAPI, and Pydantic.
 
-Do not rewrite the product behavior from the prompt. Treat the approved spec as the source of truth.
+Do not rewrite the product behavior from the prompt. Treat the approved plan or provided spec as the source of truth.
 
 ## Project constraints
 
@@ -59,7 +57,7 @@ Do not rewrite the product behavior from the prompt. Treat the approved spec as 
 
 ## Process
 
-1. Read the approved spec revision and identify backend-relevant requirements and acceptance criteria.
+1. Read the approved plan or provided spec and identify backend-relevant requirements and acceptance criteria.
 2. Inspect existing backend structure under `backend/app/`.
 3. Inspect relevant seed data under `data/seed/`.
 4. Check `docs/seed-validation.md` before changing seed-related behavior.
