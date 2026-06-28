@@ -18,6 +18,7 @@ This means:
 
 - Map-first exploration is the dominant interaction.
 - A compact app header gives route orientation without overwhelming the map or selected event.
+- The selected event inspector should have enough desktop width to read comfortably without making the map feel secondary.
 - Timeline clarifies chronology and sequence.
 - Story panel explains the selected event in plain, source-aware language.
 - Sources and media are discoverable but secondary to place/time/story understanding.

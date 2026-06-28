@@ -383,7 +383,7 @@
 
   .workspace {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(18rem, 23rem);
+    grid-template-columns: minmax(0, 0.95fr) minmax(21rem, 27rem);
     grid-template-rows: minmax(0, 1fr);
     min-height: calc(100vh - 2rem);
     height: calc(100vh - 2rem);
@@ -404,8 +404,8 @@
     display: grid;
     grid-template-columns: minmax(10rem, 16rem) minmax(0, 1fr) auto;
     align-items: start;
-    gap: 1rem;
-    padding: 0.75rem 1rem;
+    gap: 0.85rem;
+    padding: 0.65rem 0.9rem;
     border-bottom: 1px solid #d9e0e7;
     background: #ffffff;
   }
