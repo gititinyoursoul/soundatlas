@@ -53,18 +53,18 @@ describe('map utils', () => {
   it('gives the selected marker stronger visual emphasis', () => {
     expect(getMarkerOptions(false, '#e4572e')).toEqual({
       radius: 7,
-      color: '#17202a',
-      weight: 1,
+      color: '#24313d',
+      weight: 1.5,
       fillColor: '#e4572e',
-      fillOpacity: 0.75
+      fillOpacity: 0.82
     });
 
     expect(getMarkerOptions(true, '#e4572e')).toEqual({
-      radius: 13,
-      color: '#17202a',
+      radius: 12,
+      color: '#101820',
       weight: 3,
       fillColor: '#2e7d32',
-      fillOpacity: 1
+      fillOpacity: 0.98
     });
   });
 

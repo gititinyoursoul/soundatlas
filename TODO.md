@@ -27,6 +27,12 @@ Completed work packages are archived in `docs/done.md`.
 
 ### UX and Design
 
+- [ ] Check out Leaflet base map tile style options
+- [ ] Check out Leaflet marker design options
+- [ ] Check out Leaflet popups and tooltip design options
+- [ ] Check out Leaflet GeoJSON overlay design options
+- [ ] Check out Leaflet route, region, and era overlay design options
+- [ ] Check out Leaflet controls and map chrome design options
 - [ ] Decide how pre-1970 hip-hop context should appear in route ranges and timeline layout
 - [ ] Gate or remove admin media/image review controls before a public explorer surface
 - [ ] Run screenshot critique after the first map-first UX pass

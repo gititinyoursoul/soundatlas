@@ -84,10 +84,10 @@ export function getMarkerPosition(
 
 export function getMarkerOptions(isSelected: boolean, routeColor: string): MarkerOptions {
   return {
-    radius: isSelected ? 13 : 7,
-    color: '#17202a',
-    weight: isSelected ? 3 : 1,
+    radius: isSelected ? 12 : 7,
+    color: isSelected ? '#101820' : '#24313d',
+    weight: isSelected ? 3 : 1.5,
     fillColor: isSelected ? '#2e7d32' : routeColor,
-    fillOpacity: isSelected ? 1 : 0.75
+    fillOpacity: isSelected ? 0.98 : 0.82
   };
 }

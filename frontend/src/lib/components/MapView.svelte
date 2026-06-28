@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import 'leaflet/dist/leaflet.css';
+  import { boroughColors, nycBoroughs, type BoroughFeature } from '$lib/data/nyc-boroughs';
   import type { Event, Place, Route } from '$lib/types/soundatlas';
   import {
     getEventMarkerPlacements,
@@ -27,6 +28,8 @@
   let mapContainer: HTMLDivElement;
   let map: import('leaflet').Map | null = null;
   let markerLayer: import('leaflet').LayerGroup | null = null;
+  let boroughLayer: import('leaflet').GeoJSON | null = null;
+  let boroughLabelLayer: import('leaflet').LayerGroup | null = null;
   let leaflet: typeof import('leaflet') | null = null;
   let lastFramedRouteId: string | null = null;
 
@@ -44,19 +47,50 @@
       attributionControl: true
     });
 
+    map.createPane('boroughs');
+    map.createPane('borough-labels');
+    const boroughPane = map.getPane('boroughs');
+    const boroughLabelPane = map.getPane('borough-labels');
+
+    if (boroughPane) {
+      boroughPane.style.zIndex = '350';
+      boroughPane.style.pointerEvents = 'none';
+    }
+
+    if (boroughLabelPane) {
+      boroughLabelPane.style.zIndex = '360';
+      boroughLabelPane.style.pointerEvents = 'none';
+    }
+
     map.setView(defaultMapCenter, defaultMapZoom);
 
     leaflet
       .tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
-        attribution: '&copy; OpenStreetMap contributors'
+        attribution: '&copy; OpenStreetMap contributors',
+        className: 'research-atlas-tiles'
       })
       .addTo(map);
+
+    boroughLayer = leaflet
+      .geoJSON(nycBoroughs as GeoJSON.GeoJsonObject, {
+        pane: 'boroughs',
+        interactive: false,
+        style: styleBoroughFeature
+      })
+      .addTo(map);
+
+    boroughLabelLayer = leaflet.layerGroup().addTo(map);
+    renderBoroughLabels();
 
     leaflet.control.zoom({ position: 'bottomright' }).addTo(map);
     markerLayer = leaflet.layerGroup().addTo(map);
 
     return () => {
+      boroughLayer?.remove();
+      boroughLayer = null;
+      boroughLabelLayer?.remove();
+      boroughLabelLayer = null;
       map?.remove();
       map = null;
     };
@@ -83,6 +117,7 @@
       const marker = leaflet
         .circleMarker(placement.position, getMarkerOptions(isSelected, placement.route.color))
         .bindTooltip(`${placement.event.title} (${placement.event.year_start})`, {
+          className: 'event-tooltip',
           direction: 'top',
           offset: [0, -8]
         });
@@ -153,6 +188,43 @@
     });
   }
 
+  function styleBoroughFeature(feature?: GeoJSON.Feature): import('leaflet').PathOptions {
+    const boroughName = (feature as BoroughFeature | undefined)?.properties.name;
+    const fillColor = boroughName ? boroughColors[boroughName] : '#8a99a8';
+
+    return {
+      color: '#314151',
+      fillColor,
+      fillOpacity: 0.2,
+      opacity: 0.38,
+      weight: 1.2
+    };
+  }
+
+  function renderBoroughLabels(): void {
+    if (!leaflet || !boroughLabelLayer) {
+      return;
+    }
+
+    for (const borough of nycBoroughs.features) {
+      const { label, name } = borough.properties;
+
+      leaflet
+        .marker([label.latitude, label.longitude], {
+          interactive: false,
+          keyboard: false,
+          pane: 'borough-labels',
+          icon: leaflet.divIcon({
+            className: 'borough-label',
+            html: `<span>${name}</span>`,
+            iconAnchor: [58, 12],
+            iconSize: [116, 24]
+          })
+        })
+        .addTo(boroughLabelLayer);
+    }
+  }
+
 </script>
 
 <div class="map-shell">
@@ -202,13 +274,57 @@
     min-height: 480px;
     height: 100%;
     overflow: hidden;
-    background: #dfe7ed;
+    background: #e5e8e5;
   }
 
   .map {
     width: 100%;
     height: 100%;
     min-height: 480px;
+  }
+
+  :global(.research-atlas-tiles) {
+    filter: grayscale(0.5) saturate(0.82) contrast(0.92) brightness(1.04);
+  }
+
+  :global(.borough-label) {
+    display: grid;
+    place-items: center;
+    pointer-events: none;
+  }
+
+  :global(.borough-label span) {
+    padding: 0.14rem 0.38rem;
+    border: 1px solid rgba(23, 32, 42, 0.16);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.46);
+    color: rgba(23, 32, 42, 0.72);
+    font-size: 0.68rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    line-height: 1;
+    text-transform: uppercase;
+    text-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.75),
+      0 0 10px rgba(255, 255, 255, 0.74);
+    box-shadow: 0 6px 18px rgba(23, 32, 42, 0.08);
+    backdrop-filter: blur(2px);
+  }
+
+  :global(.event-tooltip) {
+    padding: 0.35rem 0.48rem;
+    border: 1px solid rgba(23, 32, 42, 0.2);
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.94);
+    color: #17202a;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.01em;
+    box-shadow: 0 8px 18px rgba(23, 32, 42, 0.12);
+  }
+
+  :global(.event-tooltip::before) {
+    border-top-color: rgba(255, 255, 255, 0.94);
   }
 
   .map-legend {
@@ -219,14 +335,15 @@
     display: grid;
     gap: 0.35rem;
     max-width: min(16.5rem, calc(100% - 2rem));
-    padding: 0.5rem 0.6rem;
-    border: 1px solid rgba(207, 215, 223, 0.9);
+    padding: 0.46rem 0.55rem;
+    border: 1px solid rgba(49, 65, 81, 0.12);
     border-radius: 8px;
-    background: rgba(255, 255, 255, 0.94);
+    background: rgba(255, 255, 255, 0.86);
     color: #314151;
-    font-size: 0.78rem;
+    font-size: 0.75rem;
     font-weight: 700;
-    box-shadow: 0 8px 24px rgba(23, 32, 42, 0.12);
+    backdrop-filter: blur(4px);
+    box-shadow: 0 8px 22px rgba(23, 32, 42, 0.1);
   }
 
   .selected-place {
@@ -283,7 +400,7 @@
     flex: 0 0 auto;
     width: 0.8rem;
     height: 0.8rem;
-    border: 1px solid #17202a;
+    border: 1.5px solid #24313d;
     border-radius: 999px;
     background: var(--route-color, #314151);
   }
@@ -291,7 +408,7 @@
   .legend-marker.selected {
     width: 0.95rem;
     height: 0.95rem;
-    border: 2px solid #17202a;
+    border: 2.5px solid #101820;
     background: #2e7d32;
   }
 
