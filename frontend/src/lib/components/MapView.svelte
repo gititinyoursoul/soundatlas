@@ -2,6 +2,11 @@
   import { onMount } from 'svelte';
   import 'leaflet/dist/leaflet.css';
   import { boroughColors, nycBoroughs, type BoroughFeature } from '$lib/data/nyc-boroughs';
+  import {
+    getPlaceGeometriesForPlaceIds,
+    placeGeometryColors,
+    type PlaceGeometryFeature
+  } from '$lib/data/nyc-place-geometries';
   import type { Event, Place, Route } from '$lib/types/soundatlas';
   import {
     getEventMarkerPlacements,
@@ -30,11 +35,17 @@
   let markerLayer: import('leaflet').LayerGroup | null = null;
   let boroughLayer: import('leaflet').GeoJSON | null = null;
   let boroughLabelLayer: import('leaflet').LayerGroup | null = null;
+  let placeGeometryLayer: import('leaflet').LayerGroup | null = null;
+  let placeGeometryLabelLayer: import('leaflet').LayerGroup | null = null;
   let leaflet: typeof import('leaflet') | null = null;
   let lastFramedRouteId: string | null = null;
 
   $: if (leaflet && markerLayer && map) {
     syncMapState(selectedRouteId, selectedEventId, events, places, routes);
+  }
+
+  $: if (leaflet && placeGeometryLayer && placeGeometryLabelLayer && map) {
+    renderPlaceGeometries(events, selectedPlace?.id ?? null, selectedRoute?.color ?? null);
   }
 
   $: visibleRoutes = getVisibleRoutes(routes, events);
@@ -48,18 +59,32 @@
     });
 
     map.createPane('boroughs');
+    map.createPane('place-geometries');
     map.createPane('borough-labels');
+    map.createPane('place-geometry-labels');
     const boroughPane = map.getPane('boroughs');
+    const placeGeometryPane = map.getPane('place-geometries');
     const boroughLabelPane = map.getPane('borough-labels');
+    const placeGeometryLabelPane = map.getPane('place-geometry-labels');
 
     if (boroughPane) {
       boroughPane.style.zIndex = '350';
       boroughPane.style.pointerEvents = 'none';
     }
 
+    if (placeGeometryPane) {
+      placeGeometryPane.style.zIndex = '355';
+      placeGeometryPane.style.pointerEvents = 'none';
+    }
+
     if (boroughLabelPane) {
       boroughLabelPane.style.zIndex = '360';
       boroughLabelPane.style.pointerEvents = 'none';
+    }
+
+    if (placeGeometryLabelPane) {
+      placeGeometryLabelPane.style.zIndex = '370';
+      placeGeometryLabelPane.style.pointerEvents = 'none';
     }
 
     map.setView(defaultMapCenter, defaultMapZoom);
@@ -83,6 +108,9 @@
     boroughLabelLayer = leaflet.layerGroup().addTo(map);
     renderBoroughLabels();
 
+    placeGeometryLayer = leaflet.layerGroup().addTo(map);
+    placeGeometryLabelLayer = leaflet.layerGroup().addTo(map);
+
     leaflet.control.zoom({ position: 'bottomright' }).addTo(map);
     markerLayer = leaflet.layerGroup().addTo(map);
 
@@ -91,6 +119,10 @@
       boroughLayer = null;
       boroughLabelLayer?.remove();
       boroughLabelLayer = null;
+      placeGeometryLayer?.remove();
+      placeGeometryLayer = null;
+      placeGeometryLabelLayer?.remove();
+      placeGeometryLabelLayer = null;
       map?.remove();
       map = null;
     };
@@ -198,6 +230,75 @@
       fillOpacity: 0.2,
       opacity: 0.38,
       weight: 1.2
+    };
+  }
+
+  function renderPlaceGeometries(
+    currentEvents: Event[],
+    selectedPlaceId: string | null,
+    selectedRouteColor: string | null
+  ): void {
+    if (!leaflet || !placeGeometryLayer || !placeGeometryLabelLayer) {
+      return;
+    }
+
+    placeGeometryLayer.clearLayers();
+    placeGeometryLabelLayer.clearLayers();
+
+    const placeIds = currentEvents.map((event) => event.place_id);
+
+    if (selectedPlaceId) {
+      placeIds.push(selectedPlaceId);
+    }
+
+    const visibleGeometries = getPlaceGeometriesForPlaceIds(placeIds);
+
+    for (const geometry of visibleGeometries) {
+      leaflet
+        .geoJSON(geometry as GeoJSON.GeoJsonObject, {
+          pane: 'place-geometries',
+          interactive: false,
+          style: (feature) => stylePlaceGeometryFeature(feature, selectedPlaceId, selectedRouteColor)
+        })
+        .addTo(placeGeometryLayer);
+
+      const { label, name, placeId } = geometry.properties;
+      const isSelected = selectedPlaceId === placeId;
+
+      leaflet
+        .marker([label.latitude, label.longitude], {
+          interactive: false,
+          keyboard: false,
+          pane: 'place-geometry-labels',
+          icon: leaflet.divIcon({
+            className: `place-geometry-label${isSelected ? ' selected' : ''}`,
+            html: `<span>${name}</span>`,
+            iconAnchor: [66, 12],
+            iconSize: [132, 24]
+          })
+        })
+        .addTo(placeGeometryLabelLayer);
+    }
+  }
+
+  function stylePlaceGeometryFeature(
+    feature: GeoJSON.Feature | undefined,
+    selectedPlaceId: string | null,
+    selectedRouteColor: string | null
+  ): import('leaflet').PathOptions {
+    const properties = (feature as PlaceGeometryFeature | undefined)?.properties;
+    const kind = properties?.kind ?? 'cultural_area';
+    const isSelected = properties?.placeId === selectedPlaceId;
+    const color = isSelected && selectedRouteColor ? selectedRouteColor : placeGeometryColors[kind];
+    const isSite = kind === 'site';
+
+    return {
+      color,
+      dashArray: properties?.precision === 'interpretive' ? (isSelected ? '8 5' : '5 5') : undefined,
+      fillColor: color,
+      fillOpacity: isSelected ? (isSite ? 0.32 : 0.14) : isSite ? 0.2 : 0.07,
+      opacity: isSelected ? 0.95 : 0.58,
+      weight: isSelected ? 2.2 : 1.3
     };
   }
 
@@ -309,6 +410,34 @@
       0 0 10px rgba(255, 255, 255, 0.74);
     box-shadow: 0 6px 18px rgba(23, 32, 42, 0.08);
     backdrop-filter: blur(2px);
+  }
+
+  :global(.place-geometry-label) {
+    display: grid;
+    place-items: center;
+    pointer-events: none;
+  }
+
+  :global(.place-geometry-label span) {
+    padding: 0.16rem 0.42rem;
+    border: 1px solid rgba(49, 65, 81, 0.18);
+    border-radius: 999px;
+    background: rgba(255, 250, 236, 0.68);
+    color: rgba(23, 32, 42, 0.78);
+    font-size: 0.66rem;
+    font-weight: 900;
+    letter-spacing: 0.055em;
+    line-height: 1;
+    text-transform: uppercase;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.76);
+    box-shadow: 0 8px 18px rgba(23, 32, 42, 0.1);
+    backdrop-filter: blur(2px);
+  }
+
+  :global(.place-geometry-label.selected span) {
+    border-color: rgba(16, 24, 32, 0.34);
+    background: rgba(255, 255, 255, 0.84);
+    color: #101820;
   }
 
   :global(.event-tooltip) {
