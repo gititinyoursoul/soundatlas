@@ -104,9 +104,11 @@ For planning-only requests, return:
 5. Files likely affected.
 6. Validation commands.
 7. Risks, blockers, or out-of-scope behavior.
+8. Next step: approve the planned test slice or refine blockers before implementation.
 
 For implementation requests, return:
 
 1. New or updated tests.
 2. Notes on what is covered and intentionally not covered.
 3. Validation command run and outcome.
+4. Next step: commit the tests, add the next missing coverage slice, or run the related implementation/docs workflow.

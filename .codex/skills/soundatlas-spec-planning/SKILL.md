@@ -69,5 +69,6 @@ Return the planning result in this order:
 4. Spec draft
 5. Implementation plan mapped to `R*`
 6. Validation plan mapped to `AC*`
+7. Next step: usually review and approve the proposed spec revision, then use the relevant implementation, test, docs, or UX workflow
 
 If the request is truly trivial, say so briefly and explain why a spec is not needed.

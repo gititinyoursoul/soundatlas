@@ -75,9 +75,11 @@ For planning-only requests, return:
 3. Planned edits.
 4. Related docs or prompts to update together.
 5. Risks or ambiguities.
+6. Next step: approve the documentation plan or identify the missing source of truth.
 
 For implementation requests, return:
 
 1. Updated documentation.
 2. Notes on what was changed and why.
 3. Validation or review notes if relevant.
+4. Next step: commit the docs or continue with the related spec, implementation, or test workflow.

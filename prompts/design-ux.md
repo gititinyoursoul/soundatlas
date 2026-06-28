@@ -72,6 +72,7 @@ Do not make changes yet. Return:
 - Candidate UX slices
 - Suggested first UX slice
 - Files and components likely affected
+- Next step: usually turn the selected UX slice into a spec with `prompts/plan-feature.md`
 ```
 
 ## UX Pass Plan
@@ -105,6 +106,7 @@ Return:
 - Acceptance criteria candidates
 - Risks or open questions
 - Recommended spec revision name
+- Next step: create or update the spec with `prompts/plan-feature.md`
 ```
 
 ## Screenshot Critique
@@ -134,4 +136,5 @@ Return:
 - Recommended follow-up UX slice
 - Whether a new spec revision is needed
 - Whether `docs/design/current-frontend-design.md` should change
+- Next step: usually create the follow-up spec with `prompts/plan-feature.md`, or update the design baseline with `prompts/update-docs.md`
 ```

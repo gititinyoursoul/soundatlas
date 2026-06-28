@@ -124,4 +124,8 @@ Return:
 ## Suggested commit message
 
 - `feat(backend): ...`
+
+## Next step
+
+- Review the verification report, then commit the backend change or run `prompts/write-tests.md` / `prompts/update-docs.md` if follow-up coverage or docs are needed.
 ```

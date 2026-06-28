@@ -161,4 +161,8 @@ Return:
 ## Suggested commit message
 
 - `feat(frontend): ...`
+
+## Next step
+
+- Review the verification report, then commit the frontend change or run `prompts/write-tests.md` / `prompts/update-docs.md` if follow-up coverage or docs are needed.
 ```

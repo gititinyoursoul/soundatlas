@@ -55,6 +55,8 @@ The implementation plan explains how to make the spec real.
 
 The verification report proves whether the implementation satisfies the acceptance criteria.
 
+Each workflow response should also end with a short `Next step` handoff so the human does not need to look up the process document before continuing.
+
 ## Prompt structure
 
 SoundAtlas uses prompt entrypoints for the most common workflows:
@@ -78,6 +80,22 @@ Skills are the reusable execution layer for repeatable work such as planning, im
 - Prompts in `prompts/` are thin entrypoints and compatibility wrappers around that work.
 - The current spec-planning skill is `soundatlas-spec-planning` at `.codex/skills/soundatlas-spec-planning`.
 - The current mapping between specs, skills, and prompts lives in `docs/skills-workflow.md`.
+
+## Next-step handoff
+
+Every workflow prompt and skill should finish with a `Next step` line.
+
+The handoff should be concrete and should name the next prompt, skill, or human action when there is an expected continuation.
+
+Examples:
+
+- After spec planning: `Next step: review and approve specs/<feature-slug>/rNN-<short-desc>.md, then implement with prompts/implement-frontend-map.md or prompts/implement-backend-api.md.`
+- After test planning: `Next step: approve the test slice, then implement it with prompts/write-tests.md.`
+- After UX audit or screenshot critique: `Next step: choose one UX slice and turn it into a spec with prompts/plan-feature.md.`
+- After implementation: `Next step: review the verification report, then commit the changed files or run prompts/update-docs.md if durable docs changed.`
+- After documentation updates: `Next step: review the docs diff, then commit the documentation change.`
+
+If there is no natural continuation, say `Next step: none; this task is complete.`
 
 ## Recommended repo structure
 
@@ -359,6 +377,10 @@ Use this format:
 - `feat(backend): ...`
 - `test(backend): ...`
 - `docs: ...`
+
+## Next step
+
+- `<concrete follow-up action>`
 ```
 
 ## Practical Codex CLI usage
@@ -383,6 +405,7 @@ Expected output:
 * Risks/open questions
 * Suggested file groups
 * Suggested commit grouping
+* Next step
 
 ### Step 2: approve the spec
 

@@ -270,6 +270,7 @@ Return:
 7. Risks or open questions.
 8. Suggested file groups for review.
 9. Suggested commit grouping and Conventional Commit messages.
+10. Next step: the concrete follow-up action, usually spec review/approval followed by the relevant implementation prompt.
 
 ## Output Rules
 
@@ -281,3 +282,4 @@ Return:
 * Do not write code unless explicitly asked.
 * Do not modify product behavior outside the spec.
 * If implementation reveals needed behavior not covered by the spec, draft a new revision first and stop for approval.
+* End with a `Next step` line naming the next prompt, skill, or human action.

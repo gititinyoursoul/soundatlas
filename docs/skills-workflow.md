@@ -14,6 +14,7 @@ Prompts are compatibility entrypoints into those workflows. They stay thin and s
 - Use a skill or prompt entrypoint only to carry out the approved spec.
 - When a workflow repeats across multiple features, extract the repeatable part into a skill and leave the prompt as a wrapper if needed.
 - Keep feature names stable in spec paths and revision names.
+- End every workflow result with a short `Next step` handoff naming the next prompt, skill, or human action when useful.
 
 ## Current mapping
 
