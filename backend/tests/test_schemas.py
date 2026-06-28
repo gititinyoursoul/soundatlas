@@ -14,6 +14,7 @@ def test_media_link_accepts_structured_provider_link() -> None:
             "query": "example query",
             "confidence": 0.8,
             "review_status": "draft",
+            "playback_mode": "external",
             "video_id": "example",
             "channel_title": "Example Channel",
             "description": "Example description",
@@ -25,6 +26,7 @@ def test_media_link_accepts_structured_provider_link() -> None:
     assert media_link.provider == "youtube"
     assert media_link.type == "video"
     assert media_link.video_id == "example"
+    assert media_link.playback_mode == "external"
 
 
 @pytest.mark.parametrize(

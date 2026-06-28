@@ -3,6 +3,7 @@ export type ReviewAction = 'reviewed' | 'reject';
 export type ReviewLinkKind = 'media' | 'image';
 export type MediaProvider = 'youtube' | 'spotify' | 'qobuz';
 export type MediaType = 'track' | 'album' | 'playlist' | 'video' | 'search';
+export type MediaPlaybackMode = 'embed' | 'external';
 export type ImageProvider =
   | 'wikimedia'
   | 'loc'
@@ -58,6 +59,7 @@ export type MediaLink = {
   query: string;
   confidence: number;
   review_status: ReviewStatus;
+  playback_mode?: MediaPlaybackMode;
   video_id?: string | null;
   channel_title?: string | null;
   description?: string | null;
@@ -105,6 +107,16 @@ export type Connection = {
   type: string;
   summary: string;
   review_status: ReviewStatus;
+};
+
+export type StoryConnectionItem = {
+  id: string;
+  summary: string;
+  type: string;
+  directionLabel: string;
+  event: Event;
+  place: Place | null;
+  route: Route | null;
 };
 
 export type TimelineRange = {

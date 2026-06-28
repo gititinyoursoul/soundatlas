@@ -8,6 +8,7 @@ MediaReviewAction = Literal["reviewed", "reject"]
 LinkReviewKind = Literal["media", "image"]
 MediaProvider = Literal["youtube", "spotify", "qobuz"]
 MediaType = Literal["track", "album", "playlist", "video", "search"]
+MediaPlaybackMode = Literal["embed", "external"]
 ImageProvider = Literal[
     "wikimedia",
     "loc",
@@ -90,6 +91,7 @@ class MediaLink(BaseModel):
     query: str
     confidence: float
     review_status: ReviewStatus
+    playback_mode: MediaPlaybackMode = "embed"
     video_id: str | None = None
     channel_title: str | None = None
     description: str | None = None

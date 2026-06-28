@@ -121,7 +121,7 @@ Currently exists as a reusable component for route switching, but it is not part
 
 ### `StoryPanel`
 
-Explains the selected event with year, route, place, summary, significance, connections, sources, media, and previous/next navigation.
+Explains the selected event with a compact title-and-metadata header, stable previous/next navigation with adjacent-event tooltips, story/media/source tabs, readable source labels, a continuous story reading block with a quieter significance note, clickable connected-event rows that show relationship direction and type, and a media tab framed as exploratory listening and viewing rather than admin review.
 
 ### `MediaEmbed`
 

@@ -79,6 +79,7 @@ Required fields per event:
 - `url`
 - `query`
 - `confidence`: number between `0` and `1`
+- optional `playback_mode`: `embed` or `external`
 - `review_status`
 
 `image_links` contains structured image links:

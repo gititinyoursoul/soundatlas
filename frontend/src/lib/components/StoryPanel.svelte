@@ -1,15 +1,16 @@
 <script lang="ts">
+  import Icon from '$lib/components/Icon.svelte';
   import MediaEmbed from '$lib/components/MediaEmbed.svelte';
   import { parseYouTubeEmbed, type YouTubeEmbed } from '$lib/media/youtube';
   import type {
-    Connection,
     Event,
     ImageLink,
     MediaLink,
     MediaProvider,
     MediaType,
     Place,
-    Route
+    Route,
+    StoryConnectionItem
   } from '$lib/types/soundatlas';
 
   type InspectorTab = 'story' | 'media' | 'sources';
@@ -35,12 +36,12 @@
   export let event: Event | null = null;
   export let place: Place | null = null;
   export let route: Route | null = null;
-  export let connections: Connection[] = [];
+  export let connections: StoryConnectionItem[] = [];
   export let previousEvent: Event | null = null;
   export let nextEvent: Event | null = null;
   export let isLoading = false;
   export let errorMessage: string | null = null;
-  export let onNavigateEvent: (eventId: string) => void = () => {};
+  export let onNavigateEvent: (eventId: string, routeId?: string) => void = () => {};
 
   const mediaProviderLabels: Record<MediaProvider, string> = {
     youtube: 'YouTube',
@@ -55,6 +56,27 @@
     internet_archive: 'Internet Archive',
     cover_art_archive: 'Cover Art Archive',
     manual: 'Manual'
+  };
+
+  const sourceHostLabels: Record<string, string> = {
+    'americanhistory.si.edu': 'Smithsonian National Museum of American History',
+    'arts.gov': 'National Endowment for the Arts',
+    'britannica.com': 'Britannica',
+    'bronxriver.org': 'Bronx River Alliance',
+    'cinema.cornell.edu': 'Cornell Cinema',
+    'citylore.org': 'City Lore',
+    'en.wikipedia.org': 'Wikipedia',
+    'filmlinc.org': 'Film at Lincoln Center',
+    'history.com': 'History',
+    'latimes.com': 'Los Angeles Times',
+    'museumofplay.org': 'The Strong National Museum of Play',
+    'namm.org': 'NAMM Oral History',
+    'osti.gov': 'OSTI',
+    'pbs.org': 'PBS',
+    'pitchfork.com': 'Pitchfork',
+    'rockhall.com': 'Rock & Roll Hall of Fame',
+    'si.edu': 'Smithsonian',
+    'soundonsound.com': 'Sound on Sound'
   };
 
   let activeTab: InspectorTab = 'story';
@@ -85,9 +107,7 @@
       id: `image:${imageLink.image_url}`,
       kind: 'image',
       title: imageLink.title,
-      subtitle: `${formatImageDescriptor(imageLink.provider, imageLink.type)} · ${formatRightsLabel(
-        imageLink.rights_status
-      )}`,
+      subtitle: formatImageDescriptor(imageLink.provider, imageLink.type),
       previewUrl: imageLink.thumbnail_url ?? imageLink.image_url,
       imageLink
     }));
@@ -96,9 +116,9 @@
       id: `media:${mediaLink.url}`,
       kind: 'media',
       title: mediaLink.title,
-      subtitle: `${formatMediaDescriptor(mediaLink.provider, mediaLink.type)} · ${mediaLink.review_status}`,
+      subtitle: formatMediaDescriptor(mediaLink.provider, mediaLink.type),
       mediaLink,
-      embed: parseYouTubeEmbed(mediaLink.url)
+      embed: mediaLink.playback_mode === 'external' ? null : parseYouTubeEmbed(mediaLink.url)
     }));
 
     return [...imageItems, ...mediaItems];
@@ -110,10 +130,6 @@
 
   function formatImageDescriptor(provider: string, type: string): string {
     return `${imageProviderLabels[provider] ?? humanize(provider)} ${humanize(type)}`;
-  }
-
-  function formatRightsLabel(rightsStatus: string): string {
-    return humanize(rightsStatus);
   }
 
   function humanize(value: string): string {
@@ -133,6 +149,68 @@
   function selectTab(tab: InspectorTab): void {
     activeTab = tab;
   }
+
+  function formatConnectionMeta(connection: StoryConnectionItem): string {
+    const parts = [formatEventYears(connection.event)];
+
+    if (connection.place) {
+      parts.push(connection.place.name);
+    }
+
+    if (connection.route) {
+      parts.push(connection.route.title);
+    }
+
+    return parts.join(' • ');
+  }
+
+  function formatConnectionType(connection: StoryConnectionItem): string {
+    return humanize(connection.type);
+  }
+
+  function formatSourceLabel(sourceUrl: string): string {
+    try {
+      const url = new URL(sourceUrl);
+      const host = url.hostname.replace(/^www\./, '');
+      const hostLabel = sourceHostLabels[host] ?? sourceHostLabels[getBaseHost(host)];
+
+      if (hostLabel) {
+        return hostLabel;
+      }
+
+      return getBaseHost(host)
+        .split('.')
+        .filter((part) => part !== 'com' && part !== 'org' && part !== 'gov' && part !== 'edu')
+        .map((part) => humanize(part.replace(/-/g, '_')))
+        .join(' ');
+    } catch {
+      return sourceUrl;
+    }
+  }
+
+  function getBaseHost(host: string): string {
+    const parts = host.split('.');
+
+    if (parts.length <= 2) {
+      return host;
+    }
+
+    return parts.slice(-2).join('.');
+  }
+
+  function formatEventMeta(currentEvent: Event, currentPlace: Place | null, currentRoute: Route | null): string {
+    const parts = [formatEventYears(currentEvent)];
+
+    if (currentPlace) {
+      parts.push(`${currentPlace.name}, ${currentPlace.borough}`);
+    }
+
+    if (currentRoute) {
+      parts.push(currentRoute.title);
+    }
+
+    return parts.join(' • ');
+  }
 </script>
 
 <aside class="story-panel" aria-label="Event inspector">
@@ -148,85 +226,85 @@
     </div>
   {:else if event}
     <header class="inspector-header">
-      <div class="eyebrow">
-        <span>Selected event</span>
+      <div class="header-top">
+        <div class="title-block">
+          <h2>{event.title}</h2>
+          <p class="event-meta-line">
+            {#if route}
+              <span class="meta-route">
+                <span class="route-dot" style={`--route-color: ${route.color}`}></span>
+                {formatEventMeta(event, place, route)}
+              </span>
+            {:else}
+              {formatEventMeta(event, place, route)}
+            {/if}
+          </p>
+        </div>
       </div>
 
-      <div class="title-block">
-        <h2>{event.title}</h2>
-        <p>{formatEventYears(event)}</p>
+      <div class="header-controls">
+        <div class="inspector-tabs" role="tablist" aria-label="Inspector sections">
+          <button
+            id="inspector-tab-story"
+            type="button"
+            role="tab"
+            class:active={activeTab === 'story'}
+            aria-selected={activeTab === 'story'}
+            aria-controls="inspector-panel-story"
+            on:click={() => selectTab('story')}
+          >
+            Story
+          </button>
+          <button
+            id="inspector-tab-media"
+            type="button"
+            role="tab"
+            class:active={activeTab === 'media'}
+            aria-selected={activeTab === 'media'}
+            aria-controls="inspector-panel-media"
+            on:click={() => selectTab('media')}
+          >
+            Media
+            <span>{mediaCount + imageCount}</span>
+          </button>
+          <button
+            id="inspector-tab-sources"
+            type="button"
+            role="tab"
+            class:active={activeTab === 'sources'}
+            aria-selected={activeTab === 'sources'}
+            aria-controls="inspector-panel-sources"
+            on:click={() => selectTab('sources')}
+          >
+            Sources
+            <span>{sourceCount}</span>
+          </button>
+        </div>
+
+        <nav class="event-nav" aria-label="Event navigation">
+          <button
+            type="button"
+            disabled={!previousEvent}
+            aria-label="Previous event"
+            data-tooltip={previousEvent?.title}
+            on:click={() => previousEvent && onNavigateEvent(previousEvent.id, previousEvent.route_id)}
+          >
+            <Icon name="chevron-left" />
+            <span class="sr-only">Previous event</span>
+          </button>
+          <button
+            type="button"
+            disabled={!nextEvent}
+            aria-label="Next event"
+            data-tooltip={nextEvent?.title}
+            on:click={() => nextEvent && onNavigateEvent(nextEvent.id, nextEvent.route_id)}
+          >
+            <Icon name="chevron-right" />
+            <span class="sr-only">Next event</span>
+          </button>
+        </nav>
       </div>
 
-      <dl class="event-meta">
-        {#if place}
-          <div>
-            <dt>Place</dt>
-            <dd>{place.name}, {place.borough}</dd>
-          </div>
-        {/if}
-        {#if route}
-          <div>
-            <dt>Route</dt>
-            <dd><span class="route-dot" style={`--route-color: ${route.color}`}></span>{route.title}</dd>
-          </div>
-        {/if}
-      </dl>
-
-      <div class="inspector-tabs" role="tablist" aria-label="Inspector sections">
-        <button
-          id="inspector-tab-story"
-          type="button"
-          role="tab"
-          class:active={activeTab === 'story'}
-          aria-selected={activeTab === 'story'}
-          aria-controls="inspector-panel-story"
-          on:click={() => selectTab('story')}
-        >
-          Story
-          <span>{mediaCount + imageCount + sourceCount + connectionCount}</span>
-        </button>
-        <button
-          id="inspector-tab-media"
-          type="button"
-          role="tab"
-          class:active={activeTab === 'media'}
-          aria-selected={activeTab === 'media'}
-          aria-controls="inspector-panel-media"
-          on:click={() => selectTab('media')}
-        >
-          Media
-          <span>{mediaCount + imageCount}</span>
-        </button>
-        <button
-          id="inspector-tab-sources"
-          type="button"
-          role="tab"
-          class:active={activeTab === 'sources'}
-          aria-selected={activeTab === 'sources'}
-          aria-controls="inspector-panel-sources"
-          on:click={() => selectTab('sources')}
-        >
-          Sources
-          <span>{sourceCount}</span>
-        </button>
-      </div>
-
-      <nav class="event-nav" aria-label="Event navigation">
-        <button
-          type="button"
-          disabled={!previousEvent}
-          on:click={() => previousEvent && onNavigateEvent(previousEvent.id)}
-        >
-          Previous
-        </button>
-        <button
-          type="button"
-          disabled={!nextEvent}
-          on:click={() => nextEvent && onNavigateEvent(nextEvent.id)}
-        >
-          Next
-        </button>
-      </nav>
     </header>
 
     <div class="inspector-body">
@@ -237,22 +315,43 @@
           aria-labelledby="inspector-tab-story"
           class="tab-panel"
         >
-          <section class="detail-block">
-            <h3>What happened</h3>
-            <p>{event.summary}</p>
-          </section>
+          <section class="story-reading">
+            <div class="story-copy">
+              <h3>What happened</h3>
+              <p>{event.summary}</p>
+            </div>
 
-          <section class="detail-block emphasis">
-            <h3>Why it matters</h3>
-            <p>{event.significance}</p>
+            <aside class="significance-note" aria-label="Why it matters">
+              <h3>Why it matters</h3>
+              <p>{event.significance}</p>
+            </aside>
           </section>
 
           <section class="detail-block">
             <h3>Connections</h3>
             {#if connections.length > 0}
-              <ul class="connection-list">
+              <ul class="connection-list compact">
                 {#each connections as connection}
-                  <li>{connection.summary}</li>
+                  <li>
+                    <button
+                      type="button"
+                      class="connection-row"
+                      on:click={() => onNavigateEvent(connection.event.id, connection.event.route_id)}
+                    >
+                      <span class="connection-kicker">
+                        <span>{connection.directionLabel}</span>
+                        <span>{formatConnectionType(connection)}</span>
+                      </span>
+                      <span class="connection-title">{connection.event.title}</span>
+                      <span class="connection-meta">
+                        {#if connection.route}
+                          <span class="route-dot" style={`--route-color: ${connection.route.color}`}></span>
+                        {/if}
+                        {formatConnectionMeta(connection)}
+                      </span>
+                      <span class="connection-summary">{connection.summary}</span>
+                    </button>
+                  </li>
                 {/each}
               </ul>
             {:else}
@@ -295,7 +394,9 @@
                 <h3>{selectedPreviewItem.title}</h3>
                 <p>{selectedPreviewItem.subtitle}</p>
                 <a href={selectedPreviewItem.mediaLink.url} target="_blank" rel="noreferrer">
-                  Open media link
+                  {selectedPreviewItem.mediaLink.provider === 'youtube'
+                    ? 'Open on YouTube'
+                    : 'Open media link'}
                 </a>
               </div>
             {:else}
@@ -307,7 +408,7 @@
           </section>
 
           <section class="detail-block">
-            <h3>Images and media</h3>
+            <h3>Media to explore</h3>
             {#if previewItems.length > 0}
               <div class="preview-list" aria-label="Media thumbnails">
                 {#each previewItems as previewItem}
@@ -320,7 +421,7 @@
                     {#if previewItem.kind === 'image'}
                       <img src={previewItem.previewUrl} alt="" aria-hidden="true" loading="lazy" />
                     {:else}
-                      <span class="preview-badge">{previewItem.embed ? 'Play' : 'Link'}</span>
+                      <span class="preview-badge">{previewItem.embed ? 'Play' : 'Open'}</span>
                     {/if}
                     <span class="preview-text">
                       <strong>{previewItem.title}</strong>
@@ -330,7 +431,7 @@
                 {/each}
               </div>
             {:else}
-              <p class="empty-inline">No image or media links are attached to this event yet.</p>
+              <p class="empty-inline">No media has been added for this event yet.</p>
             {/if}
           </section>
         </div>
@@ -345,10 +446,10 @@
             <h3>Source URLs</h3>
             {#if event.source_urls.length > 0}
               <ul class="source-list">
-                {#each event.source_urls as sourceUrl, index}
+                {#each event.source_urls as sourceUrl}
                   <li>
                     <a href={sourceUrl} target="_blank" rel="noreferrer">
-                      Source {index + 1}
+                      {formatSourceLabel(sourceUrl)}
                     </a>
                   </li>
                 {/each}
@@ -390,10 +491,24 @@
     top: 0;
     z-index: 1;
     display: grid;
-    gap: 0.8rem;
-    padding: 0.95rem 1rem 0.8rem;
+    gap: 0.6rem;
+    padding: 0.9rem 1rem 0.7rem;
     border-bottom: 1px solid #d9e0e7;
     background: linear-gradient(180deg, #ffffff 0%, #fbfcfd 100%);
+  }
+
+  .header-top {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: 0.4rem;
+  }
+
+  .header-controls {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.65rem;
   }
 
   .inspector-body {
@@ -402,19 +517,10 @@
     padding: 0.95rem 1rem 1rem;
   }
 
-  .eyebrow {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    align-items: center;
-    color: #6b7785;
-    font-size: 0.75rem;
-    font-weight: 700;
-  }
-
   .title-block {
     display: grid;
-    gap: 0.1rem;
+    gap: 0.18rem;
+    min-width: 0;
   }
 
   .title-block h2,
@@ -434,52 +540,32 @@
 
   .title-block p {
     color: #6b7785;
-    font-size: 0.84rem;
-    font-weight: 700;
+    font-size: 0.8rem;
+    font-weight: 600;
   }
 
-  .event-meta {
-    display: grid;
-    gap: 0.55rem;
-    margin: 0;
-  }
-
-  .event-meta div {
-    display: grid;
-    gap: 0.1rem;
-  }
-
-  dt {
-    color: #6b7785;
-    font-size: 0.72rem;
-    font-weight: 800;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-  }
-
-  dd {
-    margin: 0;
-    color: #314151;
-    font-size: 0.88rem;
-    font-weight: 700;
-    line-height: 1.3;
+  .event-meta-line,
+  .meta-route {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem;
   }
 
   .route-dot {
     display: inline-block;
     width: 0.65rem;
     height: 0.65rem;
-    margin-right: 0.35rem;
     border: 1px solid #17202a;
     border-radius: 999px;
     background: var(--route-color);
-    vertical-align: -0.05rem;
+    flex: 0 0 auto;
   }
 
   .inspector-tabs {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 0.35rem;
+    gap: 0.3rem;
   }
 
   .inspector-tabs button {
@@ -488,19 +574,19 @@
     justify-content: space-between;
     gap: 0.5rem;
     min-width: 0;
-    padding: 0.55rem 0.7rem;
-    border: 1px solid #cfd7df;
+    padding: 0.48rem 0.62rem;
+    border: 1px solid #dde4eb;
     border-radius: 8px;
-    background: #ffffff;
-    color: #314151;
+    background: #f7f9fb;
+    color: #536170;
     font: inherit;
-    font-size: 0.84rem;
-    font-weight: 700;
+    font-size: 0.82rem;
+    font-weight: 650;
   }
 
   .inspector-tabs button span {
     color: #6b7785;
-    font-size: 0.76rem;
+    font-size: 0.72rem;
     font-weight: 800;
   }
 
@@ -517,27 +603,69 @@
   }
 
   .event-nav {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(2, 2.35rem);
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.35rem;
   }
 
   .event-nav button {
-    flex: 1 1 0;
-    min-width: 0;
-    padding: 0.5rem 0.6rem;
-    border: 1px solid #cfd7df;
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 2.35rem;
+    min-width: 2.35rem;
+    min-height: 2.1rem;
+    padding: 0;
+    border: 1px solid #dde4eb;
     border-radius: 8px;
-    background: #ffffff;
-    color: #314151;
+    background: #f7f9fb;
+    color: #536170;
     font: inherit;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-weight: 700;
+  }
+
+  .event-nav button :global(.icon) {
+    width: 0.95rem;
+    height: 0.95rem;
+  }
+
+  .event-nav button[data-tooltip]:not(:disabled)::after {
+    position: absolute;
+    right: 0;
+    bottom: calc(100% + 0.45rem);
+    z-index: 2;
+    width: max-content;
+    max-width: min(18rem, 70vw);
+    padding: 0.4rem 0.55rem;
+    border: 1px solid #d7dfe7;
+    border-radius: 6px;
+    background: #17202a;
+    color: #ffffff;
+    content: attr(data-tooltip);
+    font-size: 0.74rem;
+    font-weight: 700;
+    line-height: 1.25;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(0.2rem);
+    transition:
+      opacity 120ms ease,
+      transform 120ms ease;
+    white-space: normal;
+  }
+
+  .event-nav button[data-tooltip]:not(:disabled):hover::after,
+  .event-nav button[data-tooltip]:not(:disabled):focus-visible::after {
+    opacity: 1;
+    transform: translateY(0);
   }
 
   .event-nav button:not(:disabled):hover,
   .inspector-tabs button:not(.active):hover {
     border-color: #17202a;
+    background: #ffffff;
   }
 
   .event-nav button:disabled {
@@ -551,7 +679,8 @@
   }
 
   .detail-block,
-  .preview-shell {
+  .preview-shell,
+  .story-reading {
     display: grid;
     gap: 0.45rem;
     padding: 0.85rem;
@@ -560,12 +689,27 @@
     background: #ffffff;
   }
 
-  .detail-block.emphasis {
-    border-color: #efc8be;
-    background: #fff7f4;
+  .story-reading {
+    gap: 0.75rem;
+    padding: 0.95rem 0.95rem 0.85rem;
   }
 
-  .detail-block h3 {
+  .story-copy {
+    display: grid;
+    gap: 0.45rem;
+  }
+
+  .significance-note {
+    display: grid;
+    gap: 0.35rem;
+    padding-top: 0.7rem;
+    border-top: 1px solid #e0e6ec;
+  }
+
+  .detail-block h3,
+  .story-copy h3,
+  .significance-note h3 {
+    margin: 0;
     color: #314151;
     font-size: 0.78rem;
     font-weight: 800;
@@ -574,13 +718,27 @@
   }
 
   .detail-block p,
+  .story-copy p,
+  .significance-note p,
   .empty-inline,
   .supporting-note,
   li,
   a {
+    margin: 0;
     color: #536170;
     font-size: 0.9rem;
     line-height: 1.45;
+  }
+
+  .story-copy p {
+    color: #314151;
+    font-size: 0.94rem;
+    line-height: 1.52;
+  }
+
+  .significance-note p {
+    color: #536170;
+    font-size: 0.88rem;
   }
 
   .supporting-note {
@@ -592,7 +750,74 @@
     display: grid;
     gap: 0.45rem;
     margin: 0;
+  }
+
+  .connection-list.compact {
+    padding: 0;
+    list-style: none;
+  }
+
+  .source-list {
     padding-left: 1.1rem;
+  }
+
+  .connection-row {
+    display: grid;
+    gap: 0.2rem;
+    width: 100%;
+    padding: 0.7rem 0.8rem;
+    border: 1px solid #d7dfe7;
+    border-radius: 8px;
+    background: #f9fbfc;
+    color: inherit;
+    text-align: left;
+  }
+
+  .connection-row:hover {
+    border-color: #17202a;
+    background: #ffffff;
+  }
+
+  .connection-kicker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    align-items: center;
+    color: #6b7785;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .connection-kicker span + span::before {
+    content: '•';
+    margin-right: 0.3rem;
+    color: #9aa7b4;
+  }
+
+  .connection-title {
+    color: #17202a;
+    font-size: 0.9rem;
+    font-weight: 800;
+    line-height: 1.3;
+  }
+
+  .connection-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem;
+    color: #6b7785;
+    font-size: 0.76rem;
+    font-weight: 700;
+    line-height: 1.35;
+  }
+
+  .connection-summary {
+    color: #536170;
+    font-size: 0.85rem;
+    line-height: 1.4;
   }
 
   .preview-shell {
@@ -735,11 +960,34 @@
     color: #8f2d16;
   }
 
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
   :global(.embedded-media .media-embed) {
     gap: 0.55rem;
   }
 
   :global(.embedded-media .media-embed .player) {
     border-radius: 8px;
+  }
+
+  @media (max-width: 920px) {
+    .header-controls {
+      grid-template-columns: 1fr;
+      align-items: start;
+    }
+
+    .event-nav {
+      justify-self: start;
+    }
   }
 </style>

@@ -1,6 +1,8 @@
 <script lang="ts">
   export let name:
     | 'book'
+    | 'chevron-left'
+    | 'chevron-right'
     | 'circle'
     | 'close'
     | 'collapse'
@@ -32,6 +34,10 @@
   {:else if name === 'close'}
     <path d="M18 6 6 18" />
     <path d="m6 6 12 12" />
+  {:else if name === 'chevron-left'}
+    <path d="m15 18-6-6 6-6" />
+  {:else if name === 'chevron-right'}
+    <path d="m9 18 6-6-6-6" />
   {:else if name === 'collapse'}
     <path d="m15 18-6-6 6-6" />
     <path d="M20 4v16" />

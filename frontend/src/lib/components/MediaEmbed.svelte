@@ -16,6 +16,7 @@
   let errorMessage: string | null = null;
 
   $: playableLinks = mediaLinks
+    .filter((mediaLink) => mediaLink.playback_mode !== 'external')
     .map((mediaLink) => ({ mediaLink, embed: parseYouTubeEmbed(mediaLink.url) }))
     .filter((entry): entry is { mediaLink: MediaLink; embed: NonNullable<ReturnType<typeof parseYouTubeEmbed>> } =>
       Boolean(entry.embed)
@@ -60,7 +61,13 @@
     <div class="media-meta">
       <div>
         <strong>{selectedEntry.mediaLink.title}</strong>
-        <span>{selectedEntry.mediaLink.review_status} · {selectedEntry.embed.kind}</span>
+        <span>
+          {#if showReviewActions}
+            {selectedEntry.mediaLink.review_status} · {selectedEntry.embed.kind}
+          {:else}
+            {selectedEntry.embed.kind}
+          {/if}
+        </span>
       </div>
     </div>
 

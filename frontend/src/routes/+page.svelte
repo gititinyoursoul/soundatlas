@@ -14,7 +14,8 @@
     Place,
     ReviewAction,
     ReviewQueueItem,
-    Route
+    Route,
+    StoryConnectionItem
   } from '$lib/types/soundatlas';
 
   let routes: Route[] = [];
@@ -103,11 +104,7 @@
       ? 'API unavailable'
       : `${routeEvents.length} events visible`;
   $: selectedConnections = selectedEvent
-    ? connections.filter(
-        (connection) =>
-          connection.from_event_id === selectedEvent?.id ||
-          connection.to_event_id === selectedEvent?.id
-      )
+    ? buildStoryConnectionItems(selectedEvent, connections, events, places, routes)
     : [];
 
   onMount(async () => {
@@ -130,7 +127,11 @@
     }
   });
 
-  function selectEvent(eventId: string): void {
+  function selectEvent(eventId: string, routeId?: string): void {
+    if (routeId) {
+      selectedRouteId = routeId;
+    }
+
     selectedEventId = eventId;
   }
 
@@ -138,6 +139,40 @@
     selectedRouteId = routeId;
     selectedEventId = getFirstEventIdForRoute(events, routeId);
     activeNavigationItemId = 'routes';
+  }
+
+  function buildStoryConnectionItems(
+    baseEvent: Event,
+    allConnections: Connection[],
+    allEvents: Event[],
+    allPlaces: Place[],
+    allRoutes: Route[]
+  ): StoryConnectionItem[] {
+    return allConnections.flatMap<StoryConnectionItem>((connection) => {
+      if (connection.from_event_id !== baseEvent.id && connection.to_event_id !== baseEvent.id) {
+        return [];
+      }
+
+      const connectedEventId =
+        connection.from_event_id === baseEvent.id ? connection.to_event_id : connection.from_event_id;
+      const connectedEvent = allEvents.find((event) => event.id === connectedEventId);
+
+      if (!connectedEvent) {
+        return [];
+      }
+
+      return [
+        {
+          id: connection.id,
+          summary: connection.summary,
+          type: connection.type,
+          directionLabel: connection.from_event_id === baseEvent.id ? 'Leads to' : 'Linked from',
+          event: connectedEvent,
+          place: allPlaces.find((place) => place.id === connectedEvent.place_id) ?? null,
+          route: allRoutes.find((route) => route.id === connectedEvent.route_id) ?? null
+        }
+      ];
+    });
   }
 
   function selectReviewItem(item: ReviewQueueItem): void {
