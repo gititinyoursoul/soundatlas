@@ -38,11 +38,6 @@
   let placeGeometryLabelLayer: import('leaflet').LayerGroup | null = null;
   let leaflet: typeof import('leaflet') | null = null;
   let lastFramedRouteId: string | null = null;
-  let computedMarkerCount = 0;
-  let renderedMarkerCount = 0;
-  let markerRenderError: string | null = null;
-
-  $: computedMarkerCount = getEventMarkerPlacements(events, places, routes).length;
 
   $: if (leaflet && placeGeometryLayer && placeGeometryLabelLayer && map) {
     renderPlaceGeometries(events, selectedPlace?.id ?? null, selectedRoute?.color ?? null);
@@ -201,16 +196,13 @@
       const placements = renderMarkers(currentSelectedEventId, currentEvents, currentPlaces, currentRoutes, {
         panToSelectedEvent: !routeChanged
       });
-      renderedMarkerCount = placements.length;
-      markerRenderError = null;
 
       if (routeChanged) {
         frameRouteBounds(placements);
         lastFramedRouteId = currentSelectedRouteId;
       }
     } catch (error) {
-      renderedMarkerCount = 0;
-      markerRenderError = error instanceof Error ? error.message : 'Marker rendering failed';
+      console.error(error);
     }
   }
 
@@ -350,17 +342,6 @@
 <div class="map-shell">
   <div bind:this={mapContainer} class="map" aria-label="SoundAtlas map"></div>
 
-  <div class="map-debug" aria-label="Map debug state">
-    <span>route: {selectedRouteId ?? 'none'}</span>
-    <span>event: {selectedEventId ?? 'none'}</span>
-    <span>route events: {events.length}</span>
-    <span>placements: {computedMarkerCount}</span>
-    <span>markers: {renderedMarkerCount}</span>
-    {#if markerRenderError}
-      <span class="error">error: {markerRenderError}</span>
-    {/if}
-  </div>
-
   {#if events.length === 0}
     <div class="map-empty">No events in the active time range.</div>
   {/if}
@@ -397,30 +378,6 @@
     width: 100%;
     height: 100%;
     min-height: 480px;
-  }
-
-  .map-debug {
-    position: absolute;
-    z-index: 500;
-    top: 1rem;
-    right: 1rem;
-    display: grid;
-    gap: 0.18rem;
-    padding: 0.55rem 0.68rem;
-    border: 1px solid rgba(23, 32, 42, 0.14);
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.92);
-    color: #314151;
-    font-size: 0.72rem;
-    font-weight: 700;
-    line-height: 1.2;
-    font-family: ui-monospace, SFMono-Regular, SF Mono, Consolas, Liberation Mono, Menlo, monospace;
-    box-shadow: 0 8px 24px rgba(23, 32, 42, 0.12);
-    pointer-events: none;
-  }
-
-  .map-debug .error {
-    color: #8e1f1f;
   }
 
   :global(.research-atlas-tiles) {
