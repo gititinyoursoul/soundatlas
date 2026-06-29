@@ -380,7 +380,7 @@ def test_v2_dry_run_does_not_write_seed_data(
     assert "Enriched 1 event(s)." in output
 
 
-def test_preview_queries_prints_event_plan_without_provider_calls(
+def test_preview_queries_prints_legacy_queries_without_provider_calls(
     tmp_path: Path,
     monkeypatch,
     capsys,
@@ -407,6 +407,33 @@ def test_preview_queries_prints_event_plan_without_provider_calls(
     output = capsys.readouterr().out
     assert exit_code == 0
     assert events_path.read_text(encoding="utf-8") == original_text
+    assert "Event: kool-herc-back-to-school-jam" in output
+    assert "legacy" in output
+    assert "[1] Kool Herc Back to School Jam 1520 Sedgwick Avenue 1973" in output
+
+
+def test_preview_queries_can_print_v2_plan(
+    tmp_path: Path,
+    monkeypatch,
+    capsys,
+) -> None:
+    events_path, routes_path, places_path = write_preview_seed_files(tmp_path)
+    monkeypatch.setattr(enrich_image_links, "EVENTS_PATH", events_path)
+    monkeypatch.setattr(enrich_image_links, "ROUTES_PATH", routes_path)
+    monkeypatch.setattr(enrich_image_links, "PLACES_PATH", places_path)
+
+    exit_code = main(
+        [
+            "--event-id",
+            "kool-herc-back-to-school-jam",
+            "--preview-queries",
+            "--query-planner",
+            "v2",
+        ],
+    )
+
+    output = capsys.readouterr().out
+    assert exit_code == 0
     assert "Event: kool-herc-back-to-school-jam" in output
     assert "venue_photo" in output
     assert "[1/high] 1520 Sedgwick Avenue" in output

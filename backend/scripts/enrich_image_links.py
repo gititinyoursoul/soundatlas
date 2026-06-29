@@ -89,6 +89,7 @@ def main(argv: list[str] | None = None) -> int:
                 places_payload=places_payload,
                 event_id=args.event_id,
                 route_id=args.route_id,
+                query_planner=args.query_planner,
             )
         except ValueError as exc:
             print(str(exc), file=sys.stderr)
@@ -139,6 +140,7 @@ def print_image_query_preview(
     places_payload: dict[str, Any],
     event_id: str | None,
     route_id: str | None,
+    query_planner: str,
 ) -> None:
     routes_by_id = build_routes_by_id(routes_payload)
     places_by_id = build_places_by_id(places_payload)
@@ -153,8 +155,14 @@ def print_image_query_preview(
     for event in events:
         route = routes_by_id.get(event.get("route_id"), {})
         place = places_by_id.get(event.get("place_id"), {})
-        brief = build_retrieval_brief(event=event, route=route, place=place)
-        output_blocks.append(format_image_query_preview(event=event, plans=plan_image_queries(brief)))
+        output_blocks.append(
+            format_image_query_preview(
+                event=event,
+                route=route,
+                place=place,
+                query_planner=query_planner,
+            ),
+        )
 
     print("\n\n".join(output_blocks))
 
@@ -194,9 +202,28 @@ def select_events(
     return events
 
 
-def format_image_query_preview(event: dict[str, Any], plans: tuple[ImageQueryPlan, ...]) -> str:
+def format_image_query_preview(
+    event: dict[str, Any],
+    route: dict[str, Any],
+    place: dict[str, Any],
+    query_planner: str,
+) -> str:
     event_id = event.get("id") or "(unknown event)"
     lines = [f"Event: {event_id}"]
+    if query_planner == "legacy":
+        queries = build_event_image_queries(event=event, route=route, place=place)
+        if not queries:
+            lines.append("  No image queries planned.")
+            return "\n".join(lines)
+        lines.append("  legacy")
+        for index, query in enumerate(queries, start=1):
+            lines.append(f"    [{index}] {query}")
+        return "\n".join(lines)
+    if query_planner != "v2":
+        raise ValueError(f"Unsupported query planner: {query_planner}")
+
+    brief = build_retrieval_brief(event=event, route=route, place=place)
+    plans = plan_image_queries(brief)
     if not plans:
         lines.append("  No image queries planned.")
         return "\n".join(lines)
