@@ -4,6 +4,9 @@
 
 This document describes the practical command sequence for the YouTube-only media retrieval MVP.
 
+The shared enrichment workflow is documented in `docs/enrichment-workflow.md`.
+This page stays command-focused.
+
 Use it when you want to enrich one or more SoundAtlas events with draft YouTube `media_links`.
 
 ## Workflow Overview
@@ -15,6 +18,9 @@ Codex creates or reviews a query plan
 → CLI merges normalized results into event media_links
 → editor reviews generated draft links
 ```
+
+For the shared enrichment flow and split points, see
+`docs/enrichment-workflow.md`.
 
 ## 1. Choose An Event
 

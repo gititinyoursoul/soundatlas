@@ -5,6 +5,9 @@
 This document describes the practical command sequence for the Wikimedia-only
 image enrichment pass.
 
+The shared enrichment workflow is documented in
+`docs/enrichment-workflow.md`. This page stays command-focused.
+
 Use it when you want to enrich one or more SoundAtlas events with draft
 `image_links`.
 
@@ -18,13 +21,23 @@ CLI plans event-specific image queries
 -> editor reviews generated draft links
 ```
 
-The default query planner is `v2`, which starts with exact place, artist, work,
-or event terms before broader fallback queries. The legacy planner is still
-available for comparison with `--query-planner legacy`.
+For the shared enrichment flow and split points, see
+`docs/enrichment-workflow.md`.
+
+The default query planner is `v2`. It builds a retrieval brief from the event,
+route, and place data, then plans a short ladder of searches that starts with
+exact place, artist, work, or event terms before falling back to broader route
+and archive queries. The legacy planner is still available for comparison with
+`--query-planner legacy`.
+
+The v2 preview groups queries by target type and shows the planner's priority
+and confidence hint for each query. Use that preview to understand why a broad
+event search may have fewer results than a more specific place- or artist-led
+query.
 
 ## 0. Preview Query Plans
 
-Preview the planned query ladder before calling Wikimedia:
+Preview the planned v2 query ladder before calling Wikimedia:
 
 ```bash
 cd backend

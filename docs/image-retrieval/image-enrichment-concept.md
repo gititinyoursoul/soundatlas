@@ -13,6 +13,10 @@ Images should contextualize events through places, scenes, artists, releases,
 flyers, club culture, urban history, and archival material. The goal is an
 auditable external link layer, not an image database inside the repository.
 
+The shared enrichment workflow is documented in
+`docs/enrichment-workflow.md`. This concept focuses on the image-specific
+branch of that pipeline.
+
 ## Core Principles
 
 - Do not add image files to the repository.
@@ -136,6 +140,13 @@ seed data:
 - event tags
 - known artist, venue, label, release, film, or organization terms already
   present in the event text
+
+The current v2 planner turns that input into a retrieval brief, then orders the
+searches from most specific to broadest:
+
+- exact place, artist, work, event, or organization terms first
+- route and theme terms next
+- archive, flyer, press, or map fallbacks last
 
 The target candidate mix per event is:
 
