@@ -12,8 +12,10 @@ BACKEND_ROOT = Path(__file__).resolve().parents[1]
 if str(BACKEND_ROOT) not in sys.path:
     sys.path.insert(0, str(BACKEND_ROOT))
 
-from app.media_enrichment.services import MediaProviderError, request_json
 from app.link_ignores import build_ignored_link_index, link_is_ignored
+from app.media_enrichment.image_query_planner import ImageQueryPlan, plan_image_queries
+from app.media_enrichment.retrieval_brief import build_retrieval_brief
+from app.media_enrichment.services import MediaProviderError, request_json
 from app.schemas import ImageLink
 
 
@@ -56,6 +58,11 @@ def main(argv: list[str] | None = None) -> int:
         help="Image provider to query. May be repeated. Defaults to wikimedia.",
     )
     parser.add_argument("--dry-run", action="store_true", help="Print changes without writing.")
+    parser.add_argument(
+        "--preview-queries",
+        action="store_true",
+        help="Print planned image queries without calling providers or writing seed data.",
+    )
     args = parser.parse_args(argv)
 
     providers = args.provider or ["wikimedia"]
@@ -66,6 +73,21 @@ def main(argv: list[str] | None = None) -> int:
     events_payload = read_json(EVENTS_PATH)
     routes_payload = read_json(ROUTES_PATH)
     places_payload = read_json(PLACES_PATH)
+
+    if args.preview_queries:
+        try:
+            print_image_query_preview(
+                events_payload=events_payload,
+                routes_payload=routes_payload,
+                places_payload=places_payload,
+                event_id=args.event_id,
+                route_id=args.route_id,
+            )
+        except ValueError as exc:
+            print(str(exc), file=sys.stderr)
+            return 2
+        return 0
+
     ignored_link_index = build_ignored_link_index(events_payload)
 
     try:
@@ -101,6 +123,83 @@ def main(argv: list[str] | None = None) -> int:
 
 def read_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def print_image_query_preview(
+    events_payload: dict[str, Any],
+    routes_payload: dict[str, Any],
+    places_payload: dict[str, Any],
+    event_id: str | None,
+    route_id: str | None,
+) -> None:
+    routes_by_id = build_routes_by_id(routes_payload)
+    places_by_id = build_places_by_id(places_payload)
+    events = select_events(
+        events_payload=events_payload,
+        routes_payload=routes_payload,
+        event_id=event_id,
+        route_id=route_id,
+    )
+
+    output_blocks = []
+    for event in events:
+        route = routes_by_id.get(event.get("route_id"), {})
+        place = places_by_id.get(event.get("place_id"), {})
+        brief = build_retrieval_brief(event=event, route=route, place=place)
+        output_blocks.append(format_image_query_preview(event=event, plans=plan_image_queries(brief)))
+
+    print("\n\n".join(output_blocks))
+
+
+def build_routes_by_id(routes_payload: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    return {
+        route["id"]: route
+        for route in routes_payload.get("routes", [])
+        if isinstance(route, dict) and isinstance(route.get("id"), str)
+    }
+
+
+def build_places_by_id(places_payload: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    return {
+        place["id"]: place
+        for place in places_payload.get("places", [])
+        if isinstance(place, dict) and isinstance(place.get("id"), str)
+    }
+
+
+def select_events(
+    events_payload: dict[str, Any],
+    routes_payload: dict[str, Any],
+    event_id: str | None,
+    route_id: str | None,
+) -> list[dict[str, Any]]:
+    events = [
+        event
+        for event in events_payload.get("events", [])
+        if isinstance(event, dict) and event_matches_filters(event, event_id=event_id, route_id=route_id)
+    ]
+
+    if event_id and not events:
+        raise ValueError(f"No event found for --event-id '{event_id}'.")
+    if route_id and not any(route.get("id") == route_id for route in routes_payload.get("routes", [])):
+        raise ValueError(f"No route found for --route-id '{route_id}'.")
+    return events
+
+
+def format_image_query_preview(event: dict[str, Any], plans: tuple[ImageQueryPlan, ...]) -> str:
+    event_id = event.get("id") or "(unknown event)"
+    lines = [f"Event: {event_id}"]
+    if not plans:
+        lines.append("  No image queries planned.")
+        return "\n".join(lines)
+
+    current_target_type = ""
+    for plan in plans:
+        if plan.target_type != current_target_type:
+            current_target_type = plan.target_type
+            lines.append(f"  {current_target_type}")
+        lines.append(f"    [{plan.priority}/{plan.confidence_hint}] {plan.query}")
+    return "\n".join(lines)
 
 
 def request_wikimedia_json(
@@ -155,26 +254,14 @@ def enrich_events_payload(
     if unsupported_providers:
         raise ValueError(f"Unsupported provider(s): {', '.join(unsupported_providers)}")
 
-    routes_by_id = {
-        route["id"]: route
-        for route in routes_payload.get("routes", [])
-        if isinstance(route, dict) and isinstance(route.get("id"), str)
-    }
-    places_by_id = {
-        place["id"]: place
-        for place in places_payload.get("places", [])
-        if isinstance(place, dict) and isinstance(place.get("id"), str)
-    }
-    events = [
-        event
-        for event in events_payload.get("events", [])
-        if event_matches_filters(event, event_id=event_id, route_id=route_id)
-    ]
-
-    if event_id and not events:
-        raise ValueError(f"No event found for --event-id '{event_id}'.")
-    if route_id and not any(route.get("id") == route_id for route in routes_payload.get("routes", [])):
-        raise ValueError(f"No route found for --route-id '{route_id}'.")
+    routes_by_id = build_routes_by_id(routes_payload)
+    places_by_id = build_places_by_id(places_payload)
+    events = select_events(
+        events_payload=events_payload,
+        routes_payload=routes_payload,
+        event_id=event_id,
+        route_id=route_id,
+    )
 
     changed_events = 0
     for event in events:

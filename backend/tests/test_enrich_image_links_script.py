@@ -284,6 +284,86 @@ def test_dry_run_does_not_write_seed_data(
     assert "Enriched 1 event(s)." in output
 
 
+def test_preview_queries_prints_event_plan_without_provider_calls(
+    tmp_path: Path,
+    monkeypatch,
+    capsys,
+) -> None:
+    events_path, routes_path, places_path = write_preview_seed_files(tmp_path)
+    original_text = events_path.read_text(encoding="utf-8")
+
+    def fail_request(*args, **kwargs):
+        raise AssertionError("preview should not call Wikimedia")
+
+    monkeypatch.setattr(enrich_image_links, "EVENTS_PATH", events_path)
+    monkeypatch.setattr(enrich_image_links, "ROUTES_PATH", routes_path)
+    monkeypatch.setattr(enrich_image_links, "PLACES_PATH", places_path)
+    monkeypatch.setattr(enrich_image_links, "request_wikimedia_json", fail_request)
+
+    exit_code = main(
+        [
+            "--event-id",
+            "kool-herc-back-to-school-jam",
+            "--preview-queries",
+        ],
+    )
+
+    output = capsys.readouterr().out
+    assert exit_code == 0
+    assert events_path.read_text(encoding="utf-8") == original_text
+    assert "Event: kool-herc-back-to-school-jam" in output
+    assert "venue_photo" in output
+    assert "[1/high] 1520 Sedgwick Avenue" in output
+    assert "[2/medium] DJ Kool Herc" in output
+
+
+def test_preview_queries_respects_route_filter(
+    tmp_path: Path,
+    monkeypatch,
+    capsys,
+) -> None:
+    events_path, routes_path, places_path = write_preview_seed_files(tmp_path)
+    monkeypatch.setattr(enrich_image_links, "EVENTS_PATH", events_path)
+    monkeypatch.setattr(enrich_image_links, "ROUTES_PATH", routes_path)
+    monkeypatch.setattr(enrich_image_links, "PLACES_PATH", places_path)
+
+    exit_code = main(
+        [
+            "--route-id",
+            "birth-of-hip-hop",
+            "--preview-queries",
+        ],
+    )
+
+    output = capsys.readouterr().out
+    assert exit_code == 0
+    assert "Event: kool-herc-back-to-school-jam" in output
+    assert "Event: other-route-event" not in output
+
+
+def test_preview_queries_reports_unknown_filters(
+    tmp_path: Path,
+    monkeypatch,
+    capsys,
+) -> None:
+    events_path, routes_path, places_path = write_preview_seed_files(tmp_path)
+    monkeypatch.setattr(enrich_image_links, "EVENTS_PATH", events_path)
+    monkeypatch.setattr(enrich_image_links, "ROUTES_PATH", routes_path)
+    monkeypatch.setattr(enrich_image_links, "PLACES_PATH", places_path)
+
+    exit_code = main(
+        [
+            "--event-id",
+            "missing-event",
+            "--preview-queries",
+        ],
+    )
+
+    captured = capsys.readouterr()
+    assert exit_code == 2
+    assert "No event found for --event-id 'missing-event'." in captured.err
+
+
 def build_wikimedia_request_fn():
     def fake_request(url: str, params: dict[str, str] | None = None) -> dict[str, Any]:
         assert url == enrich_image_links.WIKIMEDIA_API_URL
@@ -358,6 +438,54 @@ def build_event(overrides: dict[str, Any] | None = None, **keyword_overrides: An
         event.update(overrides)
     event.update(keyword_overrides)
     return event
+
+
+def write_preview_seed_files(tmp_path: Path) -> tuple[Path, Path, Path]:
+    events_path = tmp_path / "events.json"
+    routes_path = tmp_path / "routes.json"
+    places_path = tmp_path / "places.json"
+    events_path.write_text(
+        json.dumps(
+            {
+                "events": [
+                    build_event(),
+                    build_event(
+                        {
+                            "id": "other-route-event",
+                            "route_id": "other-route",
+                            "place_id": "other-place",
+                            "title": "Other Event",
+                        },
+                    ),
+                ],
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    routes_path.write_text(
+        json.dumps(
+            {
+                "routes": [
+                    build_route(),
+                    build_route({"id": "other-route", "title": "Other Route"}),
+                ],
+            },
+        ),
+        encoding="utf-8",
+    )
+    places_path.write_text(
+        json.dumps(
+            {
+                "places": [
+                    build_place(),
+                    build_place({"id": "other-place", "name": "Other Place"}),
+                ],
+            },
+        ),
+        encoding="utf-8",
+    )
+    return events_path, routes_path, places_path
 
 
 def build_route(overrides: dict[str, Any] | None = None) -> dict[str, Any]:
