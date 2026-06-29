@@ -176,21 +176,6 @@
           "thumbnail_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/1520_Sedwick_Ave.%2C_Bronx%2C_New_York1.JPG/960px-1520_Sedwick_Ave.%2C_Bronx%2C_New_York1.JPG",
           "creator": "Bigtimepeace",
           "license": "Public domain"
-        },
-        {
-          "provider": "wikimedia",
-          "type": "venue_photo",
-          "title": "1520 Sedwick Ave., Bronx, New York2",
-          "image_url": "https://upload.wikimedia.org/wikipedia/commons/b/b0/1520_Sedwick_Ave.%2C_Bronx%2C_New_York2.JPG",
-          "source_url": "https://commons.wikimedia.org/wiki/File:1520_Sedwick_Ave.,_Bronx,_New_York2.JPG",
-          "rights_status": "public_domain",
-          "alt_text": "Another photo (see File:1520_Sedwick_Ave.,_Bronx,_New_York1.JPG for first version) of the front of 1520 Sedgwick Avenue in the Western Bronx. Kool Herc, generally credited as the...",
-          "query": "1520 Sedgwick Avenue",
-          "confidence": 1.0,
-          "review_status": "draft",
-          "thumbnail_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/1520_Sedwick_Ave.%2C_Bronx%2C_New_York2.JPG/960px-1520_Sedwick_Ave.%2C_Bronx%2C_New_York2.JPG",
-          "creator": "Bigtimepeace",
-          "license": "Public domain"
         }
       ]
     },
@@ -1535,6 +1520,15 @@
         "https://commons.wikimedia.org/wiki/File:161st_St_River_Av_td_(2019-01-24)_57.jpg",
         "https://upload.wikimedia.org/wikipedia/commons/1/1b/161st_St_River_Av_td_%282019-01-24%29_57.jpg",
         "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/161st_St_River_Av_td_%282019-01-24%29_57.jpg/960px-161st_St_River_Av_td_%282019-01-24%29_57.jpg"
+      ]
+    },
+    {
+      "event_id": "kool-herc-back-to-school-jam",
+      "kind": "image",
+      "values": [
+        "https://commons.wikimedia.org/wiki/File:1520_Sedwick_Ave.,_Bronx,_New_York2.JPG",
+        "https://upload.wikimedia.org/wikipedia/commons/b/b0/1520_Sedwick_Ave.%2C_Bronx%2C_New_York2.JPG",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/1520_Sedwick_Ave.%2C_Bronx%2C_New_York2.JPG/960px-1520_Sedwick_Ave.%2C_Bronx%2C_New_York2.JPG"
       ]
     }
   ]
