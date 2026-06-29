@@ -67,8 +67,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--query-planner",
         choices=sorted(SUPPORTED_QUERY_PLANNERS),
-        default="legacy",
-        help="Query planner to use for provider searches. Defaults to legacy.",
+        default="v2",
+        help="Query planner to use for provider searches. Defaults to v2.",
     )
     args = parser.parse_args(argv)
 
@@ -282,7 +282,7 @@ def enrich_events_payload(
     route_id: str | None,
     limit: int,
     providers: list[str],
-    query_planner: str = "legacy",
+    query_planner: str = "v2",
     ignored_link_index: dict[tuple[str, str], set[str]] | None = None,
     request_fn: RequestJson = request_json,
 ) -> int:
@@ -353,7 +353,7 @@ def fetch_wikimedia_image_candidates(
     route: dict[str, Any],
     place: dict[str, Any],
     limit: int,
-    query_planner: str = "legacy",
+    query_planner: str = "v2",
     ignored_link_index: dict[tuple[str, str], set[str]] | None = None,
     request_fn: RequestJson = request_json,
 ) -> list[dict[str, Any]]:

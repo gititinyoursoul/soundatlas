@@ -11,10 +11,31 @@ Use it when you want to enrich one or more SoundAtlas events with draft
 ## Workflow Overview
 
 ```text
-CLI queries Wikimedia Commons
+CLI plans event-specific image queries
+-> CLI queries Wikimedia Commons
 -> CLI normalizes image metadata into image_links
 -> CLI previews or writes draft links into seed data
 -> editor reviews generated draft links
+```
+
+The default query planner is `v2`, which starts with exact place, artist, work,
+or event terms before broader fallback queries. The legacy planner is still
+available for comparison with `--query-planner legacy`.
+
+## 0. Preview Query Plans
+
+Preview the planned query ladder before calling Wikimedia:
+
+```bash
+cd backend
+uv run python scripts/enrich_image_links.py --event-id kool-herc-back-to-school-jam --preview-queries
+```
+
+Compare the legacy query planner when needed:
+
+```bash
+cd backend
+uv run python scripts/enrich_image_links.py --event-id kool-herc-back-to-school-jam --preview-queries --query-planner legacy
 ```
 
 ## 1. Preview One Event
@@ -113,6 +134,13 @@ Use the explicit provider flag:
 ```bash
 cd backend
 uv run python scripts/enrich_image_links.py --event-id kool-herc-back-to-school-jam --provider wikimedia --dry-run
+```
+
+Use the legacy query planner for comparison:
+
+```bash
+cd backend
+uv run python scripts/enrich_image_links.py --event-id kool-herc-back-to-school-jam --query-planner legacy --dry-run
 ```
 
 Combine route and per-event image limit:

@@ -54,6 +54,20 @@ def test_query_builder_includes_concise_place_and_notable_term_queries() -> None
     assert all("'" not in query for query in queries)
 
 
+def test_legacy_query_planner_uses_legacy_queries() -> None:
+    queries = build_wikimedia_search_queries(
+        event=build_event(),
+        route=build_route(),
+        place=build_place(),
+        query_planner="legacy",
+    )
+
+    assert queries[:2] == [
+        "Kool Herc Back to School Jam 1520 Sedgwick Avenue 1973",
+        "Kool Herc Back to School Jam",
+    ]
+
+
 def test_v2_query_planner_uses_planned_queries() -> None:
     queries = build_wikimedia_search_queries(
         event=build_event(),
@@ -229,7 +243,7 @@ def test_enrich_events_payload_filters_event_route_and_limit() -> None:
     assert events_payload["events"][2]["image_links"] == []
 
 
-def test_enrich_events_payload_can_use_v2_query_planner() -> None:
+def test_enrich_events_payload_uses_v2_query_planner_by_default() -> None:
     searched_queries: list[str] = []
 
     def fake_request(url: str, params: dict[str, str] | None = None) -> dict[str, Any]:
@@ -264,13 +278,55 @@ def test_enrich_events_payload_can_use_v2_query_planner() -> None:
         route_id=None,
         limit=1,
         providers=["wikimedia"],
-        query_planner="v2",
         request_fn=fake_request,
     )
 
     assert changed_events == 1
     assert searched_queries[0] == "1520 Sedgwick Avenue"
     assert events_payload["events"][0]["image_links"][0]["query"] == "1520 Sedgwick Avenue"
+
+
+def test_enrich_events_payload_can_use_legacy_query_planner() -> None:
+    searched_queries: list[str] = []
+
+    def fake_request(url: str, params: dict[str, str] | None = None) -> dict[str, Any]:
+        assert params is not None
+        if params.get("list") == "search":
+            searched_queries.append(params["srsearch"])
+            return {
+                "query": {
+                    "search": [
+                        {"title": "File:1520 Sedgwick Avenue.jpg"},
+                    ],
+                },
+            }
+        return {
+            "query": {
+                "pages": {
+                    "1": build_imageinfo_page(
+                        title="File:1520 Sedgwick Avenue.jpg",
+                        object_name="1520 Sedgwick Avenue",
+                        description="1520 Sedgwick Avenue in the Bronx.",
+                    ),
+                },
+            },
+        }
+
+    events_payload = {"events": [build_event({"image_links": []})]}
+    changed_events = enrich_events_payload(
+        events_payload=events_payload,
+        routes_payload={"routes": [build_route()]},
+        places_payload={"places": [build_place()]},
+        event_id="kool-herc-back-to-school-jam",
+        route_id=None,
+        limit=1,
+        providers=["wikimedia"],
+        query_planner="legacy",
+        request_fn=fake_request,
+    )
+
+    assert changed_events == 1
+    assert searched_queries[0] == "Kool Herc Back to School Jam 1520 Sedgwick Avenue 1973"
 
 
 def test_enrich_events_payload_skips_ignored_image_links() -> None:
@@ -310,7 +366,7 @@ def test_enrich_events_payload_skips_ignored_image_links() -> None:
     assert events_payload["events"][0]["image_links"] == []
 
 
-def test_dry_run_does_not_write_seed_data(
+def test_dry_run_does_not_write_seed_data_with_default_v2_planner(
     tmp_path: Path,
     monkeypatch,
     capsys,
@@ -344,7 +400,7 @@ def test_dry_run_does_not_write_seed_data(
     assert "Enriched 1 event(s)." in output
 
 
-def test_v2_dry_run_does_not_write_seed_data(
+def test_legacy_dry_run_does_not_write_seed_data(
     tmp_path: Path,
     monkeypatch,
     capsys,
@@ -368,7 +424,7 @@ def test_v2_dry_run_does_not_write_seed_data(
             "--event-id",
             "kool-herc-back-to-school-jam",
             "--query-planner",
-            "v2",
+            "legacy",
             "--dry-run",
         ],
     )
@@ -380,7 +436,7 @@ def test_v2_dry_run_does_not_write_seed_data(
     assert "Enriched 1 event(s)." in output
 
 
-def test_preview_queries_prints_legacy_queries_without_provider_calls(
+def test_preview_queries_prints_default_v2_plan_without_provider_calls(
     tmp_path: Path,
     monkeypatch,
     capsys,
@@ -408,11 +464,12 @@ def test_preview_queries_prints_legacy_queries_without_provider_calls(
     assert exit_code == 0
     assert events_path.read_text(encoding="utf-8") == original_text
     assert "Event: kool-herc-back-to-school-jam" in output
-    assert "legacy" in output
-    assert "[1] Kool Herc Back to School Jam 1520 Sedgwick Avenue 1973" in output
+    assert "venue_photo" in output
+    assert "[1/high] 1520 Sedgwick Avenue" in output
+    assert "[2/medium] DJ Kool Herc" in output
 
 
-def test_preview_queries_can_print_v2_plan(
+def test_preview_queries_can_print_legacy_queries(
     tmp_path: Path,
     monkeypatch,
     capsys,
@@ -428,16 +485,15 @@ def test_preview_queries_can_print_v2_plan(
             "kool-herc-back-to-school-jam",
             "--preview-queries",
             "--query-planner",
-            "v2",
+            "legacy",
         ],
     )
 
     output = capsys.readouterr().out
     assert exit_code == 0
     assert "Event: kool-herc-back-to-school-jam" in output
-    assert "venue_photo" in output
-    assert "[1/high] 1520 Sedgwick Avenue" in output
-    assert "[2/medium] DJ Kool Herc" in output
+    assert "legacy" in output
+    assert "[1] Kool Herc Back to School Jam 1520 Sedgwick Avenue 1973" in output
 
 
 def test_preview_queries_respects_route_filter(
