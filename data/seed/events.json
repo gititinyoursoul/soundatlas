@@ -278,7 +278,7 @@
           "alt_text": "Flash at the wheels of steel",
           "query": "Grandmaster Flash",
           "confidence": 0.75,
-          "review_status": "draft",
+          "review_status": "reviewed",
           "thumbnail_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Dj_Grandmaster_Flash-01-mika.jpg/960px-Dj_Grandmaster_Flash-01-mika.jpg",
           "creator": "Mika-photography",
           "license": "CC BY-SA 3.0",
@@ -294,7 +294,7 @@
           "alt_text": "DJ Grandmaster Flash, Netherlands 1998",
           "query": "Grandmaster Flash",
           "confidence": 0.75,
-          "review_status": "draft",
+          "review_status": "reviewed",
           "thumbnail_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Dj_grandmaster_flash-05-mika.jpg/960px-Dj_grandmaster_flash-05-mika.jpg",
           "creator": "Mika-photography",
           "license": "CC BY-SA 3.0",
@@ -438,40 +438,7 @@
         "https://www.arts.gov/stories/other/afrika-bambaataa-renegade-funk"
       ],
       "media_links": [],
-      "image_links": [
-        {
-          "provider": "wikimedia",
-          "type": "venue_photo",
-          "title": "161st St River Av td (2019-01-24) 57",
-          "image_url": "https://upload.wikimedia.org/wikipedia/commons/1/1b/161st_St_River_Av_td_%282019-01-24%29_57.jpg",
-          "source_url": "https://commons.wikimedia.org/wiki/File:161st_St_River_Av_td_(2019-01-24)_57.jpg",
-          "rights_status": "open_license",
-          "alt_text": "A Washington Heights–Riverside Drive-bound Bx6 local bus crossing underneath the 161st Street–Yankee Stadium IRT station, traveling west on 161st Street at River Avenue in Concour...",
-          "query": "Bronx River Houses",
-          "confidence": 0.5,
-          "review_status": "draft",
-          "thumbnail_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/161st_St_River_Av_td_%282019-01-24%29_57.jpg/960px-161st_St_River_Av_td_%282019-01-24%29_57.jpg",
-          "creator": "Tdorante10",
-          "license": "CC BY-SA 4.0",
-          "license_url": "https://creativecommons.org/licenses/by-sa/4.0"
-        },
-        {
-          "provider": "wikimedia",
-          "type": "venue_photo",
-          "title": "161st St River Av td (2019-01-24) 69",
-          "image_url": "https://upload.wikimedia.org/wikipedia/commons/f/fc/161st_St_River_Av_td_%282019-01-24%29_69.jpg",
-          "source_url": "https://commons.wikimedia.org/wiki/File:161st_St_River_Av_td_(2019-01-24)_69.jpg",
-          "rights_status": "open_license",
-          "alt_text": "An El Grant Highway–University Avenue (Highbridge)-bound Bx13 bus about to enter service, turning south from River Avenue onto East 161st Street in Concourse, Bronx. Short run Bx1...",
-          "query": "Bronx River Houses",
-          "confidence": 0.5,
-          "review_status": "draft",
-          "thumbnail_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/161st_St_River_Av_td_%282019-01-24%29_69.jpg/960px-161st_St_River_Av_td_%282019-01-24%29_69.jpg",
-          "creator": "Tdorante10",
-          "license": "CC BY-SA 4.0",
-          "license_url": "https://creativecommons.org/licenses/by-sa/4.0"
-        }
-      ]
+      "image_links": []
     },
     {
       "id": "wild-style-global-visibility",
@@ -1549,6 +1516,26 @@
       ],
       "media_links": [],
       "image_links": []
+    }
+  ],
+  "ignored_links": [
+    {
+      "event_id": "planet-rock-electro-future",
+      "kind": "image",
+      "values": [
+        "https://commons.wikimedia.org/wiki/File:161st_St_River_Av_td_(2019-01-24)_69.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/f/fc/161st_St_River_Av_td_%282019-01-24%29_69.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/161st_St_River_Av_td_%282019-01-24%29_69.jpg/960px-161st_St_River_Av_td_%282019-01-24%29_69.jpg"
+      ]
+    },
+    {
+      "event_id": "planet-rock-electro-future",
+      "kind": "image",
+      "values": [
+        "https://commons.wikimedia.org/wiki/File:161st_St_River_Av_td_(2019-01-24)_57.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/1/1b/161st_St_River_Av_td_%282019-01-24%29_57.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/161st_St_River_Av_td_%282019-01-24%29_57.jpg/960px-161st_St_River_Av_td_%282019-01-24%29_57.jpg"
+      ]
     }
   ]
 }
