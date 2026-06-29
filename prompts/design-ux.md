@@ -6,7 +6,7 @@ This prompt set is the UX entrypoint for the current workflow. If the repo has a
 
 Design UX prompts produce audit findings, critique, and UX slice proposals.
 They do not authorize implementation.
-Use `prompts/plan-feature.md` or direct conversation to turn a selected UX slice into an implementation plan. Create a spec record only when requested or useful for later analysis.
+Use `prompts/plan-feature.md` or direct conversation to turn a selected UX slice into an implementation plan. Create a local spec record only when requested or useful for later analysis.
 
 ## Shared Context
 
@@ -142,7 +142,7 @@ Return:
 - Screenshot evidence
 - Whether each finding is bug, polish, or design-direction issue
 - Recommended follow-up UX slice
-- Whether a spec record is needed
+- Whether a local spec record is needed
 - Whether `docs/design/current-frontend-design.md` should change
 - Whether the critique should be saved under `docs/design/audits/`
 - Whether supporting annotated screenshots or mockups should be saved under `docs/design/mockups/`

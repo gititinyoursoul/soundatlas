@@ -4,7 +4,7 @@ Use this prompt before implementing a new SoundAtlas feature, UX change, data wo
 
 This prompt is the planning entrypoint for the current plan-led workflow.
 
-The goal is to prevent implementation from starting from a vague request. First produce a practical implementation plan. Create a spec record only when the human asks for one or when the work needs later analysis.
+The goal is to prevent implementation from starting from a vague request. First produce a practical implementation plan. Create a local spec record only when the human asks for one or when the work needs later analysis.
 
 Core rule:
 
@@ -33,11 +33,11 @@ Core rule:
   * `docs/media-retrieval/youtube-mvp-workflow.md`
 * Constraints and non-goals.
 * Whether implementation or planning-only is requested.
-* Existing spec path, if using or updating a previous record.
+* Existing local spec path, if using or updating a previous record.
 
 ## Task
 
-Produce a practical implementation plan. If requested or useful for later analysis, also produce a small spec record.
+Produce a practical implementation plan. If requested or useful for later analysis, also produce a small local spec record.
 
 Do not write code unless explicitly asked.
 
@@ -67,13 +67,15 @@ If the input is incomplete, do not stop immediately. State reasonable assumption
 
 ## Optional Spec Record Rules
 
-When a spec record is requested or useful for later analysis, create or update a lightweight spec.
+When a spec record is requested or useful for later analysis, create or update a lightweight local spec.
 
 Recommended location:
 
 ```text
 specs/<feature-slug>/rNN-<short-desc>.md
 ```
+
+Treat this as a local, gitignored workspace path during solo work unless the human explicitly asks to commit the file.
 
 If the repository already has a better convention for specs or feature docs, follow that convention instead.
 
@@ -207,7 +209,7 @@ For media retrieval changes, define:
 
 ## Linking Plan To Spec Records
 
-If a spec record exists, the implementation plan should reference spec requirements.
+If a local spec record exists, the implementation plan should reference spec requirements.
 
 Use requirement IDs from the spec:
 
@@ -235,7 +237,7 @@ When a spec exists, tests and validation should reference acceptance criteria:
 
 ## Handling Incomplete Input
 
-* State assumptions explicitly before the plan or spec record.
+* State assumptions explicitly before the plan or local spec record.
 * Separate assumptions from open questions.
 * Continue with a conservative plan when assumptions are safe.
 * Keep risky or irreversible steps behind confirmation.
@@ -262,7 +264,7 @@ Example:
 Return:
 
 1. A short summary of the intended change.
-2. A proposed spec record path, if a spec record is requested or useful.
+2. A proposed local spec record path, if a spec record is requested or useful.
 3. The spec content or summary, if a spec record is included.
 4. A numbered implementation plan with 5-9 reviewable steps.
 5. Acceptance criteria.

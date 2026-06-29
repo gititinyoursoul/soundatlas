@@ -6,7 +6,7 @@ This prompt is the backend implementation entrypoint for the current workflow. I
 
 ## Context to provide
 
-* Approved plan summary or provided spec path, for example `specs/<feature-slug>/rNN-<short-desc>.md`.
+* Approved plan summary or local spec path, for example `specs/<feature-slug>/rNN-<short-desc>.md`.
 * Endpoint or backend behavior to implement.
 * Relevant seed data and expected API response shape.
 * Error behavior and filtering requirements.
@@ -18,7 +18,7 @@ Before implementing, read the approved plan or provided spec.
 
 Implementation may proceed only when:
 
-* An approved plan, provided spec path, or clearly trivial request exists.
+* An approved plan, provided local spec path, or clearly trivial request exists.
 * Requirements are clear enough to implement.
 * Acceptance criteria are testable enough to verify.
 * Blocking questions are resolved or intentionally deferred.
@@ -113,7 +113,7 @@ Return:
 ## Spec updates
 
 - None, or:
-- `<spec path>`: `<what changed and why>`
+- `<local spec path>`: `<what changed and why>`
 
 ## Risks/open questions
 

@@ -4,7 +4,7 @@ This document defines the lightweight agent workflow for SoundAtlas.
 
 The default workflow is now plan-led:
 
-> Do not implement from a vague request. Inspect the repo, propose a concrete plan when the work is non-trivial, and implement after the human approves that plan. Specs are optional planning inputs and useful analysis records, not a mandatory approval gate.
+> Do not implement from a vague request. Inspect the repo, propose a concrete plan when the work is non-trivial, and implement after the human approves that plan. Specs are optional local planning records, not a mandatory approval gate.
 
 The filename stays `docs/spec-first-agent-workflow.md` for compatibility with existing links and prompts.
 
@@ -48,11 +48,11 @@ For trivial changes, the agent may proceed directly if the request is clear and 
 
 The approved plan is the source of truth for intended behavior during that implementation turn.
 
-## Specs As Records
+## Specs As Local Records
 
-Specs under `specs/` are no longer mandatory approval gates.
+Specs under `specs/` are local planning records. In solo work they are gitignored by default and are not mandatory approval gates.
 
-Create a spec record when:
+Create a local spec record when:
 
 * The human explicitly asks for one.
 * A plan is approved for non-trivial feature, UX, backend, data, or cross-cutting work and the implementation would benefit from later analysis.
@@ -73,6 +73,8 @@ For generated records, use:
 * Contents: request, goal, non-goals, requirements, acceptance criteria, assumptions, implementation plan, validation plan, and verification report
 
 If a spec already exists for the work, the agent may implement from it, but the spec is still just the chosen source of truth for that task, not a repository-wide requirement.
+
+Do not commit spec files during solo work unless the human explicitly asks for them to be committed.
 
 ## Implementation Gate
 
@@ -193,7 +195,7 @@ After implementation, the agent should report:
 - `<concrete follow-up action>`
 ```
 
-If a spec record was created, update its verification report before finishing.
+If a local spec record was created, update its verification report before finishing.
 
 ## Practical Codex Usage
 
@@ -214,7 +216,7 @@ Implement the plan.
 For work that needs a record:
 
 ```text
-Implement the plan and create a spec record for analysis.
+Implement the plan and create a local spec record for analysis.
 ```
 
 For work that should stay planning-only:

@@ -74,7 +74,7 @@ Events should contain at least:
 - The current task list lives in `TODO.md`.
 - For feature work, follow the plan-led workflow in `docs/spec-first-agent-workflow.md`.
 - Implementation may start from an approved conversational plan, an explicitly provided spec, or a clearly trivial request.
-- Specs in `specs/<feature-slug>/rNN-<short-desc>.md` are optional records for analysis and traceability, not mandatory approval gates.
+- Specs in `specs/<feature-slug>/rNN-<short-desc>.md` are optional local records for analysis and traceability, not mandatory approval gates, and are gitignored during solo work unless explicitly committed.
 - Use `docs/skills-workflow.md` as the routing guide for repeatable execution work that should live in skills or prompt wrappers.
 - Use the repo skill at `.codex/skills/soundatlas-spec-planning` when a spec record is requested or useful.
 - If the scope changes, update `docs/mvp-concept.md` first and then `TODO.md`.

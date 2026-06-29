@@ -13,7 +13,7 @@ Core rule:
 ## Context To Provide
 
 * Target module, component, endpoint, data workflow, or seed validation behavior.
-* Provided spec path, if the tests verify a spec-recorded change.
+* Provided local spec path, if the tests verify a spec-recorded change.
 * Expected behavior, edge cases, and any known bug.
 * Whether the target is backend, frontend, data validation, or cross-cutting.
 * Existing test runner or whether test infrastructure must be added first.
