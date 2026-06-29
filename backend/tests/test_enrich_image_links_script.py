@@ -7,6 +7,7 @@ from app.schemas import ImageLink
 from scripts import enrich_image_links
 from scripts.enrich_image_links import (
     build_event_image_queries,
+    build_wikimedia_search_queries,
     build_wikimedia_image_link,
     dedupe_image_links,
     enrich_events_payload,
@@ -51,6 +52,21 @@ def test_query_builder_includes_concise_place_and_notable_term_queries() -> None
     assert "1520 Sedgwick Avenue" in queries
     assert any(query == "DJ Kool Herc" for query in queries)
     assert all("'" not in query for query in queries)
+
+
+def test_v2_query_planner_uses_planned_queries() -> None:
+    queries = build_wikimedia_search_queries(
+        event=build_event(),
+        route=build_route(),
+        place=build_place(),
+        query_planner="v2",
+    )
+
+    assert queries[:3] == [
+        "1520 Sedgwick Avenue",
+        "1520 Sedgwick Avenue 1973",
+        "DJ Kool Herc",
+    ]
 
 
 def test_wikimedia_request_wrapper_adds_maxlag_caches_and_retries(
@@ -213,6 +229,50 @@ def test_enrich_events_payload_filters_event_route_and_limit() -> None:
     assert events_payload["events"][2]["image_links"] == []
 
 
+def test_enrich_events_payload_can_use_v2_query_planner() -> None:
+    searched_queries: list[str] = []
+
+    def fake_request(url: str, params: dict[str, str] | None = None) -> dict[str, Any]:
+        assert params is not None
+        if params.get("list") == "search":
+            searched_queries.append(params["srsearch"])
+            return {
+                "query": {
+                    "search": [
+                        {"title": "File:1520 Sedgwick Avenue.jpg"},
+                    ],
+                },
+            }
+        return {
+            "query": {
+                "pages": {
+                    "1": build_imageinfo_page(
+                        title="File:1520 Sedgwick Avenue.jpg",
+                        object_name="1520 Sedgwick Avenue",
+                        description="1520 Sedgwick Avenue in the Bronx.",
+                    ),
+                },
+            },
+        }
+
+    events_payload = {"events": [build_event({"image_links": []})]}
+    changed_events = enrich_events_payload(
+        events_payload=events_payload,
+        routes_payload={"routes": [build_route()]},
+        places_payload={"places": [build_place()]},
+        event_id="kool-herc-back-to-school-jam",
+        route_id=None,
+        limit=1,
+        providers=["wikimedia"],
+        query_planner="v2",
+        request_fn=fake_request,
+    )
+
+    assert changed_events == 1
+    assert searched_queries[0] == "1520 Sedgwick Avenue"
+    assert events_payload["events"][0]["image_links"][0]["query"] == "1520 Sedgwick Avenue"
+
+
 def test_enrich_events_payload_skips_ignored_image_links() -> None:
     events_payload = {
         "events": [
@@ -273,6 +333,42 @@ def test_dry_run_does_not_write_seed_data(
         [
             "--event-id",
             "kool-herc-back-to-school-jam",
+            "--dry-run",
+        ],
+    )
+
+    output = capsys.readouterr().out
+    assert exit_code == 0
+    assert events_path.read_text(encoding="utf-8") == original_text
+    assert "1520 Sedgwick Avenue" in output
+    assert "Enriched 1 event(s)." in output
+
+
+def test_v2_dry_run_does_not_write_seed_data(
+    tmp_path: Path,
+    monkeypatch,
+    capsys,
+) -> None:
+    events_path = tmp_path / "events.json"
+    routes_path = tmp_path / "routes.json"
+    places_path = tmp_path / "places.json"
+    original_payload = {"events": [build_event({"image_links": []})]}
+    events_path.write_text(json.dumps(original_payload, indent=2), encoding="utf-8")
+    routes_path.write_text(json.dumps({"routes": [build_route()]}), encoding="utf-8")
+    places_path.write_text(json.dumps({"places": [build_place()]}), encoding="utf-8")
+    original_text = events_path.read_text(encoding="utf-8")
+
+    monkeypatch.setattr(enrich_image_links, "EVENTS_PATH", events_path)
+    monkeypatch.setattr(enrich_image_links, "ROUTES_PATH", routes_path)
+    monkeypatch.setattr(enrich_image_links, "PLACES_PATH", places_path)
+    monkeypatch.setattr(enrich_image_links, "request_wikimedia_json", build_wikimedia_request_fn())
+
+    exit_code = main(
+        [
+            "--event-id",
+            "kool-herc-back-to-school-jam",
+            "--query-planner",
+            "v2",
             "--dry-run",
         ],
     )

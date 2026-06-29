@@ -26,6 +26,7 @@ ROUTES_PATH = DATA_SEED_DIR / "routes.json"
 PLACES_PATH = DATA_SEED_DIR / "places.json"
 WIKIMEDIA_API_URL = "https://commons.wikimedia.org/w/api.php"
 SUPPORTED_PROVIDERS = {"wikimedia"}
+SUPPORTED_QUERY_PLANNERS = {"legacy", "v2"}
 IMAGE_DEDUPE_FIELDS = ("image_url", "thumbnail_url", "source_url")
 MIN_CONFIDENCE = 0.45
 MAX_QUERIES_PER_EVENT = 6
@@ -63,6 +64,12 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="Print planned image queries without calling providers or writing seed data.",
     )
+    parser.add_argument(
+        "--query-planner",
+        choices=sorted(SUPPORTED_QUERY_PLANNERS),
+        default="legacy",
+        help="Query planner to use for provider searches. Defaults to legacy.",
+    )
     args = parser.parse_args(argv)
 
     providers = args.provider or ["wikimedia"]
@@ -99,6 +106,7 @@ def main(argv: list[str] | None = None) -> int:
             route_id=args.route_id,
             limit=args.limit,
             providers=providers,
+            query_planner=args.query_planner,
             ignored_link_index=ignored_link_index,
             request_fn=request_wikimedia_json,
         )
@@ -247,12 +255,15 @@ def enrich_events_payload(
     route_id: str | None,
     limit: int,
     providers: list[str],
+    query_planner: str = "legacy",
     ignored_link_index: dict[tuple[str, str], set[str]] | None = None,
     request_fn: RequestJson = request_json,
 ) -> int:
     unsupported_providers = sorted(set(providers) - SUPPORTED_PROVIDERS)
     if unsupported_providers:
         raise ValueError(f"Unsupported provider(s): {', '.join(unsupported_providers)}")
+    if query_planner not in SUPPORTED_QUERY_PLANNERS:
+        raise ValueError(f"Unsupported query planner: {query_planner}")
 
     routes_by_id = build_routes_by_id(routes_payload)
     places_by_id = build_places_by_id(places_payload)
@@ -277,6 +288,7 @@ def enrich_events_payload(
                         route=route,
                         place=place,
                         limit=limit,
+                        query_planner=query_planner,
                         ignored_link_index=ignored_link_index,
                         request_fn=request_fn,
                     ),
@@ -314,11 +326,17 @@ def fetch_wikimedia_image_candidates(
     route: dict[str, Any],
     place: dict[str, Any],
     limit: int,
+    query_planner: str = "legacy",
     ignored_link_index: dict[tuple[str, str], set[str]] | None = None,
     request_fn: RequestJson = request_json,
 ) -> list[dict[str, Any]]:
     candidates: list[dict[str, Any]] = []
-    for query in build_event_image_queries(event=event, route=route, place=place):
+    for query in build_wikimedia_search_queries(
+        event=event,
+        route=route,
+        place=place,
+        query_planner=query_planner,
+    ):
         titles = search_wikimedia_file_titles(query, request_fn=request_fn)
         if not titles:
             continue
@@ -342,6 +360,20 @@ def fetch_wikimedia_image_candidates(
             break
 
     return dedupe_image_links(candidates)[:limit]
+
+
+def build_wikimedia_search_queries(
+    event: dict[str, Any],
+    route: dict[str, Any],
+    place: dict[str, Any],
+    query_planner: str,
+) -> list[str]:
+    if query_planner == "legacy":
+        return build_event_image_queries(event=event, route=route, place=place)
+    if query_planner == "v2":
+        brief = build_retrieval_brief(event=event, route=route, place=place)
+        return [plan.query for plan in plan_image_queries(brief)]
+    raise ValueError(f"Unsupported query planner: {query_planner}")
 
 
 def build_event_image_queries(
