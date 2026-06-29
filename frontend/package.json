@@ -9,12 +9,14 @@
     "preview": "vite preview",
     "check": "svelte-kit sync && tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "capture:drawer": "node scripts/capture-drawer-screenshots.mjs"
   },
   "dependencies": {
     "leaflet": "^1.9.4"
   },
   "devDependencies": {
+    "@playwright/test": "^1.61.1",
     "@sveltejs/adapter-auto": "^7.0.1",
     "@sveltejs/kit": "^2.63.1",
     "@types/leaflet": "^1.9.21",

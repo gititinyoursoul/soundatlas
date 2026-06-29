@@ -320,6 +320,7 @@ Generated screenshots belong in `/workspace/screenshots/`, which is ignored by
 Git. Use them for local UX critique, then copy the approved files into
 `docs/design/screenshots/` and remove any stale files from that tracked folder.
 Use stable filenames so refreshed captures replace the previous version cleanly.
+For the drawer states, run `cd /workspace/frontend && npm run capture:drawer`.
 The `--strictPort` flag is intentional: if a previous dev server is still
 running, Vite should fail loudly instead of moving to a different port while
 Playwright captures the wrong page.
