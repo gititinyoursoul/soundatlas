@@ -34,6 +34,8 @@
   let storyRegionElement: HTMLElement;
   let reviewSavingItemId: string | null = null;
   let reviewErrorMessage: string | null = null;
+  let selectedInspectorTab: 'story' | 'media' | 'related' = 'story';
+  let selectedPreviewUrl: string | null = null;
 
   $: routeEvents = [...filterEvents(events, selectedRouteId)].sort(compareEvents);
   $: routeEventCounts = routes.reduce<Record<string, number>>((counts, route) => {
@@ -133,12 +135,16 @@
     }
 
     selectedEventId = eventId;
+    selectedInspectorTab = 'story';
+    selectedPreviewUrl = null;
   }
 
   function selectRoute(routeId: string): void {
     selectedRouteId = routeId;
     selectedEventId = getFirstEventIdForRoute(events, routeId);
     activeNavigationItemId = 'routes';
+    selectedInspectorTab = 'story';
+    selectedPreviewUrl = null;
   }
 
   function buildStoryConnectionItems(
@@ -178,6 +184,8 @@
   function selectReviewItem(item: ReviewQueueItem): void {
     selectedRouteId = item.routeId;
     selectedEventId = item.eventId;
+    selectedInspectorTab = 'media';
+    selectedPreviewUrl = item.url;
     activeNavigationItemId = 'media-review';
   }
 
@@ -186,6 +194,8 @@
     reviewErrorMessage = null;
     selectedRouteId = item.routeId;
     selectedEventId = item.eventId;
+    selectedInspectorTab = 'media';
+    selectedPreviewUrl = item.url;
     activeNavigationItemId = 'media-review';
 
     try {
@@ -408,6 +418,8 @@
         onNavigateEvent={selectEvent}
         {isLoading}
         {errorMessage}
+        initialTab={selectedInspectorTab}
+        selectedPreviewUrl={selectedPreviewUrl}
       />
     </section>
   </section>

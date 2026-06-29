@@ -42,6 +42,8 @@
   export let isLoading = false;
   export let errorMessage: string | null = null;
   export let onNavigateEvent: (eventId: string, routeId?: string) => void = () => {};
+  export let initialTab: InspectorTab = 'story';
+  export let selectedPreviewUrl: string | null = null;
 
   const mediaProviderLabels: Record<MediaProvider, string> = {
     youtube: 'YouTube',
@@ -86,8 +88,20 @@
   $: previewItems = buildPreviewItems(event);
   $: if (event?.id !== lastEventId) {
     lastEventId = event?.id ?? null;
-    activeTab = 'story';
-    selectedPreviewId = previewItems[0]?.id ?? '';
+    activeTab = initialTab;
+    selectedPreviewId =
+      previewItems.find((item) => item.previewUrl === selectedPreviewUrl)?.id ??
+      previewItems[0]?.id ??
+      '';
+  }
+  $: if (event?.id === lastEventId && activeTab !== initialTab && initialTab !== 'story') {
+    activeTab = initialTab;
+  }
+  $: if (selectedPreviewUrl) {
+    const selectedPreviewItem = previewItems.find((item) => item.previewUrl === selectedPreviewUrl);
+    if (selectedPreviewItem && selectedPreviewItem.id !== selectedPreviewId) {
+      selectedPreviewId = selectedPreviewItem.id;
+    }
   }
   $: if (previewItems.length > 0 && !previewItems.some((item) => item.id === selectedPreviewId)) {
     selectedPreviewId = previewItems[0].id;
