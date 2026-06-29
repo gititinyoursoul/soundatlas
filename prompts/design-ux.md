@@ -25,6 +25,7 @@ Project context:
 - The visual tone should be dense, documentary, source-aware, and usable.
 - Treat `docs/design/current-frontend-design.md` as the current intended frontend design baseline when available.
 - Store durable UX audits, critiques, and design explorations in `docs/design/audits/`.
+- Store current approved screenshots in `docs/design/screenshots/` when they are meant to stay in Git.
 - Store visual mockups, diagrams, and supporting images in `docs/design/mockups/`.
 
 When reviewing or designing, focus on:

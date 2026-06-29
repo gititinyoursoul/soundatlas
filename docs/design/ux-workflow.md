@@ -36,6 +36,7 @@ Design documentation is organized by purpose:
 
 - `docs/design/current-frontend-design.md` records the current intended frontend baseline.
 - `docs/design/audits/` stores dated UX audits, design explorations, and critique records.
+- `docs/design/screenshots/` stores the current approved screenshot set when screenshots should stay in Git.
 - `docs/design/mockups/` stores visual mockups, diagrams, and supporting images referenced by audits or plans.
 - `docs/design/ux-workflow.md` documents this process.
 
@@ -260,6 +261,10 @@ When possible, inspect the running app in desktop and mobile viewports before co
 After a visual pass, run the app and capture desktop and mobile screenshots where practical.
 
 Use the **Screenshot Critique** template in `prompts/design-ux.md`.
+
+If the screenshots are meant to become the current tracked reference set, promote
+the approved files into `docs/design/screenshots/` and delete any stale files
+from that tracked folder before committing.
 
 Output:
 

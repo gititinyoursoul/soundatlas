@@ -29,6 +29,8 @@ dist/
 coverage/
 playwright-report/
 screenshots/
+!docs/design/screenshots/
+!docs/design/screenshots/**
 test-results/
 
 # Environment files

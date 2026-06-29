@@ -317,7 +317,9 @@ npx playwright screenshot --browser chromium --viewport-size=390,844 --wait-for-
 ```
 
 Generated screenshots belong in `/workspace/screenshots/`, which is ignored by
-Git. Use them for local UX critique, then delete or regenerate them as needed.
+Git. Use them for local UX critique, then copy the approved files into
+`docs/design/screenshots/` and remove any stale files from that tracked folder.
+Use stable filenames so refreshed captures replace the previous version cleanly.
 The `--strictPort` flag is intentional: if a previous dev server is still
 running, Vite should fail loudly instead of moving to a different port while
 Playwright captures the wrong page.
