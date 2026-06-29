@@ -31,6 +31,10 @@ Completed work packages are archived in `docs/done.md`.
 
 ### UX and Design
 
+- [ ] Explore a landing page design concept and decide whether it belongs outside the main map-first app surface
+- [ ] Explore first route selection behavior for new users before entering the main exploration workspace
+- [ ] Explore search bar functionality for finding routes, events, places, sources, and media
+- [ ] Run current screenshots and recheck whether the map feels dominant enough in the first viewport
 - [ ] Check out Leaflet base map tile style options
 - [ ] Check out Leaflet marker design options
 - [ ] Check out Leaflet popups and tooltip design options
@@ -38,7 +42,14 @@ Completed work packages are archived in `docs/done.md`.
 - [ ] Check out Leaflet route, region, and era overlay design options
 - [ ] Check out Leaflet controls and map chrome design options
 - [ ] Decide how pre-1970 hip-hop context should appear in route ranges and timeline layout
+- [ ] Decide whether drawer route selection should keep the overlay open or close after selection
+- [ ] Define the public/admin visibility policy for restricted drawer items, including hidden vs disabled behavior
 - [ ] Gate or remove admin media/image review controls before a public explorer surface
 - [ ] Define a separate admin validation workflow before adding Validation back to the drawer
+- [ ] Decide whether timeline event cards should remain, become more compact, or move into the story inspector
+- [ ] Review timeline density behavior for future routes with more events
+- [ ] Review the selected-event focal cue across header, map marker/place chrome, timeline, and inspector
+- [ ] Reconcile the current mobile ordering implementation with the design baseline and update docs as needed
+- [ ] Define public-facing image/media browsing behavior, including fixed preview dimensions, long-list handling, lazy loading, and focused image/video inspection
 - [ ] Review the selection flow across route, map, timeline, and story panel
 - [ ] Document the UX acceptance check against the design checklist

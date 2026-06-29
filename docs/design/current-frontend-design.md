@@ -6,7 +6,7 @@ Update this document when the intended product surface, design direction, state 
 
 ## Purpose
 
-The frontend should let a user explore New York music history through place, time, and story. For the MVP, the first successful experience is understanding **Birth of Hip-Hop: Bronx 1970-1985** through a coordinated map, timeline, route filter, and story panel.
+The frontend should let a user explore New York music history through place, time, and story. For the MVP, the first successful experience is understanding **Birth of Hip-Hop: Bronx 1970-1985** through a coordinated map, route sequence timeline, route switching, and selected event inspector.
 
 The first screen should be the product experience itself, not a landing page.
 
@@ -20,7 +20,7 @@ This means:
 - A compact app header gives route orientation without overwhelming the map or selected event.
 - The selected event inspector should have enough desktop width to read comfortably without making the map feel secondary.
 - Timeline clarifies chronology and sequence.
-- Story panel explains the selected event in plain, source-aware language.
+- The event inspector explains the selected event in plain, source-aware language.
 - Sources and media are discoverable but secondary to place/time/story understanding.
 - Route context should stay compact and visible above the map without duplicating the inspector.
 - The visual tone is dense, documentary, restrained, and useful.
@@ -31,8 +31,8 @@ This means:
 2. The default route is selected.
 3. The map shows relevant places and event markers.
 4. The timeline shows the route event sequence.
-5. User selects an event from the map, timeline, or story navigation.
-6. Map, timeline, and story panel update from the same selected event state.
+5. User selects an event from the map, timeline, or inspector navigation.
+6. Map, timeline, and event inspector update from the same selected event state.
 7. User inspects event summary, significance, place, route context, sources, and media.
 
 ## Screen Structure
@@ -43,13 +43,13 @@ The current main screen is organized around:
 - Desktop overlay navigation drawer: icon trigger in the header, expanded/collapsed states, route switching, admin media/image review queue, direct review actions, and dim overlay behavior
 - Map: primary spatial exploration surface
 - Timeline: route sequence and selected event range
-- Story panel: selected event details, navigation, sources, and media
+- Event inspector: selected event details, navigation, sources, related events, and media
 
 The intended hierarchy is:
 
 1. Map and selected event context
 2. Timeline sequence
-3. Story details
+3. Selected-event story and relationships
 4. Route switching and metadata
 5. Sources and media
 
@@ -84,7 +84,7 @@ Derived state includes:
 - route event counts
 - review queue items
 
-Map marker clicks, timeline clicks, route selection, story navigation, and keyboard navigation should continue to use this shared state rather than creating separate local selection models.
+Map marker clicks, timeline clicks, route selection, inspector navigation, related-event clicks, and keyboard navigation should continue to use this shared state rather than creating separate local selection models.
 
 ## Component Roles
 
@@ -121,7 +121,7 @@ Currently exists as a reusable component for route switching, but it is not part
 
 ### `StoryPanel`
 
-Explains the selected event with a compact title-and-metadata header, stable previous/next navigation with adjacent-event tooltips, Story/Media/Related tabs, readable source labels inline in the Story tab, a continuous story reading block with a quieter significance note, and clickable related-event rows that show relationship direction and type. The media tab is framed as exploratory listening and viewing rather than admin review. Media that cannot be embedded should use a dedicated external-open preview state, not the generic empty placeholder.
+Implements the selected event inspector. It explains the selected event with a compact title-and-metadata header, stable previous/next navigation with adjacent-event tooltips, Story/Media/Related tabs, readable source labels inline in the Story tab, a continuous story reading block with a quieter significance note, and clickable related-event rows that show relationship direction and type. The media tab is framed as exploratory listening and viewing rather than admin review. Media that cannot be embedded should use a dedicated external-open preview state, not the generic empty placeholder.
 
 ### `MediaEmbed`
 
@@ -133,7 +133,7 @@ Embeds playable media links when available. The active admin review workflow now
 - Use compact, readable panels rather than marketing-style sections.
 - Prefer restrained color and clear hierarchy over decorative styling.
 - Keep typography dense enough for repeated research use.
-- Make selected state obvious across map, timeline, and story.
+- Make selected state obvious across map, timeline, and inspector.
 - Keep sources visible but not louder than event understanding.
 - Preserve usable empty, loading, and error states.
 - Design laptop-size screens first, then preserve the workflow on mobile.
@@ -145,22 +145,22 @@ Embeds playable media links when available. The active admin review workflow now
 - The Birth of Hip-Hop route range starts at 1970, while an early route event starts in 1967.
 - Timeline selection has both ticks and event cards, which can feel visually busy.
 - If the horizontal event-card strip remains, selected cards should stay centered so the fallback does not feel detached from the active selection.
-- Map selected-event context is split between the compact route header, selected marker, and story inspector; it may still need a better single focal cue.
-- Mobile behavior needs a clearer ordering strategy for map, timeline, and story panel.
+- Map selected-event context is split between the compact route header, selected marker/place chrome, timeline, and inspector; it may still need a better single focal cue.
+- Mobile behavior has an implemented ordering strategy, but it needs review against the current design baseline and screenshots.
 - The drawer is currently admin-oriented; a later public mode must hide or gate media/image review actions.
+- Public-facing image/media browsing still needs a clearer behavior definition for fixed preview dimensions, long media lists, lazy loading, and focused image/video inspection.
 
 ## Open Decisions
 
 - How should pre-1970 hip-hop context be represented in route ranges and timeline layout?
 - Should drawer route selection keep the overlay open on desktop, or close after a route is selected?
+- Should restricted drawer/admin items be hidden or disabled in public-facing contexts?
 - What is the public-mode boundary for hiding or gating the admin drawer media/image review workflow?
-- Should the map include a persistent selected-event caption or overlay?
-- Should timeline event cards remain, become more compact, or move into the story panel?
+- Should timeline event cards remain, become more compact, or move into the inspector?
 - Should the route header be reduced further once the story inspector becomes more self-contained?
 
 ## Related Documents
 
 - `docs/design/ux-workflow.md`
-- `docs/design/2026-06-27-frontend-ux-audit.md`
 - `prompts/design-ux.md`
 - `docs/mvp-concept.md`

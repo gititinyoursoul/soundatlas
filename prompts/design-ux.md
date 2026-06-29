@@ -20,10 +20,12 @@ Project context:
 - MVP scope: New York 1965-1985.
 - Vertical slice: Birth of Hip-Hop: Bronx 1970-1985.
 - The map is the primary interface.
-- Timeline, route filter, and story panel should share one central selection state.
+- Timeline, route switching, and event inspector should share one central selection state.
 - Use real seed data where possible; avoid mock-only UI.
 - The visual tone should be dense, documentary, source-aware, and usable.
 - Treat `docs/design/current-frontend-design.md` as the current intended frontend design baseline when available.
+- Store durable UX audits, critiques, and design explorations in `docs/design/audits/`.
+- Store visual mockups, diagrams, and supporting images in `docs/design/mockups/`.
 
 When reviewing or designing, focus on:
 - Map-first exploration
@@ -72,6 +74,8 @@ Do not make changes yet. Return:
 - Candidate UX slices
 - Suggested first UX slice
 - Files and components likely affected
+- Suggested audit filename under `docs/design/audits/` if the findings should be saved
+- Suggested mockup filenames under `docs/design/mockups/` if visual artifacts are needed
 - Next step: usually turn the selected UX slice into an implementation plan with `prompts/plan-feature.md`
 ```
 
@@ -87,10 +91,12 @@ Constraints:
 - Leaflet map is primary
 - Use existing seed data
 - Respect `docs/design/current-frontend-design.md` unless the plan explicitly recommends changing the design baseline
-- Components should stay small and domain-named, such as MapView, Timeline, RouteFilter, and StoryPanel
+- Components should stay small and domain-named, such as MapView, Timeline, NavigationDrawer, RouteFilter, and StoryPanel
 - No mock-only UI
 - Dense, documentary, usable MVP style
 - The first screen should be the product experience, not a landing page
+- Save durable design plans or explorations under `docs/design/audits/`
+- Save visual mockups and diagrams under `docs/design/mockups/`
 
 Plan exactly one workflow slice. Do not redesign the whole app unless explicitly requested.
 
@@ -106,6 +112,8 @@ Return:
 - Acceptance criteria candidates
 - Risks or open questions
 - Recommended plan or spec-record name
+- Recommended audit/design-plan path under `docs/design/audits/`, if this should be saved
+- Recommended mockup path under `docs/design/mockups/`, if visual artifacts are needed
 - Next step: create or update the implementation plan with `prompts/plan-feature.md`
 ```
 
@@ -136,5 +144,7 @@ Return:
 - Recommended follow-up UX slice
 - Whether a spec record is needed
 - Whether `docs/design/current-frontend-design.md` should change
+- Whether the critique should be saved under `docs/design/audits/`
+- Whether supporting annotated screenshots or mockups should be saved under `docs/design/mockups/`
 - Next step: usually create the follow-up plan with `prompts/plan-feature.md`, or update the design baseline with `prompts/update-docs.md`
 ```

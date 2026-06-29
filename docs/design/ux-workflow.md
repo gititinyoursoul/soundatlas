@@ -14,8 +14,8 @@ The first screen should be the actual exploration surface, not a landing page. T
 
 - Map
 - Timeline
-- Route filter
-- Story panel
+- Route switching
+- Event inspector
 
 The app should make music history understandable across three axes:
 
@@ -31,6 +31,13 @@ The default design posture is **Research Atlas with selected Story Explorer beha
 - Grounded in real seed/API data, not mock-only UI
 
 Use `docs/design/current-frontend-design.md` as the baseline for the current intended frontend design. UX audits should compare the implemented app against that baseline, and design passes should update it when the intended design changes.
+
+Design documentation is organized by purpose:
+
+- `docs/design/current-frontend-design.md` records the current intended frontend baseline.
+- `docs/design/audits/` stores dated UX audits, design explorations, and critique records.
+- `docs/design/mockups/` stores visual mockups, diagrams, and supporting images referenced by audits or plans.
+- `docs/design/ux-workflow.md` documents this process.
 
 ## Core Rules
 
@@ -83,7 +90,7 @@ Output:
 Example:
 
 ```text
-Improve the main exploration screen so a user can follow the Birth of Hip-Hop route through map, timeline, and story without losing selected-event context.
+Improve the main exploration screen so a user can follow the Birth of Hip-Hop route through map, timeline, and event inspector without losing selected-event context.
 ```
 
 ### Step 2: Audit Without Editing
@@ -108,11 +115,13 @@ Output:
 - Proposed first UX pass
 - Files and components likely affected
 
-Store durable audits in `docs/design/` with a date or frontend version in the filename, for example:
+Store durable audits in `docs/design/audits/` with a date or frontend version in the filename, for example:
 
 ```text
-docs/design/2026-06-27-frontend-ux-audit.md
+docs/design/audits/YYYY-MM-DD-frontend-ux-audit.md
 ```
+
+If an audit or exploration includes visual mockups, store them in `docs/design/mockups/` and reference them with relative links from the audit or plan.
 
 ### Step 3: Choose the Design Direction
 
@@ -131,7 +140,7 @@ For the current MVP, the default direction is:
 Research Atlas with selected Story Explorer behavior.
 ```
 
-This means the map remains primary, the timeline clarifies sequence, the story panel explains the selected event, and source/media links stay visible but secondary.
+This means the map remains primary, the timeline clarifies sequence, the event inspector explains the selected event, and source/media links stay visible but secondary.
 
 Use the direction to evaluate workflow slices. For example, if the direction is Research Atlas with selected Story Explorer behavior, a proposed slice should strengthen map-first exploration, selected-event context, sequence clarity, or source-aware storytelling.
 
@@ -164,9 +173,9 @@ Output:
 
 Example candidate workflow slices for the current MVP:
 
-- First arrival path: user opens the app, sees the default route, and understands the relationship between map, timeline, and story.
-- Event selection path: user selects a timeline event, then map and story panel update with clear selected-event context.
-- Map exploration path: user selects a map marker, then story panel and timeline show what happened there and where it sits in sequence.
+- First arrival path: user opens the app, sees the default route, and understands the relationship between map, timeline, and inspector.
+- Event selection path: user selects a timeline event, then map and inspector update with clear selected-event context.
+- Map exploration path: user selects a map marker, then inspector and timeline show what happened there and where it sits in sequence.
 - Source/media inspection path: user reads an event, inspects sources/media, then returns to the route sequence.
 
 Example detailed workflow slice:
@@ -176,7 +185,7 @@ Example detailed workflow slice:
 3. The map shows relevant places.
 4. The timeline shows the event sequence.
 5. User selects an event from the map or timeline.
-6. Map, timeline, and story panel update from the same selected event state.
+6. Map, timeline, and event inspector update from the same selected event state.
 7. User inspects summary, significance, sources, and media.
 
 ### Step 5: Plan One UX Pass
@@ -191,7 +200,7 @@ Useful pass types:
 - Shared state and interaction pass
 - Map marker or map context pass
 - Timeline sequence/navigation pass
-- Story panel readability/content pass
+- Event inspector readability/content pass
 - Loading, empty, and error states pass
 - Responsive layout pass
 - Final polish pass
@@ -218,7 +227,7 @@ Rules:
 - Use existing seed/API-backed data.
 - Do not introduce unrelated refactors.
 - Do not add mock-only UI when real data exists.
-- Keep route filter, timeline, map, and story panel synchronized through shared state.
+- Keep route switching, timeline, map, and event inspector synchronized through shared state.
 - Add TODOs only for real follow-up work that is out of scope for the pass.
 
 If the pass changes shared state, filtering, API behavior, or interaction logic, use `prompts/write-tests.md` to add or update focused tests.
@@ -278,7 +287,8 @@ Update documentation when:
 
 Likely docs:
 
-- `docs/design/`
+- `docs/design/audits/`
+- `docs/design/mockups/`
 - `docs/design/current-frontend-design.md`
 - `docs/mvp-concept.md`
 - `TODO.md`
@@ -312,7 +322,7 @@ Use this checklist before finishing each UX pass:
 
 - Can the user immediately tell this is about music history in place and time?
 - Is the map clearly the main surface?
-- Does selecting a place or event update map, timeline, and story together?
+- Does selecting a place or event update map, timeline, and inspector together?
 - Does the timeline clarify sequence rather than just decorate the page?
 - Are source links visible but not dominant?
 - Does the UI work with real seed/API data?
@@ -329,7 +339,7 @@ Use this sequence:
 1. Define the UX target.
 2. Read `docs/design/current-frontend-design.md`.
 3. Run a no-code audit with `prompts/design-ux.md`.
-4. Save durable audit findings in `docs/design/`.
+4. Save durable audit findings in `docs/design/audits/`.
 5. Choose one design direction.
 6. Select one workflow slice.
 7. Plan one UX pass.

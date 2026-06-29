@@ -68,9 +68,9 @@ The MVP may still include an internal admin or editor workflow for validation. T
 
 ## Core Experience
 
-The first view shows a map of New York and a timeline from 1965 to 1985. Users can select a route, navigate through time, and click events on the map.
+The first view shows a map-first New York workspace with a route sequence timeline. Users can select a route, move through the event sequence, and click events on the map.
 
-Clicking a point opens a story panel with:
+Clicking a point opens an event inspector with:
 
 - Title and year
 - Place and scene
@@ -84,7 +84,7 @@ Clicking a point opens a story panel with:
 
 ### Map View
 
-The map is the primary surface. Every event has coordinates and is color-coded by route. For wider time ranges, events are visible when their date range overlaps the active timeline window.
+The map is the primary surface. Every event has coordinates and is color-coded by route. The currently selected route determines the visible event set.
 
 Key functions:
 
@@ -96,30 +96,34 @@ Key functions:
 
 ### Timeline View
 
-The timeline controls which events are visible. For the MVP, a range slider with start and end year is enough.
+The timeline shows the selected route's event sequence and selected-event range. It is sequence navigation, not the primary content surface and not currently a global time-range filter.
 
 Key functions:
 
-- Range from 1965 to 1985
-- Default window: 1973-1980
-- Highlight 1977 as a concentration year
-- Filter map points by time range
+- Show the active route's year span
+- Show clickable event positions
+- Highlight the selected event or event range
+- Keep the selected event synchronized with the map and event inspector
+- Preserve the open decision about how pre-1970 hip-hop context should appear when a route range starts at 1970
 
-### Story Panel
+### Event Inspector
 
-The story panel explains a selected event and makes relationships visible.
+The story panel component now behaves as a selected event inspector. It explains the selected event, makes relationships visible, and keeps sources and media discoverable without making them louder than the map.
 
 Key functions:
 
-- Event summary
-- "Why it matters" section
-- Sources
-- Media links
-- Incoming and outgoing connections
+- Event title, year range, place, and route context
+- Story tab with summary, significance, and compact source links
+- Media tab with image/media previews and external media actions
+- Related tab with incoming and outgoing connections
+- Previous/next event navigation
+- Clickable connected events that keep route, map, timeline, and inspector state synchronized
 
-### Route Filter
+### Route Switching
 
-Users can activate one or more routes. In the MVP, one route should be preselected by default so the first experience is not empty or unclear.
+The MVP uses one active route at a time. `Birth of Hip-Hop` is selected by default so the first experience is not empty or unclear.
+
+Desktop route discovery and route switching currently live in the overlay navigation drawer rather than a prominent route filter in the main header. The reusable `RouteFilter` component may still exist, but it is not the main desktop route-switching surface.
 
 ## First Vertical Slice
 
@@ -136,8 +140,8 @@ The slice contains:
 - 8-12 curated events
 - 5-8 places
 - 8-12 connections
-- Map, timeline, route filter, and story panel
-- Data from a local seed file or SQLite
+- Map, timeline, route switching, and event inspector
+- Data from curated JSON seed files through the FastAPI backend
 
 ## Example Events for the First Slice
 
@@ -164,9 +168,14 @@ The MVP should be data-driven. The frontend only renders what the backend provid
   "id": "birth-of-hip-hop",
   "title": "Birth of Hip-Hop",
   "color": "#e4572e",
+  "creator": "gpt-5.5",
   "year_start": 1970,
   "year_end": 1985,
-  "summary": "How Bronx block parties, DJ techniques and urban culture shaped hip-hop."
+  "summary": "How local parties, DJ technique, Bronx communities, and media circulation turned hip-hop into a global cultural form.",
+  "thesis": "Hip-hop emerges from DJ practice, community spaces, urban conditions, and media circulation, not from a single point of origin.",
+  "tags": ["dj-culture", "block-party", "breakbeat", "bronx"],
+  "review_status": "draft",
+  "source_urls": []
 }
 ```
 
@@ -177,9 +186,12 @@ The MVP should be data-driven. The frontend only renders what the backend provid
   "id": "1520-sedgwick-avenue",
   "name": "1520 Sedgwick Avenue",
   "borough": "Bronx",
+  "place_type": "venue",
   "latitude": 40.8459,
   "longitude": -73.9230,
-  "summary": "Apartment building associated with an early Kool Herc party."
+  "summary": "Apartment building associated with an early Kool Herc party.",
+  "review_status": "draft",
+  "source_urls": []
 }
 ```
 
@@ -195,8 +207,11 @@ The MVP should be data-driven. The frontend only renders what the backend provid
   "year_end": 1973,
   "summary": "A party often cited as a symbolic origin point for hip-hop culture.",
   "significance": "Shows how DJ practice, community space and youth culture converged in the Bronx.",
+  "tags": ["dj-culture", "block-party", "bronx"],
+  "review_status": "draft",
   "source_urls": [],
-  "media_links": []
+  "media_links": [],
+  "image_links": []
 }
 ```
 
@@ -208,7 +223,8 @@ The MVP should be data-driven. The frontend only renders what the backend provid
   "from_event_id": "caribbean-soundsystem-influences",
   "to_event_id": "kool-herc-back-to-school-jam",
   "type": "influence",
-  "summary": "Connects Jamaican soundsystem practice with early Bronx DJ culture."
+  "summary": "Connects Jamaican soundsystem practice with early Bronx DJ culture.",
+  "review_status": "draft"
 }
 ```
 
@@ -219,23 +235,23 @@ Technology:
 - Python
 - `uv`
 - FastAPI
-- SQLite for the MVP
+- Curated JSON seed files for the MVP
+- Optional later: SQLite, once editing, imports, source maintenance, or more complex filters are needed
 - Optional later: PostgreSQL/PostGIS
 
-Planned structure:
+Current structure:
 
 ```text
 backend/
   app/
     main.py
-    api/
-      routes.py
-      events.py
-      places.py
-      connections.py
-    models/
-    repositories/
-    schemas/
+    config.py
+    seed_repository.py
+    schemas.py
+    media_enrichment/
+      services.py
+      settings.py
+  scripts/
   pyproject.toml
   uv.lock
 ```
@@ -247,11 +263,12 @@ GET /health
 GET /routes
 GET /events?from_year=1965&to_year=1985&route_id=birth-of-hip-hop
 GET /events/{event_id}
+PATCH /events/{event_id}/links
 GET /places
 GET /connections?route_id=birth-of-hip-hop
 ```
 
-For the first prototype, the backend can load data from static JSON files. SQLite becomes useful once editing, imports, source maintenance, or more complex filters are needed.
+The backend currently loads data from static JSON seed files. SQLite becomes useful once editing, imports, source maintenance, or more complex filters are needed.
 
 ## Frontend Concept
 
@@ -262,7 +279,7 @@ Technology:
 - TypeScript recommended
 - Optional later: MapLibre GL, if vector maps, layer styling, or more complex map interactions become important
 
-Planned structure:
+Current structure:
 
 ```text
 frontend/
@@ -281,10 +298,11 @@ frontend/
 
 Frontend state:
 
-- Active route or routes
-- Active time range
+- Active route
 - Selected event
 - Loaded events, places, and connections
+- Navigation drawer state
+- Review queue state for draft media/image links
 
 ## UX Principles
 
@@ -337,9 +355,9 @@ The MVP is successful if a user understands within five minutes:
 
 - Check or initialize the SvelteKit base structure
 - Add the Leaflet map
-- Build the timeline filter
-- Connect the story panel
-- Add the route filter
+- Build the route sequence timeline
+- Connect the event inspector
+- Add route switching
 - Keep the public explorer usable without authentication and separate admin validation controls from the main user flow
 
 ### Phase 4: Editorial Expansion
@@ -352,12 +370,13 @@ The MVP is successful if a user understands within five minutes:
 ## Open Decisions
 
 - Should events be told as precise points or as time ranges?
-- Should the MVP start with static JSON files or use SQLite immediately?
 - How strict do sources need to be in the first internal prototype?
 - Which map base should be used: OpenStreetMap tiles, MapLibre, or a custom style?
 - Should audio initially appear only as an external link or be embedded directly?
 - What is the minimal admin validation workflow: seed validation only, media/source review, publication status, or all of these?
+- How should pre-1970 hip-hop context be represented in route ranges and timeline layout?
+- What is the public-mode boundary for hiding or gating admin media/image review controls?
 
 ## Next Concrete Step
 
-Next, the **Birth of Hip-Hop** route should be created as a seed dataset. A first pass is enough with 8-12 events, 5-8 places, and the most important influence connections. After that, the first clickable prototype can be built.
+Next, continue tightening the current map-first exploration slice: decide how pre-1970 hip-hop context should appear in route ranges and timeline layout, review the selection flow across route, map, timeline, and inspector, and gate or remove admin media/image review controls before a public explorer surface.
