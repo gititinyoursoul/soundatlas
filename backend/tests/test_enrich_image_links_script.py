@@ -128,6 +128,22 @@ def test_build_wikimedia_image_link_defaults_to_archive_photo() -> None:
     assert candidate["review_status"] == "draft"
 
 
+def test_build_wikimedia_image_link_rejects_generic_broad_place_matches() -> None:
+    candidate = build_wikimedia_image_link(
+        page=build_imageinfo_page(
+            title="File:South Bronx street scene.jpg",
+            object_name="South Bronx street scene",
+            description="A street scene in the South Bronx.",
+        ),
+        query="South Bronx",
+        event=build_event({"title": "Caribbean Sound System Influences Reach the Bronx"}),
+        route=build_route(),
+        place=build_place({"name": "South Bronx", "place_type": "region"}),
+    )
+
+    assert candidate is None
+
+
 def test_deduplication_uses_image_thumbnail_and_source_urls() -> None:
     image_links = [
         build_candidate("https://img.example/1.jpg", "https://thumb.example/a.jpg", "https://src.example/1"),

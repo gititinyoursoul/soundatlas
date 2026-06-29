@@ -270,12 +270,18 @@ def build_event_image_queries(
     tag_text = " ".join(tags[:3])
     notable_terms = extract_notable_terms(event, max_terms=4)
     text_terms = " ".join(notable_terms)
+    place_type = str(place.get("place_type") or "").casefold()
+    allow_broad_place_only_queries = place_type in {
+        "building",
+        "club",
+        "housing_complex",
+        "venue",
+    }
 
     query_parts = [
         [event_title, place_name, years],
         [event_title],
-        [place_name, years],
-        [place_name],
+        *([[place_name, years], [place_name]] if allow_broad_place_only_queries else []),
         *[[term] for term in notable_terms[:2]],
         [event_title, route_title, years],
         [event_title, text_terms, tag_text],
@@ -410,6 +416,16 @@ def build_wikimedia_image_link(
     if media_type and media_type not in {"BITMAP", "DRAWING", "UNKNOWN"}:
         return None
     if not title:
+        return None
+
+    place_type = str(place.get("place_type") or "").casefold()
+    query_specificity = any(
+        [
+            token_overlap_count(event.get("title"), query) >= 2,
+            token_overlap_count(route.get("title"), query) >= 2,
+        ],
+    )
+    if place_type in {"city", "region", "neighborhood"} and not query_specificity:
         return None
 
     creator = metadata_value(info, "Artist")
@@ -566,6 +582,19 @@ def score_image_candidate(
     route: dict[str, Any],
     place: dict[str, Any],
 ) -> float:
+    place_type = str(place.get("place_type") or "").casefold()
+    has_specificity = any(
+        [
+            token_overlap(event.get("title"), text_blob),
+            token_overlap(route.get("title"), text_blob),
+            tag_overlap(event.get("tags", []), text_blob),
+            token_overlap(event.get("summary"), text_blob),
+            token_overlap(event.get("significance"), text_blob),
+        ],
+    )
+    if place_type in {"city", "region", "neighborhood"} and not has_specificity:
+        return 0.0
+
     score = 0.3
     if token_overlap(event.get("title"), text_blob):
         score += 0.25
@@ -591,6 +620,14 @@ def token_overlap(value: Any, text_blob: str) -> bool:
     text_tokens = meaningful_tokens(text_blob)
     value_tokens = meaningful_tokens(value)
     return bool(text_tokens & value_tokens)
+
+
+def token_overlap_count(value: Any, text_blob: str) -> int:
+    if not isinstance(value, str) or not value:
+        return 0
+    text_tokens = meaningful_tokens(text_blob)
+    value_tokens = meaningful_tokens(value)
+    return len(text_tokens & value_tokens)
 
 
 def tag_overlap(tags: Any, text_blob: str) -> bool:
