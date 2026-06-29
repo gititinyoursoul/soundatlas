@@ -1,8 +1,13 @@
 # SoundAtlas
 
+![Image #1](docs/design/screenshots/drawer-closed-desktop.png)
+
 SoundAtlas is an MVP for an interactive music history app. Current scope:
-**New York 1965-1985**, starting with the vertical slice
-**Birth of Hip-Hop: Bronx 1970-1985**.
+**New York 1965-1985** across four curated routes:
+**Birth of Hip-Hop: Bronx 1970-1985**,
+**Disco to Dance Music**,
+**Salsa and Latin New York**,
+and **Punk and New Wave Downtown**.
 
 ## Quick Start
 
@@ -119,11 +124,14 @@ Validation rules: `docs/seed-validation.md`
 
 ## Media Retrieval
 
-The automated media workflow is a YouTube-only MVP. It creates draft
-`media_links`; no audio or video files are stored in the repo.
+The automated enrichment workflows create draft `media_links` and
+`image_links`; no audio or video files are stored in the repo.
 
 Useful docs:
 
+- `docs/enrichment-workflow.md`
+- `docs/image-retrieval/image-enrichment-concept.md`
+- `docs/image-retrieval/workflow-commands.md`
 - `docs/media-retrieval/youtube-mvp-workflow.md`
 - `docs/media-retrieval/workflow-commands.md`
 - `docs/media-retrieval/codex-query-curation.md`
@@ -143,7 +151,7 @@ See `.env.example`.
 - `backend/`: FastAPI app, schemas, tests, and media retrieval scripts
 - `frontend/`: SvelteKit app with map, timeline, route filter, and story panel
 - `data/seed/`: curated MVP JSON data
-- `data/enrichment/`: media retrieval plans and results
+- `data/enrichment/`: enrichment plans and results
 - `docs/`: product, data, route, infrastructure, and workflow docs
 - `prompts/`: reusable project prompts for planning, implementation, review,
   and media retrieval
