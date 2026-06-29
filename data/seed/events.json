@@ -176,6 +176,21 @@
           "thumbnail_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/1520_Sedwick_Ave.%2C_Bronx%2C_New_York1.JPG/960px-1520_Sedwick_Ave.%2C_Bronx%2C_New_York1.JPG",
           "creator": "Bigtimepeace",
           "license": "Public domain"
+        },
+        {
+          "provider": "wikimedia",
+          "type": "venue_photo",
+          "title": "1520 Sedwick Ave., Bronx, New York2",
+          "image_url": "https://upload.wikimedia.org/wikipedia/commons/b/b0/1520_Sedwick_Ave.%2C_Bronx%2C_New_York2.JPG",
+          "source_url": "https://commons.wikimedia.org/wiki/File:1520_Sedwick_Ave.,_Bronx,_New_York2.JPG",
+          "rights_status": "public_domain",
+          "alt_text": "Another photo (see File:1520_Sedwick_Ave.,_Bronx,_New_York1.JPG for first version) of the front of 1520 Sedgwick Avenue in the Western Bronx. Kool Herc, generally credited as the...",
+          "query": "1520 Sedgwick Avenue",
+          "confidence": 1.0,
+          "review_status": "draft",
+          "thumbnail_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/1520_Sedwick_Ave.%2C_Bronx%2C_New_York2.JPG/960px-1520_Sedwick_Ave.%2C_Bronx%2C_New_York2.JPG",
+          "creator": "Bigtimepeace",
+          "license": "Public domain"
         }
       ]
     },
@@ -252,7 +267,40 @@
           "review_status": "reviewed"
         }
       ],
-      "image_links": []
+      "image_links": [
+        {
+          "provider": "wikimedia",
+          "type": "artist_photo",
+          "title": "Dj Grandmaster Flash-01-mika",
+          "image_url": "https://upload.wikimedia.org/wikipedia/commons/9/92/Dj_Grandmaster_Flash-01-mika.jpg",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Dj_Grandmaster_Flash-01-mika.jpg",
+          "rights_status": "open_license",
+          "alt_text": "Flash at the wheels of steel",
+          "query": "Grandmaster Flash",
+          "confidence": 0.75,
+          "review_status": "draft",
+          "thumbnail_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Dj_Grandmaster_Flash-01-mika.jpg/960px-Dj_Grandmaster_Flash-01-mika.jpg",
+          "creator": "Mika-photography",
+          "license": "CC BY-SA 3.0",
+          "license_url": "https://creativecommons.org/licenses/by-sa/3.0"
+        },
+        {
+          "provider": "wikimedia",
+          "type": "artist_photo",
+          "title": "Dj grandmaster flash-05-mika",
+          "image_url": "https://upload.wikimedia.org/wikipedia/commons/4/4d/Dj_grandmaster_flash-05-mika.jpg",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Dj_grandmaster_flash-05-mika.jpg",
+          "rights_status": "open_license",
+          "alt_text": "DJ Grandmaster Flash, Netherlands 1998",
+          "query": "Grandmaster Flash",
+          "confidence": 0.75,
+          "review_status": "draft",
+          "thumbnail_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Dj_grandmaster_flash-05-mika.jpg/960px-Dj_grandmaster_flash-05-mika.jpg",
+          "creator": "Mika-photography",
+          "license": "CC BY-SA 3.0",
+          "license_url": "https://creativecommons.org/licenses/by-sa/3.0"
+        }
+      ]
     },
     {
       "id": "zulu-nation-scene-organization",
@@ -390,7 +438,40 @@
         "https://www.arts.gov/stories/other/afrika-bambaataa-renegade-funk"
       ],
       "media_links": [],
-      "image_links": []
+      "image_links": [
+        {
+          "provider": "wikimedia",
+          "type": "venue_photo",
+          "title": "161st St River Av td (2019-01-24) 57",
+          "image_url": "https://upload.wikimedia.org/wikipedia/commons/1/1b/161st_St_River_Av_td_%282019-01-24%29_57.jpg",
+          "source_url": "https://commons.wikimedia.org/wiki/File:161st_St_River_Av_td_(2019-01-24)_57.jpg",
+          "rights_status": "open_license",
+          "alt_text": "A Washington Heights–Riverside Drive-bound Bx6 local bus crossing underneath the 161st Street–Yankee Stadium IRT station, traveling west on 161st Street at River Avenue in Concour...",
+          "query": "Bronx River Houses",
+          "confidence": 0.5,
+          "review_status": "draft",
+          "thumbnail_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/161st_St_River_Av_td_%282019-01-24%29_57.jpg/960px-161st_St_River_Av_td_%282019-01-24%29_57.jpg",
+          "creator": "Tdorante10",
+          "license": "CC BY-SA 4.0",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0"
+        },
+        {
+          "provider": "wikimedia",
+          "type": "venue_photo",
+          "title": "161st St River Av td (2019-01-24) 69",
+          "image_url": "https://upload.wikimedia.org/wikipedia/commons/f/fc/161st_St_River_Av_td_%282019-01-24%29_69.jpg",
+          "source_url": "https://commons.wikimedia.org/wiki/File:161st_St_River_Av_td_(2019-01-24)_69.jpg",
+          "rights_status": "open_license",
+          "alt_text": "An El Grant Highway–University Avenue (Highbridge)-bound Bx13 bus about to enter service, turning south from River Avenue onto East 161st Street in Concourse, Bronx. Short run Bx1...",
+          "query": "Bronx River Houses",
+          "confidence": 0.5,
+          "review_status": "draft",
+          "thumbnail_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/161st_St_River_Av_td_%282019-01-24%29_69.jpg/960px-161st_St_River_Av_td_%282019-01-24%29_69.jpg",
+          "creator": "Tdorante10",
+          "license": "CC BY-SA 4.0",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0"
+        }
+      ]
     },
     {
       "id": "wild-style-global-visibility",
