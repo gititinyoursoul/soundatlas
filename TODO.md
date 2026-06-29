@@ -29,6 +29,14 @@ Completed work packages are archived in `docs/done.md`.
 - [ ] Add a YouTube media availability audit step to the enrichment workflow that records embed vs external playback mode
 - [ ] Recheck every current YouTube video link for playable, embeddable, external-only, private, deleted, or unavailable status
 
+### Image Enrichment
+
+- [ ] Add LOC and Internet Archive providers to the image enrichment workflow
+- [ ] Define and enforce the public-image visibility boundary so only reviewed image links render in public-facing UI
+- [ ] Implement the reviewed-image presentation behavior in the story panel, including first-image header, attribution, and visible rights notice
+- [ ] Confirm the image enrichment pass can reliably reach 3-5 candidates per event when source coverage exists
+- [ ] Expand provider-specific image normalization so search, pagination, and rights mapping are encapsulated by provider modules
+
 ### UX and Design
 
 - [ ] Explore a landing page design concept and decide whether it belongs outside the main map-first app surface
@@ -51,5 +59,6 @@ Completed work packages are archived in `docs/done.md`.
 - [ ] Review the selected-event focal cue across header, map marker/place chrome, timeline, and inspector
 - [ ] Reconcile the current mobile ordering implementation with the design baseline and update docs as needed
 - [ ] Define public-facing image/media browsing behavior, including fixed preview dimensions, long-list handling, lazy loading, and focused image/video inspection
+- [ ] Rework image and media exploration in the story inspector
 - [ ] Review the selection flow across route, map, timeline, and story panel
 - [ ] Document the UX acceptance check against the design checklist
