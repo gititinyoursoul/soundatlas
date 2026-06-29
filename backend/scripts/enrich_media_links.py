@@ -10,6 +10,7 @@ if str(BACKEND_ROOT) not in sys.path:
     sys.path.insert(0, str(BACKEND_ROOT))
 
 from scripts.run_youtube_search_requests import DEFAULT_OUTPUT_DIR
+from app.link_ignores import build_ignored_link_index, link_is_ignored
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -44,6 +45,7 @@ def main() -> int:
     args = parser.parse_args()
 
     events_payload = read_json(EVENTS_PATH)
+    ignored_link_index = build_ignored_link_index(events_payload)
     youtube_result_payloads = load_youtube_result_payloads(
         args.results_dir,
         event_id=args.event_id,
@@ -58,6 +60,7 @@ def main() -> int:
         youtube_result_payloads=youtube_result_payloads,
         event_id=args.event_id,
         limit=args.limit,
+        ignored_link_index=ignored_link_index,
     )
 
     if args.dry_run:
@@ -99,6 +102,7 @@ def enrich_events_payload(
     youtube_result_payloads: list[dict[str, Any]],
     event_id: str | None,
     limit: int,
+    ignored_link_index: dict[tuple[str, str], set[str]] | None = None,
 ) -> int:
     result_payload_by_event_id = {
         payload["event_id"]: payload
@@ -115,7 +119,12 @@ def enrich_events_payload(
         if not result_payload:
             continue
 
-        candidates = extract_media_links_from_youtube_results(result_payload, limit=limit)
+        candidates = extract_media_links_from_youtube_results(
+            result_payload,
+            limit=limit,
+            event_id=event["id"],
+            ignored_link_index=ignored_link_index,
+        )
         if not candidates:
             continue
 
@@ -131,6 +140,8 @@ def enrich_events_payload(
 def extract_media_links_from_youtube_results(
     result_payload: dict[str, Any],
     limit: int,
+    event_id: str | None = None,
+    ignored_link_index: dict[tuple[str, str], set[str]] | None = None,
 ) -> list[dict[str, Any]]:
     candidates = []
     for result_group in sorted(
@@ -143,7 +154,14 @@ def extract_media_links_from_youtube_results(
             if candidate:
                 candidates.append(candidate)
 
-    return dedupe_media_links(candidates)[:limit]
+    candidates = dedupe_media_links(candidates)
+    if event_id and ignored_link_index:
+        candidates = [
+            candidate
+            for candidate in candidates
+            if not link_is_ignored(ignored_link_index, event_id, "media", candidate)
+        ]
+    return candidates[:limit]
 
 
 def build_media_link_from_youtube_item(

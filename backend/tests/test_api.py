@@ -1,3 +1,5 @@
+import json
+
 from fastapi.testclient import TestClient
 
 from app.main import app, create_app
@@ -105,9 +107,16 @@ def test_media_link_can_be_rejected(tmp_path) -> None:
 
     assert response.status_code == 200
     assert response.json()["media_links"] == []
-    assert "watch?v=draft" not in (tmp_path / "events.json").read_text(
-        encoding="utf-8",
-    )
+    events_payload = json.loads((tmp_path / "events.json").read_text(encoding="utf-8"))
+    assert events_payload["ignored_links"] == [
+        {
+            "event_id": "review-event",
+            "kind": "media",
+            "values": [
+                "https://www.youtube.com/watch?v=draft",
+            ],
+        }
+    ]
 
 
 def test_event_link_can_mark_image_reviewed(tmp_path) -> None:
@@ -144,9 +153,17 @@ def test_event_link_can_reject_image(tmp_path) -> None:
 
     assert response.status_code == 200
     assert response.json()["image_links"] == []
-    assert "draft-image.jpg" not in (tmp_path / "events.json").read_text(
-        encoding="utf-8",
-    )
+    events_payload = json.loads((tmp_path / "events.json").read_text(encoding="utf-8"))
+    assert events_payload["ignored_links"] == [
+        {
+            "event_id": "review-event",
+            "kind": "image",
+            "values": [
+                "https://example.com/draft-image.jpg",
+                "https://example.com/source",
+            ],
+        }
+    ]
 
 
 def write_review_seed_files(seed_dir) -> None:

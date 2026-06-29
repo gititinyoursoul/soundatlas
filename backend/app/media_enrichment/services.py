@@ -1,4 +1,5 @@
 import json
+import gzip
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -26,7 +27,10 @@ def request_json(
     )
     try:
         with urllib.request.urlopen(request, timeout=30) as response:
-            return json.loads(response.read().decode("utf-8"))
+            raw_body = response.read()
+            if response.headers.get("Content-Encoding", "").lower() == "gzip":
+                raw_body = gzip.decompress(raw_body)
+            return json.loads(raw_body.decode("utf-8"))
     except urllib.error.HTTPError as exc:
         detail = exc.read().decode("utf-8", errors="replace")
         raise MediaProviderError(f"HTTP {exc.code}: {detail}") from exc

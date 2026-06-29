@@ -145,7 +145,39 @@
           "review_status": "reviewed"
         }
       ],
-      "image_links": []
+      "image_links": [
+        {
+          "provider": "wikimedia",
+          "type": "venue_photo",
+          "title": "1520Sedgwick Avenue",
+          "image_url": "https://upload.wikimedia.org/wikipedia/commons/f/f4/1520Sedgwick_Avenue.jpg",
+          "source_url": "https://commons.wikimedia.org/wiki/File:1520Sedgwick_Avenue.jpg",
+          "rights_status": "open_license",
+          "alt_text": "1520 Sedgwick Avenue",
+          "query": "1520 Sedgwick Avenue",
+          "confidence": 0.95,
+          "review_status": "reviewed",
+          "thumbnail_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/1520Sedgwick_Avenue.jpg/960px-1520Sedgwick_Avenue.jpg",
+          "creator": "Stephanie Morillo",
+          "license": "CC BY-SA 2.0",
+          "license_url": "https://creativecommons.org/licenses/by-sa/2.0"
+        },
+        {
+          "provider": "wikimedia",
+          "type": "venue_photo",
+          "title": "1520 Sedwick Ave., Bronx, New York1",
+          "image_url": "https://upload.wikimedia.org/wikipedia/commons/6/6c/1520_Sedwick_Ave.%2C_Bronx%2C_New_York1.JPG",
+          "source_url": "https://commons.wikimedia.org/wiki/File:1520_Sedwick_Ave.,_Bronx,_New_York1.JPG",
+          "rights_status": "public_domain",
+          "alt_text": "Photo of the front of 1520 Sedgwick Avenue in the Western Bronx.(американска панелка) Kool Herc, generally credited as the originator of hip-hop music, lived and threw his first p...",
+          "query": "1520 Sedgwick Avenue",
+          "confidence": 1.0,
+          "review_status": "reviewed",
+          "thumbnail_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/1520_Sedwick_Ave.%2C_Bronx%2C_New_York1.JPG/960px-1520_Sedwick_Ave.%2C_Bronx%2C_New_York1.JPG",
+          "creator": "Bigtimepeace",
+          "license": "Public domain"
+        }
+      ]
     },
     {
       "id": "breakbeat-dj-practice-spreads",

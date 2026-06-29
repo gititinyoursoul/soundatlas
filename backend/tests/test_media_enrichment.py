@@ -1,5 +1,11 @@
+import gzip
+import json
 from pathlib import Path
+from urllib.request import Request
 
+import pytest
+
+from app.media_enrichment import services
 from app.media_enrichment.settings import MediaEnrichmentSettings
 
 
@@ -47,3 +53,30 @@ def test_settings_fall_back_to_dummy_codex_file(tmp_path: Path) -> None:
     assert settings.env_source == "codex"
     assert settings.use_dummy_services is True
     assert settings.has_live_youtube_credentials is False
+
+
+def test_request_json_decompresses_gzip_responses(monkeypatch) -> None:
+    payload = {"ok": True}
+    compressed_body = gzip.compress(json.dumps(payload).encode("utf-8"))
+
+    class FakeResponse:
+        def __init__(self) -> None:
+            self.headers = {"Content-Encoding": "gzip"}
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def read(self) -> bytes:
+            return compressed_body
+
+    def fake_urlopen(request: Request, timeout: int = 30):
+        return FakeResponse()
+
+    monkeypatch.setattr(services.urllib.request, "urlopen", fake_urlopen)
+
+    result = services.request_json("https://example.com/api")
+
+    assert result == payload

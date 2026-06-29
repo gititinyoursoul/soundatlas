@@ -1,5 +1,6 @@
 import json
 
+from app.link_ignores import build_ignored_link_index
 from scripts.enrich_media_links import (
     enrich_events_payload,
     extract_media_links_from_youtube_results,
@@ -135,6 +136,49 @@ def test_load_youtube_result_payloads_filters_provider_and_event(tmp_path) -> No
 
     assert len(result_payloads) == 1
     assert result_payloads[0]["provider"] == "youtube"
+
+
+def test_enrich_events_payload_skips_ignored_media_links() -> None:
+    events_payload = {
+        "events": [
+            {
+                "id": "kool-herc-back-to-school-jam",
+                "route_id": "birth-of-hip-hop",
+                "place_id": "1520-sedgwick-avenue",
+                "title": "Back to School Jam",
+                "year_start": 1973,
+                "year_end": 1973,
+                "summary": "Bronx party",
+                "significance": "Birth of a scene",
+                "tags": ["bronx", "dj"],
+                "source_urls": [],
+                "review_status": "draft",
+                "media_links": [],
+                "image_links": [],
+            }
+        ],
+        "ignored_links": [
+            {
+                "event_id": "kool-herc-back-to-school-jam",
+                "kind": "media",
+                "values": ["https://www.youtube.com/watch?v=interview"],
+            }
+        ],
+    }
+
+    changed_events = enrich_events_payload(
+        events_payload=events_payload,
+        youtube_result_payloads=[build_youtube_result_payload()],
+        event_id=None,
+        limit=2,
+        ignored_link_index=build_ignored_link_index(events_payload),
+    )
+
+    assert changed_events == 1
+    media_links = events_payload["events"][0]["media_links"]
+    assert [link["url"] for link in media_links] == [
+        "https://www.youtube.com/playlist?list=playlist",
+    ]
 
 
 def build_youtube_result_payload() -> dict:

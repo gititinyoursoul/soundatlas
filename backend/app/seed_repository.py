@@ -5,6 +5,7 @@ from typing import Any
 from pydantic import ValidationError
 
 from app.config import DEFAULT_SEED_DIR
+from app.link_ignores import record_ignored_link
 from app.schemas import Connection, Event, Place, Route
 
 
@@ -132,6 +133,15 @@ class SeedRepository:
         if event is None:
             return None
 
+        payload_link = next(
+            (
+                link
+                for link in ([*event.media_links, *event.image_links])
+                if link_matches_url(link, url)
+            ),
+            None,
+        )
+
         if link_kind == "media":
             next_links = [
                 media_link
@@ -151,7 +161,11 @@ class SeedRepository:
                 return None
             event.image_links = next_links
 
+        if payload_link is None:
+            payload_link = {"url": url}
+
         self._remove_link(event_id, link_kind, url)
+        self._record_ignored_link(event_id, link_kind, payload_link)
         return event
 
     def mark_image_link_reviewed(self, event_id: str, image_url: str) -> Event | None:
@@ -184,6 +198,15 @@ class SeedRepository:
 
     def _remove_media_link(self, event_id: str, media_url: str) -> None:
         self._remove_link(event_id, "media", media_url)
+
+    def _record_ignored_link(self, event_id: str, link_kind: str, link: Any) -> None:
+        if self._seed_dir is None:
+            return
+
+        events_path = self._seed_dir / "events.json"
+        payload = read_json_payload(events_path)
+        if record_ignored_link(payload, event_id, link_kind, link):
+            write_json_payload(events_path, payload)
 
     def _write_link_review_status(
         self,
