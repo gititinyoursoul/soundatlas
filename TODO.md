@@ -35,6 +35,7 @@ Completed work packages are archived in `docs/done.md`.
 - [ ] Define and enforce the public-image visibility boundary so only reviewed image links render in public-facing UI
 - [ ] Implement the reviewed-image presentation behavior in the story panel, including first-image header, attribution, and visible rights notice
 - [ ] Confirm the image enrichment pass can reliably reach 3-5 candidates per event when source coverage exists
+- [ ] Add final cross-query ranking for image enrichment so candidates are collected across planned queries and the best matches are kept per event
 - [ ] Expand provider-specific image normalization so search, pagination, and rights mapping are encapsulated by provider modules
 
 ### UX and Design
