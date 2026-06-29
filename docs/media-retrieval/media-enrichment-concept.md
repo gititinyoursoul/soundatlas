@@ -14,6 +14,11 @@ Media enrichment currently uses a YouTube-only MVP workflow:
 
 These links are meant as exploration aids, not as a complete editorial discography.
 
+Image enrichment is tracked separately in
+`docs/image-retrieval/image-enrichment-concept.md`. It follows the same
+draft-first review principle, but writes to `image_links` instead of
+`media_links`.
+
 ## Data Model
 
 Events use the `media_links` field. Each entry is a structured object.

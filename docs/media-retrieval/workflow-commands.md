@@ -122,6 +122,10 @@ This updates:
 data/seed/events.json
 ```
 
+Rejected media links are also added to the top-level `ignored_links` collection
+in the same seed file. That keeps future enrichment runs from re-adding the same
+event-specific URL after it has been rejected.
+
 ## 7. Review Generated Links
 
 Manually review every generated link before treating it as accepted content.
@@ -140,6 +144,10 @@ Only set:
 ```
 
 after editorial review.
+
+If you reject a media item, the UI removes it from the event and stores the
+ignored URL for the same event and media kind. That suppression applies to later
+reruns of the YouTube enrichment workflow.
 
 ## Useful Variants
 
