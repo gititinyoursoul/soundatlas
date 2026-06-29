@@ -1,6 +1,7 @@
 <script lang="ts">
   import Icon from '$lib/components/Icon.svelte';
   import MediaEmbed from '$lib/components/MediaEmbed.svelte';
+  import { resolvePreviewItemId } from '$lib/components/story-preview';
   import { parseYouTubeEmbed, type YouTubeEmbed } from '$lib/media/youtube';
   import type {
     Event,
@@ -21,6 +22,7 @@
         kind: 'image';
         title: string;
         subtitle: string;
+        selectionUrl: string;
         previewUrl: string;
         imageLink: ImageLink;
       }
@@ -29,6 +31,8 @@
         kind: 'media';
         title: string;
         subtitle: string;
+        selectionUrl: string;
+        previewUrl?: string | null;
         mediaLink: MediaLink;
         embed: YouTubeEmbed | null;
       };
@@ -89,18 +93,15 @@
   $: if (event?.id !== lastEventId) {
     lastEventId = event?.id ?? null;
     activeTab = initialTab;
-    selectedPreviewId =
-      previewItems.find((item) => item.previewUrl === selectedPreviewUrl)?.id ??
-      previewItems[0]?.id ??
-      '';
+    selectedPreviewId = resolvePreviewItemId(previewItems, selectedPreviewUrl);
   }
   $: if (event?.id === lastEventId && activeTab !== initialTab && initialTab !== 'story') {
     activeTab = initialTab;
   }
   $: if (selectedPreviewUrl) {
-    const selectedPreviewItem = previewItems.find((item) => item.previewUrl === selectedPreviewUrl);
-    if (selectedPreviewItem && selectedPreviewItem.id !== selectedPreviewId) {
-      selectedPreviewId = selectedPreviewItem.id;
+    const resolvedPreviewItemId = resolvePreviewItemId(previewItems, selectedPreviewUrl);
+    if (resolvedPreviewItemId && resolvedPreviewItemId !== selectedPreviewId) {
+      selectedPreviewId = resolvedPreviewItemId;
     }
   }
   $: if (previewItems.length > 0 && !previewItems.some((item) => item.id === selectedPreviewId)) {
@@ -121,6 +122,7 @@
       kind: 'image',
       title: imageLink.title,
       subtitle: formatImageDescriptor(imageLink.provider, imageLink.type),
+      selectionUrl: imageLink.image_url,
       previewUrl: imageLink.thumbnail_url ?? imageLink.image_url,
       imageLink
     }));
@@ -130,6 +132,8 @@
       kind: 'media',
       title: mediaLink.title,
       subtitle: formatMediaDescriptor(mediaLink.provider, mediaLink.type),
+      selectionUrl: mediaLink.url,
+      previewUrl: mediaLink.url,
       mediaLink,
       embed: mediaLink.playback_mode === 'external' ? null : parseYouTubeEmbed(mediaLink.url)
     }));
