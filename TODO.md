@@ -6,6 +6,11 @@ The goal of the first MVP is a vertical slice for **Birth of Hip-Hop: Bronx 1970
 
 Completed work packages are archived in `docs/done.md`.
 
+## Priority
+
+- Current: improve enrichment quality and unify the shared upstream input for image and media queries.
+- Next up: rethink how media types and images are presented and explored in the app.
+
 ## Open
 
 ### AI Agent Setup and Security
@@ -28,6 +33,15 @@ Completed work packages are archived in `docs/done.md`.
 
 - [ ] Add a YouTube media availability audit step to the enrichment workflow that records embed vs external playback mode
 - [ ] Recheck every current YouTube video link for playable, embeddable, external-only, private, deleted, or unavailable status
+- [ ] Compare `docs/media-retrieval/event-search-components.md` with the image retrieval brief approach and choose one shared upstream process for both image and media enrichment
+- [ ] Make `docs/media-retrieval/event-search-components.md` the shared upstream search-input model for both image and media enrichment so query planning starts from the same structured base
+
+### Enrichment Orchestration
+
+- [ ] Add a single script that triggers all enrichment passes for one event, including media and images, so one command can refresh the full enrichment state
+- [ ] Add a shared event-search-components generator so media and image enrichment start from the same structured input
+- [ ] Add a shared enrichment preview command that shows media and image query plans for one event side by side
+- [ ] Add a dry-run quality report that compares enrichment workflow changes by measuring candidate count, specificity, ignored matches, and other output-quality signals
 
 ### Image Enrichment
 
@@ -40,9 +54,14 @@ Completed work packages are archived in `docs/done.md`.
 
 ### UX and Design
 
+#### Discovery And Entry
+
 - [ ] Explore a landing page design concept and decide whether it belongs outside the main map-first app surface
 - [ ] Explore first route selection behavior for new users before entering the main exploration workspace
 - [ ] Explore search bar functionality for finding routes, events, places, sources, and media
+
+#### Map And Timeline
+
 - [ ] Run current screenshots and recheck whether the map feels dominant enough in the first viewport
 - [ ] Check out Leaflet base map tile style options
 - [ ] Check out Leaflet marker design options
@@ -52,14 +71,21 @@ Completed work packages are archived in `docs/done.md`.
 - [ ] Check out Leaflet controls and map chrome design options
 - [ ] Decide how pre-1970 hip-hop context should appear in route ranges and timeline layout
 - [ ] Decide whether drawer route selection should keep the overlay open or close after selection
-- [ ] Define the public/admin visibility policy for restricted drawer items, including hidden vs disabled behavior
-- [ ] Gate or remove admin media/image review controls before a public explorer surface
-- [ ] Define a separate admin validation workflow before adding Validation back to the drawer
-- [ ] Decide whether timeline event cards should remain, become more compact, or move into the story inspector
 - [ ] Review timeline density behavior for future routes with more events
 - [ ] Review the selected-event focal cue across header, map marker/place chrome, timeline, and inspector
 - [ ] Reconcile the current mobile ordering implementation with the design baseline and update docs as needed
-- [ ] Define public-facing image/media browsing behavior, including fixed preview dimensions, long-list handling, lazy loading, and focused image/video inspection
-- [ ] Rework image and media exploration in the story inspector
+- [ ] Decide whether timeline event cards should remain, become more compact, or move into the story inspector
 - [ ] Review the selection flow across route, map, timeline, and story panel
 - [ ] Document the UX acceptance check against the design checklist
+
+#### Media And Image UX
+
+- [ ] Define public-facing image/media browsing behavior, including fixed preview dimensions, long-list handling, lazy loading, and focused image/video inspection
+- [ ] Rethink how media types and images should be used in the app, including whether they belong in the story inspector, as evidence, or as primary browsing content
+- [ ] Rework image and media exploration in the story inspector
+
+#### Admin And Visibility
+
+- [ ] Define the public/admin visibility policy for restricted drawer items, including hidden vs disabled behavior
+- [ ] Gate or remove admin media/image review controls before a public explorer surface
+- [ ] Define a separate admin validation workflow before adding Validation back to the drawer
