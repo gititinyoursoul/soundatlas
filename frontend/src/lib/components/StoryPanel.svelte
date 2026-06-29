@@ -389,6 +389,23 @@
                   showReviewActions={false}
                 />
               </div>
+            {:else if selectedPreviewItem?.kind === 'media' && selectedPreviewItem.mediaLink.playback_mode === 'external'}
+              <div class="external-media">
+                <span class="external-media-badge">
+                  {selectedPreviewItem.mediaLink.provider === 'youtube'
+                    ? 'YouTube'
+                    : selectedPreviewItem.subtitle}
+                </span>
+                <div>
+                  <h3>{selectedPreviewItem.title}</h3>
+                  <p>{selectedPreviewItem.subtitle}</p>
+                </div>
+                <a href={selectedPreviewItem.mediaLink.url} target="_blank" rel="noreferrer">
+                  {selectedPreviewItem.mediaLink.provider === 'youtube'
+                    ? 'Open on YouTube'
+                    : 'Open media link'}
+                </a>
+              </div>
             {:else if selectedPreviewItem?.kind === 'media'}
               <div class="media-placeholder">
                 <h3>{selectedPreviewItem.title}</h3>
@@ -826,7 +843,8 @@
 
   .image-preview,
   .media-placeholder,
-  .embedded-media {
+  .embedded-media,
+  .external-media {
     display: grid;
     gap: 0.6rem;
   }
@@ -851,16 +869,23 @@
   }
 
   .image-preview strong,
-  .media-placeholder h3 {
+  .media-placeholder h3,
+  .external-media h3 {
     color: #17202a;
     font-size: 0.95rem;
     line-height: 1.3;
   }
 
   .image-preview span,
-  .media-placeholder p {
+  .media-placeholder p,
+  .external-media p {
     color: #6b7785;
     font-size: 0.8rem;
+  }
+
+  .external-media h3,
+  .external-media p {
+    margin: 0;
   }
 
   .media-placeholder {
@@ -873,16 +898,46 @@
     background: #f9fbfc;
   }
 
-  .media-placeholder a {
+  .external-media {
+    align-content: center;
+    min-height: 14rem;
+    padding: 1rem;
+    border: 1px solid #d7dfe7;
+    border-radius: 8px;
+    background:
+      linear-gradient(135deg, rgba(23, 32, 42, 0.08) 0%, rgba(23, 32, 42, 0) 42%),
+      #f9fbfc;
+  }
+
+  .external-media-badge {
+    width: fit-content;
+    padding: 0.25rem 0.45rem;
+    border: 1px solid #d7dfe7;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #536170;
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .media-placeholder a,
+  .external-media a {
     width: fit-content;
     padding: 0.45rem 0.65rem;
-    border: 1px solid #efc8be;
+    border: 1px solid #cfd7df;
     border-radius: 999px;
-    background: #fff7f4;
-    color: #bb3f22;
+    background: #ffffff;
+    color: #17202a;
     font-size: 0.78rem;
     font-weight: 700;
     text-decoration: none;
+  }
+
+  .external-media a:hover,
+  .media-placeholder a:hover {
+    border-color: #17202a;
   }
 
   .preview-list {

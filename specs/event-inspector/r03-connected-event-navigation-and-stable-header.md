@@ -52,6 +52,7 @@ Make the event inspector read as a stable research surface with actionable narra
 * R9: Source links must show readable source labels instead of generic numbered labels.
 * R10: Public media labels must be framed for exploration and must not expose review-status language.
 * R11: Media marked as external-only must render as an external action instead of an embedded player.
+* R12: External-only media must use a dedicated preview state distinct from empty or missing media.
 
 ## Acceptance criteria
 
@@ -66,6 +67,7 @@ Make the event inspector read as a stable research surface with actionable narra
 * AC9: Source links use recognizable source names or cleaned hostnames.
 * AC10: The media list is headed "Media to explore" and media subtitles do not include review status.
 * AC11: External-only YouTube media shows an "Open on YouTube" action and no iframe.
+* AC12: External-only media shows a provider cue, title, subtitle, and external-open action in the preview area.
 
 ## Assumptions
 
@@ -133,6 +135,10 @@ Make the event inspector read as a stable research surface with actionable narra
    * Satisfies: R11
    * Files likely affected: `data/seed/events.json`, `frontend/src/lib/components/StoryPanel.svelte`, `frontend/src/lib/components/MediaEmbed.svelte`, `frontend/src/lib/types/soundatlas.ts`, `backend/app/schemas.py`
 
+11. Add a dedicated external media preview state so external-only items remain part of media exploration.
+   * Satisfies: R12
+   * Files likely affected: `frontend/src/lib/components/StoryPanel.svelte`
+
 ## Validation plan
 
 * AC1:
@@ -179,6 +185,10 @@ Make the event inspector read as a stable research surface with actionable narra
 
   * Check: External-only media is filtered out of embedded playback and gets an external-open action.
   * Command: `npm run check`, `cd backend && uv run pytest`
+* AC12:
+
+  * Check: External-only media does not reuse the generic placeholder visual state.
+  * Command: `npm run check`
 
 ## Suggested validation commands
 
@@ -220,6 +230,7 @@ Suggested file groups for review:
 * R9: implemented in `frontend/src/lib/components/StoryPanel.svelte`
 * R10: implemented in `frontend/src/lib/components/StoryPanel.svelte`
 * R11: implemented in `data/seed/events.json`, `frontend/src/lib/components/StoryPanel.svelte`, `frontend/src/lib/components/MediaEmbed.svelte`, `frontend/src/lib/types/soundatlas.ts`, `backend/app/schemas.py`
+* R12: implemented in `frontend/src/lib/components/StoryPanel.svelte`
 
 ### Acceptance criteria verification
 
@@ -234,6 +245,7 @@ Suggested file groups for review:
 * AC9: Pass — source links render readable source labels derived from URL hosts
 * AC10: Pass — media tab copy is exploratory and public subtitles omit review status
 * AC11: Pass — external-only media opens on YouTube instead of rendering an iframe
+* AC12: Pass — external-only media has a dedicated preview state with provider cue and external action
 
 ### Tests/checks run
 

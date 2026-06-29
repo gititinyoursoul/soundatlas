@@ -24,6 +24,11 @@ Completed work packages are archived in `docs/done.md`.
 - [ ] Split environment dependency management into prod and dev
 - [ ] Remove design documents and images that are no longer needed
 
+### Media Enrichment
+
+- [ ] Add a YouTube media availability audit step to the enrichment workflow that records embed vs external playback mode
+- [ ] Recheck every current YouTube video link for playable, embeddable, external-only, private, deleted, or unavailable status
+
 ### UX and Design
 
 - [ ] Check out Leaflet base map tile style options
