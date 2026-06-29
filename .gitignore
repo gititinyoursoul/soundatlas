@@ -51,6 +51,9 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
+# Local planning records
+specs/
+
 # OS / editor
 .DS_Store
 Thumbs.db
