@@ -13,7 +13,7 @@
     StoryConnectionItem
   } from '$lib/types/soundatlas';
 
-  type InspectorTab = 'story' | 'media' | 'sources';
+  type InspectorTab = 'story' | 'media' | 'related';
 
   type PreviewItem =
     | {
@@ -95,7 +95,6 @@
   $: selectedPreviewItem = previewItems.find((item) => item.id === selectedPreviewId) ?? null;
   $: mediaCount = event?.media_links.length ?? 0;
   $: imageCount = event?.image_links.length ?? 0;
-  $: sourceCount = event?.source_urls.length ?? 0;
   $: connectionCount = connections.length;
 
   function buildPreviewItems(currentEvent: Event | null): PreviewItem[] {
@@ -268,16 +267,16 @@
             <span>{mediaCount + imageCount}</span>
           </button>
           <button
-            id="inspector-tab-sources"
+            id="inspector-tab-related"
             type="button"
             role="tab"
-            class:active={activeTab === 'sources'}
-            aria-selected={activeTab === 'sources'}
-            aria-controls="inspector-panel-sources"
-            on:click={() => selectTab('sources')}
+            class:active={activeTab === 'related'}
+            aria-selected={activeTab === 'related'}
+            aria-controls="inspector-panel-related"
+            on:click={() => selectTab('related')}
           >
-            Sources
-            <span>{sourceCount}</span>
+            Related
+            <span>{connectionCount}</span>
           </button>
         </div>
 
@@ -327,35 +326,20 @@
             </aside>
           </section>
 
-          <section class="detail-block">
-            <h3>Connections</h3>
-            {#if connections.length > 0}
-              <ul class="connection-list compact">
-                {#each connections as connection}
+          <section class="story-sources">
+            <h3>Sources</h3>
+            {#if event.source_urls.length > 0}
+              <ul class="source-list compact">
+                {#each event.source_urls as sourceUrl}
                   <li>
-                    <button
-                      type="button"
-                      class="connection-row"
-                      on:click={() => onNavigateEvent(connection.event.id, connection.event.route_id)}
-                    >
-                      <span class="connection-kicker">
-                        <span>{connection.directionLabel}</span>
-                        <span>{formatConnectionType(connection)}</span>
-                      </span>
-                      <span class="connection-title">{connection.event.title}</span>
-                      <span class="connection-meta">
-                        {#if connection.route}
-                          <span class="route-dot" style={`--route-color: ${connection.route.color}`}></span>
-                        {/if}
-                        {formatConnectionMeta(connection)}
-                      </span>
-                      <span class="connection-summary">{connection.summary}</span>
-                    </button>
+                    <a href={sourceUrl} target="_blank" rel="noreferrer">
+                      {formatSourceLabel(sourceUrl)}
+                    </a>
                   </li>
                 {/each}
               </ul>
             {:else}
-              <p class="empty-inline">No connection notes are attached to this event yet.</p>
+              <p class="empty-inline">No source URLs have been added for this event yet.</p>
             {/if}
           </section>
         </div>
@@ -454,33 +438,41 @@
         </div>
       {:else}
         <div
-          id="inspector-panel-sources"
+          id="inspector-panel-related"
           role="tabpanel"
-          aria-labelledby="inspector-tab-sources"
+          aria-labelledby="inspector-tab-related"
           class="tab-panel"
         >
           <section class="detail-block">
-            <h3>Source URLs</h3>
-            {#if event.source_urls.length > 0}
-              <ul class="source-list">
-                {#each event.source_urls as sourceUrl}
+            <h3>Related events</h3>
+            {#if connections.length > 0}
+              <ul class="connection-list compact">
+                {#each connections as connection}
                   <li>
-                    <a href={sourceUrl} target="_blank" rel="noreferrer">
-                      {formatSourceLabel(sourceUrl)}
-                    </a>
+                    <button
+                      type="button"
+                      class="connection-row"
+                      on:click={() => onNavigateEvent(connection.event.id, connection.event.route_id)}
+                    >
+                      <span class="connection-kicker">
+                        <span>{connection.directionLabel}</span>
+                        <span>{formatConnectionType(connection)}</span>
+                      </span>
+                      <span class="connection-title">{connection.event.title}</span>
+                      <span class="connection-meta">
+                        {#if connection.route}
+                          <span class="route-dot" style={`--route-color: ${connection.route.color}`}></span>
+                        {/if}
+                        {formatConnectionMeta(connection)}
+                      </span>
+                      <span class="connection-summary">{connection.summary}</span>
+                    </button>
                   </li>
                 {/each}
               </ul>
             {:else}
-              <p class="empty-inline">No source URLs have been added for this event yet.</p>
+              <p class="empty-inline">No related events are attached to this event yet.</p>
             {/if}
-          </section>
-
-          <section class="detail-block compact">
-            <h3>Citation notes</h3>
-            <p class="supporting-note">
-              Keep source links external and traceable. Public media browsing stays in the Media tab.
-            </p>
           </section>
         </div>
       {/if}
@@ -723,9 +715,16 @@
     border-top: 1px solid #e0e6ec;
   }
 
+  .story-sources {
+    display: grid;
+    gap: 0.4rem;
+    padding: 0 0.1rem;
+  }
+
   .detail-block h3,
   .story-copy h3,
-  .significance-note h3 {
+  .significance-note h3,
+  .story-sources h3 {
     margin: 0;
     color: #314151;
     font-size: 0.78rem;
@@ -774,7 +773,32 @@
     list-style: none;
   }
 
-  .source-list {
+  .source-list.compact {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    padding: 0;
+    list-style: none;
+  }
+
+  .source-list.compact a {
+    display: inline-flex;
+    padding: 0.28rem 0.45rem;
+    border: 1px solid #d7dfe7;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #536170;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .source-list.compact a:hover {
+    border-color: #17202a;
+    color: #17202a;
+  }
+
+  .source-list:not(.compact) {
     padding-left: 1.1rem;
   }
 
