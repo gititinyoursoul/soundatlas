@@ -32,16 +32,6 @@
           "query": "South Bronx neighborhood parties sound system culture hip hop origins 1967 1972",
           "confidence": 0.35,
           "review_status": "reviewed"
-        },
-        {
-          "provider": "youtube",
-          "type": "video",
-          "title": "70's MIX By Bronx Remixer",
-          "url": "https://www.youtube.com/watch?v=8KUgtj3IKTk",
-          "query": "South Bronx neighborhood parties sound system culture hip hop origins 1967 1972",
-          "confidence": 0.35,
-          "playback_mode": "external",
-          "review_status": "draft"
         }
       ],
       "image_links": []
@@ -70,29 +60,11 @@
         {
           "provider": "youtube",
           "type": "playlist",
-          "title": "Funk Classics 70's & 80's",
-          "url": "https://www.youtube.com/playlist?list=PLBA986EF6C0FAA1D9",
-          "query": "classic funk disco breaks early hip hop DJ playlist 1970 1973",
-          "confidence": 0.55,
-          "review_status": "draft"
-        },
-        {
-          "provider": "youtube",
-          "type": "playlist",
           "title": "70s pure raw funk!!",
           "url": "https://www.youtube.com/playlist?list=PLFK9SMgFPIoCUt9SyJFywfuevkiCbnpkr",
           "query": "classic funk disco breaks early hip hop DJ playlist 1970 1973",
           "confidence": 0.55,
-          "review_status": "draft"
-        },
-        {
-          "provider": "youtube",
-          "type": "playlist",
-          "title": "Late 70s Soul, Funk & Disco Music | Playlist | Hits | Best | Soul | Funk | Disco | 1970s | Classics | Late 1970s",
-          "url": "https://www.youtube.com/playlist?list=PLcM4ZwI542CriszmMjt8HSOJ-dVzKo3O3",
-          "query": "classic funk disco breaks early hip hop DJ playlist 1970 1973",
-          "confidence": 0.55,
-          "review_status": "draft"
+          "review_status": "reviewed"
         }
       ],
       "image_links": []
@@ -200,15 +172,6 @@
         "https://www.museumofplay.org/blog/indelibly-marked-crayons-records-and-grandmaster-flash/"
       ],
       "media_links": [
-        {
-          "provider": "youtube",
-          "type": "video",
-          "title": "1979 -1984 OLD SCHOOL HIP HOP BLOCK PARTY MIX by DJ TNT SOUNDS",
-          "url": "https://www.youtube.com/watch?v=Zta1Le1Q-iI",
-          "query": "early hip hop breakbeat DJ mix Bronx block party 1974 1976",
-          "confidence": 0.75,
-          "review_status": "draft"
-        },
         {
           "provider": "youtube",
           "type": "video",
@@ -1529,6 +1492,355 @@
         "https://commons.wikimedia.org/wiki/File:1520_Sedwick_Ave.,_Bronx,_New_York2.JPG",
         "https://upload.wikimedia.org/wikipedia/commons/b/b0/1520_Sedwick_Ave.%2C_Bronx%2C_New_York2.JPG",
         "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/1520_Sedwick_Ave.%2C_Bronx%2C_New_York2.JPG/960px-1520_Sedwick_Ave.%2C_Bronx%2C_New_York2.JPG"
+      ]
+    },
+    {
+      "event_id": "kool-herc-back-to-school-jam",
+      "kind": "image",
+      "values": [
+        "https://commons.wikimedia.org/wiki/File:Dj_Kool_Herc-03.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/c/c8/Dj_Kool_Herc-03.jpg"
+      ]
+    },
+    {
+      "event_id": "kool-herc-back-to-school-jam",
+      "kind": "image",
+      "values": [
+        "https://commons.wikimedia.org/wiki/File:Dj_Kool_Herc.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/d/df/Dj_Kool_Herc.jpg"
+      ]
+    },
+    {
+      "event_id": "kool-herc-back-to-school-jam",
+      "kind": "image",
+      "values": [
+        "https://commons.wikimedia.org/wiki/File:Herc_on_the_Wheels_of_Steel.JPG",
+        "https://upload.wikimedia.org/wikipedia/commons/9/91/Herc_on_the_Wheels_of_Steel.JPG",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Herc_on_the_Wheels_of_Steel.JPG/960px-Herc_on_the_Wheels_of_Steel.JPG"
+      ]
+    },
+    {
+      "event_id": "breakbeat-dj-practice-spreads",
+      "kind": "image",
+      "values": [
+        "https://commons.wikimedia.org/wiki/File:Cedar_Creek_reenactment_VA25.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/4/4e/Cedar_Creek_reenactment_VA25.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Cedar_Creek_reenactment_VA25.jpg/960px-Cedar_Creek_reenactment_VA25.jpg"
+      ]
+    },
+    {
+      "event_id": "breakbeat-dj-practice-spreads",
+      "kind": "image",
+      "values": [
+        "https://commons.wikimedia.org/wiki/File:Cedar_Creek_reenactment_VA6.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/5/55/Cedar_Creek_reenactment_VA6.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Cedar_Creek_reenactment_VA6.jpg/960px-Cedar_Creek_reenactment_VA6.jpg"
+      ]
+    },
+    {
+      "event_id": "breakbeat-dj-practice-spreads",
+      "kind": "image",
+      "values": [
+        "https://commons.wikimedia.org/wiki/File:Cedar_Park,_Philadelphia.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/7/7d/Cedar_Park%2C_Philadelphia.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Cedar_Park%2C_Philadelphia.jpg/960px-Cedar_Park%2C_Philadelphia.jpg"
+      ]
+    },
+    {
+      "event_id": "breakbeat-dj-practice-spreads",
+      "kind": "image",
+      "values": [
+        "https://commons.wikimedia.org/wiki/File:Cedar_Park_neighborhood_3,_Seattle,_2016-10-29.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/8/8c/Cedar_Park_neighborhood_3%2C_Seattle%2C_2016-10-29.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Cedar_Park_neighborhood_3%2C_Seattle%2C_2016-10-29.jpg/960px-Cedar_Park_neighborhood_3%2C_Seattle%2C_2016-10-29.jpg"
+      ]
+    },
+    {
+      "event_id": "breakbeat-dj-practice-spreads",
+      "kind": "image",
+      "values": [
+        "https://commons.wikimedia.org/wiki/File:Cedar_Park_train_station_(exo).jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/3/37/Cedar_Park_train_station_%28exo%29.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Cedar_Park_train_station_%28exo%29.jpg/960px-Cedar_Park_train_station_%28exo%29.jpg"
+      ]
+    },
+    {
+      "event_id": "grandmaster-flash-dj-techniques",
+      "kind": "image",
+      "values": [
+        "https://commons.wikimedia.org/wiki/File:Grandmaster_Flash_(872341618).jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/9/93/Grandmaster_Flash_%28872341618%29.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Grandmaster_Flash_%28872341618%29.jpg/960px-Grandmaster_Flash_%28872341618%29.jpg"
+      ]
+    },
+    {
+      "event_id": "grandmaster-flash-dj-techniques",
+      "kind": "image",
+      "values": [
+        "https://commons.wikimedia.org/wiki/File:Grandmaster_Flash_(872341618)_(cropped).jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/c/c9/Grandmaster_Flash_%28872341618%29_%28cropped%29.jpg"
+      ]
+    },
+    {
+      "event_id": "grandmaster-flash-dj-techniques",
+      "kind": "image",
+      "values": [
+        "https://commons.wikimedia.org/wiki/File:Grandmaster_Flash_,_Positivus_Festival,_Latvia,_July_2017-1923_(48740760241).jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/9/91/Grandmaster_Flash_%2C_Positivus_Festival%2C_Latvia%2C_July_2017-1923_%2848740760241%29.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Grandmaster_Flash_%2C_Positivus_Festival%2C_Latvia%2C_July_2017-1923_%2848740760241%29.jpg/960px-Grandmaster_Flash_%2C_Positivus_Festival%2C_Latvia%2C_July_2017-1923_%2848740760241%29.jpg"
+      ]
+    },
+    {
+      "event_id": "zulu-nation-scene-organization",
+      "kind": "image",
+      "values": [
+        "https://commons.wikimedia.org/wiki/File:161st_St_River_Av_td_(2019-01-24)_69.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/f/fc/161st_St_River_Av_td_%282019-01-24%29_69.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/161st_St_River_Av_td_%282019-01-24%29_69.jpg/960px-161st_St_River_Av_td_%282019-01-24%29_69.jpg"
+      ]
+    },
+    {
+      "event_id": "zulu-nation-scene-organization",
+      "kind": "image",
+      "values": [
+        "https://commons.wikimedia.org/wiki/File:161st_St_River_Av_td_(2019-01-24)_71.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/7/7a/161st_St_River_Av_td_%282019-01-24%29_71.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/161st_St_River_Av_td_%282019-01-24%29_71.jpg/960px-161st_St_River_Av_td_%282019-01-24%29_71.jpg"
+      ]
+    },
+    {
+      "event_id": "zulu-nation-scene-organization",
+      "kind": "image",
+      "values": [
+        "https://commons.wikimedia.org/wiki/File:161st_St_River_Av_td_(2019-01-24)_57.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/1/1b/161st_St_River_Av_td_%282019-01-24%29_57.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/161st_St_River_Av_td_%282019-01-24%29_57.jpg/960px-161st_St_River_Av_td_%282019-01-24%29_57.jpg"
+      ]
+    },
+    {
+      "event_id": "zulu-nation-scene-organization",
+      "kind": "image",
+      "values": [
+        "https://commons.wikimedia.org/wiki/File:180th_Street%E2%80%93Bronx_Park;_IRT_WPR_Site-2.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/d/db/180th_Street%E2%80%93Bronx_Park%3B_IRT_WPR_Site-2.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/180th_Street%E2%80%93Bronx_Park%3B_IRT_WPR_Site-2.jpg/960px-180th_Street%E2%80%93Bronx_Park%3B_IRT_WPR_Site-2.jpg"
+      ]
+    },
+    {
+      "event_id": "zulu-nation-scene-organization",
+      "kind": "image",
+      "values": [
+        "https://commons.wikimedia.org/wiki/File:Bronx_river_NYCHA_sun_jeh.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/5/51/Bronx_river_NYCHA_sun_jeh.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Bronx_river_NYCHA_sun_jeh.jpg/960px-Bronx_river_NYCHA_sun_jeh.jpg"
+      ]
+    },
+    {
+      "event_id": "rappers-delight-mainstream-breakthrough",
+      "kind": "image",
+      "values": [
+        "https://commons.wikimedia.org/wiki/File:Btv1b530849639_plan_du_port_et_de_la_ville_de_Brest_1855_restored.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/5/56/Btv1b530849639_plan_du_port_et_de_la_ville_de_Brest_1855_restored.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Btv1b530849639_plan_du_port_et_de_la_ville_de_Brest_1855_restored.jpg/960px-Btv1b530849639_plan_du_port_et_de_la_ville_de_Brest_1855_restored.jpg"
+      ]
+    },
+    {
+      "event_id": "rappers-delight-mainstream-breakthrough",
+      "kind": "image",
+      "values": [
+        "https://commons.wikimedia.org/wiki/File:General_Map_of_Switzerland.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/2/26/General_Map_of_Switzerland.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/General_Map_of_Switzerland.jpg/960px-General_Map_of_Switzerland.jpg"
+      ]
+    },
+    {
+      "event_id": "rappers-delight-mainstream-breakthrough",
+      "kind": "image",
+      "values": [
+        "https://commons.wikimedia.org/wiki/File:Hawaii_Island_topographic_map-fr.svg",
+        "https://upload.wikimedia.org/wikipedia/commons/d/d8/Hawaii_Island_topographic_map-fr.svg",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Hawaii_Island_topographic_map-fr.svg/960px-Hawaii_Island_topographic_map-fr.svg.png"
+      ]
+    },
+    {
+      "event_id": "rappers-delight-mainstream-breakthrough",
+      "kind": "image",
+      "values": [
+        "https://commons.wikimedia.org/wiki/File:Pyrenees_topographic_map-fr.svg",
+        "https://upload.wikimedia.org/wikipedia/commons/4/49/Pyrenees_topographic_map-fr.svg",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Pyrenees_topographic_map-fr.svg/960px-Pyrenees_topographic_map-fr.svg.png"
+      ]
+    },
+    {
+      "event_id": "hip-hop-enters-downtown-clubs",
+      "kind": "image",
+      "values": [
+        "https://commons.wikimedia.org/wiki/File:Jackie_Evancho_@_The_Roxy_12_09_2024_(54230055317).jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/c/c0/Jackie_Evancho_%40_The_Roxy_12_09_2024_%2854230055317%29.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Jackie_Evancho_%40_The_Roxy_12_09_2024_%2854230055317%29.jpg/960px-Jackie_Evancho_%40_The_Roxy_12_09_2024_%2854230055317%29.jpg"
+      ]
+    },
+    {
+      "event_id": "hip-hop-enters-downtown-clubs",
+      "kind": "image",
+      "values": [
+        "https://commons.wikimedia.org/wiki/File:Jackie_Evancho_@_The_Roxy_12_09_2024_(54231193553).jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/1/15/Jackie_Evancho_%40_The_Roxy_12_09_2024_%2854231193553%29.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Jackie_Evancho_%40_The_Roxy_12_09_2024_%2854231193553%29.jpg/960px-Jackie_Evancho_%40_The_Roxy_12_09_2024_%2854231193553%29.jpg"
+      ]
+    },
+    {
+      "event_id": "hip-hop-enters-downtown-clubs",
+      "kind": "image",
+      "values": [
+        "https://commons.wikimedia.org/wiki/File:Jackie_Evancho_@_The_Roxy_12_09_2024_(54231193688).jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/b/b6/Jackie_Evancho_%40_The_Roxy_12_09_2024_%2854231193688%29.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Jackie_Evancho_%40_The_Roxy_12_09_2024_%2854231193688%29.jpg/960px-Jackie_Evancho_%40_The_Roxy_12_09_2024_%2854231193688%29.jpg"
+      ]
+    },
+    {
+      "event_id": "hip-hop-enters-downtown-clubs",
+      "kind": "image",
+      "values": [
+        "https://commons.wikimedia.org/wiki/File:Jackie_Evancho_@_The_Roxy_12_09_2024_(54231366430).jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/b/b7/Jackie_Evancho_%40_The_Roxy_12_09_2024_%2854231366430%29.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Jackie_Evancho_%40_The_Roxy_12_09_2024_%2854231366430%29.jpg/960px-Jackie_Evancho_%40_The_Roxy_12_09_2024_%2854231366430%29.jpg"
+      ]
+    },
+    {
+      "event_id": "hip-hop-enters-downtown-clubs",
+      "kind": "image",
+      "values": [
+        "https://commons.wikimedia.org/wiki/File:Roxy,_Miramar,_Wellington_(8489576892).jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/e/ee/Roxy%2C_Miramar%2C_Wellington_%288489576892%29.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Roxy%2C_Miramar%2C_Wellington_%288489576892%29.jpg/960px-Roxy%2C_Miramar%2C_Wellington_%288489576892%29.jpg"
+      ]
+    },
+    {
+      "event_id": "planet-rock-electro-future",
+      "kind": "image",
+      "values": [
+        "https://commons.wikimedia.org/wiki/File:161st_St_River_Av_td_(2019-01-24)_71.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/7/7a/161st_St_River_Av_td_%282019-01-24%29_71.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/161st_St_River_Av_td_%282019-01-24%29_71.jpg/960px-161st_St_River_Av_td_%282019-01-24%29_71.jpg"
+      ]
+    },
+    {
+      "event_id": "planet-rock-electro-future",
+      "kind": "image",
+      "values": [
+        "https://commons.wikimedia.org/wiki/File:180th_Street%E2%80%93Bronx_Park;_IRT_WPR_Site-2.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/d/db/180th_Street%E2%80%93Bronx_Park%3B_IRT_WPR_Site-2.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/180th_Street%E2%80%93Bronx_Park%3B_IRT_WPR_Site-2.jpg/960px-180th_Street%E2%80%93Bronx_Park%3B_IRT_WPR_Site-2.jpg"
+      ]
+    },
+    {
+      "event_id": "planet-rock-electro-future",
+      "kind": "image",
+      "values": [
+        "https://commons.wikimedia.org/wiki/File:Bronx_river_NYCHA_sun_jeh.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/5/51/Bronx_river_NYCHA_sun_jeh.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Bronx_river_NYCHA_sun_jeh.jpg/960px-Bronx_river_NYCHA_sun_jeh.jpg"
+      ]
+    },
+    {
+      "event_id": "planet-rock-electro-future",
+      "kind": "image",
+      "values": [
+        "https://commons.wikimedia.org/wiki/File:The_Great_north_side,_or,_Borough_of_the_Bronx,_New_York_(1897)_(14578354819).jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/7/72/The_Great_north_side%2C_or%2C_Borough_of_the_Bronx%2C_New_York_%281897%29_%2814578354819%29.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/The_Great_north_side%2C_or%2C_Borough_of_the_Bronx%2C_New_York_%281897%29_%2814578354819%29.jpg/960px-The_Great_north_side%2C_or%2C_Borough_of_the_Bronx%2C_New_York_%281897%29_%2814578354819%29.jpg"
+      ]
+    },
+    {
+      "event_id": "planet-rock-electro-future",
+      "kind": "image",
+      "values": [
+        "https://commons.wikimedia.org/wiki/File:The_Great_north_side,_or,_Borough_of_the_Bronx,_New_York_(1897)_(14764806862).jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/4/40/The_Great_north_side%2C_or%2C_Borough_of_the_Bronx%2C_New_York_%281897%29_%2814764806862%29.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/The_Great_north_side%2C_or%2C_Borough_of_the_Bronx%2C_New_York_%281897%29_%2814764806862%29.jpg/960px-The_Great_north_side%2C_or%2C_Borough_of_the_Bronx%2C_New_York_%281897%29_%2814764806862%29.jpg"
+      ]
+    },
+    {
+      "event_id": "wild-style-global-visibility",
+      "kind": "image",
+      "values": [
+        "https://commons.wikimedia.org/wiki/File:Group_of_the_Wild_Style_-_Rocco_IVA_W49_-_waterbirds_-_M%C3%BCnchen_AS_7616.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/4/42/Group_of_the_Wild_Style_-_Rocco_IVA_W49_-_waterbirds_-_M%C3%BCnchen_AS_7616.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Group_of_the_Wild_Style_-_Rocco_IVA_W49_-_waterbirds_-_M%C3%BCnchen_AS_7616.jpg/960px-Group_of_the_Wild_Style_-_Rocco_IVA_W49_-_waterbirds_-_M%C3%BCnchen_AS_7616.jpg"
+      ]
+    },
+    {
+      "event_id": "wild-style-global-visibility",
+      "kind": "image",
+      "values": [
+        "https://commons.wikimedia.org/wiki/File:Group_of_the_Wild_Style_-_Rocco_IVA_W8_-_geometric_and_floral_motives.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/6/6d/Group_of_the_Wild_Style_-_Rocco_IVA_W8_-_geometric_and_floral_motives.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Group_of_the_Wild_Style_-_Rocco_IVA_W8_-_geometric_and_floral_motives.jpg/960px-Group_of_the_Wild_Style_-_Rocco_IVA_W8_-_geometric_and_floral_motives.jpg"
+      ]
+    },
+    {
+      "event_id": "wild-style-global-visibility",
+      "kind": "image",
+      "values": [
+        "https://commons.wikimedia.org/wiki/File:South_Ionian_Wild_Goat_Style_SiA_IIa_-_bowl_-_star_and_meander_-_Rhodos_AM.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/d/d2/South_Ionian_Wild_Goat_Style_SiA_IIa_-_bowl_-_star_and_meander_-_Rhodos_AM.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/South_Ionian_Wild_Goat_Style_SiA_IIa_-_bowl_-_star_and_meander_-_Rhodos_AM.jpg/960px-South_Ionian_Wild_Goat_Style_SiA_IIa_-_bowl_-_star_and_meander_-_Rhodos_AM.jpg"
+      ]
+    },
+    {
+      "event_id": "rappers-delight-mainstream-breakthrough",
+      "kind": "image",
+      "values": [
+        "https://commons.wikimedia.org/wiki/File:1635_Blaeu_Map_Guiana,_Venezuela,_and_El_Dorado_-_Geographicus_-_Guiana-blaeu-1635.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/5/53/1635_Blaeu_Map_Guiana%2C_Venezuela%2C_and_El_Dorado_-_Geographicus_-_Guiana-blaeu-1635.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/1635_Blaeu_Map_Guiana%2C_Venezuela%2C_and_El_Dorado_-_Geographicus_-_Guiana-blaeu-1635.jpg/960px-1635_Blaeu_Map_Guiana%2C_Venezuela%2C_and_El_Dorado_-_Geographicus_-_Guiana-blaeu-1635.jpg"
+      ]
+    },
+    {
+      "event_id": "wild-style-global-visibility",
+      "kind": "image",
+      "values": [
+        "https://commons.wikimedia.org/wiki/File:South_Ionian_Wild_Goat_Style_SiA_Ia_-_oinochoe_-_dogs_-_Rhodos_AM_-_01.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/b/b1/South_Ionian_Wild_Goat_Style_SiA_Ia_-_oinochoe_-_dogs_-_Rhodos_AM_-_01.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/South_Ionian_Wild_Goat_Style_SiA_Ia_-_oinochoe_-_dogs_-_Rhodos_AM_-_01.jpg/960px-South_Ionian_Wild_Goat_Style_SiA_Ia_-_oinochoe_-_dogs_-_Rhodos_AM_-_01.jpg"
+      ]
+    },
+    {
+      "event_id": "wild-style-global-visibility",
+      "kind": "image",
+      "values": [
+        "https://commons.wikimedia.org/wiki/File:South_Ionian_Wild_Goat_Style_SiA_Ia_-_oinochoe_-_dogs_-_Rhodos_AM_-_02.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/0/00/South_Ionian_Wild_Goat_Style_SiA_Ia_-_oinochoe_-_dogs_-_Rhodos_AM_-_02.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/South_Ionian_Wild_Goat_Style_SiA_Ia_-_oinochoe_-_dogs_-_Rhodos_AM_-_02.jpg/960px-South_Ionian_Wild_Goat_Style_SiA_Ia_-_oinochoe_-_dogs_-_Rhodos_AM_-_02.jpg"
+      ]
+    },
+    {
+      "event_id": "caribbean-soundsystem-influences",
+      "kind": "media",
+      "values": [
+        "https://www.youtube.com/watch?v=8KUgtj3IKTk"
+      ]
+    },
+    {
+      "event_id": "funk-disco-breaks-as-raw-material",
+      "kind": "media",
+      "values": [
+        "https://www.youtube.com/playlist?list=PLBA986EF6C0FAA1D9"
+      ]
+    },
+    {
+      "event_id": "funk-disco-breaks-as-raw-material",
+      "kind": "media",
+      "values": [
+        "https://www.youtube.com/playlist?list=PLcM4ZwI542CriszmMjt8HSOJ-dVzKo3O3"
+      ]
+    },
+    {
+      "event_id": "breakbeat-dj-practice-spreads",
+      "kind": "media",
+      "values": [
+        "https://www.youtube.com/watch?v=Zta1Le1Q-iI"
       ]
     }
   ]

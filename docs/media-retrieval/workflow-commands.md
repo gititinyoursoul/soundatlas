@@ -157,6 +157,18 @@ reruns of the YouTube enrichment workflow.
 
 ## Useful Variants
 
+Report dry-run quality metrics for available YouTube result files:
+
+```powershell
+cd backend
+uv run python scripts/report_enrichment_quality.py --kind media --route-id birth-of-hip-hop --baseline-from-seed
+```
+
+The media report does not call YouTube. If you changed query planning, run the
+new request plan first so `--results-dir` points at the new saved result files.
+The report can then compare the new result set to current seed links or to a
+previously saved quality report.
+
 Validate all request plans without API calls:
 
 ```powershell

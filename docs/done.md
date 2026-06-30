@@ -46,6 +46,7 @@ Archive of completed work packages. The current work list lives in `TODO.md`.
 - [x] Implement a mockable YouTube analysis/search/ranking pipeline for content pages
 - [x] Adjust the YouTube search prompt `prompts/generate-youtube-search-queries.md` to exclude Shorts
 - [x] Check whether `backend/scripts/enrich_media_links.py` is compatible with the plus-only workflow
+- [x] Add a dry-run enrichment quality report for comparing candidate count, specificity, ignored matches, type mix, and other output-quality signals
 
 ## Frontend
 

@@ -16,6 +16,7 @@ Completed work packages are archived in `docs/done.md`.
 ### AI Agent Setup and Security
 
 - [ ] Check current AI agent setup and documentation, including current security and rights
+- [ ] Upgrade the dev container Codex CLI pin to `@openai/codex` `0.142.4`, rebuild the workspace image, and verify `codex --version`
 - [ ] Configure Playwright screenshot capture to use a different dev server port than the local browser so both can run at the same time
 - [ ] Turn plan-feature prompt into a skill
 - [ ] Turn backend and frontend implementation prompts into skills
@@ -35,17 +36,23 @@ Completed work packages are archived in `docs/done.md`.
 - [ ] Recheck every current YouTube video link for playable, embeddable, external-only, private, deleted, or unavailable status
 - [ ] Compare `docs/media-retrieval/event-search-components.md` with the image retrieval brief approach and choose one shared upstream process for both image and media enrichment
 - [ ] Make `docs/media-retrieval/event-search-components.md` the shared upstream search-input model for both image and media enrichment so query planning starts from the same structured base
+- [ ] Fix media enrichment so genre-correct playlists from the wrong decade are filtered or clearly flagged before review
 
 ### Enrichment Orchestration
 
 - [ ] Add a single script that triggers all enrichment passes for one event, including media and images, so one command can refresh the full enrichment state
 - [ ] Add a shared event-search-components generator so media and image enrichment start from the same structured input
 - [ ] Add a shared enrichment preview command that shows media and image query plans for one event side by side
-- [ ] Add a dry-run quality report that compares enrichment workflow changes by measuring candidate count, specificity, ignored matches, and other output-quality signals
+- [ ] Streamline media and image quality reports so they can generate missing provider query results before reporting, instead of requiring separate manual result-generation steps
 
 ### Image Enrichment
 
 - [ ] Add LOC and Internet Archive providers to the image enrichment workflow
+- [ ] Fix artist image queries so they prefer historically relevant/era-appropriate artists instead of only newer artists with matching names
+- [ ] Add place disambiguation to image enrichment so same-name places from other cities or countries are filtered or clearly flagged
+- [ ] Add era checks to venue image candidates so wrong-era venue photos are filtered or clearly flagged
+- [ ] Show why each image candidate was selected during review, including matched query, specificity signals, confidence, and warning reasons
+- [ ] Improve Wild Style image enrichment so fetched images include enough event/context explanation for review
 - [ ] Define and enforce the public-image visibility boundary so only reviewed image links render in public-facing UI
 - [ ] Implement the reviewed-image presentation behavior in the story panel, including first-image header, attribution, and visible rights notice
 - [ ] Confirm the image enrichment pass can reliably reach 3-5 candidates per event when source coverage exists

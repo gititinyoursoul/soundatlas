@@ -135,6 +135,13 @@ Replace `birth-of-hip-hop` with another route ID as needed.
 
 ## Useful Variants
 
+Report dry-run quality metrics and compare them to current seed image links:
+
+```bash
+cd backend
+uv run python scripts/report_enrichment_quality.py --kind image --route-id birth-of-hip-hop --baseline-from-seed
+```
+
 Limit generated image links per event:
 
 ```bash

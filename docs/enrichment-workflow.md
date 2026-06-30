@@ -23,6 +23,7 @@ seed data selection
 -> provider execution
 -> candidate normalization
 -> deduplication and ranking
+-> dry-run quality report
 -> merge into seed data
 -> editorial review
 ```
@@ -90,6 +91,72 @@ The review surface should:
 
 Rejected links are recorded in the event-level ignore list so reruns do not
 immediately re-add the same item.
+
+## Dry-Run Quality Reports
+
+Use the quality report before writing enrichment changes when comparing query
+plans, provider behavior, scoring changes, or merge limits.
+
+The report is dry-run only: it computes candidate metrics and optional
+comparisons without writing `data/seed/events.json`.
+
+Media report:
+
+```bash
+cd backend
+uv run python scripts/report_enrichment_quality.py --kind media --route-id birth-of-hip-hop
+```
+
+Media reports do not call the YouTube API. They read saved normalized result
+files from `data/enrichment/youtube-search-results/`, or another directory
+passed with `--results-dir`. To evaluate media query-planning changes, run the
+new YouTube request plan first, save its results, and then compare reports. You
+do not need to rerun the old query plan if old results or an old JSON report are
+already saved.
+
+Image report:
+
+```bash
+cd backend
+uv run python scripts/report_enrichment_quality.py --kind image --route-id birth-of-hip-hop
+```
+
+Image reports currently call Wikimedia live because image provider results are
+not yet persisted in a separate result directory.
+
+Compare a new dry run to current seed links:
+
+```bash
+cd backend
+uv run python scripts/report_enrichment_quality.py --kind image --route-id birth-of-hip-hop --baseline-from-seed
+```
+
+Compare a new dry run to a previously saved JSON report:
+
+```bash
+cd backend
+mkdir -p ../data/enrichment/quality-reports
+uv run python scripts/report_enrichment_quality.py --kind image --route-id birth-of-hip-hop --query-planner legacy --json > ../data/enrichment/quality-reports/image-legacy.json
+uv run python scripts/report_enrichment_quality.py --kind image --route-id birth-of-hip-hop --query-planner v2 --compare-to ../data/enrichment/quality-reports/image-legacy.json
+```
+
+Tracked signals include candidate count, deduped count, ignored matches,
+existing duplicates, limit drops, average specificity, average confidence,
+provider/type mix, and image rights mix.
+
+Warnings are review prompts, not failures:
+
+- `no_candidates`: the run produced no reviewable candidates for the event.
+- `all_candidates_ignored`: every deduped candidate matched the event's ignore list.
+- `limit_reached`: valid candidates existed beyond the configured per-event limit.
+- `only_low_specificity_candidates`: every selected candidate had weak event/place/query overlap.
+- `only_low_confidence_candidates`: every selected candidate had low provider or scoring confidence.
+- `playlist_only` or `no_videos`: media candidates contained playlists but no videos.
+- `unknown_rights_status`: at least one image candidate lacks clear rights metadata.
+- `missing_query`, `missing_title`, or `missing_source_url`: a candidate is missing useful review metadata.
+
+Comparison output also highlights type-by-type shifts, new/lost candidate
+identities, and quality direction per event.
 
 ## Image Workflow
 
