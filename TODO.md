@@ -13,41 +13,25 @@ Completed work packages are archived in `docs/done.md`.
 
 ## Open
 
-### AI Agent Setup and Security
+### Enrichment
 
-- [ ] Check current AI agent setup and documentation, including current security and rights
-- [ ] Upgrade the dev container Codex CLI pin to `@openai/codex` `0.142.4`, rebuild the workspace image, and verify `codex --version`
-- [ ] Configure Playwright screenshot capture to use a different dev server port than the local browser so both can run at the same time
-- [ ] Turn plan-feature prompt into a skill
-- [ ] Turn backend and frontend implementation prompts into skills
-- [ ] Turn write-tests prompt into a skill
-- [ ] Turn update-docs prompt into a skill
-- [ ] Check whether `prompts/generate-youtube-search-queries.md` should stay standalone or be integrated into a documented workflow entrypoint
-
-### Repository Maintenance
-
-- [ ] Add frontend behavior tests for route selection, timeline selection, map/story synchronization, loading/error states, and admin media controls
-- [ ] Find a test coverage setup for `uv` and `npm`
-- [ ] Split environment dependency management into prod and dev
-- [ ] Remove design documents and images that are no longer needed
-
-### Seed Data Workflow
+#### Upstream Inputs
 
 - [ ] Add a route seed scaffold or preview command that reduces manual route updates by checking route, place, event, and connection changes before writing seed JSON
+- [ ] Add a shared enrichment preview command that shows media and image query plans for one event side by side
 
-### Media Enrichment
+#### Orchestration And Reporting
+
+- [ ] Add a single script that triggers all enrichment passes for one event, including media and images, so one command can refresh the full enrichment state
+- [ ] Streamline media and image quality reports so they can generate missing provider query results before reporting, instead of requiring separate manual result-generation steps
+
+#### Media Enrichment
 
 - [ ] Add a YouTube media availability audit step to the enrichment workflow that records embed vs external playback mode
 - [ ] Recheck every current YouTube video link for playable, embeddable, external-only, private, deleted, or unavailable status
 - [ ] Move the ignore list out of seed data into a separate enrichment data store or review file
 
-### Enrichment Orchestration
-
-- [ ] Add a single script that triggers all enrichment passes for one event, including media and images, so one command can refresh the full enrichment state
-- [ ] Add a shared enrichment preview command that shows media and image query plans for one event side by side
-- [ ] Streamline media and image q/modeluality reports so they can generate missing provider query results before reporting, instead of requiring separate manual result-generation steps
-
-### Image Enrichment
+#### Image Enrichment
 
 - [ ] Add LOC and Internet Archive providers to the image enrichment workflow
 - [ ] Add era checks to venue image candidates so wrong-era venue photos are filtered or clearly flagged
@@ -58,6 +42,23 @@ Completed work packages are archived in `docs/done.md`.
 - [ ] Confirm the image enrichment pass can reliably reach 3-5 candidates per event when source coverage exists
 - [ ] Add final cross-query ranking for image enrichment so candidates are collected across planned queries and the best matches are kept per event
 - [ ] Expand provider-specific image normalization so search, pagination, and rights mapping are encapsulated by provider modules
+
+### Repo And Agent Workflow
+
+- [ ] Check current AI agent setup and documentation, including current security and rights
+- [ ] Upgrade the dev container Codex CLI pin to `@openai/codex` `0.142.4`, rebuild the workspace image, and verify `codex --version`
+- [ ] Configure Playwright screenshot capture to use a different dev server port than the local browser so both can run at the same time
+- [ ] Turn plan-feature prompt into a skill
+- [ ] Turn backend and frontend implementation prompts into skills
+- [ ] Turn write-tests prompt into a skill
+- [ ] Turn update-docs prompt into a skill
+
+### Repository Maintenance
+
+- [ ] Add frontend behavior tests for route selection, timeline selection, map/story synchronization, loading/error states, and admin media controls
+- [ ] Find a test coverage setup for `uv` and `npm`
+- [ ] Split environment dependency management into prod and dev
+- [ ] Remove design documents and images that are no longer needed
 
 ### UX and Design
 
