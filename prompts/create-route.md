@@ -7,6 +7,7 @@ Context to provide
 - Intended geography and time range.
 - Why this route matters for the current SoundAtlas scope.
 - Known source material, uncertainty, or contested claims.
+- Existing local implementation plan record path, if this route work is part of broader approved work.
 - Whether the output should be concept-only or should also update seed files.
 
 Task
@@ -53,6 +54,7 @@ Seed data requirements
 - For event media, use structured entries with `provider`, `type`, `title`, `url`, `query`, `confidence`, and `review_status`.
 
 Recommended workflow
+- For non-trivial route creation or route reshaping, use `prompts/plan-feature.md` first and create or update a local implementation plan record under `plans/records/` before broad seed edits.
 - First create or update a route concept in `docs/routes/`.
 - Then map the concept into seed data.
 - Validate JSON syntax.
@@ -62,12 +64,14 @@ Recommended workflow
 Deliverables
 - Route concept document under `docs/routes/`.
 - Seed data changes if requested.
+- Related local implementation plan record path or update note, when used.
 - Notes on unresolved source or content questions.
 - Validation command run and outcome.
 - Suggested commit grouping:
   - `docs: add <route> route concept`
   - `data: add <route> seed data`
   - `docs: update route TODOs`
+  - If a local plan record exists, reference it in the commit body, for example `Plan: P-###`
 
 Acceptance criteria
 - The route has a clear narrative thesis.

@@ -30,17 +30,21 @@ flowchart TD
 
 Seed creation is currently curator-led and prompt-assisted:
 
-1. Start from the MVP concept and a route concept in `docs/routes/`.
-2. Add or update the smallest necessary seed files in `data/seed/`.
-3. Keep stable lowercase, URL-safe IDs.
-4. Keep event `summary` focused on what happened.
-5. Keep event `significance` focused on why the event matters.
-6. Add `source_urls`, even when source review is still incomplete.
-7. Keep generated or uncertain records as `review_status: "draft"`.
-8. Validate JSON shape and cross-file references through backend schema loading
+1. For non-trivial route or seed changes, start with `prompts/plan-feature.md`
+   and save an approved local implementation plan record under
+   `plans/records/` before editing multiple seed files.
+2. Start from the MVP concept and a route concept in `docs/routes/`.
+3. Add or update the smallest necessary seed files in `data/seed/`.
+4. Keep stable lowercase, URL-safe IDs.
+5. Keep event `summary` focused on what happened.
+6. Keep event `significance` focused on why the event matters.
+7. Add `source_urls`, even when source review is still incomplete.
+8. Keep generated or uncertain records as `review_status: "draft"`.
+9. Validate JSON shape and cross-file references through backend schema loading
    and tests.
 
-The prompt boundary for this work is documented in
+The planning boundary for non-trivial seed work is documented in
+`prompts/plan-feature.md`. The curation boundary for this work is documented in
 `prompts/curate-seed-data.md`. Route-level creation guidance is documented in
 `prompts/create-route.md`.
 

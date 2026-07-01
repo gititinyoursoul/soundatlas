@@ -22,6 +22,7 @@ Completed work packages are archived in `docs/done.md`.
 - [ ] Turn backend and frontend implementation prompts into skills
 - [ ] Turn write-tests prompt into a skill
 - [ ] Turn update-docs prompt into a skill
+- [ ] Check whether `prompts/generate-youtube-search-queries.md` should stay standalone or be integrated into a documented workflow entrypoint
 
 ### Repository Maintenance
 
