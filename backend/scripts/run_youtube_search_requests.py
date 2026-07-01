@@ -31,7 +31,7 @@ SUPPORTED_YOUTUBE_TYPES = {"video", "playlist"}
 SUPPORTED_CONFIDENCE_HINTS = {"high", "medium", "low"}
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Run curated YouTube search.list request plans.",
     )
@@ -53,7 +53,16 @@ def main() -> int:
         action="store_true",
         help="Print planned requests without calling the YouTube API.",
     )
-    args = parser.parse_args()
+    parser.add_argument(
+        "--json",
+        action="store_true",
+        help="With --dry-run, print the planned request summary as JSON.",
+    )
+    args = parser.parse_args(argv)
+
+    if args.json and not args.dry_run:
+        print("--json can only be used with --dry-run.", file=sys.stderr)
+        return 2
 
     try:
         settings = MediaEnrichmentSettings.from_env()
@@ -75,19 +84,24 @@ def main() -> int:
         return 2
 
     if args.dry_run:
-        print(
-            json.dumps(
-                [
-                    build_dry_run_summary(request_plan)
-                    for request_plan in request_plans
-                ],
-                indent=2,
-                ensure_ascii=False,
-            ),
-        )
+        summaries = [build_dry_run_summary(request_plan) for request_plan in request_plans]
+        if args.json:
+            print(json.dumps(summaries, indent=2, ensure_ascii=False))
+        else:
+            print(
+                format_youtube_request_run_summary(
+                    request_plans=request_plans,
+                    event_id=args.event_id,
+                    request_dir=args.request_dir,
+                    output_dir=args.output_dir,
+                    dry_run=True,
+                    written_paths=[],
+                ),
+            )
         return 0
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
+    written_paths = []
     for request_plan in request_plans:
         result_payload = run_request_plan(
             request_plan,
@@ -98,7 +112,18 @@ def main() -> int:
             json.dumps(result_payload, indent=2, ensure_ascii=False) + "\n",
             encoding="utf-8",
         )
-        print(output_path.relative_to(REPO_ROOT))
+        written_paths.append(output_path)
+
+    print(
+        format_youtube_request_run_summary(
+            request_plans=request_plans,
+            event_id=args.event_id,
+            request_dir=args.request_dir,
+            output_dir=args.output_dir,
+            dry_run=False,
+            written_paths=written_paths,
+        ),
+    )
 
     return 0
 
@@ -189,6 +214,76 @@ def build_dry_run_summary(request_plan: dict[str, Any]) -> dict[str, Any]:
             for candidate in request_plan.get("query_candidates", [])
         ],
     }
+
+
+def format_youtube_request_run_summary(
+    *,
+    request_plans: list[dict[str, Any]],
+    event_id: str | None,
+    request_dir: Path,
+    output_dir: Path,
+    dry_run: bool,
+    written_paths: list[Path],
+) -> str:
+    total_requests = sum(
+        len(plan.get("query_candidates", []))
+        for plan in request_plans
+        if isinstance(plan.get("query_candidates"), list)
+    )
+    lines = [
+        "YouTube request run",
+        f"Mode: {'dry-run (no API calls, no files written)' if dry_run else 'write'}",
+        f"Scope: {f'event {event_id}' if event_id else 'all request plans'}",
+        f"Request dir: {relative_repo_path(request_dir)}",
+        f"Output dir: {relative_repo_path(output_dir)}",
+        f"Request plans: {len(request_plans)}",
+        f"Planned requests: {total_requests}",
+    ]
+    if not dry_run:
+        lines.append(f"Written result files: {len(written_paths)}")
+    if request_plans:
+        lines.extend(["", "Plans"])
+        for request_plan in request_plans:
+            candidates = [
+                candidate
+                for candidate in request_plan.get("query_candidates", [])
+                if isinstance(candidate, dict)
+            ]
+            type_counts = count_values(candidates, "youtube_type")
+            lines.append(
+                f"  {request_plan.get('event_id')}: {len(candidates)} request(s) "
+                f"({format_counts(type_counts)})",
+            )
+    if written_paths:
+        lines.extend(["", "Files"])
+        for path in written_paths:
+            lines.append(f"  {relative_repo_path(path)}")
+    if dry_run:
+        lines.extend(["", "Use --dry-run --json to inspect the planned requests as JSON."])
+    return "\n".join(lines)
+
+
+def count_values(items: list[dict[str, Any]], field: str) -> dict[str, int]:
+    counts: dict[str, int] = {}
+    for item in items:
+        value = item.get(field)
+        if not isinstance(value, str) or not value:
+            value = "unknown"
+        counts[value] = counts.get(value, 0) + 1
+    return dict(sorted(counts.items()))
+
+
+def format_counts(counts: dict[str, int]) -> str:
+    if not counts:
+        return "none"
+    return ", ".join(f"{key}={value}" for key, value in counts.items())
+
+
+def relative_repo_path(path: Path) -> str:
+    try:
+        return str(path.relative_to(REPO_ROOT))
+    except ValueError:
+        return str(path)
 
 
 def run_request_plan(

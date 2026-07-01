@@ -1,10 +1,13 @@
 import json
+from pathlib import Path
 
 from app.link_ignores import build_ignored_link_index
+from scripts import enrich_media_links
 from scripts.enrich_media_links import (
     enrich_events_payload,
     extract_media_links_from_youtube_results,
     load_youtube_result_payloads,
+    main,
 )
 
 
@@ -181,6 +184,61 @@ def test_enrich_events_payload_skips_ignored_media_links() -> None:
     ]
 
 
+def test_dry_run_prints_media_summary_without_writing(
+    tmp_path: Path,
+    monkeypatch,
+    capsys,
+) -> None:
+    events_path, results_dir = write_media_cli_files(tmp_path)
+    original_text = events_path.read_text(encoding="utf-8")
+    monkeypatch.setattr(enrich_media_links, "EVENTS_PATH", events_path)
+
+    exit_code = main(
+        [
+            "--event-id",
+            "kool-herc-back-to-school-jam",
+            "--results-dir",
+            str(results_dir),
+            "--dry-run",
+        ],
+    )
+
+    output = capsys.readouterr().out
+    assert exit_code == 0
+    assert events_path.read_text(encoding="utf-8") == original_text
+    assert "Media enrichment" in output
+    assert "Mode: dry-run (no files written)" in output
+    assert "Changed events: 1" in output
+    assert "kool-herc-back-to-school-jam: +2 media link(s) (0 -> 2)" in output
+    assert "Use --dry-run --json" in output
+
+
+def test_dry_run_json_prints_media_seed_payload(
+    tmp_path: Path,
+    monkeypatch,
+    capsys,
+) -> None:
+    events_path, results_dir = write_media_cli_files(tmp_path)
+    original_text = events_path.read_text(encoding="utf-8")
+    monkeypatch.setattr(enrich_media_links, "EVENTS_PATH", events_path)
+
+    exit_code = main(
+        [
+            "--event-id",
+            "kool-herc-back-to-school-jam",
+            "--results-dir",
+            str(results_dir),
+            "--dry-run",
+            "--json",
+        ],
+    )
+
+    payload = json.loads(capsys.readouterr().out)
+    assert exit_code == 0
+    assert events_path.read_text(encoding="utf-8") == original_text
+    assert len(payload["events"][0]["media_links"]) == 2
+
+
 def build_youtube_result_payload() -> dict:
     return {
         "provider": "youtube",
@@ -222,3 +280,39 @@ def build_youtube_result_payload() -> dict:
             },
         ],
     }
+
+
+def write_media_cli_files(tmp_path: Path) -> tuple[Path, Path]:
+    events_path = tmp_path / "events.json"
+    results_dir = tmp_path / "youtube-results"
+    results_dir.mkdir()
+    events_path.write_text(
+        json.dumps(
+            {
+                "events": [
+                    {
+                        "id": "kool-herc-back-to-school-jam",
+                        "route_id": "birth-of-hip-hop",
+                        "place_id": "1520-sedgwick-avenue",
+                        "title": "Back to School Jam",
+                        "year_start": 1973,
+                        "year_end": 1973,
+                        "summary": "Bronx party",
+                        "significance": "Birth of a scene",
+                        "tags": ["bronx", "dj"],
+                        "source_urls": [],
+                        "review_status": "draft",
+                        "media_links": [],
+                        "image_links": [],
+                    },
+                ],
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    (results_dir / "kool-herc-back-to-school-jam.json").write_text(
+        json.dumps(build_youtube_result_payload()),
+        encoding="utf-8",
+    )
+    return events_path, results_dir

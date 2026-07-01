@@ -1,7 +1,12 @@
+import json
+from pathlib import Path
+
 import pytest
 
+from scripts import run_youtube_search_requests
 from scripts.run_youtube_search_requests import (
     build_dry_run_summary,
+    main,
     normalize_youtube_search_items,
     run_request_plan,
     validate_request_plan,
@@ -126,6 +131,115 @@ def test_build_dry_run_summary_uses_request_plan_without_secrets() -> None:
     }
 
 
+def test_dry_run_prints_youtube_request_summary(
+    tmp_path: Path,
+    monkeypatch,
+    capsys,
+) -> None:
+    request_dir = write_request_plan_files(tmp_path)
+    monkeypatch.setattr(
+        run_youtube_search_requests.MediaEnrichmentSettings,
+        "from_env",
+        lambda: build_dummy_settings(),
+    )
+
+    exit_code = main(
+        [
+            "--event-id",
+            "grandmaster-flash-dj-techniques",
+            "--request-dir",
+            str(request_dir),
+            "--dry-run",
+        ],
+    )
+
+    output = capsys.readouterr().out
+    assert exit_code == 0
+    assert "YouTube request run" in output
+    assert "Mode: dry-run (no API calls, no files written)" in output
+    assert "Request plans: 1" in output
+    assert "grandmaster-flash-dj-techniques: 1 request(s) (video=1)" in output
+    assert "Use --dry-run --json" in output
+
+
+def test_dry_run_json_preserves_youtube_request_summary_shape(
+    tmp_path: Path,
+    monkeypatch,
+    capsys,
+) -> None:
+    request_dir = write_request_plan_files(tmp_path)
+    monkeypatch.setattr(
+        run_youtube_search_requests.MediaEnrichmentSettings,
+        "from_env",
+        lambda: build_dummy_settings(),
+    )
+
+    exit_code = main(
+        [
+            "--event-id",
+            "grandmaster-flash-dj-techniques",
+            "--request-dir",
+            str(request_dir),
+            "--dry-run",
+            "--json",
+        ],
+    )
+
+    payload = json.loads(capsys.readouterr().out)
+    assert exit_code == 0
+    assert payload == [build_dry_run_summary(build_valid_request_plan())]
+
+
+def test_live_run_prints_written_result_summary(
+    tmp_path: Path,
+    monkeypatch,
+    capsys,
+) -> None:
+    request_dir = write_request_plan_files(tmp_path)
+    output_dir = tmp_path / "youtube-search-results"
+    monkeypatch.setattr(
+        run_youtube_search_requests.MediaEnrichmentSettings,
+        "from_env",
+        lambda: build_live_settings(),
+    )
+
+    def fake_run_request_plan(request_plan, api_key):
+        assert api_key == "real-youtube-key"
+        return {
+            "provider": "youtube",
+            "api_method": "search.list",
+            "event_id": request_plan["event_id"],
+            "results": [
+                {
+                    "intent": "interview",
+                    "items": [],
+                }
+            ],
+        }
+
+    monkeypatch.setattr(run_youtube_search_requests, "run_request_plan", fake_run_request_plan)
+
+    exit_code = main(
+        [
+            "--event-id",
+            "grandmaster-flash-dj-techniques",
+            "--request-dir",
+            str(request_dir),
+            "--output-dir",
+            str(output_dir),
+        ],
+    )
+
+    output = capsys.readouterr().out
+    result_path = output_dir / "grandmaster-flash-dj-techniques.json"
+    assert exit_code == 0
+    assert result_path.exists()
+    assert "Mode: write" in output
+    assert "Written result files: 1" in output
+    assert "grandmaster-flash-dj-techniques.json" in output
+    assert "real-youtube-key" not in output
+
+
 def test_validate_request_plan_rejects_unsupported_intent(tmp_path) -> None:
     request_plan = build_valid_request_plan()
     request_plan["query_candidates"][0]["intent"] = "unsupported_legacy_intent"
@@ -169,3 +283,31 @@ def build_valid_request_plan() -> dict:
             },
         ],
     }
+
+
+def write_request_plan_files(tmp_path: Path) -> Path:
+    request_dir = tmp_path / "youtube-search-requests"
+    request_dir.mkdir()
+    (request_dir / "grandmaster-flash-dj-techniques.json").write_text(
+        json.dumps(build_valid_request_plan()),
+        encoding="utf-8",
+    )
+    return request_dir
+
+
+def build_dummy_settings():
+    return run_youtube_search_requests.MediaEnrichmentSettings(
+        env_source="test",
+        env_file=None,
+        use_dummy_services=True,
+        youtube_api_key=None,
+    )
+
+
+def build_live_settings():
+    return run_youtube_search_requests.MediaEnrichmentSettings(
+        env_source="test",
+        env_file=None,
+        use_dummy_services=False,
+        youtube_api_key="real-youtube-key",
+    )

@@ -396,8 +396,11 @@ def test_dry_run_does_not_write_seed_data_with_default_v2_planner(
     output = capsys.readouterr().out
     assert exit_code == 0
     assert events_path.read_text(encoding="utf-8") == original_text
-    assert "1520 Sedgwick Avenue" in output
-    assert "Enriched 1 event(s)." in output
+    assert "Image enrichment" in output
+    assert "Mode: dry-run (no files written)" in output
+    assert "Changed events: 1" in output
+    assert "kool-herc-back-to-school-jam: +1 image link(s) (0 -> 1)" in output
+    assert "Use --dry-run --json" in output
 
 
 def test_legacy_dry_run_does_not_write_seed_data(
@@ -432,8 +435,43 @@ def test_legacy_dry_run_does_not_write_seed_data(
     output = capsys.readouterr().out
     assert exit_code == 0
     assert events_path.read_text(encoding="utf-8") == original_text
-    assert "1520 Sedgwick Avenue" in output
-    assert "Enriched 1 event(s)." in output
+    assert "Image enrichment" in output
+    assert "Query planner: legacy" in output
+    assert "Changed events: 1" in output
+
+
+def test_dry_run_json_prints_changed_seed_payload(
+    tmp_path: Path,
+    monkeypatch,
+    capsys,
+) -> None:
+    events_path = tmp_path / "events.json"
+    routes_path = tmp_path / "routes.json"
+    places_path = tmp_path / "places.json"
+    original_payload = {"events": [build_event({"image_links": []})]}
+    events_path.write_text(json.dumps(original_payload, indent=2), encoding="utf-8")
+    routes_path.write_text(json.dumps({"routes": [build_route()]}), encoding="utf-8")
+    places_path.write_text(json.dumps({"places": [build_place()]}), encoding="utf-8")
+    original_text = events_path.read_text(encoding="utf-8")
+
+    monkeypatch.setattr(enrich_image_links, "EVENTS_PATH", events_path)
+    monkeypatch.setattr(enrich_image_links, "ROUTES_PATH", routes_path)
+    monkeypatch.setattr(enrich_image_links, "PLACES_PATH", places_path)
+    monkeypatch.setattr(enrich_image_links, "request_wikimedia_json", build_wikimedia_request_fn())
+
+    exit_code = main(
+        [
+            "--event-id",
+            "kool-herc-back-to-school-jam",
+            "--dry-run",
+            "--json",
+        ],
+    )
+
+    payload = json.loads(capsys.readouterr().out)
+    assert exit_code == 0
+    assert events_path.read_text(encoding="utf-8") == original_text
+    assert payload["events"][0]["image_links"][0]["query"] == "1520 Sedgwick Avenue Bronx 1973"
 
 
 def test_preview_queries_prints_default_v2_plan_without_provider_calls(

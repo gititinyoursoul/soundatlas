@@ -63,9 +63,16 @@ uv run python scripts/enrich_image_links.py --event-id kool-herc-back-to-school-
 
 Expected result:
 
-- the command prints the changed seed payload
+- the command prints a readable summary of changed events and candidate counts
 - no seed file is written
 - generated links have `review_status: "draft"`
+
+To inspect the full changed seed payload, add `--json`:
+
+```bash
+cd backend
+uv run python scripts/enrich_image_links.py --event-id kool-herc-back-to-school-jam --dry-run --json
+```
 
 If the command prints `No image candidates found.`, Wikimedia did not return
 acceptable candidates for the current queries and scoring threshold.

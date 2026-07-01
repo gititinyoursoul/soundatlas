@@ -60,6 +60,11 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--dry-run", action="store_true", help="Print changes without writing.")
     parser.add_argument(
+        "--json",
+        action="store_true",
+        help="With --dry-run, print the full changed seed payload as JSON.",
+    )
+    parser.add_argument(
         "--preview-queries",
         action="store_true",
         help="Print planned image queries without calling providers or writing seed data.",
@@ -76,10 +81,28 @@ def main(argv: list[str] | None = None) -> int:
     if args.limit < 1:
         print("--limit must be at least 1.", file=sys.stderr)
         return 2
+    if args.json and not args.dry_run:
+        print("--json can only be used with --dry-run.", file=sys.stderr)
+        return 2
 
     events_payload = read_json(EVENTS_PATH)
     routes_payload = read_json(ROUTES_PATH)
     places_payload = read_json(PLACES_PATH)
+    try:
+        selected_event_ids = [
+            event["id"]
+            for event in select_events(
+                events_payload=events_payload,
+                routes_payload=routes_payload,
+                event_id=args.event_id,
+                route_id=args.route_id,
+            )
+            if isinstance(event.get("id"), str)
+        ]
+    except ValueError as exc:
+        print(str(exc), file=sys.stderr)
+        return 2
+    before_counts = link_counts_by_event_id(events_payload, selected_event_ids, "image_links")
 
     if args.preview_queries:
         try:
@@ -116,22 +139,127 @@ def main(argv: list[str] | None = None) -> int:
         return 2
 
     if args.dry_run:
-        print(json.dumps(events_payload, indent=2, ensure_ascii=False))
+        if args.json:
+            print(json.dumps(events_payload, indent=2, ensure_ascii=False))
+        else:
+            print(
+                format_image_enrichment_summary(
+                    events_payload=events_payload,
+                    selected_event_ids=selected_event_ids,
+                    before_counts=before_counts,
+                    changed_events=changed_events,
+                    event_id=args.event_id,
+                    route_id=args.route_id,
+                    limit=args.limit,
+                    providers=providers,
+                    query_planner=args.query_planner,
+                    dry_run=True,
+                    wrote_seed=False,
+                ),
+            )
     elif changed_events:
         EVENTS_PATH.write_text(
             json.dumps(events_payload, indent=2, ensure_ascii=False) + "\n",
             encoding="utf-8",
         )
 
-    if changed_events:
-        print(f"Enriched {changed_events} event(s).")
-    else:
-        print("No image candidates found.")
+    if not args.dry_run:
+        print(
+            format_image_enrichment_summary(
+                events_payload=events_payload,
+                selected_event_ids=selected_event_ids,
+                before_counts=before_counts,
+                changed_events=changed_events,
+                event_id=args.event_id,
+                route_id=args.route_id,
+                limit=args.limit,
+                providers=providers,
+                query_planner=args.query_planner,
+                dry_run=False,
+                wrote_seed=changed_events > 0,
+            ),
+        )
     return 0
 
 
 def read_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def link_counts_by_event_id(
+    events_payload: dict[str, Any],
+    event_ids: list[str],
+    link_field: str,
+) -> dict[str, int]:
+    selected_ids = set(event_ids)
+    return {
+        event["id"]: len([link for link in event.get(link_field, []) if isinstance(link, dict)])
+        for event in events_payload.get("events", [])
+        if isinstance(event, dict) and event.get("id") in selected_ids
+    }
+
+
+def format_image_enrichment_summary(
+    *,
+    events_payload: dict[str, Any],
+    selected_event_ids: list[str],
+    before_counts: dict[str, int],
+    changed_events: int,
+    event_id: str | None,
+    route_id: str | None,
+    limit: int,
+    providers: list[str],
+    query_planner: str,
+    dry_run: bool,
+    wrote_seed: bool,
+) -> str:
+    after_counts = link_counts_by_event_id(events_payload, selected_event_ids, "image_links")
+    added_total = sum(
+        max(after_counts.get(event_id, 0) - before_counts.get(event_id, 0), 0)
+        for event_id in selected_event_ids
+    )
+    lines = [
+        "Image enrichment",
+        f"Mode: {'dry-run (no files written)' if dry_run else 'write'}",
+        f"Scope: {format_scope(event_id=event_id, route_id=route_id)}",
+        f"Providers: {', '.join(providers)}",
+        f"Query planner: {query_planner}",
+        f"Limit: {limit} image link(s) per event",
+        f"Events considered: {len(selected_event_ids)}",
+        f"Changed events: {changed_events}",
+        f"Added image links: {added_total}",
+    ]
+    if not dry_run:
+        lines.append(f"Wrote: {relative_repo_path(EVENTS_PATH) if wrote_seed else 'nothing'}")
+        if not wrote_seed:
+            lines.append("No candidates added.")
+    if selected_event_ids:
+        lines.extend(["", "Events"])
+        for current_event_id in selected_event_ids:
+            before = before_counts.get(current_event_id, 0)
+            after = after_counts.get(current_event_id, 0)
+            lines.append(
+                f"  {current_event_id}: +{max(after - before, 0)} image link(s) "
+                f"({before} -> {after})",
+            )
+    if dry_run:
+        lines.extend(["", "Use --dry-run --json to inspect the full changed seed payload."])
+    return "\n".join(lines)
+
+
+def format_scope(event_id: str | None, route_id: str | None) -> str:
+    if event_id:
+        return f"event {event_id}"
+    if route_id:
+        return f"route {route_id}"
+    return "all events"
+
+
+def relative_repo_path(path: Path) -> str:
+    try:
+        return str(path.relative_to(REPO_ROOT))
+    except ValueError:
+        return str(path)
 
 
 def print_image_query_preview(

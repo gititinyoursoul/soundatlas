@@ -70,9 +70,16 @@ uv run python scripts/run_youtube_search_requests.py --event-id kool-herc-back-t
 
 Expected result:
 
-- the command prints planned YouTube requests
+- the command prints a readable summary of planned YouTube requests
 - no API call is made
 - no result file is written
+
+To inspect the planned requests as JSON, add `--json`:
+
+```powershell
+cd backend
+uv run python scripts/run_youtube_search_requests.py --event-id kool-herc-back-to-school-jam --dry-run --json
+```
 
 If this fails, fix the request plan JSON first.
 
@@ -107,9 +114,16 @@ uv run python scripts/enrich_media_links.py --event-id kool-herc-back-to-school-
 
 Expected result:
 
-- the command prints the changed event payload
+- the command prints a readable summary of changed events and candidate counts
 - no seed file is written
 - generated links have `review_status: "draft"`
+
+To inspect the full changed seed payload, add `--json`:
+
+```powershell
+cd backend
+uv run python scripts/enrich_media_links.py --event-id kool-herc-back-to-school-jam --dry-run --json
+```
 
 If the command prints `No YouTube search results found.`, create or fetch the normalized result file first.
 
@@ -176,6 +190,13 @@ cd backend
 uv run python scripts/run_youtube_search_requests.py --dry-run
 ```
 
+Print request-plan dry-run output as JSON:
+
+```powershell
+cd backend
+uv run python scripts/run_youtube_search_requests.py --dry-run --json
+```
+
 Run all live YouTube searches:
 
 ```powershell
@@ -189,6 +210,13 @@ Preview merge for all available result files:
 ```powershell
 cd backend
 uv run python scripts/enrich_media_links.py --dry-run
+```
+
+Print merge dry-run output as the full changed seed payload:
+
+```powershell
+cd backend
+uv run python scripts/enrich_media_links.py --dry-run --json
 ```
 
 Limit generated links per event:
