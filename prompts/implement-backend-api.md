@@ -41,7 +41,7 @@ Do not rewrite the product behavior from the prompt. Treat the approved plan or 
 * Load MVP data from `data/seed/` until a database is introduced.
 * Use Pydantic schemas for response models.
 * Keep route, place, event, and connection field names aligned with seed data.
-* Preserve documented seed contracts from `docs/seed-validation.md`.
+* Preserve documented seed contracts from `docs/data/seed-data-validation.md`.
 * Do not introduce a database until explicitly requested.
 * Do not commit changes unless explicitly requested.
 * Do not commit secrets, API keys, local paths, generated media files, audio, or video.
@@ -60,7 +60,7 @@ Do not rewrite the product behavior from the prompt. Treat the approved plan or 
 1. Read the approved plan or local implementation plan record and identify backend-relevant requirements and acceptance criteria.
 2. Inspect existing backend structure under `backend/app/`.
 3. Inspect relevant seed data under `data/seed/`.
-4. Check `docs/seed-validation.md` before changing seed-related behavior.
+4. Check `docs/data/seed-data-validation.md` before changing seed-related behavior.
 5. Define or update Pydantic schemas before endpoint handlers.
 6. Add or update a seed repository or loader with explicit path handling.
 7. Implement filtering for `from_year`, `to_year`, and `route_id` when required by the approved plan.

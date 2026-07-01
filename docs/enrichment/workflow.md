@@ -181,6 +181,7 @@ Warnings are review prompts, not failures:
 - `only_low_specificity_candidates`: every selected candidate had weak event/place/query overlap.
 - `only_low_confidence_candidates`: every selected candidate had low provider or scoring confidence.
 - `playlist_only` or `no_videos`: media candidates contained playlists but no videos.
+- `wrong_era_playlist`: at least one playlist candidate exposes explicit year or decade evidence outside the event's year range.
 - `unknown_rights_status`: at least one image candidate lacks clear rights metadata.
 - `missing_query`, `missing_title`, or `missing_source_url`: a candidate is missing useful review metadata.
 
@@ -210,8 +211,8 @@ retrieval brief built from the event, route, and place data.
 
 The image-specific docs are:
 
-- `docs/image-retrieval/image-enrichment-concept.md`
-- `docs/image-retrieval/workflow-commands.md`
+- `docs/enrichment/image/overview.md`
+- `docs/enrichment/image/workflow-commands.md`
 
 ## Media Workflow
 
@@ -220,8 +221,8 @@ plans and normalized result files.
 
 The media-specific docs are:
 
-- `docs/media-retrieval/media-enrichment-concept.md`
-- `docs/media-retrieval/workflow-commands.md`
+- `docs/enrichment/media/overview.md`
+- `docs/enrichment/media/workflow-commands.md`
 
 ## Practical Rule
 

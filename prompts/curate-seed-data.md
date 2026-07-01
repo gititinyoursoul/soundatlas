@@ -13,7 +13,7 @@ Task
 - Add or update seed data under `data/seed/`.
 
 Project constraints
-- Follow `docs/seed-validation.md`.
+- Follow `docs/data/seed-data-validation.md`.
 - Preserve stable IDs once frontend or backend code may reference them.
 - Use `review_status: "draft"` unless the user explicitly asks for reviewed content.
 - Always model `source_urls` and `media_links` as arrays.
@@ -22,7 +22,7 @@ Project constraints
 
 Process
 - If the seed work is non-trivial, use `prompts/plan-feature.md` first and create or update a local implementation plan record under `plans/records/` before multi-file data changes.
-- Check the route concept in `docs/routes/` and MVP scope in `docs/mvp-concept.md`.
+- Check the route concept in `docs/content/route-concepts/` and MVP scope in `docs/mvp-concept.md`.
 - Update the smallest necessary set of seed files: routes, places, events, connections.
 - Keep event wording concise: `summary` for what happened, `significance` for why it matters.
 - Validate JSON syntax and cross-references if tooling is available.

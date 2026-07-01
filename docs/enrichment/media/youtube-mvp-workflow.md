@@ -28,7 +28,7 @@ event
 
 ## Minimal Event Search Components
 
-Use the simplified schema from `docs/media-retrieval/event-search-components.md`.
+Use the simplified schema from `docs/enrichment/upstream/event-search-components.md`.
 
 For MVP query planning, the most important fields are:
 

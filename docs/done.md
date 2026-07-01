@@ -31,7 +31,7 @@ Archive of completed work packages. The current work list lives in `TODO.md`.
 - [x] Create the FastAPI app structure under `backend/app/`
 - [x] Define Pydantic schemas for API responses
 - [x] Load JSON seed files in the backend
-- [x] Validate seed data against `docs/seed-validation.md`
+- [x] Validate seed data against `docs/data/seed-data-validation.md`
 - [x] Implement `GET /health`
 - [x] Implement `GET /routes`
 - [x] Implement `GET /events` with `from_year`, `to_year`, and `route_id`
@@ -51,10 +51,14 @@ Archive of completed work packages. The current work list lives in `TODO.md`.
 ## Enrichment
 
 - [x] Draft or revise the `event-search-components` spec so it matches the current image and media planner inputs, including time context, place disambiguation, typed works, and supporting-term handling
-- [x] Compare `docs/media-retrieval/event-search-components.md` with the image retrieval brief approach and choose `event-search-components` as the shared upstream process for image and media enrichment
-- [x] Make `docs/media-retrieval/event-search-components.md` the shared upstream search-input model for both image and media enrichment
+- [x] Compare `docs/enrichment/upstream/event-search-components.md` with the image retrieval brief approach and choose `event-search-components` as the shared upstream process for image and media enrichment
+- [x] Make `docs/enrichment/upstream/event-search-components.md` the shared upstream search-input model for both image and media enrichment
 - [x] Improve `event-search-components` with richer time context, structured place disambiguation, typed works, supporting terms, and targeted review warnings
 - [x] Add a shared event-search-components generator so media and image enrichment start from the same structured input
+- [x] Add enrichment-readiness warnings so weak query inputs are flagged during event-search-component generation
+- [x] Flag wrong-era YouTube playlist candidates before media review
+- [x] Prefer era- and context-specific artist image queries before broad artist-only queries
+- [x] Add borough/city place disambiguation to image query planning
 
 ## Frontend
 

@@ -16,7 +16,7 @@ Task
 
 Project constraints
 - Keep the MVP focused on `New York 1965-1985` unless explicitly requested.
-- Follow `AGENTS.md` and `docs/seed-validation.md`.
+- Follow `AGENTS.md` and `docs/data/seed-data-validation.md`.
 - Preserve existing route, place, event, and connection IDs.
 - Use stable, lowercase, URL-safe IDs with hyphens.
 - Mark early editorial data with `review_status: "draft"`.
@@ -55,14 +55,14 @@ Seed data requirements
 
 Recommended workflow
 - For non-trivial route creation or route reshaping, use `prompts/plan-feature.md` first and create or update a local implementation plan record under `plans/records/` before broad seed edits.
-- First create or update a route concept in `docs/routes/`.
+- First create or update a route concept in `docs/content/route-concepts/`.
 - Then map the concept into seed data.
 - Validate JSON syntax.
 - Validate references between routes, places, events, and connections.
 - Update `TODO.md` only for tasks that are actually completed.
 
 Deliverables
-- Route concept document under `docs/routes/`.
+- Route concept document under `docs/content/route-concepts/`.
 - Seed data changes if requested.
 - Related local implementation plan record path or update note, when used.
 - Notes on unresolved source or content questions.

@@ -1,4 +1,4 @@
-# Media Enrichment Concept
+# Media Enrichment Overview
 
 ## Goal
 
@@ -14,10 +14,10 @@ Media enrichment currently uses a YouTube-only MVP workflow:
 
 These links are meant as exploration aids, not as a complete editorial discography.
 
-The shared enrichment workflow is documented in `docs/enrichment-workflow.md`.
+The shared enrichment workflow is documented in `docs/enrichment/workflow.md`.
 Image enrichment follows the same shared pipeline, but writes to `image_links`
 instead of `media_links`. The image-specific branch is documented in
-`docs/image-retrieval/image-enrichment-concept.md`.
+`docs/enrichment/image/overview.md`.
 
 ## Data Model
 
@@ -66,7 +66,9 @@ The review status is the primary safety boundary. Automation may write links, bu
 
 ## Matching Rules
 
-Queries should be planned from structured event search components, not directly from raw event text. The reference schema is documented in `docs/media-retrieval/event-search-components.md`.
+Queries should be planned from structured event search components, not directly
+from raw event text. The reference schema is documented in
+`docs/enrichment/upstream/event-search-components.md`.
 
 Search components are derived from existing event data:
 
@@ -195,9 +197,9 @@ The merge script does not need provider credentials. The YouTube request runner 
 
 For YouTube search requests, the following rules apply:
 
-1. The simplified MVP workflow is documented in `docs/media-retrieval/youtube-mvp-workflow.md`.
-2. Event search components are documented in `docs/media-retrieval/event-search-components.md`.
-3. Query planning is documented in `docs/media-retrieval/query-planning.md`.
+1. The simplified MVP workflow is documented in `docs/enrichment/media/youtube-mvp-workflow.md`.
+2. Event search components are documented in `docs/enrichment/upstream/event-search-components.md`.
+3. Query planning is documented in `docs/enrichment/media/youtube-query-planning.md`.
 4. Query plans are stored as JSON request plans under `data/enrichment/youtube-search-requests/`.
 5. Request plans use `YOUTUBE_API_KEY` only as a placeholder.
 6. `run_youtube_search_requests.py` injects the real key at runtime and redacts it from written result files.

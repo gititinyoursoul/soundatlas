@@ -1,4 +1,4 @@
-# Media Retrieval Query Planning
+# YouTube Query Planning
 
 ## Purpose
 
@@ -120,7 +120,8 @@ Default MVP storage rule:
 
 ## Intent Selection
 
-The planner should derive intents from `docs/media-retrieval/event-search-components.md`.
+The planner should derive intents from
+`docs/enrichment/upstream/event-search-components.md`.
 
 | Component | Eligible YouTube Intents | Default Priority |
 | --- | --- | --- |

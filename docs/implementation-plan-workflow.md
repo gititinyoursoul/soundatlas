@@ -128,7 +128,7 @@ Plans and implementation should respect these project constraints:
 * Current product scope is New York 1965-1985 with curated routes, events, places, connections, and external media links.
 * Use existing project conventions in `AGENTS.md`.
 * Prefer data-driven implementation from `data/seed/` over hardcoded UI mock data.
-* Preserve seed file shapes documented in `docs/seed-validation.md`.
+* Preserve seed file shapes documented in `docs/data/seed-data-validation.md`.
 * Keep generated media links as `review_status: "draft"` until manually reviewed.
 * Do not store audio or video files in the repository.
 * Do not commit secrets, API keys, local paths, or generated media files.

@@ -1,4 +1,4 @@
-# Image Enrichment Concept
+# Image Enrichment Overview
 
 ## Goal
 
@@ -14,7 +14,7 @@ flyers, club culture, urban history, and archival material. The goal is an
 auditable external link layer, not an image database inside the repository.
 
 The shared enrichment workflow is documented in
-`docs/enrichment-workflow.md`. This concept focuses on the image-specific
+`docs/enrichment/workflow.md`. This concept focuses on the image-specific
 branch of that pipeline.
 
 ## Core Principles

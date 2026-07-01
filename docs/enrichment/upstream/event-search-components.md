@@ -1,8 +1,9 @@
-# Media Retrieval Event Search Components
+# Enrichment Upstream Event Search Components
 
 ## Purpose
 
-This document defines a simple, stable schema for deriving YouTube search input from SoundAtlas events.
+This document defines a simple, stable schema for deriving shared enrichment
+search input from SoundAtlas events.
 
 The schema is intentionally separate from `data/seed/events.json`. Core event data should remain editorial product content, while retrieval metadata can evolve as the media pipeline improves.
 
@@ -11,7 +12,7 @@ The schema is intentionally separate from `data/seed/events.json`. Core event da
 Use this document as the schema reference first:
 
 ```text
-docs/media-retrieval/event-search-components.md
+docs/enrichment/upstream/event-search-components.md
 ```
 
 Once the structure is stable, generated or curated component files can live under:
@@ -48,7 +49,8 @@ data/seed/events.json
 
 Only selected media links are merged back into `events.json`. Intermediate search components, request plans, and search results stay in `data/enrichment/`.
 
-The next conceptual step is query planning, documented in `docs/media-retrieval/query-planning.md`.
+The next conceptual step is media query planning, documented in
+`docs/enrichment/media/youtube-query-planning.md`.
 
 ## Stable Schema
 
@@ -261,7 +263,7 @@ Use to make query planning safer:
 
 ## Query Planning Implications
 
-Use only the MVP YouTube intents from `docs/media-retrieval/youtube-mvp-workflow.md`:
+Use only the MVP YouTube intents from `docs/enrichment/media/youtube-mvp-workflow.md`:
 
 - `artists` present: consider `interview` or `documentary`.
 - `places` present: consider `venue_context` or `documentary`.

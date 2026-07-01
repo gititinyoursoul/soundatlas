@@ -28,9 +28,9 @@ Core rule:
   * `README.md`
   * `TODO.md`
   * `AGENTS.md`
-  * `docs/seed-validation.md`
-  * `docs/media-retrieval/workflow-commands.md`
-  * `docs/media-retrieval/youtube-mvp-workflow.md`
+  * `docs/data/seed-data-validation.md`
+  * `docs/enrichment/media/workflow-commands.md`
+  * `docs/enrichment/media/youtube-mvp-workflow.md`
 * Constraints and non-goals.
 * Whether implementation or planning-only is requested.
 * Existing local implementation plan record path, if using or updating a previous record.
@@ -51,7 +51,7 @@ If the input is incomplete, do not stop immediately. State reasonable assumption
 * Current product scope is New York 1965-1985 with curated routes, events, places, connections, and external media links.
 * Use existing project conventions in `AGENTS.md`.
 * Prefer data-driven implementation from `data/seed/` over hardcoded UI mock data.
-* Preserve seed file shapes documented in `docs/seed-validation.md`.
+* Preserve seed file shapes documented in `docs/data/seed-data-validation.md`.
 * Keep generated media links as `review_status: "draft"` until manually reviewed.
 * Do not store audio or video files in the repository.
 * Do not commit secrets, API keys, local paths, or generated media files.
@@ -63,7 +63,7 @@ If the input is incomplete, do not stop immediately. State reasonable assumption
 * Backend: Python, `uv`, FastAPI, Pydantic.
 * MVP data: curated JSON files under `data/seed/`.
 * Media retrieval: YouTube-only MVP using `data/enrichment/`.
-* Media workflow commands are documented in `docs/media-retrieval/workflow-commands.md`.
+* Media workflow commands are documented in `docs/enrichment/media/workflow-commands.md`.
 
 ## Local Implementation Plan Record Rules
 

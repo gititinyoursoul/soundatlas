@@ -1,4 +1,4 @@
-# Image Retrieval Workflow Commands
+# Image Workflow Commands
 
 ## Purpose
 
@@ -6,7 +6,7 @@ This document describes the practical command sequence for the Wikimedia-only
 image enrichment pass.
 
 The shared enrichment workflow is documented in
-`docs/enrichment-workflow.md`. This page stays command-focused.
+`docs/enrichment/workflow.md`. This page stays command-focused.
 
 Use it when you want to enrich one or more SoundAtlas events with draft
 `image_links`.
@@ -22,7 +22,7 @@ CLI plans event-specific image queries
 ```
 
 For the shared enrichment flow and split points, see
-`docs/enrichment-workflow.md`.
+`docs/enrichment/workflow.md`.
 
 The default query planner is `v2`. It prefers an optional
 `data/enrichment/event-search-components/<event-id>.json` file when present,
