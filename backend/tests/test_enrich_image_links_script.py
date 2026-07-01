@@ -77,9 +77,9 @@ def test_v2_query_planner_uses_planned_queries() -> None:
     )
 
     assert queries[:3] == [
-        "1520 Sedgwick Avenue",
-        "1520 Sedgwick Avenue 1973",
-        "DJ Kool Herc",
+        "1520 Sedgwick Avenue Bronx 1973",
+        "1520 Sedgwick Avenue Bronx 1970s",
+        "DJ Kool Herc 1973",
     ]
 
 
@@ -282,8 +282,8 @@ def test_enrich_events_payload_uses_v2_query_planner_by_default() -> None:
     )
 
     assert changed_events == 1
-    assert searched_queries[0] == "1520 Sedgwick Avenue"
-    assert events_payload["events"][0]["image_links"][0]["query"] == "1520 Sedgwick Avenue"
+    assert searched_queries[0] == "1520 Sedgwick Avenue Bronx 1973"
+    assert events_payload["events"][0]["image_links"][0]["query"] == "1520 Sedgwick Avenue Bronx 1973"
 
 
 def test_enrich_events_payload_can_use_legacy_query_planner() -> None:
@@ -465,8 +465,8 @@ def test_preview_queries_prints_default_v2_plan_without_provider_calls(
     assert events_path.read_text(encoding="utf-8") == original_text
     assert "Event: kool-herc-back-to-school-jam" in output
     assert "venue_photo" in output
-    assert "[1/high] 1520 Sedgwick Avenue" in output
-    assert "[2/medium] DJ Kool Herc" in output
+    assert "[1/high] 1520 Sedgwick Avenue Bronx 1973" in output
+    assert "[2/high] DJ Kool Herc 1973" in output
 
 
 def test_preview_queries_can_print_legacy_queries(

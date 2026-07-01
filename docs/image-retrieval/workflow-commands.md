@@ -25,15 +25,16 @@ For the shared enrichment flow and split points, see
 `docs/enrichment-workflow.md`.
 
 The default query planner is `v2`. It builds a retrieval brief from the event,
-route, and place data, then plans a short ladder of searches that starts with
-exact place, artist, work, or event terms before falling back to broader route
-and archive queries. The legacy planner is still available for comparison with
-`--query-planner legacy`.
+route, and place data, then plans short ladders of searches around strong
+identity terms and compact supporting context. Venue queries include city or
+borough context, artist and work queries start with the event year/range when
+available, and short ranges also get decade and individual-year fallbacks. The
+legacy planner is still available for comparison with `--query-planner legacy`.
 
 The v2 preview groups queries by target type and shows the planner's priority
-and confidence hint for each query. Use that preview to understand why a broad
-event search may have fewer results than a more specific place- or artist-led
-query.
+and confidence hint for each query. Use that preview to check that venues are
+disambiguated, artist queries are era-aware, and quoted works such as films are
+not treated as generic title searches.
 
 ## 0. Preview Query Plans
 

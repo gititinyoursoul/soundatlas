@@ -36,6 +36,7 @@ Completed work packages are archived in `docs/done.md`.
 - [ ] Recheck every current YouTube video link for playable, embeddable, external-only, private, deleted, or unavailable status
 - [ ] Compare `docs/media-retrieval/event-search-components.md` with the image retrieval brief approach and choose one shared upstream process for both image and media enrichment
 - [ ] Make `docs/media-retrieval/event-search-components.md` the shared upstream search-input model for both image and media enrichment so query planning starts from the same structured base
+- [ ] Improve `event-search-components` with richer time context, structured place disambiguation, typed works, primary supporting terms, and targeted review warnings
 - [ ] Fix media enrichment so genre-correct playlists from the wrong decade are filtered or clearly flagged before review
 
 ### Enrichment Orchestration

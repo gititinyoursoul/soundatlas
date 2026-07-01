@@ -141,12 +141,25 @@ seed data:
 - known artist, venue, label, release, film, or organization terms already
   present in the event text
 
-The current v2 planner turns that input into a retrieval brief, then orders the
-searches from most specific to broadest:
+The current v2 planner turns that input into a retrieval brief, then builds
+short query ladders around a strong identity term and the smallest useful
+supporting context.
 
-- exact place, artist, work, event, or organization terms first
-- route and theme terms next
-- archive, flyer, press, or map fallbacks last
+Query ordering rules:
+
+- Venue and concrete-place queries must include city or borough context, such as
+  `Bronx` or `New York`, before any time term.
+- Artist queries start with the artist or group name plus the event year/range,
+  then try decade and individual-year variants for short ranges.
+- Work queries start with the title plus the strongest time term, for example
+  `Wild Style 1983`; film works add `film` or scene context as fallback variants.
+- Event-title archive queries remain broad fallbacks after place, artist, and
+  work-specific searches.
+- Broad region-only queries, such as `South Bronx` alone, are skipped.
+
+For short year ranges, the planner uses range, decade, and individual-year
+variants. For example, an event from 1975 to 1977 can produce `1975 1977`,
+`1970s`, `1975`, `1976`, and `1977` as supporting time context.
 
 The target candidate mix per event is:
 

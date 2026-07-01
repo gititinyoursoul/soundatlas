@@ -25,9 +25,12 @@ def test_plan_image_queries_for_concrete_venue_and_artist() -> None:
         ),
     )
 
-    assert ("venue_photo", "1520 Sedgwick Avenue") in plan_pairs(plans)
-    assert ("artist_photo", "DJ Kool Herc") in plan_pairs(plans)
+    assert ("venue_photo", "1520 Sedgwick Avenue Bronx 1973") in plan_pairs(plans)
+    assert ("venue_photo", "1520 Sedgwick Avenue Bronx 1970s") in plan_pairs(plans)
+    assert ("artist_photo", "DJ Kool Herc 1973") in plan_pairs(plans)
+    assert ("artist_photo", "DJ Kool Herc 1970s") in plan_pairs(plans)
     assert "bronx" not in planned_queries(plans)
+    assert "1520 Sedgwick Avenue" not in planned_queries(plans)
 
 
 def test_plan_image_queries_for_artist_event_avoids_broad_place_query() -> None:
@@ -49,8 +52,12 @@ def test_plan_image_queries_for_artist_event_avoids_broad_place_query() -> None:
         ),
     )
 
-    assert ("artist_photo", "Grandmaster Flash") in plan_pairs(plans)
-    assert ("archive_photo", "Grandmaster Flash Refines DJ Techniques") in plan_pairs(plans)
+    assert ("artist_photo", "Grandmaster Flash 1975 1977") in plan_pairs(plans)
+    assert ("artist_photo", "Grandmaster Flash 1970s") in plan_pairs(plans)
+    assert ("artist_photo", "Grandmaster Flash 1975") in plan_pairs(plans)
+    assert ("artist_photo", "Grandmaster Flash 1976") in plan_pairs(plans)
+    assert ("artist_photo", "Grandmaster Flash 1977") in plan_pairs(plans)
+    assert ("archive_photo", "Grandmaster Flash Refines DJ Techniques 1975 1977") in plan_pairs(plans)
     assert "South Bronx" not in planned_queries(plans)
 
 
@@ -102,7 +109,41 @@ def test_plan_image_queries_for_quoted_release() -> None:
     )
 
     assert ("album_cover", "Rapper") not in plan_pairs(plans)
-    assert ("album_cover", "Rapper's Delight") in plan_pairs(plans)
+    assert ("album_cover", "Rapper's Delight 1979") in plan_pairs(plans)
+    assert ("album_cover", "Charts 1979") not in plan_pairs(plans)
+
+
+def test_plan_image_queries_for_quoted_film_uses_title_and_year_first() -> None:
+    plans = plan_image_queries(
+        build_retrieval_brief(
+            event={
+                "id": "wild-style-global-visibility",
+                "route_id": "birth-of-hip-hop",
+                "place_id": "south-bronx",
+                "title": "Wild Style Documents the Four Elements",
+                "year_start": 1983,
+                "year_end": 1983,
+                "summary": (
+                    "Charlie Ahearn's film 'Wild Style' shows early hip-hop culture with "
+                    "graffiti, DJing, MCing, and breaking in a semi-documentary feature film."
+                ),
+                "significance": (
+                    "The film makes the scene internationally legible and connects local practice "
+                    "with global perception."
+                ),
+                "tags": ["wild-style", "film", "four-elements", "global-visibility"],
+            },
+            route={"id": "birth-of-hip-hop", "title": "Birth of Hip-Hop"},
+            place={"id": "south-bronx", "name": "South Bronx", "place_type": "region"},
+        ),
+    )
+
+    assert ordered_queries(plans)[:3] == [
+        "Wild Style 1983",
+        "Wild Style 1983 film",
+        "Wild Style hip hop film",
+    ]
+    assert ("album_cover", "Wild Style 1983") not in plan_pairs(plans)
 
 
 def plan_pairs(plans):
@@ -111,3 +152,7 @@ def plan_pairs(plans):
 
 def planned_queries(plans):
     return {plan.query for plan in plans}
+
+
+def ordered_queries(plans):
+    return [plan.query for plan in plans]
