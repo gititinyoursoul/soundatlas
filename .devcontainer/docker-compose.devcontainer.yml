@@ -12,6 +12,7 @@ services:
     environment:
       CODEX_HOME: /home/soundatlas/.codex
       GH_CONFIG_DIR: /home/soundatlas/.config/gh
+      SOUNDATLAS_GITHUB_AGENT_ENV_FILE: /run/secrets/github-agent.env
       SOUNDATLAS_GIT_AUTHOR_NAME: ${SOUNDATLAS_GIT_AUTHOR_NAME:-}
       SOUNDATLAS_GIT_AUTHOR_EMAIL: ${SOUNDATLAS_GIT_AUTHOR_EMAIL:-}
       SOUNDATLAS_EGRESS_GUARD: enabled
@@ -33,6 +34,10 @@ services:
       - type: bind
         source: ../secrets/soundatlas/.env
         target: /run/secrets/soundatlas.env
+        read_only: true
+      - type: bind
+        source: ../secrets/soundatlas/github-agent.env
+        target: /run/secrets/github-agent.env
         read_only: true
       - frontend_node_modules:/workspace/frontend/node_modules
       - backend_uv_cache:/home/soundatlas/.cache/uv

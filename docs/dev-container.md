@@ -125,6 +125,7 @@ Important environment variables:
 CODEX_HOME=/home/soundatlas/.codex
 GH_CONFIG_DIR=/home/soundatlas/.config/gh
 SOUNDATLAS_ENV_FILE=/run/secrets/soundatlas.env
+SOUNDATLAS_GITHUB_AGENT_ENV_FILE=/run/secrets/github-agent.env
 SOUNDATLAS_GIT_AUTHOR_NAME=
 SOUNDATLAS_GIT_AUTHOR_EMAIL=
 UV_PROJECT_ENVIRONMENT=/home/soundatlas/.cache/uv/venvs/backend
@@ -196,6 +197,8 @@ The `workspace` service uses these mounts:
 - read-only host bind mount: `%USERPROFILE%/.codex` to `/mnt/host-codex`
 - read-only host bind mount: `../secrets/soundatlas/.env` to
   `/run/secrets/soundatlas.env`
+- read-only host bind mount: `../secrets/soundatlas/github-agent.env` to
+  `/run/secrets/github-agent.env`
 
 Because `CODEX_HOME` points at the `codex_home` volume, Codex can keep its
 container-local SQLite state and writable `config.toml` on a Linux filesystem.
@@ -239,10 +242,13 @@ the repo, for example:
 ```
 
 For issue management, the GitHub CLI can use `GH_TOKEN` from that file when it
-is loaded into the shell. For persistent interactive `gh auth login` inside the
-container, GitHub CLI config is stored in the `github_cli_config` Docker volume
-at `/home/soundatlas/.config/gh`. Do not mount the host GitHub CLI config into
-the container.
+is loaded into the shell. Interactive Bash shells in the workspace load
+`SOUNDATLAS_GITHUB_AGENT_ENV_FILE` automatically when `GH_TOKEN` is not already
+set, so `gh` can authenticate without `gh auth login` and without writing
+GitHub credentials into the `github_cli_config` volume. For persistent
+interactive `gh auth login` inside the container, GitHub CLI config is stored
+in the `github_cli_config` Docker volume at `/home/soundatlas/.config/gh`. Do
+not mount the host GitHub CLI config into the container.
 
 The app services use repo-local bind mounts and named dependency/cache volumes:
 
