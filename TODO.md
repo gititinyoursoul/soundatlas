@@ -46,6 +46,7 @@ Completed work packages are archived in `docs/done.md`.
 ### Repo And Agent Workflow
 
 - [ ] Check current AI agent setup and documentation, including current security and rights
+- [x] Audit how external env tokens become visible inside the devcontainer, including `SOUNDATLAS_ENV_FILE`, mounted secrets, shell inheritance, and local Compose overrides
 - [x] Upgrade the dev container Codex CLI pin to `@openai/codex` `0.142.4`, rebuild the workspace image, and verify `codex --version`
 - [x] Make devcontainer dependency sync explicit by running locked backend `uv sync` and frontend `npm ci` during post-create or documenting the equivalent setup command
 - [x] Configure Playwright screenshot capture to use a different dev server port than the local browser so both can run at the same time

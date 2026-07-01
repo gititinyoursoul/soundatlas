@@ -21,7 +21,9 @@ CLI process inside that container. Codex credentials and config are seeded from
 the host so the container CLI can reuse the host login without baking
 credentials into an image. Codex runtime state and writable config stay in a
 Docker volume so SQLite state files and `config.toml` updates are not written
-through Windows bind mounts.
+through Windows bind mounts. App/provider secrets are mounted as a single
+read-only env file when present; GitHub agent credentials are kept separate
+from app env files.
 
 It starts three Compose services:
 
@@ -92,7 +94,8 @@ Installed runtime tools:
 - `uv`
 - Node.js `24.11.1`
 - npm
-- Codex CLI `@openai/codex` `0.142.2`
+- Codex CLI `@openai/codex` `0.142.4`
+- GitHub CLI `gh`
 - Git
 - Bash with programmable completion and Git prompt support
 - basic shell/process tools: `bubblewrap`, `curl`, `less`, `procps`
@@ -120,12 +123,14 @@ Important environment variables:
 
 ```sh
 CODEX_HOME=/home/soundatlas/.codex
+GH_CONFIG_DIR=/home/soundatlas/.config/gh
+SOUNDATLAS_ENV_FILE=/run/secrets/soundatlas.env
 SOUNDATLAS_GIT_AUTHOR_NAME=
 SOUNDATLAS_GIT_AUTHOR_EMAIL=
 UV_PROJECT_ENVIRONMENT=/home/soundatlas/.cache/uv/venvs/backend
 SOUNDATLAS_EGRESS_GUARD=enabled
 SOUNDATLAS_ALLOWED_OUTBOUND_PORTS=8000 5173
-SOUNDATLAS_WRITABLE_PATHS=/workspace/frontend/node_modules /home/soundatlas/.cache/ms-playwright /home/soundatlas/.cache/uv /home/soundatlas/.npm /home/soundatlas/.codex
+SOUNDATLAS_WRITABLE_PATHS=/workspace/frontend/node_modules /home/soundatlas/.cache/ms-playwright /home/soundatlas/.cache/uv /home/soundatlas/.config/gh /home/soundatlas/.npm /home/soundatlas/.codex
 ```
 
 The workspace waits for the `backend` and `frontend` services to start.
@@ -187,7 +192,10 @@ The `workspace` service uses these mounts:
 - named volume: `backend_uv_cache` to `/home/soundatlas/.cache/uv`
 - named volume: `frontend_npm_cache` to `/home/soundatlas/.npm`
 - named volume: `codex_home` to `/home/soundatlas/.codex`
+- named volume: `github_cli_config` to `/home/soundatlas/.config/gh`
 - read-only host bind mount: `%USERPROFILE%/.codex` to `/mnt/host-codex`
+- read-only host bind mount: `../secrets/soundatlas/.env` to
+  `/run/secrets/soundatlas.env`
 
 Because `CODEX_HOME` points at the `codex_home` volume, Codex can keep its
 container-local SQLite state and writable `config.toml` on a Linux filesystem.
@@ -204,6 +212,37 @@ and configuration.
 The workspace intentionally shares dependency/cache volumes with the app
 services so agent-run checks and running services see the same installed
 frontend packages and uv cache.
+
+### App Secrets And Agent Tokens
+
+The workspace dev container uses a narrow read-only mount for app/provider
+secrets:
+
+```text
+host:      ../secrets/soundatlas/.env
+container: /run/secrets/soundatlas.env
+env var:   SOUNDATLAS_ENV_FILE=/run/secrets/soundatlas.env
+```
+
+This file is intended for SoundAtlas runtime and enrichment settings such as
+`YOUTUBE_API_KEY`. The container receives the path through
+`SOUNDATLAS_ENV_FILE`; the raw token values are not written into Compose
+environment variables. Do not mount the whole `../secrets/soundatlas`
+directory unless a specific task requires broader access.
+
+GitHub agent credentials are separate from app/provider secrets. Use a
+fine-grained GitHub token scoped to this repository only, and store it outside
+the repo, for example:
+
+```text
+../secrets/soundatlas/github-agent.env
+```
+
+For issue management, the GitHub CLI can use `GH_TOKEN` from that file when it
+is loaded into the shell. For persistent interactive `gh auth login` inside the
+container, GitHub CLI config is stored in the `github_cli_config` Docker volume
+at `/home/soundatlas/.config/gh`. Do not mount the host GitHub CLI config into
+the container.
 
 The app services use repo-local bind mounts and named dependency/cache volumes:
 
@@ -227,6 +266,8 @@ git config --global credential.useHttpPath true
 git config --global core.autocrlf true
 git config --global core.filemode false
 # set git user.name and user.email when SOUNDATLAS_GIT_AUTHOR_* are present
+cd /workspace/backend && uv sync --locked --dev
+cd /workspace/frontend && npm ci
 ```
 
 This seeds Codex auth/config into the writable Linux volume, makes the mounted
@@ -234,6 +275,10 @@ workspace safe for Git inside the container, and keeps Windows-oriented
 line-ending and file-mode behavior predictable. Re-running the script updates
 the container-local Codex defaults even when the `codex_home` volume already
 existed from an older setup.
+
+The script also syncs backend and frontend dependencies from lockfiles so a
+fresh workspace has the Python and Node dependencies available without a
+separate manual install step.
 
 Git author configuration is intentionally opt-in. If both
 `SOUNDATLAS_GIT_AUTHOR_NAME` and `SOUNDATLAS_GIT_AUTHOR_EMAIL` are provided to
@@ -278,6 +323,15 @@ Start an interactive Codex session inside the workspace container:
 ```sh
 cd /workspace
 codex
+```
+
+Check GitHub CLI inside the workspace container:
+
+```sh
+cd /workspace
+gh --version
+gh auth status
+gh issue list
 ```
 
 ## Browser Screenshot Checks

@@ -15,6 +15,7 @@ services:
       SOUNDATLAS_GIT_AUTHOR_NAME: ${SOUNDATLAS_GIT_AUTHOR_NAME:-}
       SOUNDATLAS_GIT_AUTHOR_EMAIL: ${SOUNDATLAS_GIT_AUTHOR_EMAIL:-}
       SOUNDATLAS_EGRESS_GUARD: enabled
+      SOUNDATLAS_ENV_FILE: /run/secrets/soundatlas.env
       SOUNDATLAS_ALLOWED_OUTBOUND_PORTS: "8000 5173"
       SOUNDATLAS_WRITABLE_PATHS: /workspace/frontend/node_modules /home/soundatlas/.cache/ms-playwright /home/soundatlas/.cache/uv /home/soundatlas/.config/gh /home/soundatlas/.npm /home/soundatlas/.codex
       UV_PROJECT_ENVIRONMENT: /home/soundatlas/.cache/uv/venvs/backend
@@ -28,6 +29,10 @@ services:
       - type: bind
         source: ${USERPROFILE}/.codex
         target: /mnt/host-codex
+        read_only: true
+      - type: bind
+        source: ../secrets/soundatlas/.env
+        target: /run/secrets/soundatlas.env
         read_only: true
       - frontend_node_modules:/workspace/frontend/node_modules
       - backend_uv_cache:/home/soundatlas/.cache/uv
