@@ -340,6 +340,23 @@ gh auth status
 gh issue list
 ```
 
+### Backend Script Completion
+
+Interactive Bash shells in the workspace load completion for the backend
+maintenance scripts. Completion is available for common invocation forms such
+as:
+
+```sh
+cd /workspace/backend
+uv run python scripts/report_seed_link_counts.py --event-id <Tab>
+uv run python scripts/report_seed_link_counts.py --route-id <Tab>
+```
+
+`--event-id` values are read from `data/seed/events.json`; `--route-id` values
+are read from `data/seed/routes.json`. Static choices such as `--kind`,
+`--provider`, and `--query-planner` are completed from the script option
+definitions.
+
 ## Browser Screenshot Checks
 
 The workspace image includes the OS libraries required by Playwright-managed

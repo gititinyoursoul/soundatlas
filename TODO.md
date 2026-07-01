@@ -60,7 +60,7 @@ Completed work packages are archived in `docs/done.md`.
 - [ ] Add frontend behavior tests for route selection, timeline selection, map/story synchronization, loading/error states, and admin media controls
 - [ ] Find a test coverage setup for `uv` and `npm`
 - [ ] Split environment dependency management into prod and dev
-- [ ] Remove design documents and images that are no longer needed
+- [x] Remove design documents and images that are no longer needed
 
 ### UX and Design
 
