@@ -140,3 +140,11 @@ if [ -n "${SOUNDATLAS_GIT_AUTHOR_NAME:-}" ] && [ -n "${SOUNDATLAS_GIT_AUTHOR_EMA
   git config --global user.name "$SOUNDATLAS_GIT_AUTHOR_NAME"
   git config --global user.email "$SOUNDATLAS_GIT_AUTHOR_EMAIL"
 fi
+
+echo "Syncing backend dependencies..."
+cd /workspace/backend
+uv sync --locked --dev
+
+echo "Installing frontend dependencies..."
+cd /workspace/frontend
+npm ci

@@ -8,7 +8,8 @@ ARG CODEX_CLI_VERSION=0.142.4
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     UV_LINK_MODE=copy \
-    CODEX_HOME=/home/soundatlas/.codex
+    CODEX_HOME=/home/soundatlas/.codex \
+    GH_CONFIG_DIR=/home/soundatlas/.config/gh
 
 COPY --from=node /usr/local/bin/node /usr/local/bin/node
 COPY --from=node /usr/local/lib/node_modules /usr/local/lib/node_modules
@@ -55,11 +56,19 @@ RUN apt-get update \
         xdg-utils \
     && rm -rf /var/lib/apt/lists/*
 
+RUN mkdir -p -m 0755 /etc/apt/keyrings \
+    && curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg -o /etc/apt/keyrings/githubcli-archive-keyring.gpg \
+    && chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" > /etc/apt/sources.list.d/github-cli.list \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends gh \
+    && rm -rf /var/lib/apt/lists/*
+
 RUN npm install -g "@openai/codex@${CODEX_CLI_VERSION}"
 
 RUN groupadd --gid 10001 soundatlas \
     && useradd --uid 10001 --gid soundatlas --create-home --shell /bin/bash soundatlas \
-    && mkdir -p /workspace /home/soundatlas/.cache/ms-playwright /home/soundatlas/.cache/uv /home/soundatlas/.npm /home/soundatlas/.codex \
+    && mkdir -p /workspace /home/soundatlas/.cache/ms-playwright /home/soundatlas/.cache/uv /home/soundatlas/.config/gh /home/soundatlas/.npm /home/soundatlas/.codex \
     && chown -R soundatlas:soundatlas /workspace /home/soundatlas
 
 COPY .devcontainer/bashrc /home/soundatlas/.bashrc

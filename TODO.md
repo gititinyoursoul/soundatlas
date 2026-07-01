@@ -47,7 +47,7 @@ Completed work packages are archived in `docs/done.md`.
 
 - [ ] Check current AI agent setup and documentation, including current security and rights
 - [x] Upgrade the dev container Codex CLI pin to `@openai/codex` `0.142.4`, rebuild the workspace image, and verify `codex --version`
-- [ ] Make devcontainer dependency sync explicit by running locked backend `uv sync` and frontend `npm ci` during post-create or documenting the equivalent setup command
+- [x] Make devcontainer dependency sync explicit by running locked backend `uv sync` and frontend `npm ci` during post-create or documenting the equivalent setup command
 - [x] Configure Playwright screenshot capture to use a different dev server port than the local browser so both can run at the same time
 - [ ] Turn plan-feature prompt into a skill
 - [ ] Turn backend and frontend implementation prompts into skills
