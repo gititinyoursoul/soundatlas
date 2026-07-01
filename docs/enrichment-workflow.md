@@ -16,6 +16,34 @@ candidate normalization.
 
 ## Shared Workflow
 
+```mermaid
+flowchart TD
+  A["Curated seed data<br/>events, routes, places"] --> B["Select event or route"]
+  B --> C["Build retrieval brief<br/>title, place, years, tags, summary, significance"]
+  C --> D["Plan queries"]
+
+  D --> E1["Media branch<br/>YouTube request plan"]
+  E1 --> F1["Validate request plan<br/>dry run"]
+  F1 --> G1["Run YouTube search.list"]
+  G1 --> H1["Persist normalized results<br/>data/enrichment/youtube-search-results/"]
+  H1 --> I1["Merge candidates into media_links"]
+
+  D --> E2["Image branch<br/>v2 image query ladder"]
+  E2 --> F2["Preview queries"]
+  F2 --> G2["Query Wikimedia live"]
+  G2 --> H2["Normalize image metadata"]
+  H2 --> I2["Merge candidates into image_links"]
+
+  I1 --> J["Deduplicate, rank, respect ignored links, apply limits"]
+  I2 --> J
+  J --> K["Dry-run quality report or merge preview"]
+  K --> L["Write draft links<br/>data/seed/events.json"]
+  L --> M["Editorial review"]
+  M --> N{"Review decision"}
+  N -->|Accept| O["Set review_status to reviewed"]
+  N -->|Reject| P["Record ignored link<br/>skip on later reruns"]
+```
+
 ```text
 seed data selection
 -> retrieval brief generation
