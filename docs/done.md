@@ -1,6 +1,7 @@
 # SoundAtlas Done
 
-Archive of completed work packages. The current work list lives in `TODO.md`.
+Archive of completed work packages. Current planned agent work lives in GitHub
+Issues; `TODO.md` is a legacy backlog.
 
 ## Product and Content
 

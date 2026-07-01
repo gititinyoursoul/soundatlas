@@ -46,7 +46,7 @@ This document records how agent instructions should be interpreted in this repos
 
    Skills apply when the task matches the skill description or the user names the skill.
 
-   SoundAtlas example: `.codex/skills/soundatlas-spec-planning/SKILL.md` says to draft local implementation plan records for non-trivial UX, frontend, backend, data, documentation, and cross-cutting changes, then stop before implementation.
+   SoundAtlas example: `.codex/skills/soundatlas-implementation-planning/SKILL.md` says to draft local implementation plan records for non-trivial UX, frontend, backend, data, documentation, and cross-cutting changes, then stop before implementation.
 
    Configurable: yes, by editing repo skills or adding new skills. Skill priority itself cannot be raised above system, developer, user, or repo instructions.
 

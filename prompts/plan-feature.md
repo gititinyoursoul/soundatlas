@@ -4,11 +4,11 @@ Use this prompt before implementing a new SoundAtlas feature, UX change, data wo
 
 This prompt is the planning entrypoint for the current implementation-plan workflow.
 
-The goal is to prevent implementation from starting from a vague request. First produce a practical implementation plan. For approved non-trivial work, save that plan locally as an implementation plan record before implementation starts.
+The goal is to prevent implementation from starting from a vague request. First produce a practical implementation plan and capture non-trivial planned agent work in a GitHub Issue. For approved non-trivial work, save that plan locally as an implementation plan record before implementation starts.
 
 Core rule:
 
-> Do not implement directly from a vague prompt. Implementation may proceed from an approved plan, a local implementation plan record, or a clearly trivial request.
+> Do not implement directly from a vague prompt. Implementation may proceed from an approved Issue after explicit wording such as `implement issue #<number>`, an approved plan, a local implementation plan record, or a clearly trivial request.
 
 ## Context To Provide
 
@@ -26,7 +26,6 @@ Core rule:
 * Relevant docs:
 
   * `README.md`
-  * `TODO.md`
   * `AGENTS.md`
   * `docs/data/seed-data-validation.md`
   * `docs/enrichment/media/workflow-commands.md`
@@ -37,11 +36,11 @@ Core rule:
 
 ## Task
 
-Produce a practical implementation plan. If requested, also produce a local implementation plan record path and record content that can be saved under `plans/records/`.
+Produce a practical implementation plan. For non-trivial planned agent work, create or update a GitHub Issue with Goal, Plan, and Acceptance Criteria when authorized. If requested, also produce a local implementation plan record path and record content that can be saved under `plans/records/`.
 
 Do not write code unless explicitly asked.
 
-If implementation is requested in the same turn, produce the plan first and proceed only after implementation is clearly approved. For non-trivial approved work, create the local implementation plan record before implementation and update it after verification.
+If implementation is requested in the same turn, produce the plan first and proceed only after implementation is clearly approved, normally with wording such as `implement issue #<number>`. For non-trivial approved work, create the local implementation plan record before implementation and update it after verification.
 
 If the input is incomplete, do not stop immediately. State reasonable assumptions, list open questions, and produce a plan and local record shape that can be refined. Only block when missing information would make implementation unsafe, destructive, likely to violate the project data model, or likely to create incorrect historical/data behavior.
 
@@ -139,6 +138,7 @@ Implementation may proceed only when:
 * Acceptance criteria are testable.
 * Assumptions are explicit.
 * Blocking open questions are resolved or intentionally deferred.
+* For GitHub Issue work, the human has explicitly requested implementation with wording such as `implement issue #<number>`.
 
 Blocking questions include anything involving:
 
@@ -154,6 +154,33 @@ Blocking questions include anything involving:
 * irreversible workflow changes
 
 For low-risk ambiguity, make a conservative assumption and continue.
+
+## GitHub Issue Rules
+
+Each planned Issue should include:
+
+```md
+## Goal
+
+## Plan
+
+## Acceptance Criteria
+```
+
+Use optional `Non-Goals` and `Risks / Open Questions` sections when they clarify boundaries.
+
+Codex may set existing approved GitHub labels on Issues. New labels must be proposed and explicitly approved before Codex creates or uses them.
+
+Recommended label families:
+
+* `type:feature`
+* `type:bug`
+* `type:refactor`
+* `type:chore`
+* `area:<feature-or-component>`
+* `blocked`
+
+An Issue is done when implementation is complete, relevant checks have run or blockers are documented, and Acceptance Criteria have been verified. Close it with `gh issue close <number>` only when the human explicitly requests or clearly approves closure. Do not add a separate `done` label.
 
 ## Planning Rules
 
@@ -173,7 +200,7 @@ For cross-cutting changes, plan in this order:
 3. Frontend state impact
 4. UX/component impact
 5. Tests/checks
-6. Documentation/TODO updates
+6. Documentation or Issue updates
 
 For UX changes, explicitly define:
 
@@ -283,6 +310,6 @@ Return:
 * Do not invent APIs, schema fields, or data.
 * If the request is ambiguous, state assumptions before the plan.
 * Do not write code unless explicitly asked.
-* Do not modify product behavior outside the approved plan or local implementation plan record.
-* If implementation reveals needed behavior outside the approved plan, stop for approval when the difference changes product intent or another high-risk boundary.
+* Do not modify product behavior outside the approved Issue, approved plan, or local implementation plan record.
+* If implementation reveals needed behavior outside the approved Issue or plan, stop for approval when the difference changes product intent or another high-risk boundary.
 * End with a `Next step` line naming the next prompt, skill, or human action.

@@ -1,12 +1,12 @@
 # Implement Frontend Map From Plan Or Local Record
 
-Use this prompt when building or changing the SoundAtlas SvelteKit frontend map experience from an approved plan or local implementation plan record.
+Use this prompt when building or changing the SoundAtlas SvelteKit frontend map experience from an approved GitHub Issue, approved plan, or local implementation plan record.
 
 This prompt is the frontend implementation entrypoint for the current workflow. If the repo has a matching frontend skill, use that skill's instructions and keep this prompt as the compatibility wrapper.
 
 ## Context to provide
 
-* Approved plan summary or local implementation plan record path, for example `plans/records/P-014-enrichment-query-input.md`.
+* Approved GitHub Issue, approved plan summary, or local implementation plan record path, for example `plans/records/P-014-enrichment-query-input.md`.
 * Desired frontend behavior or component.
 * Related backend endpoints or seed fields.
 * Expected interaction:
@@ -33,18 +33,19 @@ This prompt is the frontend implementation entrypoint for the current workflow. 
 
 ## Implementation Gate
 
-Before implementing, read the approved plan or local implementation plan record.
+Before implementing, read the approved GitHub Issue, approved plan, or local implementation plan record.
 
 Implementation may proceed only when:
 
-* An approved plan, provided local implementation plan record path, or clearly trivial request exists.
+* An approved GitHub Issue, approved plan, provided local implementation plan record path, or clearly trivial request exists.
+* For Issue-based work, the human has explicitly requested implementation with wording such as `implement issue #<number>`.
 * The requirements are clear enough to implement.
 * Acceptance criteria are testable enough to verify.
 * Blocking questions are resolved or intentionally deferred.
 
-Do not implement behavior outside the approved plan or local implementation plan record.
+Do not implement behavior outside the approved GitHub Issue, approved plan, or local implementation plan record.
 
-If implementation reveals required behavior outside the approved plan or local implementation plan record, stop for approval when the change affects product behavior or another high-risk boundary. For low-risk implementation detail, record the assumption and continue.
+If implementation reveals required behavior outside the approved GitHub Issue, approved plan, or local implementation plan record, stop for approval when the change affects product behavior or another high-risk boundary. For low-risk implementation detail, record the assumption and continue.
 
 When a local plan record exists, map implementation work to requirement IDs and verify against acceptance criteria.
 
@@ -52,7 +53,7 @@ When a local plan record exists, map implementation work to requirement IDs and 
 
 Implement frontend behavior using SvelteKit, TypeScript, and Leaflet.
 
-Do not redefine the product behavior from the prompt. Treat the approved plan or local implementation plan record as the source of truth.
+Do not redefine the product behavior from the prompt. Treat the approved Issue, approved plan, or local implementation plan record as the source of truth.
 
 ## Project constraints
 
@@ -79,12 +80,12 @@ Do not redefine the product behavior from the prompt. Treat the approved plan or
 * Default to the MVP route and a meaningful first event when appropriate and seed data exists.
 * Make timeline controls interactive when the user is expected to explore event sequence, not only passive route ranges.
 * If UI includes review or curation controls, confirm whether the current surface is admin-only.
-* If review or curation controls stay visible on a public-facing surface, add an `@todo` for public gating.
+* If review or curation controls stay visible on a public-facing surface, capture the public-gating follow-up in a GitHub Issue.
 * Track timeline density risk near the implementation when future routes with many events may require clustering or compact ticks.
 
 ## Process
 
-1. Read the approved plan or local implementation plan record and identify frontend-relevant requirements and acceptance criteria.
+1. Read the approved GitHub Issue, approved plan, or local implementation plan record and identify frontend-relevant requirements and acceptance criteria.
 2. Inspect the existing SvelteKit route, components, and state ownership before editing.
 3. Inspect related backend response shapes or seed-backed data.
 4. Define TypeScript types that mirror backend response shapes.
@@ -93,7 +94,7 @@ Do not redefine the product behavior from the prompt. Treat the approved plan or
 7. Handle loading, empty, error, and selected states.
 8. Verify Leaflet is only used in browser-safe code.
 9. Check for Svelte warnings, including invalid self-closing non-void elements such as `<iframe />`.
-10. If a `TODO.md` item is completed, update `TODO.md`.
+10. If a legacy `TODO.md` item is completed, leave it alone unless the approved Issue or plan explicitly includes legacy backlog cleanup.
 
 ## Frontend checks
 

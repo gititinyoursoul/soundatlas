@@ -6,8 +6,13 @@ SoundAtlas.
 The default workflow is plan-led:
 
 > Do not implement from a vague request. Inspect the repo, propose a concrete
-> implementation plan when the work is non-trivial, save that plan locally once
-> it is approved for implementation, and implement from that plan.
+> implementation plan when the work is non-trivial, capture planned agent work
+> in GitHub Issues, save an approved non-trivial implementation plan locally,
+> and implement only after an explicit implementation request.
+
+GitHub Issues are the source of truth for planned agent work. `TODO.md` is a
+legacy backlog and should not receive new planned work unless the human
+explicitly asks for a legacy note.
 
 ## When To Plan
 
@@ -41,16 +46,40 @@ low-risk.
 ```text
 1. Human gives a feature/change request.
 2. Agent inspects the repo before asking questions.
-3. Agent proposes a concrete implementation plan when the work is non-trivial.
-4. Human approves the plan with wording such as "approved", "implement the plan", or "please do it".
-5. Agent saves a local implementation plan record before starting implementation.
-6. Agent implements the approved plan.
-7. Agent validates the change with the relevant checks.
-8. Agent reports what changed, what was verified, and any remaining risk.
+3. Agent creates or updates a GitHub Issue for non-trivial planned work.
+4. The Issue captures Goal, Plan, and Acceptance Criteria.
+5. Human starts implementation with explicit wording such as "implement issue #<number>".
+6. Agent saves a local implementation plan record before non-trivial implementation.
+7. Agent implements the approved Issue or local plan record.
+8. Agent validates the change with the relevant checks.
+9. Agent reports what changed, what was verified, and any remaining risk.
 ```
 
-The approved plan and local plan record are the source of truth for intended
+The approved Issue and local plan record are the source of truth for intended
 behavior during that implementation turn.
+
+## GitHub Issue Structure
+
+Each planned work Issue should include:
+
+* `Goal`: the intended outcome and why it matters.
+* `Plan`: the concrete behavior-level implementation approach.
+* `Acceptance Criteria`: testable conditions for completion.
+
+Use optional `Non-Goals` or `Risks / Open Questions` sections only when they
+clarify boundaries or unresolved decisions.
+
+Codex may set existing approved GitHub labels on Issues. New labels must be
+proposed and explicitly approved before Codex creates or uses them.
+
+Recommended label families are:
+
+* `type:feature`
+* `type:bug`
+* `type:refactor`
+* `type:chore`
+* `area:<feature-or-component>`
+* `blocked`
 
 ## Local Plan Records
 
@@ -88,13 +117,13 @@ The local plan record should capture:
 
 Implementation may proceed when:
 
-* The human has approved a concrete plan, or a local implementation plan record exists for that approved plan, or the change is clearly trivial.
+* The human has explicitly requested implementation of an approved Issue with wording such as `implement issue #<number>`, or has approved a concrete plan, or a local implementation plan record exists for that approved Issue or plan, or the change is clearly trivial.
 * Requirements are clear enough to implement.
 * Acceptance criteria are testable enough to verify.
 * Blocking questions are resolved or intentionally deferred.
 
-The agent must not implement behavior outside the approved plan or local plan
-record.
+The agent must not implement behavior outside the approved Issue, approved plan,
+or local plan record.
 
 If implementation reveals missing behavior, the agent should:
 
@@ -148,6 +177,19 @@ Plan: P-014
 This is a documented convention, not a hook-enforced rule in the current
 workflow.
 
+## Closing Issues
+
+An Issue is done when the local implementation is complete, relevant checks have
+run or blockers are documented, and the Acceptance Criteria have been verified
+in the final report.
+
+Codex should not close Issues just because implementation has started. Close the
+Issue with `gh issue close <number>` only when the human explicitly requests or
+clearly approves closure after reviewing the local result. Prefer adding a short
+completion comment with summary, checks, and remaining risks before closure.
+
+Do not add a separate `done` label for completion.
+
 ## Verification Report
 
 After implementation, the agent should report:
@@ -189,10 +231,10 @@ Plan this change first:
 <describe feature/change>
 ```
 
-Then approve the plan:
+Then approve the plan in GitHub and start implementation:
 
 ```text
-Implement the plan.
+Implement issue #<number>.
 ```
 
 For work that needs a local record:

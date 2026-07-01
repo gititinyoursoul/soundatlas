@@ -71,13 +71,16 @@ Events should contain at least:
 ## Documentation
 
 - Document product and architecture decisions in `docs/`.
-- The current task list lives in `TODO.md`.
+- GitHub Issues are the source of truth for planned agent work.
+- New planned work should be captured in a GitHub Issue with `Goal`, `Plan`, and `Acceptance Criteria`.
 - For feature work, follow the implementation-plan workflow in `docs/implementation-plan-workflow.md`.
-- Implementation may start from an approved conversational plan, a local implementation plan record, or a clearly trivial request.
+- Implementation may start from an approved Issue after explicit wording such as `implement issue #<number>`, an approved conversational plan, a local implementation plan record, or a clearly trivial request.
 - Local implementation plan records live under `plans/records/`, are gitignored during solo work, and should be created for non-trivial approved work before implementation starts.
 - Use `docs/skills-workflow.md` as the routing guide for repeatable execution work that should live in skills or prompt wrappers.
-- Use the repo skill at `.codex/skills/soundatlas-spec-planning` when a local implementation plan record is requested or useful.
-- If the scope changes, update `docs/mvp-concept.md` first and then `TODO.md`.
+- Use the repo skill at `.codex/skills/soundatlas-implementation-planning` when a local implementation plan record is requested or useful.
+- `TODO.md` is a legacy backlog and should not receive new planned work unless the user explicitly asks for a legacy note.
+- If the scope changes, update `docs/mvp-concept.md` first and then create or update the relevant GitHub Issue.
+- Codex may set existing approved GitHub labels on Issues. New labels must be proposed and explicitly approved before Codex creates or uses them.
 
 ## Prompt Authorization Rules
 
@@ -108,4 +111,4 @@ Events should contain at least:
 - When frontend code changes, run `npm run check`; for larger changes, also run `npm run build`
 - When backend code changes, run `uv run pytest`
 - When data or seed files change, check the JSON structure and references
-- When new work packages arise, update `TODO.md`
+- When new work packages arise, create or update the relevant GitHub Issue rather than `TODO.md`

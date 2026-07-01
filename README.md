@@ -175,7 +175,8 @@ the expected environment variables.
 ## Documentation
 
 - MVP concept: `docs/mvp-concept.md`
-- Current task list: `TODO.md`
+- Planned agent work: GitHub Issues
+- Legacy backlog: `TODO.md`
 - Completed work archive: `docs/done.md`
 - Dev container workflow: `docs/dev-container.md`
 - Implementation plan workflow: `docs/implementation-plan-workflow.md`

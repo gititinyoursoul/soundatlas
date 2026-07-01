@@ -59,7 +59,7 @@ Recommended workflow
 - Then map the concept into seed data.
 - Validate JSON syntax.
 - Validate references between routes, places, events, and connections.
-- Update `TODO.md` only for tasks that are actually completed.
+- Capture new planned follow-up work in GitHub Issues. Leave legacy `TODO.md` entries alone unless the approved Issue or plan explicitly includes legacy backlog cleanup.
 
 Deliverables
 - Route concept document under `docs/content/route-concepts/`.
@@ -70,7 +70,7 @@ Deliverables
 - Suggested commit grouping:
   - `docs: add <route> route concept`
   - `data: add <route> seed data`
-  - `docs: update route TODOs`
+  - `docs: update route workflow notes`
   - If a local plan record exists, reference it in the commit body, for example `Plan: P-###`
 
 Acceptance criteria

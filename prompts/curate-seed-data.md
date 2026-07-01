@@ -26,7 +26,7 @@ Process
 - Update the smallest necessary set of seed files: routes, places, events, connections.
 - Keep event wording concise: `summary` for what happened, `significance` for why it matters.
 - Validate JSON syntax and cross-references if tooling is available.
-- Update `TODO.md` only for tasks that are actually completed.
+- Capture new planned follow-up work in GitHub Issues. Leave legacy `TODO.md` entries alone unless the approved Issue or plan explicitly includes legacy backlog cleanup.
 
 Deliverables
 - Updated seed files.

@@ -1,5 +1,10 @@
 # SoundAtlas TODO
 
+> Legacy backlog: GitHub Issues are now the source of truth for planned agent
+> work. Do not add new planned work here unless explicitly requested as a legacy
+> note. Existing entries remain for reference and can be migrated to Issues when
+> useful.
+
 ## Current Focus
 
 The goal of the first MVP is a vertical slice for **Birth of Hip-Hop: Bronx 1970-1985**. This slice should fully demonstrate map, timeline, story panel, route filter, and backend data flow once.

@@ -61,7 +61,7 @@ Use the existing prompts in this order:
 
 1. `prompts/design-ux.md` - UX audit, main screen design plan, screenshot critique
 2. `prompts/plan-feature.md` - turn the design idea into one implementation pass, with a local implementation plan record when needed
-3. `prompts/implement-frontend-map.md` - implement frontend/map-related changes from an approved plan or local implementation plan record
+3. `prompts/implement-frontend-map.md` - implement frontend/map-related changes from an approved Issue, approved plan, or local implementation plan record
 4. `prompts/write-tests.md` - add or update focused tests
 5. `prompts/update-docs.md` - update durable docs that the UX change relies on or changes
 
@@ -219,7 +219,7 @@ Output:
 
 ### Step 6: Implement One Pass
 
-Use `prompts/implement-frontend-map.md` for frontend map or exploration-surface changes from an approved plan or local implementation plan record, or the matching skill if that workflow has already been extracted.
+Use `prompts/implement-frontend-map.md` for frontend map or exploration-surface changes from an approved Issue, approved plan, or local implementation plan record, or the matching skill if that workflow has already been extracted.
 
 Rules:
 
@@ -229,7 +229,7 @@ Rules:
 - Do not introduce unrelated refactors.
 - Do not add mock-only UI when real data exists.
 - Keep route switching, timeline, map, and event inspector synchronized through shared state.
-- Add TODOs only for real follow-up work that is out of scope for the pass.
+- Capture real follow-up work that is out of scope for the pass in GitHub Issues.
 
 If the pass changes shared state, filtering, API behavior, or interaction logic, use `prompts/write-tests.md` to add or update focused tests.
 
@@ -296,7 +296,7 @@ Likely docs:
 - `docs/design/mockups/`
 - `docs/design/current-frontend-design.md`
 - `docs/mvp-concept.md`
-- `TODO.md`
+- GitHub Issues for planned follow-up work
 
 Commit in small groups, for example:
 

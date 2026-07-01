@@ -1,9 +1,9 @@
 ---
-name: soundatlas-spec-planning
-description: Draft or revise SoundAtlas local implementation plan records and implementation plans for frontend, backend, data, documentation, UX, or cross-cutting changes. Use when the user explicitly asks for a saved local plan record, or when approved non-trivial work should be preserved for later revision and commit linkage.
+name: soundatlas-implementation-planning
+description: Draft or revise SoundAtlas implementation plans and local implementation plan records for frontend, backend, data, documentation, UX, or cross-cutting changes. Use when the user explicitly asks for a saved local plan record, or when approved non-trivial work should be preserved for later revision and commit linkage.
 ---
 
-# SoundAtlas Local Plan Planning
+# SoundAtlas Implementation Planning
 
 Read the repo context before drafting a local implementation plan record. Start with:
 
@@ -18,7 +18,7 @@ Read `prompts/plan-feature.md` only when you need the legacy wrapper wording or 
 ## Workflow
 
 1. Classify the request.
-   Use this skill when a local implementation plan record is requested or useful. The default day-to-day workflow is plan-led and does not require a separate planning gate beyond plan approval.
+   Use this skill when a local implementation plan record is requested or useful. The default day-to-day workflow is Issue-led for planned agent work and plan-led for the implementation gate.
 
 2. Inspect for an existing local plan record only when the user is extending the same in-progress local plan.
    Otherwise create a new plan ID.
@@ -51,11 +51,11 @@ Read `prompts/plan-feature.md` only when you need the legacy wrapper wording or 
 
 ## Planning Rules
 
-- Keep approved plans as the default source of truth for implementation. Use local plan records as local records for product intent, verification, and later analysis.
+- Keep approved GitHub Issues and approved plans as the default source of truth for implementation. Use local plan records as local records for product intent, verification, and later analysis.
 - Do not define behavior outside the requested change.
 - Prefer small, reviewable revisions over broad rewrites.
 - If implementation reveals missing behavior, update the generated local plan record when the detail is low-risk; stop for approval when the change affects product intent or another high-risk boundary.
-- For cross-cutting changes, plan in this order: data or schema impact, backend impact, frontend state impact, UX impact, tests or checks, docs or TODO updates.
+- For cross-cutting changes, plan in this order: data or schema impact, backend impact, frontend state impact, UX impact, tests or checks, docs or Issue updates.
 
 ## Output
 
