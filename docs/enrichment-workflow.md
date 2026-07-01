@@ -158,6 +158,22 @@ Warnings are review prompts, not failures:
 Comparison output also highlights type-by-type shifts, new/lost candidate
 identities, and quality direction per event.
 
+## Seed Link Counts
+
+Use the seed link count report when you want a quick inventory of how many
+media links, image links, and ignored links each event currently has.
+
+```bash
+cd backend
+uv run python scripts/report_seed_link_counts.py
+```
+
+Add `--route-id` or `--event-id` to narrow the report. Add `--json` when you
+want the counts as structured output. The text report groups ignored links by
+event and kind so repeated rejects read as one compact block per event. JSON
+keeps the raw top-level `ignored_links` entries if you need the underlying
+records.
+
 ## Image Workflow
 
 Image enrichment currently uses a Wikimedia-first pass and plans queries from a
