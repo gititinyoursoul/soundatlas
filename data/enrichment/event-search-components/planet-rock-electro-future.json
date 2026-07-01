@@ -1,0 +1,71 @@
+{
+  "event_id": "planet-rock-electro-future",
+  "event_type": "venue_crossover",
+  "entities": {
+    "artists": [
+      "Afrika Bambaataa",
+      "Soulsonic Force"
+    ],
+    "places": [
+      "Bronx River Houses",
+      "Bronx",
+      "New York"
+    ],
+    "works": [],
+    "organizations": [],
+    "techniques": [],
+    "historical_events": []
+  },
+  "context": {
+    "genres": [],
+    "scenes": [
+      "Bronx hip-hop"
+    ],
+    "communities": [],
+    "practices": [],
+    "industry_terms": [],
+    "route_terms": [
+      "Birth of Hip-Hop"
+    ]
+  },
+  "time_context": {
+    "year_start": 1982,
+    "year_end": 1982,
+    "query_year_phrase": "1982"
+  },
+  "search_control": {
+    "strong_terms": [
+      "Afrika Bambaataa",
+      "Soulsonic Force",
+      "Planet Rock Connects Hip-Hop and Electro",
+      "Bronx River Houses",
+      "Planet Rock Connects Hip",
+      "Electro",
+      "Kraftwerk"
+    ],
+    "supporting_terms": [
+      "Birth of Hip-Hop",
+      "1982",
+      "planet-rock",
+      "electro",
+      "afrika-bambaataa",
+      "dance-music",
+      "Bronx River Houses",
+      "Bronx",
+      "New York"
+    ],
+    "risky_terms": [],
+    "avoid_terms": [
+      "ai cover",
+      "clip",
+      "cover",
+      "icon",
+      "logo",
+      "reaction",
+      "shorts",
+      "stock photo",
+      "tutorial"
+    ]
+  },
+  "review_notes": []
+}

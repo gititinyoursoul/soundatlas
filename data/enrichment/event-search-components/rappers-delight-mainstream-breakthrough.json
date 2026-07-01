@@ -1,0 +1,72 @@
+{
+  "event_id": "rappers-delight-mainstream-breakthrough",
+  "event_type": "release",
+  "entities": {
+    "artists": [],
+    "places": [
+      "Sugar Hill Records / Englewood",
+      "New York"
+    ],
+    "works": [
+      {
+        "title": "Rapper's Delight",
+        "type": "release"
+      }
+    ],
+    "organizations": [
+      "Sugar Hill Records / Englewood"
+    ],
+    "techniques": [],
+    "historical_events": []
+  },
+  "context": {
+    "genres": [],
+    "scenes": [],
+    "communities": [],
+    "practices": [],
+    "industry_terms": [
+      "industry",
+      "mainstream"
+    ],
+    "route_terms": [
+      "Birth of Hip-Hop"
+    ]
+  },
+  "time_context": {
+    "year_start": 1979,
+    "year_end": 1979,
+    "query_year_phrase": "1979"
+  },
+  "search_control": {
+    "strong_terms": [
+      "Rapper's Delight",
+      "Sugar Hill Records / Englewood",
+      "Rapper's Delight Brings Rap into the Charts",
+      "Rapper's Delight Brings Rap",
+      "Charts"
+    ],
+    "supporting_terms": [
+      "Birth of Hip-Hop",
+      "1979",
+      "rappers-delight",
+      "sugarhill-gang",
+      "industry",
+      "mainstream",
+      "Sugar Hill Records / Englewood",
+      "New York"
+    ],
+    "risky_terms": [],
+    "avoid_terms": [
+      "ai cover",
+      "clip",
+      "cover",
+      "icon",
+      "logo",
+      "reaction",
+      "shorts",
+      "stock photo",
+      "tutorial"
+    ]
+  },
+  "review_notes": []
+}

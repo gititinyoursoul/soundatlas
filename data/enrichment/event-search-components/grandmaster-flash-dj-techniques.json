@@ -1,0 +1,74 @@
+{
+  "event_id": "grandmaster-flash-dj-techniques",
+  "event_type": "technique_development",
+  "entities": {
+    "artists": [
+      "Grandmaster Flash"
+    ],
+    "places": [
+      "South Bronx",
+      "Bronx",
+      "New York"
+    ],
+    "works": [],
+    "organizations": [],
+    "techniques": [
+      "punch phrasing",
+      "mixing",
+      "turntablism",
+      "breakbeat",
+      "backspin"
+    ],
+    "historical_events": []
+  },
+  "context": {
+    "genres": [],
+    "scenes": [
+      "Bronx hip-hop"
+    ],
+    "communities": [],
+    "practices": [],
+    "industry_terms": [],
+    "route_terms": [
+      "Birth of Hip-Hop"
+    ]
+  },
+  "time_context": {
+    "year_start": 1975,
+    "year_end": 1977,
+    "query_year_phrase": "1975 1977"
+  },
+  "search_control": {
+    "strong_terms": [
+      "Grandmaster Flash",
+      "Grandmaster Flash Refines DJ Techniques"
+    ],
+    "supporting_terms": [
+      "Birth of Hip-Hop",
+      "South Bronx",
+      "1975 1977",
+      "grandmaster-flash",
+      "dj-technique",
+      "turntablism",
+      "bronx",
+      "New York"
+    ],
+    "risky_terms": [
+      "bronx"
+    ],
+    "avoid_terms": [
+      "ai cover",
+      "clip",
+      "cover",
+      "icon",
+      "logo",
+      "reaction",
+      "shorts",
+      "stock photo",
+      "tutorial"
+    ]
+  },
+  "review_notes": [
+    "Check broad place or scene matches carefully during review."
+  ]
+}

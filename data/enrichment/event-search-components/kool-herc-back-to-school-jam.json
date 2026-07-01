@@ -1,0 +1,76 @@
+{
+  "event_id": "kool-herc-back-to-school-jam",
+  "event_type": "symbolic_event",
+  "entities": {
+    "artists": [
+      "Kool Herc's Back",
+      "DJ Kool Herc"
+    ],
+    "places": [
+      "1520 Sedgwick Avenue",
+      "Bronx",
+      "New York"
+    ],
+    "works": [],
+    "organizations": [],
+    "techniques": [],
+    "historical_events": []
+  },
+  "context": {
+    "genres": [],
+    "scenes": [
+      "Bronx hip-hop"
+    ],
+    "communities": [],
+    "practices": [
+      "block party"
+    ],
+    "industry_terms": [],
+    "route_terms": [
+      "Birth of Hip-Hop"
+    ]
+  },
+  "time_context": {
+    "year_start": 1973,
+    "year_end": 1973,
+    "query_year_phrase": "1973"
+  },
+  "search_control": {
+    "strong_terms": [
+      "Kool Herc's Back",
+      "DJ Kool Herc",
+      "Kool Herc's Back-to-School Jam",
+      "1520 Sedgwick Avenue",
+      "School Jam",
+      "On August",
+      "Sedgwick Avenue"
+    ],
+    "supporting_terms": [
+      "Birth of Hip-Hop",
+      "1973",
+      "kool-herc",
+      "block-party",
+      "bronx",
+      "origin-story",
+      "1520 Sedgwick Avenue",
+      "New York"
+    ],
+    "risky_terms": [
+      "bronx"
+    ],
+    "avoid_terms": [
+      "ai cover",
+      "clip",
+      "cover",
+      "icon",
+      "logo",
+      "reaction",
+      "shorts",
+      "stock photo",
+      "tutorial"
+    ]
+  },
+  "review_notes": [
+    "Check broad place or scene matches carefully during review."
+  ]
+}

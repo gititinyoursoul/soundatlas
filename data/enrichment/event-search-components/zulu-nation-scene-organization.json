@@ -1,0 +1,66 @@
+{
+  "event_id": "zulu-nation-scene-organization",
+  "event_type": "scene_context",
+  "entities": {
+    "artists": [
+      "Afrika Bambaataa"
+    ],
+    "places": [
+      "Bronx River Houses",
+      "Bronx",
+      "New York"
+    ],
+    "works": [],
+    "organizations": [],
+    "techniques": [],
+    "historical_events": []
+  },
+  "context": {
+    "genres": [],
+    "scenes": [
+      "Bronx hip-hop"
+    ],
+    "communities": [],
+    "practices": [],
+    "industry_terms": [],
+    "route_terms": [
+      "Birth of Hip-Hop"
+    ]
+  },
+  "time_context": {
+    "year_start": 1976,
+    "year_end": 1977,
+    "query_year_phrase": "1976 1977"
+  },
+  "search_control": {
+    "strong_terms": [
+      "Afrika Bambaataa",
+      "Zulu Nation Organizes Scene Energy",
+      "Bronx River Houses"
+    ],
+    "supporting_terms": [
+      "Birth of Hip-Hop",
+      "1976 1977",
+      "afrika-bambaataa",
+      "zulu-nation",
+      "bronx-river",
+      "scene-organization",
+      "Bronx River Houses",
+      "Bronx",
+      "New York"
+    ],
+    "risky_terms": [],
+    "avoid_terms": [
+      "ai cover",
+      "clip",
+      "cover",
+      "icon",
+      "logo",
+      "reaction",
+      "shorts",
+      "stock photo",
+      "tutorial"
+    ]
+  },
+  "review_notes": []
+}

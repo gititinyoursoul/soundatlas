@@ -1,0 +1,60 @@
+{
+  "event_id": "nyc-blackout-1977",
+  "event_type": "scene_context",
+  "entities": {
+    "artists": [],
+    "places": [
+      "New York City"
+    ],
+    "works": [],
+    "organizations": [],
+    "techniques": [],
+    "historical_events": []
+  },
+  "context": {
+    "genres": [],
+    "scenes": [],
+    "communities": [],
+    "practices": [],
+    "industry_terms": [],
+    "route_terms": [
+      "Birth of Hip-Hop"
+    ]
+  },
+  "time_context": {
+    "year_start": 1977,
+    "year_end": 1977,
+    "query_year_phrase": "1977"
+  },
+  "search_control": {
+    "strong_terms": [
+      "The 1977 Blackout as an Urban Turning Point",
+      "Blackout",
+      "Urban Turning Point",
+      "July",
+      "New York"
+    ],
+    "supporting_terms": [
+      "Birth of Hip-Hop",
+      "New York City",
+      "1977",
+      "blackout",
+      "urban-crisis",
+      "new-york-city",
+      "context"
+    ],
+    "risky_terms": [],
+    "avoid_terms": [
+      "ai cover",
+      "clip",
+      "cover",
+      "icon",
+      "logo",
+      "reaction",
+      "shorts",
+      "stock photo",
+      "tutorial"
+    ]
+  },
+  "review_notes": []
+}

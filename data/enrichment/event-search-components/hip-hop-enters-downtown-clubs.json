@@ -1,0 +1,68 @@
+{
+  "event_id": "hip-hop-enters-downtown-clubs",
+  "event_type": "venue_crossover",
+  "entities": {
+    "artists": [],
+    "places": [
+      "The Roxy",
+      "Manhattan",
+      "New York"
+    ],
+    "works": [],
+    "organizations": [],
+    "techniques": [],
+    "historical_events": []
+  },
+  "context": {
+    "genres": [],
+    "scenes": [
+      "Bronx hip-hop"
+    ],
+    "communities": [],
+    "practices": [
+      "club culture"
+    ],
+    "industry_terms": [],
+    "route_terms": [
+      "Birth of Hip-Hop"
+    ]
+  },
+  "time_context": {
+    "year_start": 1981,
+    "year_end": 1982,
+    "query_year_phrase": "1981 1982"
+  },
+  "search_control": {
+    "strong_terms": [
+      "Hip-Hop Reaches Downtown Clubs",
+      "The Roxy",
+      "Hop Reaches Downtown Clubs",
+      "Bronx",
+      "Manhattan"
+    ],
+    "supporting_terms": [
+      "Birth of Hip-Hop",
+      "1981 1982",
+      "downtown",
+      "club-culture",
+      "art-scene",
+      "cross-over",
+      "The Roxy",
+      "Manhattan",
+      "New York"
+    ],
+    "risky_terms": [],
+    "avoid_terms": [
+      "ai cover",
+      "clip",
+      "cover",
+      "icon",
+      "logo",
+      "reaction",
+      "shorts",
+      "stock photo",
+      "tutorial"
+    ]
+  },
+  "review_notes": []
+}

@@ -1,0 +1,72 @@
+{
+  "event_id": "funk-disco-breaks-as-raw-material",
+  "event_type": "technique_development",
+  "entities": {
+    "artists": [
+      "Disco Breaks Become DJ Raw Material"
+    ],
+    "places": [
+      "New York City"
+    ],
+    "works": [],
+    "organizations": [
+      "New York City"
+    ],
+    "techniques": [
+      "breakbeat"
+    ],
+    "historical_events": []
+  },
+  "context": {
+    "genres": [
+      "funk",
+      "disco"
+    ],
+    "scenes": [],
+    "communities": [],
+    "practices": [
+      "dj culture"
+    ],
+    "industry_terms": [],
+    "route_terms": [
+      "Birth of Hip-Hop"
+    ]
+  },
+  "time_context": {
+    "year_start": 1970,
+    "year_end": 1973,
+    "query_year_phrase": "1970 1973"
+  },
+  "search_control": {
+    "strong_terms": [
+      "Disco Breaks Become DJ Raw Material",
+      "New York City",
+      "Funk and Disco Breaks Become DJ Raw Material",
+      "Funk",
+      "Breaks",
+      "MCing"
+    ],
+    "supporting_terms": [
+      "Birth of Hip-Hop",
+      "New York City",
+      "1970 1973",
+      "breakbeat",
+      "funk",
+      "disco",
+      "dj-culture"
+    ],
+    "risky_terms": [],
+    "avoid_terms": [
+      "ai cover",
+      "clip",
+      "cover",
+      "icon",
+      "logo",
+      "reaction",
+      "shorts",
+      "stock photo",
+      "tutorial"
+    ]
+  },
+  "review_notes": []
+}

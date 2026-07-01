@@ -1,0 +1,67 @@
+{
+  "event_id": "the-message-social-commentary",
+  "event_type": "release",
+  "entities": {
+    "artists": [
+      "Grandmaster Flash"
+    ],
+    "places": [
+      "New York City"
+    ],
+    "works": [
+      {
+        "title": "The Message,",
+        "type": "release"
+      }
+    ],
+    "organizations": [],
+    "techniques": [],
+    "historical_events": []
+  },
+  "context": {
+    "genres": [],
+    "scenes": [],
+    "communities": [],
+    "practices": [],
+    "industry_terms": [],
+    "route_terms": [
+      "Birth of Hip-Hop"
+    ]
+  },
+  "time_context": {
+    "year_start": 1982,
+    "year_end": 1982,
+    "query_year_phrase": "1982"
+  },
+  "search_control": {
+    "strong_terms": [
+      "Grandmaster Flash",
+      "The Message,",
+      "The Message Shows Rap as Social Commentary",
+      "Social Commentary",
+      "Furious Five"
+    ],
+    "supporting_terms": [
+      "Birth of Hip-Hop",
+      "New York City",
+      "1982",
+      "the-message",
+      "social-commentary",
+      "grandmaster-flash",
+      "rap-record"
+    ],
+    "risky_terms": [],
+    "avoid_terms": [
+      "ai cover",
+      "clip",
+      "cover",
+      "icon",
+      "logo",
+      "reaction",
+      "shorts",
+      "stock photo",
+      "tutorial"
+    ]
+  },
+  "review_notes": []
+}

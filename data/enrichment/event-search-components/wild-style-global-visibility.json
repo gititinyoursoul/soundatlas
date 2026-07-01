@@ -1,0 +1,76 @@
+{
+  "event_id": "wild-style-global-visibility",
+  "event_type": "historical_context",
+  "entities": {
+    "artists": [],
+    "places": [
+      "South Bronx",
+      "Bronx",
+      "New York"
+    ],
+    "works": [
+      {
+        "title": "Wild Style",
+        "type": "film"
+      }
+    ],
+    "organizations": [],
+    "techniques": [
+      "djing"
+    ],
+    "historical_events": []
+  },
+  "context": {
+    "genres": [],
+    "scenes": [
+      "Bronx hip-hop",
+      "early hip-hop"
+    ],
+    "communities": [],
+    "practices": [],
+    "industry_terms": [],
+    "route_terms": [
+      "Birth of Hip-Hop"
+    ]
+  },
+  "time_context": {
+    "year_start": 1983,
+    "year_end": 1983,
+    "query_year_phrase": "1983"
+  },
+  "search_control": {
+    "strong_terms": [
+      "Wild Style",
+      "Wild Style Documents the Four Elements",
+      "Wild Style Documents",
+      "Four Elements",
+      "Charlie Ahearn's",
+      "DJing",
+      "MCing"
+    ],
+    "supporting_terms": [
+      "Birth of Hip-Hop",
+      "South Bronx",
+      "1983",
+      "wild-style",
+      "film",
+      "four-elements",
+      "global-visibility",
+      "Bronx",
+      "New York"
+    ],
+    "risky_terms": [],
+    "avoid_terms": [
+      "ai cover",
+      "clip",
+      "cover",
+      "icon",
+      "logo",
+      "reaction",
+      "shorts",
+      "stock photo",
+      "tutorial"
+    ]
+  },
+  "review_notes": []
+}

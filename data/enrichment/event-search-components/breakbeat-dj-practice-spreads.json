@@ -1,0 +1,69 @@
+{
+  "event_id": "breakbeat-dj-practice-spreads",
+  "event_type": "technique_development",
+  "entities": {
+    "artists": [],
+    "places": [
+      "Cedar Park",
+      "Bronx",
+      "New York"
+    ],
+    "works": [],
+    "organizations": [],
+    "techniques": [
+      "djing",
+      "b-boying",
+      "breakbeat"
+    ],
+    "historical_events": []
+  },
+  "context": {
+    "genres": [],
+    "scenes": [],
+    "communities": [],
+    "practices": [
+      "block party"
+    ],
+    "industry_terms": [],
+    "route_terms": [
+      "Birth of Hip-Hop"
+    ]
+  },
+  "time_context": {
+    "year_start": 1974,
+    "year_end": 1976,
+    "query_year_phrase": "1974 1976"
+  },
+  "search_control": {
+    "strong_terms": [
+      "Breakbeat DJing Spreads Across Parties",
+      "Cedar Park",
+      "DJing",
+      "MCing"
+    ],
+    "supporting_terms": [
+      "Birth of Hip-Hop",
+      "1974 1976",
+      "breakbeat",
+      "block-party",
+      "park",
+      "b-boying",
+      "Cedar Park",
+      "Bronx",
+      "New York"
+    ],
+    "risky_terms": [],
+    "avoid_terms": [
+      "ai cover",
+      "clip",
+      "cover",
+      "icon",
+      "logo",
+      "reaction",
+      "shorts",
+      "stock photo",
+      "tutorial"
+    ]
+  },
+  "review_notes": []
+}
