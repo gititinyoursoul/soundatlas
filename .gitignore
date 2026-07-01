@@ -53,7 +53,7 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# Local planning records
+# Legacy local planning records
 plans/records/
 specs/
 

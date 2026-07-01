@@ -72,12 +72,12 @@ Events should contain at least:
 
 - Document product and architecture decisions in `docs/`.
 - GitHub Issues are the source of truth for planned agent work.
-- New planned work should be captured in a GitHub Issue with `Goal`, `Plan`, and `Acceptance Criteria`.
+- New planned work should be captured in an Intake Issue with `Task`, `Context`, and `Acceptance Criteria`.
 - For feature work, follow the implementation-plan workflow in `docs/implementation-plan-workflow.md`.
-- Implementation may start from an approved Issue after explicit wording such as `implement issue #<number>`, an approved conversational plan, a local implementation plan record, or a clearly trivial request.
-- Local implementation plan records live under `plans/records/`, are gitignored during solo work, and should be created for non-trivial approved work before implementation starts.
+- Implementation may start from an approved Issue after explicit wording such as `implement issue #<number>`, or from a clearly trivial request.
+- Plan Updates, Detailed Plan Updates, and Implementation Reports should live in the GitHub Issue rather than local or repo-versioned plan files.
 - Use `docs/skills-workflow.md` as the routing guide for repeatable execution work that should live in skills or prompt wrappers.
-- Use the repo skill at `.codex/skills/soundatlas-implementation-planning` when a local implementation plan record is requested or useful.
+- Use the repo skill at `.codex/skills/soundatlas-implementation-planning` when an Issue needs an Intake structure, Plan Update, Detailed Plan Update, or Implementation Report.
 - `TODO.md` is a legacy backlog and should not receive new planned work unless the user explicitly asks for a legacy note.
 - If the scope changes, update `docs/mvp-concept.md` first and then create or update the relevant GitHub Issue.
 - Codex may set existing approved GitHub labels on Issues. New labels must be proposed and explicitly approved before Codex creates or uses them.
@@ -103,7 +103,7 @@ Events should contain at least:
 - Do not end the subject with a period
 - Use `!` for breaking changes, for example `feat(api)!: remove legacy endpoint`
 - Add a short body when the reason is not clear
-- When implementing from a local plan record, include a commit body footer such as `Plan: P-014`
+- When implementing from an Issue, include a commit body footer such as `Issue: #123`
 
 ## Working Defaults
 

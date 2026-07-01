@@ -13,7 +13,7 @@ Core rule:
 ## Context To Provide
 
 * Target module, component, endpoint, data workflow, or seed validation behavior.
-* Provided local implementation plan record path, if the tests verify a recorded planned change.
+* Related GitHub Issue number or URL, if the tests verify planned Issue work.
 * Expected behavior, edge cases, and any known bug.
 * Whether the target is backend, frontend, data validation, or cross-cutting.
 * Existing test runner or whether test infrastructure must be added first.
@@ -85,7 +85,7 @@ Prefer a small first test slice before broad coverage.
 
 When implementation is approved:
 
-1. Read the test plan and any local implementation plan record it references.
+1. Read the test plan and any related GitHub Issue it references.
 2. Inspect the existing tests and target code before editing.
 3. Add only the tests described in the plan.
 4. Keep fixtures minimal and local to the test when possible.

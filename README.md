@@ -168,7 +168,6 @@ the expected environment variables.
 - `frontend/`: SvelteKit app, map/timeline/story UI, API client, component tests
 - `data/`: curated seed data and enrichment artifacts
 - `docs/`: product, design, data, and workflow documentation
-- `plans/`: local implementation plan records
 - `prompts/`: reusable project prompts
 - `scripts/`: local developer startup helpers
 

@@ -1,73 +1,59 @@
-# Implementation Plan Workflow
+# GitHub Issue Workflow
 
-This document defines the lightweight implementation-plan workflow for
-SoundAtlas.
+This document defines the lightweight Issue-based workflow for SoundAtlas agent
+work.
 
-The default workflow is plan-led:
+The default workflow is Issue-led:
 
-> Do not implement from a vague request. Inspect the repo, propose a concrete
-> implementation plan when the work is non-trivial, capture planned agent work
-> in GitHub Issues, save an approved non-trivial implementation plan locally,
-> and implement only after an explicit implementation request.
+> Do not implement from a vague request. Capture non-trivial planned agent work
+> in a GitHub Issue, refine the plan in that Issue, and implement only after an
+> explicit implementation request such as `implement issue #<number>`.
 
 GitHub Issues are the source of truth for planned agent work. `TODO.md` is a
 legacy backlog and should not receive new planned work unless the human
 explicitly asks for a legacy note.
 
-## When To Plan
-
-Use a plan before implementation for:
-
-* New features
-* UX behavior changes
-* Backend/API behavior changes
-* Seed data shape or data workflow changes
-* Media retrieval or enrichment workflow changes
-* Cross-cutting frontend/backend/data changes
-* Non-trivial refactors
-* Anything involving user-visible behavior
-* Anything involving production-critical flows
-
-A plan is usually not needed for:
-
-* Typo fixes
-* Formatting-only changes
-* Tiny copy edits
-* Mechanical renames
-* Comments-only changes
-* Trivial documentation edits
-* Dependency bumps with no behavior change
-
-For trivial changes, the agent may proceed directly if the request is clear and
-low-risk.
-
-## Default Workflow
+## Workflow
 
 ```text
 1. Human gives a feature/change request.
-2. Agent inspects the repo before asking questions.
-3. Agent creates or updates a GitHub Issue for non-trivial planned work.
-4. The Issue captures Goal, Plan, and Acceptance Criteria.
+2. Agent inspects the repo before asking questions when local context can answer them.
+3. Agent creates or updates an Intake Issue for non-trivial planned work.
+4. Agent adds a Plan Update or Detailed Plan Update in the Issue when planning is needed.
 5. Human starts implementation with explicit wording such as "implement issue #<number>".
-6. Agent saves a local implementation plan record before non-trivial implementation.
-7. Agent implements the approved Issue or local plan record.
-8. Agent validates the change with the relevant checks.
-9. Agent reports what changed, what was verified, and any remaining risk.
+6. Agent implements from the approved Issue content.
+7. Agent validates the change with the relevant checks.
+8. Agent posts an Implementation Report in the Issue or final response.
+9. Human reviews the local diff and explicitly approves closing the Issue.
 ```
 
-The approved Issue and local plan record are the source of truth for intended
-behavior during that implementation turn.
+For clearly trivial changes, the agent may proceed directly when the request is
+clear and low-risk.
 
-## GitHub Issue Structure
+## Intake Issue
 
-Each planned work Issue should include:
+Create or update an Intake Issue when work is non-trivial, user-visible,
+workflow-changing, cross-cutting, or likely to need later review.
 
-* `Goal`: the intended outcome and why it matters.
-* `Plan`: the concrete behavior-level implementation approach.
-* `Acceptance Criteria`: testable conditions for completion.
+Use this minimum structure:
 
-Use optional `Non-Goals` or `Risks / Open Questions` sections only when they
-clarify boundaries or unresolved decisions.
+```md
+## Task
+
+<What should be changed, investigated, decided, or fixed?>
+
+## Context
+
+<Why it matters, relevant files or workflow notes, optional links.>
+
+## Acceptance Criteria
+
+- [ ] <Concrete done condition>
+```
+
+Keep the intake lightweight. The `Task` can be close to a TODO item. Avoid
+forcing a broad product `Goal` when the work is a small task, review,
+investigation, or decision.
 
 Codex may set existing approved GitHub labels on Issues. New labels must be
 proposed and explicitly approved before Codex creates or uses them.
@@ -81,180 +67,129 @@ Recommended label families are:
 * `area:<feature-or-component>`
 * `blocked`
 
-## Local Plan Records
+## Plan Update
 
-For implemented non-trivial work, save a local implementation plan record under:
+Add a Plan Update in the Issue before non-trivial implementation when the Intake
+Issue is not already decision-complete.
 
-```text
-plans/records/P-###-<short-slug>.md
+Use this structure for normal work:
+
+```md
+## Plan
+
+## Non-Goals
+
+## Open Questions
 ```
 
-These records are gitignored during solo work. They are for later revision and
-verification, not for normal commits.
+Use a Detailed Plan Update when the work is cross-cutting, risky, or has enough
+detail that future implementation should not rediscover decisions:
 
-Use the tracked guidance here:
+```md
+## Plan
 
-```text
-plans/README.md
-plans/template.md
+## Assumptions
+
+## Non-Goals
+
+## Acceptance Criteria Changes
+
+## Implementation Steps
+
+## Validation
+
+## Open Questions
 ```
 
-The local plan record should capture:
+Rules:
 
-* request
-* goal
-* non-goals
-* requirements
-* acceptance criteria
-* assumptions
-* open questions
-* implementation plan
-* validation plan
-* verification report
-* related commits
+* Keep the plan in the GitHub Issue, not in a local or repo-versioned plan file.
+* Use `Acceptance Criteria Changes` whenever the original criteria are changed.
+  Do not silently rewrite the meaning of the Issue.
+* Use `Requirements` only when complex product, API, data, security, or workflow
+  rules would otherwise be unclear.
+* Stop for approval when open questions affect product intent, data shape,
+  security, privacy, external API behavior, generated media review boundaries,
+  historically sensitive claims, irreversible workflow behavior, or production
+  stability.
 
 ## Implementation Gate
 
 Implementation may proceed when:
 
-* The human has explicitly requested implementation of an approved Issue with wording such as `implement issue #<number>`, or has approved a concrete plan, or a local implementation plan record exists for that approved Issue or plan, or the change is clearly trivial.
-* Requirements are clear enough to implement.
-* Acceptance criteria are testable enough to verify.
+* The human explicitly requests implementation of an Issue with wording such as
+  `implement issue #<number>`, or the change is clearly trivial.
+* The Issue contains enough Task, Plan, and Acceptance Criteria detail to
+  implement safely.
 * Blocking questions are resolved or intentionally deferred.
 
-The agent must not implement behavior outside the approved Issue, approved plan,
-or local plan record.
+The agent must not implement behavior outside the approved Issue content. If
+implementation reveals missing behavior, the agent should:
 
-If implementation reveals missing behavior, the agent should:
+* Continue and record an assumption when the decision is low-risk and local to
+  implementation.
+* Stop for approval when the decision changes product behavior or another
+  high-risk boundary.
 
-* Continue and record an assumption when the decision is low-risk and local to implementation.
-* Stop for approval when the decision changes product behavior, data shape, security, privacy, external API behavior, generated media review boundaries, historically sensitive claims, irreversible workflow behavior, or production stability.
+## Implementation Report
 
-## Blocking Questions
+After implementation, report in the final response and, when useful, as an Issue
+comment:
 
-Most incomplete input should not stop the agent. The agent should make
-conservative assumptions and document them.
+```md
+## Summary
 
-However, the agent must stop for approval when missing information involves:
+- What changed.
 
-* Data loss
-* Destructive writes
-* Schema changes
-* Seed data shape changes
-* Permissions or security
-* Privacy
-* External API behavior
-* Generated media review boundaries
-* Historically sensitive or uncertain claims
-* Irreversible workflow changes
-* Production stability risks
+## Verification
+
+- `<command>` - Pass/Fail
+
+## Acceptance Criteria Result
+
+- [x] `<criterion>` - evidence
+- [ ] `<criterion>` - blocker or remaining work
+
+## Remaining Risks
+
+- None, or:
+- `<risk and follow-up>`
+```
+
+Do not close the Issue just because implementation has started or the report was
+posted. Close the Issue with `gh issue close <number>` only when the human
+explicitly requests or clearly approves closure after reviewing the local
+result.
+
+Do not add a separate `done` label for completion.
+
+## Commit Reference
+
+When implementation work is committed, keep the Conventional Commit subject
+clean and reference the Issue in the commit body:
+
+```text
+feat(data): improve enrichment input
+
+Issue: #123
+```
+
+This is a documented convention, not a hook-enforced rule in the current
+workflow.
 
 ## SoundAtlas Project Constraints
 
 Plans and implementation should respect these project constraints:
 
 * Keep changes small, reviewable, and MVP-oriented.
-* Current product scope is New York 1965-1985 with curated routes, events, places, connections, and external media links.
+* Current product scope is New York 1965-1985 with curated routes, events,
+  places, connections, and external media links.
 * Use existing project conventions in `AGENTS.md`.
-* Prefer data-driven implementation from `data/seed/` over hardcoded UI mock data.
+* Prefer data-driven implementation from `data/seed/` over hardcoded UI mock
+  data.
 * Preserve seed file shapes documented in `docs/data/seed-data-validation.md`.
-* Keep generated media links as `review_status: "draft"` until manually reviewed.
+* Keep generated media links as `review_status: "draft"` until manually
+  reviewed.
 * Do not store audio or video files in the repository.
 * Do not commit secrets, API keys, local paths, or generated media files.
 * Do not commit changes unless explicitly requested.
-
-## Commit Reference
-
-When implementation work is committed, keep the Conventional Commit subject
-clean and reference the plan ID in the commit body:
-
-```text
-feat(data): improve enrichment input
-
-Plan: P-014
-```
-
-This is a documented convention, not a hook-enforced rule in the current
-workflow.
-
-## Closing Issues
-
-An Issue is done when the local implementation is complete, relevant checks have
-run or blockers are documented, and the Acceptance Criteria have been verified
-in the final report.
-
-Codex should not close Issues just because implementation has started. Close the
-Issue with `gh issue close <number>` only when the human explicitly requests or
-clearly approves closure after reviewing the local result. Prefer adding a short
-completion comment with summary, checks, and remaining risks before closure.
-
-Do not add a separate `done` label for completion.
-
-## Verification Report
-
-After implementation, the agent should report:
-
-```md
-## Summary
-
-- What changed.
-- Which approved plan requirements were implemented.
-
-## Verification
-
-- `<command>` - Pass/Fail
-
-## Files changed
-
-- `<path>`: `<reason>`
-
-## Assumptions or drift
-
-- None, or:
-- `<assumption/change and why it stayed within the approved plan>`
-
-## Next step
-
-- `<concrete follow-up action>`
-```
-
-If a local plan record was created, update its verification report before
-finishing.
-
-## Practical Codex Usage
-
-Typical fast path:
-
-```text
-Plan this change first:
-
-<describe feature/change>
-```
-
-Then approve the plan in GitHub and start implementation:
-
-```text
-Implement issue #<number>.
-```
-
-For work that needs a local record:
-
-```text
-Implement the plan and save a local implementation plan record.
-```
-
-For work that should stay planning-only:
-
-```text
-Planning only. Do not edit files.
-```
-
-## Drift
-
-Drift happens when implementation behavior differs from the approved plan or
-local plan record.
-
-The agent must not silently allow drift. It should record low-risk
-implementation assumptions in the final report or local plan record, and stop
-for approval when the difference changes product intent or another high-risk
-boundary.

@@ -26,7 +26,7 @@ This document records how agent instructions should be interpreted in this repos
 
    SoundAtlas example: `use prompts/design-ux.md on the active route display above the map` should be interpreted through that prompt's output boundary. A later request such as `revert this change` explicitly authorizes reverting the prior implementation.
 
-   Configurable: yes, through clear request wording such as `plan only`, `do not edit files`, `implement this approved plan`, or `implement from this local plan record`.
+   Configurable: yes, through clear request wording such as `plan only`, `do not edit files`, or `implement issue #<number>`.
 
 4. Repo instructions in `AGENTS.md`
 
@@ -46,7 +46,7 @@ This document records how agent instructions should be interpreted in this repos
 
    Skills apply when the task matches the skill description or the user names the skill.
 
-   SoundAtlas example: `.codex/skills/soundatlas-implementation-planning/SKILL.md` says to draft local implementation plan records for non-trivial UX, frontend, backend, data, documentation, and cross-cutting changes, then stop before implementation.
+   SoundAtlas example: `.codex/skills/soundatlas-implementation-planning/SKILL.md` says to draft or revise Intake Issues, Plan Updates, Detailed Plan Updates, and Implementation Reports for non-trivial UX, frontend, backend, data, documentation, and cross-cutting changes.
 
    Configurable: yes, by editing repo skills or adding new skills. Skill priority itself cannot be raised above system, developer, user, or repo instructions.
 
@@ -64,7 +64,7 @@ This document records how agent instructions should be interpreted in this repos
 
    SoundAtlas examples:
 
-   - `docs/implementation-plan-workflow.md` says not to implement from vague requests, and to implement from approved plans, local plan records, or clearly trivial requests.
+   - `docs/implementation-plan-workflow.md` says not to implement from vague requests, and to implement from approved Issues or clearly trivial requests.
    - `docs/skills-workflow.md` maps UX audit work to `prompts/design-ux.md`.
    - `docs/design/current-frontend-design.md` records the intended frontend design baseline.
 

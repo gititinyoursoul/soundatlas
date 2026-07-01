@@ -22,8 +22,8 @@ flowchart TD
 ## Current Editorial Flow
 
 1. For non-trivial route or content changes, start with
-   `prompts/plan-feature.md` and save an approved local implementation plan
-   record before broad multi-file edits.
+   `prompts/plan-feature.md` and create or update a GitHub Issue Plan Update
+   before broad multi-file edits.
 2. Start from the MVP concept in `docs/mvp-concept.md`.
 3. Create or revise a route concept in `docs/content/route-concepts/`.
 4. Define event titles, summaries, and significance text in editorial form

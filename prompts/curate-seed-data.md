@@ -6,7 +6,7 @@ Context to provide
 - Route or topic to add, e.g. `birth-of-hip-hop`.
 - Intended time range, places, events, and connections.
 - Source material or known uncertainty.
-- Existing local implementation plan record path, if this seed work belongs to broader approved work.
+- Related GitHub Issue number or URL, if this seed work belongs to broader approved work.
 - Whether this is draft content or publication-ready content.
 
 Task
@@ -21,7 +21,7 @@ Project constraints
 - Be careful with contested historical claims; mark uncertainty in wording rather than overstating.
 
 Process
-- If the seed work is non-trivial, use `prompts/plan-feature.md` first and create or update a local implementation plan record under `plans/records/` before multi-file data changes.
+- If the seed work is non-trivial, use `prompts/plan-feature.md` first and create or update a GitHub Issue Plan Update before multi-file data changes.
 - Check the route concept in `docs/content/route-concepts/` and MVP scope in `docs/mvp-concept.md`.
 - Update the smallest necessary set of seed files: routes, places, events, connections.
 - Keep event wording concise: `summary` for what happened, `significance` for why it matters.
@@ -31,7 +31,7 @@ Process
 Deliverables
 - Updated seed files.
 - Any updated route or validation docs.
-- Related local implementation plan record path or update note, when used.
+- Related GitHub Issue note, when used.
 - Validation run and outcome.
 - Suggested commit message, usually `data: ...`.
-- If a local plan record exists, include a commit body footer such as `Plan: P-###`.
+- If implementing from an Issue, include a commit body footer such as `Issue: #123`.

@@ -1,144 +1,110 @@
 # Plan Feature
 
-Use this prompt before implementing a new SoundAtlas feature, UX change, data workflow, or cross-cutting change.
+Use this prompt before implementing a new SoundAtlas feature, UX change, data
+workflow, or cross-cutting change.
 
-This prompt is the planning entrypoint for the current implementation-plan workflow.
-
-The goal is to prevent implementation from starting from a vague request. First produce a practical implementation plan and capture non-trivial planned agent work in a GitHub Issue. For approved non-trivial work, save that plan locally as an implementation plan record before implementation starts.
+This prompt is the planning entrypoint for the GitHub Issue workflow.
 
 Core rule:
 
-> Do not implement directly from a vague prompt. Implementation may proceed from an approved Issue after explicit wording such as `implement issue #<number>`, an approved plan, a local implementation plan record, or a clearly trivial request.
+> Do not implement directly from a vague prompt. Capture non-trivial planned
+> work in a GitHub Issue, refine the plan in that Issue, and implement only
+> after explicit wording such as `implement issue #<number>`.
 
 ## Context To Provide
 
-* Feature or problem statement.
-* User value and primary user action.
+* Feature, task, problem, review, or decision statement.
+* User value and primary user action, when relevant.
 * Target area:
-
   * `frontend`
   * `backend`
   * `data/seed`
   * `data/enrichment`
   * `docs`
   * cross-cutting
-* Related route, event, place, media item, or workflow, if any.
+* Related route, event, place, media item, workflow, or Issue number.
 * Relevant docs:
-
   * `README.md`
   * `AGENTS.md`
+  * `docs/implementation-plan-workflow.md`
   * `docs/data/seed-data-validation.md`
   * `docs/enrichment/media/workflow-commands.md`
-  * `docs/enrichment/media/youtube-mvp-workflow.md`
 * Constraints and non-goals.
 * Whether implementation or planning-only is requested.
-* Existing local implementation plan record path, if using or updating a previous record.
 
 ## Task
 
-Produce a practical implementation plan. For non-trivial planned agent work, create or update a GitHub Issue with Goal, Plan, and Acceptance Criteria when authorized. If requested, also produce a local implementation plan record path and record content that can be saved under `plans/records/`.
+Create or update GitHub Issue planning content. Do not create local or
+repo-versioned implementation plan files.
 
-Do not write code unless explicitly asked.
+For a new Intake Issue, use:
 
-If implementation is requested in the same turn, produce the plan first and proceed only after implementation is clearly approved, normally with wording such as `implement issue #<number>`. For non-trivial approved work, create the local implementation plan record before implementation and update it after verification.
+```md
+## Task
 
-If the input is incomplete, do not stop immediately. State reasonable assumptions, list open questions, and produce a plan and local record shape that can be refined. Only block when missing information would make implementation unsafe, destructive, likely to violate the project data model, or likely to create incorrect historical/data behavior.
+## Context
+
+## Acceptance Criteria
+```
+
+For a normal Plan Update, use:
+
+```md
+## Plan
+
+## Non-Goals
+
+## Open Questions
+```
+
+For a Detailed Plan Update, use:
+
+```md
+## Plan
+
+## Assumptions
+
+## Non-Goals
+
+## Acceptance Criteria Changes
+
+## Implementation Steps
+
+## Validation
+
+## Open Questions
+```
+
+Use `Requirements` only when complex product, API, data, security, or workflow
+rules would otherwise be unclear.
+
+If implementation is requested in the same turn, produce or inspect the Issue
+plan first and proceed only after implementation is clearly approved, normally
+with wording such as `implement issue #<number>`.
 
 ## Project Constraints
 
 * Keep changes small, reviewable, and MVP-oriented.
-* Current product scope is New York 1965-1985 with curated routes, events, places, connections, and external media links.
+* Current product scope is New York 1965-1985 with curated routes, events,
+  places, connections, and external media links.
 * Use existing project conventions in `AGENTS.md`.
-* Prefer data-driven implementation from `data/seed/` over hardcoded UI mock data.
+* Prefer data-driven implementation from `data/seed/` over hardcoded UI mock
+  data.
 * Preserve seed file shapes documented in `docs/data/seed-data-validation.md`.
-* Keep generated media links as `review_status: "draft"` until manually reviewed.
+* Keep generated media links as `review_status: "draft"` until manually
+  reviewed.
 * Do not store audio or video files in the repository.
 * Do not commit secrets, API keys, local paths, or generated media files.
 * Do not commit changes unless explicitly requested.
-
-## Technical Context
-
-* Frontend: SvelteKit, TypeScript, Leaflet.
-* Backend: Python, `uv`, FastAPI, Pydantic.
-* MVP data: curated JSON files under `data/seed/`.
-* Media retrieval: YouTube-only MVP using `data/enrichment/`.
-* Media workflow commands are documented in `docs/enrichment/media/workflow-commands.md`.
-
-## Local Implementation Plan Record Rules
-
-When a local implementation plan record is requested or needed for approved non-trivial work, create or update a lightweight local plan record.
-
-Recommended location:
-
-```text
-plans/records/P-###-<short-slug>.md
-```
-
-Treat this as a local, gitignored workspace path during solo work unless the human explicitly asks to commit the file.
-
-The record must include:
-
-```md
-# Implementation Plan: <feature/change name>
-
-## Plan ID
-P-###
-
-## Request
-What the human asked for.
-
-## Goal
-What outcome we want.
-
-## Non-goals
-What we are not doing in this change.
-
-## Requirements
-- R1:
-- R2:
-- R3:
-
-## Acceptance criteria
-- AC1:
-- AC2:
-- AC3:
-
-## Assumptions
-- A1:
-
-## Open questions
-- Q1:
-```
-
-Acceptance criteria must be concrete and testable.
-
-Avoid vague criteria like:
-
-```md
-- The UI works well.
-- The data is correct.
-- The flow is improved.
-```
-
-Prefer criteria like:
-
-```md
-- Given a user opens a route detail page, when the route has related events, then the page shows those events in chronological order.
-- Given an event has no reviewed media links, then the UI does not show draft media links as playable content.
-- Given seed validation runs, then the changed seed files pass the documented validation checks.
-```
 
 ## Implementation Gate
 
 Implementation may proceed only when:
 
-* The goal is clear.
-* Non-goals are listed.
-* Requirements describe intended behavior.
-* Acceptance criteria are testable.
-* Assumptions are explicit.
+* The Issue has enough Task, Plan, and Acceptance Criteria detail to implement.
 * Blocking open questions are resolved or intentionally deferred.
-* For GitHub Issue work, the human has explicitly requested implementation with wording such as `implement issue #<number>`.
+* For GitHub Issue work, the human has explicitly requested implementation with
+  wording such as `implement issue #<number>`.
 
 Blocking questions include anything involving:
 
@@ -157,19 +123,8 @@ For low-risk ambiguity, make a conservative assumption and continue.
 
 ## GitHub Issue Rules
 
-Each planned Issue should include:
-
-```md
-## Goal
-
-## Plan
-
-## Acceptance Criteria
-```
-
-Use optional `Non-Goals` and `Risks / Open Questions` sections when they clarify boundaries.
-
-Codex may set existing approved GitHub labels on Issues. New labels must be proposed and explicitly approved before Codex creates or uses them.
+Codex may set existing approved GitHub labels on Issues. New labels must be
+proposed and explicitly approved before Codex creates or uses them.
 
 Recommended label families:
 
@@ -180,7 +135,10 @@ Recommended label families:
 * `area:<feature-or-component>`
 * `blocked`
 
-An Issue is done when implementation is complete, relevant checks have run or blockers are documented, and Acceptance Criteria have been verified. Close it with `gh issue close <number>` only when the human explicitly requests or clearly approves closure. Do not add a separate `done` label.
+An Issue is done when implementation is complete, relevant checks have run or
+blockers are documented, and Acceptance Criteria have been verified. Close it
+with `gh issue close <number>` only when the human explicitly requests or
+clearly approves closure. Do not add a separate `done` label.
 
 ## Planning Rules
 
@@ -235,56 +193,18 @@ For media retrieval changes, define:
 * review boundary
 * whether `data/seed/events.json` should change
 
-## Linking Plan To Local Records
+## Implementation Report
 
-If a local implementation plan record exists, the implementation plan should reference that record's requirements.
-
-Use requirement IDs from the record:
+After implementation, report:
 
 ```md
-## Implementation Plan
+## Summary
 
-1. Update route data loading for related events.
-   - Satisfies: R1, R2
-   - Files likely affected: `src/routes/...`
+## Verification
 
-2. Add empty state for routes with no related events.
-   - Satisfies: R3
-   - Files likely affected: `src/lib/components/...`
-```
+## Acceptance Criteria Result
 
-When a local plan record exists, tests and validation should reference acceptance criteria:
-
-```md
-## Validation
-
-- AC1: covered by component test or manual route check.
-- AC2: covered by seed fixture check.
-- AC3: covered by `npm run check`.
-```
-
-## Handling Incomplete Input
-
-* State assumptions explicitly before the plan or local implementation plan record.
-* Separate assumptions from open questions.
-* Continue with a conservative plan when assumptions are safe.
-* Keep risky or irreversible steps behind confirmation.
-* Prefer planning small checkpoints over designing a large speculative solution.
-
-Example:
-
-```md
-## Assumptions
-
-- This is a frontend-only change.
-- Existing API responses stay unchanged.
-- The feature should work with current `data/seed/events.json`.
-- No new route or media enrichment data is required.
-
-## Open Questions
-
-- Should the behavior apply to all routes or only one route?
-- Should mobile behavior differ from desktop?
+## Remaining Risks
 ```
 
 ## Deliverables
@@ -292,24 +212,24 @@ Example:
 Return:
 
 1. A short summary of the intended change.
-2. A proposed local implementation plan record path, if a record is requested or needed.
-3. The local record content or summary, if a record is included.
-4. A numbered implementation plan with 5-9 reviewable steps.
-5. Acceptance criteria.
-6. Validation commands.
-7. Risks or open questions.
-8. Suggested file groups for review.
-9. Suggested commit grouping and Conventional Commit messages, including a `Plan: P-###` body footer example.
-10. Next step: the concrete follow-up action, usually plan approval followed by implementation.
+2. The Issue action: create Issue, update Issue body, or add Issue comment.
+3. Assumptions.
+4. Open questions, if any remain.
+5. Intake Issue, Plan Update, Detailed Plan Update, or Implementation Report
+   content.
+6. Validation approach, when implementation is expected.
+7. Next step: approve the Plan Update, request implementation with
+   `implement issue #<number>`, or review the Implementation Report.
 
 ## Output Rules
 
 * Be concrete.
 * Avoid generic filler.
-* Prefer explicit file paths.
+* Prefer explicit file paths when they clarify scope.
 * Do not invent APIs, schema fields, or data.
 * If the request is ambiguous, state assumptions before the plan.
 * Do not write code unless explicitly asked.
-* Do not modify product behavior outside the approved Issue, approved plan, or local implementation plan record.
-* If implementation reveals needed behavior outside the approved Issue or plan, stop for approval when the difference changes product intent or another high-risk boundary.
-* End with a `Next step` line naming the next prompt, skill, or human action.
+* Do not modify product behavior outside the approved Issue.
+* If implementation reveals needed behavior outside the approved Issue, stop for
+  approval when the difference changes product intent or another high-risk
+  boundary.

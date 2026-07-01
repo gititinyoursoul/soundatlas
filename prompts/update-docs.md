@@ -8,8 +8,8 @@ This prompt is the documentation entrypoint for the current workflow. If the rep
 
 * Target docs or documentation area.
 * Why the documentation needs to change now.
-* Related feature, local implementation plan record, workflow, or code change.
-* Whether the docs change should update the local implementation plan record or commit guidance.
+* Related feature, GitHub Issue, workflow, or code change.
+* Whether the docs change should update Issue workflow or commit guidance.
 * Whether the task is documentation-only or accompanies another change.
 * Constraints on wording, scope, or source of truth.
 
@@ -55,7 +55,7 @@ If the documentation change is non-trivial:
 1. Inspect the relevant source docs and related prompts.
 2. Identify what is authoritative and what must stay consistent.
 3. List the exact documentation changes needed.
-4. Note any related code, prompt, workflow, local plan record, or commit-guidance updates that should happen together.
+4. Note any related code, prompt, workflow, Issue, or commit-guidance updates that should happen together.
 
 If the documentation update is trivial, make the smallest change directly.
 
@@ -66,7 +66,7 @@ If the documentation update is trivial, make the smallest change directly.
 * Avoid broad rewrites or style-only edits.
 * Do not change curated content unless the task explicitly asks for it.
 * When the workflow changes, keep prompts, skills, `AGENTS.md`, and workflow docs aligned in the same pass.
-* When documentation supports implemented plan work, keep plan-record and commit-reference examples consistent with `plans/README.md`.
+* When documentation supports implemented Issue work, keep Issue and commit-reference examples consistent with `docs/implementation-plan-workflow.md`.
 * Do not commit changes unless explicitly requested.
 
 ## Deliverables
@@ -76,7 +76,7 @@ For planning-only requests, return:
 1. A short summary of the documentation target.
 2. Document category and source-of-truth relationship.
 3. Planned edits.
-4. Related docs, prompts, skills, or plan-record guidance to update together.
+4. Related docs, prompts, skills, or Issue guidance to update together.
 5. Risks or ambiguities.
 6. Next step: approve the documentation plan or identify the missing source of truth.
 
@@ -85,5 +85,5 @@ For implementation requests, return:
 1. Updated documentation.
 2. Notes on what was changed and why.
 3. Validation or review notes if relevant.
-4. Note any related local implementation plan record or commit-message guidance that also changed.
-5. Next step: commit the docs or continue with the related implementation-plan, implementation, or test workflow.
+4. Note any related Issue or commit-message guidance that also changed.
+5. Next step: commit the docs or continue with the related planning, implementation, or test workflow.

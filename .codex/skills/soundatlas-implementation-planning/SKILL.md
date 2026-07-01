@@ -1,72 +1,125 @@
 ---
 name: soundatlas-implementation-planning
-description: Draft or revise SoundAtlas implementation plans and local implementation plan records for frontend, backend, data, documentation, UX, or cross-cutting changes. Use when the user explicitly asks for a saved local plan record, or when approved non-trivial work should be preserved for later revision and commit linkage.
+description: Draft or revise SoundAtlas GitHub Issue intake, Plan Updates, Detailed Plan Updates, and Implementation Reports for frontend, backend, data, documentation, UX, or cross-cutting changes. Use when a SoundAtlas Issue needs to be created, refined for implementation, checked for open questions, or reported after implementation.
 ---
 
 # SoundAtlas Implementation Planning
 
-Read the repo context before drafting a local implementation plan record. Start with:
+Read the repo context before drafting or revising Issue planning content. Start
+with:
 
 - `AGENTS.md`
 - `docs/implementation-plan-workflow.md`
 - `docs/skills-workflow.md`
-- `plans/template.md`
-- `plans/README.md`
 
-Read `prompts/plan-feature.md` only when you need the legacy wrapper wording or a reminder of the planning output shape.
+Read `prompts/plan-feature.md` only when you need the legacy wrapper wording or
+a reminder of planning output shape.
 
 ## Workflow
 
 1. Classify the request.
-   Use this skill when a local implementation plan record is requested or useful. The default day-to-day workflow is Issue-led for planned agent work and plan-led for the implementation gate.
+   Decide whether the Issue needs an Intake Issue, Plan Update, Detailed Plan
+   Update, or Implementation Report.
 
-2. Inspect for an existing local plan record only when the user is extending the same in-progress local plan.
-   Otherwise create a new plan ID.
+2. Inspect the repo before asking questions.
+   Resolve discoverable facts from docs, code, seed data, or existing Issues
+   before blocking on user input.
 
-3. Choose the short slug.
-   Use a short, stable, hyphenated behavior name.
-   Prefer behavior names over implementation names.
-   Avoid route-specific or temporary wording unless the work is truly route-specific.
+3. Draft or revise Issue content.
+   Keep planning content in the GitHub Issue body or comments. Do not create
+   local or repo-versioned implementation plan files.
 
-4. Choose the local record path.
-   Use `plans/records/P-###-<short-slug>.md`.
-   Allocate the next sequential `P-###` ID by inspecting existing local records.
-   Keep the short slug stable, concrete, and behavior-focused.
+4. Keep the Issue decision-complete for implementation.
+   Make assumptions for low-risk implementation details. Stop for approval when
+   uncertainty affects product intent, data shape, security, privacy, external
+   API behavior, generated media review boundaries, historically sensitive
+   claims, irreversible workflow behavior, or production stability.
 
-5. Draft the local plan record.
-   Use the repo template shape from `plans/template.md`.
-   Keep it short, practical, and concrete.
+5. Preserve Acceptance Criteria history.
+   If the plan changes the original criteria, include an `Acceptance Criteria
+   Changes` section instead of silently rewriting the meaning of the Issue.
 
-6. Make assumptions instead of blocking on low-risk ambiguity.
-   Separate assumptions from open questions.
-   Block only on high-risk uncertainty such as destructive writes, schema changes, seed shape changes, security, privacy, external API behavior, historically sensitive claims, or irreversible workflow changes.
+6. Stop before implementation unless the user explicitly requests implementation
+   with wording such as `implement issue #<number>` or the change is clearly
+   trivial.
 
-7. Produce the implementation plan inside the local plan record.
-   Map implementation steps to requirement IDs such as `R1`, `R2`, `R3`.
-   Map validation to acceptance criteria such as `AC1`, `AC2`, `AC3`.
-   Keep the plan decision-complete enough that an implementation skill or engineer can execute without inventing product behavior.
+## Issue Shapes
 
-8. Stop before implementation.
-   Do not write code, edit non-plan files, or expand into backend, frontend, docs, or test execution.
+Use this shape for a new Intake Issue:
+
+```md
+## Task
+
+## Context
+
+## Acceptance Criteria
+```
+
+Use this shape for normal planning:
+
+```md
+## Plan
+
+## Non-Goals
+
+## Open Questions
+```
+
+Use this shape when planning is complex enough to need implementation detail:
+
+```md
+## Plan
+
+## Assumptions
+
+## Non-Goals
+
+## Acceptance Criteria Changes
+
+## Implementation Steps
+
+## Validation
+
+## Open Questions
+```
+
+Use `Requirements` only when complex product, API, data, security, or workflow
+rules would otherwise be unclear.
+
+Use this shape after implementation:
+
+```md
+## Summary
+
+## Verification
+
+## Acceptance Criteria Result
+
+## Remaining Risks
+```
 
 ## Planning Rules
 
-- Keep approved GitHub Issues and approved plans as the default source of truth for implementation. Use local plan records as local records for product intent, verification, and later analysis.
+- Keep GitHub Issues as the default source of truth for planning,
+  implementation, and verification.
+- Prefer `Task` over `Goal` for intake because SoundAtlas follow-up work often
+  starts as a task, review, investigation, or decision.
+- Keep Plan Updates concise by default; use Detailed Plan Updates only when
+  implementation would otherwise need to rediscover decisions.
 - Do not define behavior outside the requested change.
 - Prefer small, reviewable revisions over broad rewrites.
-- If implementation reveals missing behavior, update the generated local plan record when the detail is low-risk; stop for approval when the change affects product intent or another high-risk boundary.
-- For cross-cutting changes, plan in this order: data or schema impact, backend impact, frontend state impact, UX impact, tests or checks, docs or Issue updates.
+- For cross-cutting changes, plan in this order: data or schema impact, backend
+  impact, frontend state impact, UX impact, tests or checks, docs or Issue
+  updates.
 
 ## Output
 
 Return the planning result in this order:
 
-1. Proposed local plan record path
-2. Assumptions
-3. Open questions, if any remain
-4. Local plan record draft
-5. Implementation plan mapped to `R*`
-6. Validation plan mapped to `AC*`
-7. Next step: approve the plan for implementation, or review the local plan record if the user asked for one
-
-If the request is truly trivial, say so briefly and explain why a local plan record is not needed.
+1. Issue action: create, update body, or add comment.
+2. Assumptions.
+3. Open questions, if any remain.
+4. Draft Issue content or comment content.
+5. Validation approach, when implementation is expected.
+6. Next step: approve the Plan Update, request implementation with
+   `implement issue #<number>`, or review the Implementation Report.

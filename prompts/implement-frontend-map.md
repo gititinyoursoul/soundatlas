@@ -1,12 +1,12 @@
-# Implement Frontend Map From Plan Or Local Record
+# Implement Frontend Map From Issue
 
-Use this prompt when building or changing the SoundAtlas SvelteKit frontend map experience from an approved GitHub Issue, approved plan, or local implementation plan record.
+Use this prompt when building or changing the SoundAtlas SvelteKit frontend map experience from an approved GitHub Issue.
 
 This prompt is the frontend implementation entrypoint for the current workflow. If the repo has a matching frontend skill, use that skill's instructions and keep this prompt as the compatibility wrapper.
 
 ## Context to provide
 
-* Approved GitHub Issue, approved plan summary, or local implementation plan record path, for example `plans/records/P-014-enrichment-query-input.md`.
+* Approved GitHub Issue number or URL.
 * Desired frontend behavior or component.
 * Related backend endpoints or seed fields.
 * Expected interaction:
@@ -33,27 +33,25 @@ This prompt is the frontend implementation entrypoint for the current workflow. 
 
 ## Implementation Gate
 
-Before implementing, read the approved GitHub Issue, approved plan, or local implementation plan record.
+Before implementing, read the approved GitHub Issue, including any Plan Update or Detailed Plan Update.
 
 Implementation may proceed only when:
 
-* An approved GitHub Issue, approved plan, provided local implementation plan record path, or clearly trivial request exists.
+* An approved GitHub Issue or clearly trivial request exists.
 * For Issue-based work, the human has explicitly requested implementation with wording such as `implement issue #<number>`.
 * The requirements are clear enough to implement.
 * Acceptance criteria are testable enough to verify.
 * Blocking questions are resolved or intentionally deferred.
 
-Do not implement behavior outside the approved GitHub Issue, approved plan, or local implementation plan record.
+Do not implement behavior outside the approved GitHub Issue.
 
-If implementation reveals required behavior outside the approved GitHub Issue, approved plan, or local implementation plan record, stop for approval when the change affects product behavior or another high-risk boundary. For low-risk implementation detail, record the assumption and continue.
-
-When a local plan record exists, map implementation work to requirement IDs and verify against acceptance criteria.
+If implementation reveals required behavior outside the approved GitHub Issue, stop for approval when the change affects product behavior or another high-risk boundary. For low-risk implementation detail, record the assumption and continue.
 
 ## Task
 
 Implement frontend behavior using SvelteKit, TypeScript, and Leaflet.
 
-Do not redefine the product behavior from the prompt. Treat the approved Issue, approved plan, or local implementation plan record as the source of truth.
+Do not redefine the product behavior from the prompt. Treat the approved Issue as the source of truth.
 
 ## Project constraints
 
@@ -65,7 +63,7 @@ Do not redefine the product behavior from the prompt. Treat the approved Issue, 
   * `Timeline`
   * `RouteFilter`
   * `StoryPanel`
-* Ensure route colors, event time ranges, selected event state, and empty states are represented when required by the approved plan.
+* Ensure route colors, event time ranges, selected event state, and empty states are represented when required by the approved Issue.
 * Do not require real audio playback for MVP; use external media links only.
 * Avoid layout overlap and make the first viewport usable.
 * Keep the active route narrative and map visually dominant.
@@ -85,7 +83,7 @@ Do not redefine the product behavior from the prompt. Treat the approved Issue, 
 
 ## Process
 
-1. Read the approved GitHub Issue, approved plan, or local implementation plan record and identify frontend-relevant requirements and acceptance criteria.
+1. Read the approved GitHub Issue and identify frontend-relevant plan details and acceptance criteria.
 2. Inspect the existing SvelteKit route, components, and state ownership before editing.
 3. Inspect related backend response shapes or seed-backed data.
 4. Define TypeScript types that mirror backend response shapes.
@@ -94,7 +92,7 @@ Do not redefine the product behavior from the prompt. Treat the approved Issue, 
 7. Handle loading, empty, error, and selected states.
 8. Verify Leaflet is only used in browser-safe code.
 9. Check for Svelte warnings, including invalid self-closing non-void elements such as `<iframe />`.
-10. If a legacy `TODO.md` item is completed, leave it alone unless the approved Issue or plan explicitly includes legacy backlog cleanup.
+10. If a legacy `TODO.md` item is completed, leave it alone unless the approved Issue explicitly includes legacy backlog cleanup.
 
 ## Frontend checks
 
@@ -118,13 +116,7 @@ Return:
 ## Summary
 
 - What frontend behavior changed.
-- Which approved plan requirements were implemented.
-
-## Requirement mapping
-
-- R1: implemented in `<file path>`
-- R2: implemented in `<file path>`
-- R3: implemented in `<file path>`
+- Which approved Issue behavior was implemented.
 
 ## Interaction behavior
 
@@ -134,7 +126,7 @@ Return:
 - Story Panel:
 - Empty/loading/error states:
 
-## Acceptance criteria verification
+## Acceptance Criteria Result
 
 - AC1: Pass/Fail — evidence
 - AC2: Pass/Fail — evidence
@@ -148,21 +140,16 @@ Return:
 
 - `<path>`: `<reason>`
 
-## Local plan record updates
-
-- None, or:
-- `<local plan record path>`: `<what changed and why>`
-
-## Risks/open questions
+## Remaining Risks
 
 - `<risk or question>`
 
 ## Suggested commit message
 
 - `feat(frontend): ...`
-- Commit body footer: `Plan: P-###`
+- Commit body footer: `Issue: #123`
 
 ## Next step
 
-- Review the verification report, then commit the frontend change with the plan footer or run `prompts/write-tests.md` / `prompts/update-docs.md` if follow-up coverage or docs are needed.
+- Review the Implementation Report, then commit the frontend change with the Issue footer or run `prompts/write-tests.md` / `prompts/update-docs.md` if follow-up coverage or docs are needed.
 ```

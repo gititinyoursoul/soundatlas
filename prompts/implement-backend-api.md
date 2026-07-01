@@ -1,12 +1,12 @@
-# Implement Backend API From Plan Or Local Record
+# Implement Backend API From Issue
 
-Use this prompt when implementing or changing the SoundAtlas FastAPI backend from an approved GitHub Issue, approved plan, or local implementation plan record.
+Use this prompt when implementing or changing the SoundAtlas FastAPI backend from an approved GitHub Issue.
 
 This prompt is the backend implementation entrypoint for the current workflow. If the repo has a matching backend skill, use that skill's instructions and keep this prompt as the compatibility wrapper.
 
 ## Context to provide
 
-* Approved GitHub Issue, approved plan summary, or local implementation plan record path, for example `plans/records/P-014-enrichment-query-input.md`.
+* Approved GitHub Issue number or URL.
 * Endpoint or backend behavior to implement.
 * Relevant seed data and expected API response shape.
 * Error behavior and filtering requirements.
@@ -14,27 +14,25 @@ This prompt is the backend implementation entrypoint for the current workflow. I
 
 ## Implementation Gate
 
-Before implementing, read the approved GitHub Issue, approved plan, or local implementation plan record.
+Before implementing, read the approved GitHub Issue, including any Plan Update or Detailed Plan Update.
 
 Implementation may proceed only when:
 
-* An approved GitHub Issue, approved plan, provided local implementation plan record path, or clearly trivial request exists.
+* An approved GitHub Issue or clearly trivial request exists.
 * For Issue-based work, the human has explicitly requested implementation with wording such as `implement issue #<number>`.
 * Requirements are clear enough to implement.
 * Acceptance criteria are testable enough to verify.
 * Blocking questions are resolved or intentionally deferred.
 
-Do not implement behavior outside the approved GitHub Issue, approved plan, or local implementation plan record.
+Do not implement behavior outside the approved GitHub Issue.
 
-If implementation reveals required behavior outside the approved GitHub Issue, approved plan, or local implementation plan record, stop for approval when the change affects product behavior or another high-risk boundary. For low-risk implementation detail, record the assumption and continue.
-
-When a local plan record exists, map implementation work to requirement IDs and verify against acceptance criteria.
+If implementation reveals required behavior outside the approved GitHub Issue, stop for approval when the change affects product behavior or another high-risk boundary. For low-risk implementation detail, record the assumption and continue.
 
 ## Task
 
 Implement backend behavior using Python, `uv`, FastAPI, and Pydantic.
 
-Do not rewrite the product behavior from the prompt. Treat the approved Issue, approved plan, or local implementation plan record as the source of truth.
+Do not rewrite the product behavior from the prompt. Treat the approved Issue as the source of truth.
 
 ## Project constraints
 
@@ -58,13 +56,13 @@ Do not rewrite the product behavior from the prompt. Treat the approved Issue, a
 
 ## Process
 
-1. Read the approved GitHub Issue, approved plan, or local implementation plan record and identify backend-relevant requirements and acceptance criteria.
+1. Read the approved GitHub Issue and identify backend-relevant plan details and acceptance criteria.
 2. Inspect existing backend structure under `backend/app/`.
 3. Inspect relevant seed data under `data/seed/`.
 4. Check `docs/data/seed-data-validation.md` before changing seed-related behavior.
 5. Define or update Pydantic schemas before endpoint handlers.
 6. Add or update a seed repository or loader with explicit path handling.
-7. Implement filtering for `from_year`, `to_year`, and `route_id` when required by the approved plan.
+7. Implement filtering for `from_year`, `to_year`, and `route_id` when required by the approved Issue.
 8. Define behavior for unknown IDs and empty results.
 9. Add targeted tests for changed behavior.
 10. Update docs or GitHub Issues only if workflow or completed follow-ups change.
@@ -90,14 +88,9 @@ Return:
 ## Summary
 
 - What backend behavior changed.
-- Which approved plan requirements were implemented.
+- Which approved Issue behavior was implemented.
 
-## Requirement mapping
-
-- R1: implemented in `<file path>`
-- R2: implemented in `<file path>`
-
-## Acceptance criteria verification
+## Acceptance Criteria Result
 
 - AC1: Pass/Fail — evidence
 - AC2: Pass/Fail — evidence
@@ -111,21 +104,16 @@ Return:
 
 - `<path>`: `<reason>`
 
-## Local plan record updates
-
-- None, or:
-- `<local plan record path>`: `<what changed and why>`
-
-## Risks/open questions
+## Remaining Risks
 
 - `<risk or question>`
 
 ## Suggested commit message
 
 - `feat(backend): ...`
-- Commit body footer: `Plan: P-###`
+- Commit body footer: `Issue: #123`
 
 ## Next step
 
-- Review the verification report, then commit the backend change with the plan footer or run `prompts/write-tests.md` / `prompts/update-docs.md` if follow-up coverage or docs are needed.
+- Review the Implementation Report, then commit the backend change with the Issue footer or run `prompts/write-tests.md` / `prompts/update-docs.md` if follow-up coverage or docs are needed.
 ```
