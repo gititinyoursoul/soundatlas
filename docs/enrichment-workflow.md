@@ -74,6 +74,7 @@ The shared retrieval brief can use:
 - summary
 - significance
 - other known scene terms already present in the event text
+- optional event-search-components from `data/enrichment/event-search-components/`
 
 ## Split Point
 

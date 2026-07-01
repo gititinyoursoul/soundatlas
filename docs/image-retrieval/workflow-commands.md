@@ -24,12 +24,14 @@ CLI plans event-specific image queries
 For the shared enrichment flow and split points, see
 `docs/enrichment-workflow.md`.
 
-The default query planner is `v2`. It builds a retrieval brief from the event,
-route, and place data, then plans short ladders of searches around strong
-identity terms and compact supporting context. Venue queries include city or
-borough context, artist and work queries start with the event year/range when
-available, and short ranges also get decade and individual-year fallbacks. The
-legacy planner is still available for comparison with `--query-planner legacy`.
+The default query planner is `v2`. It prefers an optional
+`data/enrichment/event-search-components/<event-id>.json` file when present,
+otherwise it builds a retrieval brief from the event, route, and place data.
+It then plans short ladders of searches around strong identity terms and
+compact supporting context. Venue queries include city or borough context,
+artist and work queries start with the event year/range when available, and
+short ranges also get decade and individual-year fallbacks. The legacy planner
+is still available for comparison with `--query-planner legacy`.
 
 The v2 preview groups queries by target type and shows the planner's priority
 and confidence hint for each query. Use that preview to check that venues are

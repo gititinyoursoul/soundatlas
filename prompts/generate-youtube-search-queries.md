@@ -85,7 +85,7 @@ Input event:
     "entities": {
       "artists": ["<artist>"],
       "places": ["<place or venue>"],
-      "works": ["<song, album, film, or release>"],
+      "works": [{"title": "<song, album, film, or release>", "type": "track | album | film | documentary | release | unknown"}],
       "organizations": ["<label, institution, crew, or club>"],
       "techniques": ["<technique or practice>"],
       "historical_events": ["<historical event or scene shift>"]

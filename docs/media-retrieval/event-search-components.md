@@ -20,6 +20,16 @@ Once the structure is stable, generated or curated component files can live unde
 data/enrichment/event-search-components/<event-id>.json
 ```
 
+Generate first-pass components from current seed data with:
+
+```bash
+cd backend
+uv run python scripts/generate_event_search_components.py --event-id <event-id> --dry-run
+```
+
+Remove `--dry-run` to write the component file. Use `--route-id` to generate
+components for every event in one route.
+
 If validation becomes necessary, add a machine-readable schema later:
 
 ```text
@@ -104,12 +114,21 @@ Use for concrete terms that can anchor YouTube queries:
 
 - `artists`: individual artists, DJs, producers, organizers, bands, groups, crews, collectives, or ensembles.
 - `places`: cities, boroughs, neighborhoods, venues, parks, clubs, studios, community rooms, or exact addresses.
-- `works`: tracks, albums, releases, films, documentaries, or other named works.
+- `works`: tracks, albums, releases, films, documentaries, or other named works. Prefer objects with `title` and `type`; legacy string values are treated as `type: "unknown"`.
 - `organizations`: labels, institutions, crews, collectives, venues-as-organizations, media outlets, or industry entities.
 - `techniques`: musical, DJ, production, or performance techniques.
 - `historical_events`: named non-musical events relevant to the event context.
 
 This intentionally avoids over-modeling early. For YouTube search, `DJ Kool Herc` and `The Sugarhill Gang` often trigger similar intents, so both belong in `artists`. Likewise, `New York`, `Bronx`, and `1520 Sedgwick Avenue` can all be handled as `places`; query planning can still choose which terms are strong or supporting.
+
+Supported initial work types:
+
+- `track`
+- `album`
+- `film`
+- `documentary`
+- `release`
+- `unknown`
 
 ### `context`
 
@@ -199,7 +218,7 @@ Use to make query planning safer:
   "entities": {
     "artists": ["The Sugarhill Gang"],
     "places": ["New York", "Englewood"],
-    "works": ["Rapper's Delight"],
+    "works": [{"title": "Rapper's Delight", "type": "release"}],
     "organizations": ["Sugar Hill Records"],
     "techniques": [],
     "historical_events": []

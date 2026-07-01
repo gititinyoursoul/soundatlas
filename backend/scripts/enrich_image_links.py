@@ -13,6 +13,12 @@ if str(BACKEND_ROOT) not in sys.path:
     sys.path.insert(0, str(BACKEND_ROOT))
 
 from app.link_ignores import build_ignored_link_index, link_is_ignored
+from app.media_enrichment.event_search_components import (
+    EventSearchComponent,
+    component_path_for_event,
+    load_component,
+    retrieval_brief_from_component,
+)
 from app.media_enrichment.image_query_planner import ImageQueryPlan, plan_image_queries
 from app.media_enrichment.retrieval_brief import build_retrieval_brief
 from app.media_enrichment.services import MediaProviderError, request_json
@@ -24,6 +30,7 @@ DATA_SEED_DIR = REPO_ROOT / "data" / "seed"
 EVENTS_PATH = DATA_SEED_DIR / "events.json"
 ROUTES_PATH = DATA_SEED_DIR / "routes.json"
 PLACES_PATH = DATA_SEED_DIR / "places.json"
+DEFAULT_COMPONENT_DIR = REPO_ROOT / "data" / "enrichment" / "event-search-components"
 WIKIMEDIA_API_URL = "https://commons.wikimedia.org/w/api.php"
 SUPPORTED_PROVIDERS = {"wikimedia"}
 SUPPORTED_QUERY_PLANNERS = {"legacy", "v2"}
@@ -75,6 +82,12 @@ def main(argv: list[str] | None = None) -> int:
         default="v2",
         help="Query planner to use for provider searches. Defaults to v2.",
     )
+    parser.add_argument(
+        "--component-dir",
+        type=Path,
+        default=DEFAULT_COMPONENT_DIR,
+        help="Directory containing optional event-search-component JSON files.",
+    )
     args = parser.parse_args(argv)
 
     providers = args.provider or ["wikimedia"]
@@ -113,6 +126,7 @@ def main(argv: list[str] | None = None) -> int:
                 event_id=args.event_id,
                 route_id=args.route_id,
                 query_planner=args.query_planner,
+                component_dir=args.component_dir,
             )
         except ValueError as exc:
             print(str(exc), file=sys.stderr)
@@ -131,6 +145,7 @@ def main(argv: list[str] | None = None) -> int:
             limit=args.limit,
             providers=providers,
             query_planner=args.query_planner,
+            component_dir=args.component_dir,
             ignored_link_index=ignored_link_index,
             request_fn=request_wikimedia_json,
         )
@@ -153,6 +168,7 @@ def main(argv: list[str] | None = None) -> int:
                     limit=args.limit,
                     providers=providers,
                     query_planner=args.query_planner,
+                    component_dir=args.component_dir,
                     dry_run=True,
                     wrote_seed=False,
                 ),
@@ -175,6 +191,7 @@ def main(argv: list[str] | None = None) -> int:
                 limit=args.limit,
                 providers=providers,
                 query_planner=args.query_planner,
+                component_dir=args.component_dir,
                 dry_run=False,
                 wrote_seed=changed_events > 0,
             ),
@@ -210,6 +227,7 @@ def format_image_enrichment_summary(
     limit: int,
     providers: list[str],
     query_planner: str,
+    component_dir: Path,
     dry_run: bool,
     wrote_seed: bool,
 ) -> str:
@@ -224,6 +242,7 @@ def format_image_enrichment_summary(
         f"Scope: {format_scope(event_id=event_id, route_id=route_id)}",
         f"Providers: {', '.join(providers)}",
         f"Query planner: {query_planner}",
+        f"Component dir: {relative_repo_path(component_dir)}",
         f"Limit: {limit} image link(s) per event",
         f"Events considered: {len(selected_event_ids)}",
         f"Changed events: {changed_events}",
@@ -269,6 +288,7 @@ def print_image_query_preview(
     event_id: str | None,
     route_id: str | None,
     query_planner: str,
+    component_dir: Path,
 ) -> None:
     routes_by_id = build_routes_by_id(routes_payload)
     places_by_id = build_places_by_id(places_payload)
@@ -289,6 +309,7 @@ def print_image_query_preview(
                 route=route,
                 place=place,
                 query_planner=query_planner,
+                component_dir=component_dir,
             ),
         )
 
@@ -335,6 +356,7 @@ def format_image_query_preview(
     route: dict[str, Any],
     place: dict[str, Any],
     query_planner: str,
+    component_dir: Path | None = None,
 ) -> str:
     event_id = event.get("id") or "(unknown event)"
     lines = [f"Event: {event_id}"]
@@ -350,7 +372,13 @@ def format_image_query_preview(
     if query_planner != "v2":
         raise ValueError(f"Unsupported query planner: {query_planner}")
 
-    brief = build_retrieval_brief(event=event, route=route, place=place)
+    component = load_component_for_event(component_dir, str(event_id))
+    brief = build_image_retrieval_brief(
+        event=event,
+        route=route,
+        place=place,
+        component=component,
+    )
     plans = plan_image_queries(brief)
     if not plans:
         lines.append("  No image queries planned.")
@@ -411,6 +439,7 @@ def enrich_events_payload(
     limit: int,
     providers: list[str],
     query_planner: str = "v2",
+    component_dir: Path | None = None,
     ignored_link_index: dict[tuple[str, str], set[str]] | None = None,
     request_fn: RequestJson = request_json,
 ) -> int:
@@ -444,6 +473,7 @@ def enrich_events_payload(
                         place=place,
                         limit=limit,
                         query_planner=query_planner,
+                        component_dir=component_dir,
                         ignored_link_index=ignored_link_index,
                         request_fn=request_fn,
                     ),
@@ -482,6 +512,7 @@ def fetch_wikimedia_image_candidates(
     place: dict[str, Any],
     limit: int,
     query_planner: str = "v2",
+    component_dir: Path | None = None,
     ignored_link_index: dict[tuple[str, str], set[str]] | None = None,
     request_fn: RequestJson = request_json,
 ) -> list[dict[str, Any]]:
@@ -491,6 +522,7 @@ def fetch_wikimedia_image_candidates(
         route=route,
         place=place,
         query_planner=query_planner,
+        component_dir=component_dir,
     ):
         titles = search_wikimedia_file_titles(query, request_fn=request_fn)
         if not titles:
@@ -522,13 +554,49 @@ def build_wikimedia_search_queries(
     route: dict[str, Any],
     place: dict[str, Any],
     query_planner: str,
+    component_dir: Path | None = None,
 ) -> list[str]:
     if query_planner == "legacy":
         return build_event_image_queries(event=event, route=route, place=place)
     if query_planner == "v2":
-        brief = build_retrieval_brief(event=event, route=route, place=place)
+        component = load_component_for_event(component_dir, str(event.get("id") or ""))
+        brief = build_image_retrieval_brief(
+            event=event,
+            route=route,
+            place=place,
+            component=component,
+        )
         return [plan.query for plan in plan_image_queries(brief)]
     raise ValueError(f"Unsupported query planner: {query_planner}")
+
+
+def build_image_retrieval_brief(
+    *,
+    event: dict[str, Any],
+    route: dict[str, Any],
+    place: dict[str, Any],
+    component: EventSearchComponent | None,
+):
+    if component:
+        return retrieval_brief_from_component(
+            component=component,
+            event=event,
+            route=route,
+            place=place,
+        )
+    return build_retrieval_brief(event=event, route=route, place=place)
+
+
+def load_component_for_event(
+    component_dir: Path | None,
+    event_id: str,
+) -> EventSearchComponent | None:
+    if not component_dir or not event_id:
+        return None
+    path = component_path_for_event(component_dir, event_id)
+    if not path.exists():
+        return None
+    return load_component(path)
 
 
 def build_event_image_queries(
