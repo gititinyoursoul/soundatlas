@@ -2,13 +2,13 @@
 
 Use this prompt before implementing a new SoundAtlas feature, UX change, data workflow, or cross-cutting change.
 
-This prompt is the planning entrypoint for the current plan-led workflow.
+This prompt is the planning entrypoint for the current implementation-plan workflow.
 
-The goal is to prevent implementation from starting from a vague request. First produce a practical implementation plan. Create a local spec record only when the human asks for one or when the work needs later analysis.
+The goal is to prevent implementation from starting from a vague request. First produce a practical implementation plan. For approved non-trivial work, save that plan locally as an implementation plan record before implementation starts.
 
 Core rule:
 
-> Do not implement directly from a vague prompt. Implementation may proceed from an approved plan, a provided spec, or a clearly trivial request.
+> Do not implement directly from a vague prompt. Implementation may proceed from an approved plan, a local implementation plan record, or a clearly trivial request.
 
 ## Context To Provide
 
@@ -33,17 +33,17 @@ Core rule:
   * `docs/media-retrieval/youtube-mvp-workflow.md`
 * Constraints and non-goals.
 * Whether implementation or planning-only is requested.
-* Existing local spec path, if using or updating a previous record.
+* Existing local implementation plan record path, if using or updating a previous record.
 
 ## Task
 
-Produce a practical implementation plan. If requested or useful for later analysis, also produce a small local spec record.
+Produce a practical implementation plan. If requested, also produce a local implementation plan record path and record content that can be saved under `plans/records/`.
 
 Do not write code unless explicitly asked.
 
-If implementation is requested in the same turn, produce the plan first and proceed only after implementation is clearly approved. If a spec record is requested, create it before or during implementation and update it after verification.
+If implementation is requested in the same turn, produce the plan first and proceed only after implementation is clearly approved. For non-trivial approved work, create the local implementation plan record before implementation and update it after verification.
 
-If the input is incomplete, do not stop immediately. State reasonable assumptions, list open questions, and produce a spec and plan that can be refined. Only block when missing information would make implementation unsafe, destructive, likely to violate the project data model, or likely to create incorrect historical/data behavior.
+If the input is incomplete, do not stop immediately. State reasonable assumptions, list open questions, and produce a plan and local record shape that can be refined. Only block when missing information would make implementation unsafe, destructive, likely to violate the project data model, or likely to create incorrect historical/data behavior.
 
 ## Project Constraints
 
@@ -65,24 +65,25 @@ If the input is incomplete, do not stop immediately. State reasonable assumption
 * Media retrieval: YouTube-only MVP using `data/enrichment/`.
 * Media workflow commands are documented in `docs/media-retrieval/workflow-commands.md`.
 
-## Optional Spec Record Rules
+## Local Implementation Plan Record Rules
 
-When a spec record is requested or useful for later analysis, create or update a lightweight local spec.
+When a local implementation plan record is requested or needed for approved non-trivial work, create or update a lightweight local plan record.
 
 Recommended location:
 
 ```text
-specs/<feature-slug>/rNN-<short-desc>.md
+plans/records/P-###-<short-slug>.md
 ```
 
 Treat this as a local, gitignored workspace path during solo work unless the human explicitly asks to commit the file.
 
-If the repository already has a better convention for specs or feature docs, follow that convention instead.
-
-The spec must include:
+The record must include:
 
 ```md
-# Spec: <feature/change name>
+# Implementation Plan: <feature/change name>
+
+## Plan ID
+P-###
 
 ## Request
 What the human asked for.
@@ -128,7 +129,7 @@ Prefer criteria like:
 - Given seed validation runs, then the changed seed files pass the documented validation checks.
 ```
 
-## Spec Gate
+## Implementation Gate
 
 Implementation may proceed only when:
 
@@ -207,11 +208,11 @@ For media retrieval changes, define:
 * review boundary
 * whether `data/seed/events.json` should change
 
-## Linking Plan To Spec Records
+## Linking Plan To Local Records
 
-If a local spec record exists, the implementation plan should reference spec requirements.
+If a local implementation plan record exists, the implementation plan should reference that record's requirements.
 
-Use requirement IDs from the spec:
+Use requirement IDs from the record:
 
 ```md
 ## Implementation Plan
@@ -225,7 +226,7 @@ Use requirement IDs from the spec:
    - Files likely affected: `src/lib/components/...`
 ```
 
-When a spec exists, tests and validation should reference acceptance criteria:
+When a local plan record exists, tests and validation should reference acceptance criteria:
 
 ```md
 ## Validation
@@ -237,7 +238,7 @@ When a spec exists, tests and validation should reference acceptance criteria:
 
 ## Handling Incomplete Input
 
-* State assumptions explicitly before the plan or local spec record.
+* State assumptions explicitly before the plan or local implementation plan record.
 * Separate assumptions from open questions.
 * Continue with a conservative plan when assumptions are safe.
 * Keep risky or irreversible steps behind confirmation.
@@ -264,14 +265,14 @@ Example:
 Return:
 
 1. A short summary of the intended change.
-2. A proposed local spec record path, if a spec record is requested or useful.
-3. The spec content or summary, if a spec record is included.
+2. A proposed local implementation plan record path, if a record is requested or needed.
+3. The local record content or summary, if a record is included.
 4. A numbered implementation plan with 5-9 reviewable steps.
 5. Acceptance criteria.
 6. Validation commands.
 7. Risks or open questions.
 8. Suggested file groups for review.
-9. Suggested commit grouping and Conventional Commit messages.
+9. Suggested commit grouping and Conventional Commit messages, including a `Plan: P-###` body footer example.
 10. Next step: the concrete follow-up action, usually plan approval followed by implementation.
 
 ## Output Rules
@@ -282,6 +283,6 @@ Return:
 * Do not invent APIs, schema fields, or data.
 * If the request is ambiguous, state assumptions before the plan.
 * Do not write code unless explicitly asked.
-* Do not modify product behavior outside the approved plan or provided spec.
+* Do not modify product behavior outside the approved plan or local implementation plan record.
 * If implementation reveals needed behavior outside the approved plan, stop for approval when the difference changes product intent or another high-risk boundary.
 * End with a `Next step` line naming the next prompt, skill, or human action.

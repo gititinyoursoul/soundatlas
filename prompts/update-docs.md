@@ -8,7 +8,7 @@ This prompt is the documentation entrypoint for the current workflow. If the rep
 
 * Target docs or documentation area.
 * Why the documentation needs to change now.
-* Related feature, spec revision, workflow, or code change.
+* Related feature, local implementation plan record, workflow, or code change.
 * Whether the task is documentation-only or accompanies another change.
 * Constraints on wording, scope, or source of truth.
 
@@ -22,7 +22,7 @@ Do not treat this as a generic cleanup prompt. Use it for durable docs that othe
 
 Use this prompt for:
 
-* `docs/spec-first-agent-workflow.md`
+* `docs/implementation-plan-workflow.md`
 * `docs/design/current-frontend-design.md`
 * `docs/mvp-concept.md`
 * route concept docs under `docs/routes/`
@@ -82,4 +82,4 @@ For implementation requests, return:
 1. Updated documentation.
 2. Notes on what was changed and why.
 3. Validation or review notes if relevant.
-4. Next step: commit the docs or continue with the related spec, implementation, or test workflow.
+4. Next step: commit the docs or continue with the related implementation-plan, implementation, or test workflow.

@@ -72,11 +72,11 @@ Events should contain at least:
 
 - Document product and architecture decisions in `docs/`.
 - The current task list lives in `TODO.md`.
-- For feature work, follow the plan-led workflow in `docs/spec-first-agent-workflow.md`.
-- Implementation may start from an approved conversational plan, an explicitly provided spec, or a clearly trivial request.
-- Specs in `specs/<feature-slug>/rNN-<short-desc>.md` are optional local records for analysis and traceability, not mandatory approval gates, and are gitignored during solo work unless explicitly committed.
+- For feature work, follow the implementation-plan workflow in `docs/implementation-plan-workflow.md`.
+- Implementation may start from an approved conversational plan, a local implementation plan record, or a clearly trivial request.
+- Local implementation plan records live under `plans/records/`, are gitignored during solo work, and should be created for non-trivial approved work before implementation starts.
 - Use `docs/skills-workflow.md` as the routing guide for repeatable execution work that should live in skills or prompt wrappers.
-- Use the repo skill at `.codex/skills/soundatlas-spec-planning` when a spec record is requested or useful.
+- Use the repo skill at `.codex/skills/soundatlas-spec-planning` when a local implementation plan record is requested or useful.
 - If the scope changes, update `docs/mvp-concept.md` first and then `TODO.md`.
 
 ## Prompt Authorization Rules
@@ -100,6 +100,7 @@ Events should contain at least:
 - Do not end the subject with a period
 - Use `!` for breaking changes, for example `feat(api)!: remove legacy endpoint`
 - Add a short body when the reason is not clear
+- When implementing from a local plan record, include a commit body footer such as `Plan: P-014`
 
 ## Working Defaults
 

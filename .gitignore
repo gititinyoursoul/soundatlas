@@ -54,6 +54,7 @@ yarn-error.log*
 pnpm-debug.log*
 
 # Local planning records
+plans/records/
 specs/
 
 # OS / editor

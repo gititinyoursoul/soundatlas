@@ -1,12 +1,12 @@
-# Implement Frontend Map From Plan Or Spec
+# Implement Frontend Map From Plan Or Local Record
 
-Use this prompt when building or changing the SoundAtlas SvelteKit frontend map experience from an approved plan or provided spec.
+Use this prompt when building or changing the SoundAtlas SvelteKit frontend map experience from an approved plan or local implementation plan record.
 
 This prompt is the frontend implementation entrypoint for the current workflow. If the repo has a matching frontend skill, use that skill's instructions and keep this prompt as the compatibility wrapper.
 
 ## Context to provide
 
-* Approved plan summary or local spec path, for example `specs/<feature-slug>/rNN-<short-desc>.md`.
+* Approved plan summary or local implementation plan record path, for example `plans/records/P-014-enrichment-query-input.md`.
 * Desired frontend behavior or component.
 * Related backend endpoints or seed fields.
 * Expected interaction:
@@ -33,26 +33,26 @@ This prompt is the frontend implementation entrypoint for the current workflow. 
 
 ## Implementation Gate
 
-Before implementing, read the approved plan or provided spec.
+Before implementing, read the approved plan or local implementation plan record.
 
 Implementation may proceed only when:
 
-* An approved plan, provided local spec path, or clearly trivial request exists.
+* An approved plan, provided local implementation plan record path, or clearly trivial request exists.
 * The requirements are clear enough to implement.
 * Acceptance criteria are testable enough to verify.
 * Blocking questions are resolved or intentionally deferred.
 
-Do not implement behavior outside the approved plan or provided spec.
+Do not implement behavior outside the approved plan or local implementation plan record.
 
-If implementation reveals required behavior outside the approved plan or provided spec, stop for approval when the change affects product behavior or another high-risk boundary. For low-risk implementation detail, record the assumption and continue.
+If implementation reveals required behavior outside the approved plan or local implementation plan record, stop for approval when the change affects product behavior or another high-risk boundary. For low-risk implementation detail, record the assumption and continue.
 
-When a spec exists, map implementation work to requirement IDs and verify against acceptance criteria.
+When a local plan record exists, map implementation work to requirement IDs and verify against acceptance criteria.
 
 ## Task
 
 Implement frontend behavior using SvelteKit, TypeScript, and Leaflet.
 
-Do not redefine the product behavior from the prompt. Treat the approved plan or provided spec as the source of truth.
+Do not redefine the product behavior from the prompt. Treat the approved plan or local implementation plan record as the source of truth.
 
 ## Project constraints
 
@@ -64,7 +64,7 @@ Do not redefine the product behavior from the prompt. Treat the approved plan or
   * `Timeline`
   * `RouteFilter`
   * `StoryPanel`
-* Ensure route colors, event time ranges, selected event state, and empty states are represented when required by the spec.
+* Ensure route colors, event time ranges, selected event state, and empty states are represented when required by the approved plan.
 * Do not require real audio playback for MVP; use external media links only.
 * Avoid layout overlap and make the first viewport usable.
 * Keep the active route narrative and map visually dominant.
@@ -84,7 +84,7 @@ Do not redefine the product behavior from the prompt. Treat the approved plan or
 
 ## Process
 
-1. Read the approved plan or provided spec and identify frontend-relevant requirements and acceptance criteria.
+1. Read the approved plan or local implementation plan record and identify frontend-relevant requirements and acceptance criteria.
 2. Inspect the existing SvelteKit route, components, and state ownership before editing.
 3. Inspect related backend response shapes or seed-backed data.
 4. Define TypeScript types that mirror backend response shapes.
@@ -117,7 +117,7 @@ Return:
 ## Summary
 
 - What frontend behavior changed.
-- Which spec requirements were implemented.
+- Which approved plan requirements were implemented.
 
 ## Requirement mapping
 
@@ -147,10 +147,10 @@ Return:
 
 - `<path>`: `<reason>`
 
-## Spec updates
+## Local plan record updates
 
 - None, or:
-- `<local spec path>`: `<what changed and why>`
+- `<local plan record path>`: `<what changed and why>`
 
 ## Risks/open questions
 
@@ -159,8 +159,9 @@ Return:
 ## Suggested commit message
 
 - `feat(frontend): ...`
+- Commit body footer: `Plan: P-###`
 
 ## Next step
 
-- Review the verification report, then commit the frontend change or run `prompts/write-tests.md` / `prompts/update-docs.md` if follow-up coverage or docs are needed.
+- Review the verification report, then commit the frontend change with the plan footer or run `prompts/write-tests.md` / `prompts/update-docs.md` if follow-up coverage or docs are needed.
 ```
