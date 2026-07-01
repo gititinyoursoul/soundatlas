@@ -105,6 +105,7 @@ def test_component_validation_reports_broad_only_terms_as_warning() -> None:
 
     assert report.errors == []
     assert "strong_terms only contains broad terms." in report.warnings
+    assert any("no precise enrichment anchors found" in warning for warning in report.warnings)
 
 
 def test_image_query_planner_prefers_component_file_when_present(tmp_path: Path) -> None:

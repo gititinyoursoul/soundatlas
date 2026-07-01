@@ -34,26 +34,22 @@ Completed work packages are archived in `docs/done.md`.
 ### Seed Data Workflow
 
 - [ ] Add a route seed scaffold or preview command that reduces manual route updates by checking route, place, event, and connection changes before writing seed JSON
-- [ ] Add enrichment-readiness warnings to seed validation so weak query inputs are flagged during seed creation
 
 ### Media Enrichment
 
 - [ ] Add a YouTube media availability audit step to the enrichment workflow that records embed vs external playback mode
 - [ ] Recheck every current YouTube video link for playable, embeddable, external-only, private, deleted, or unavailable status
 - [ ] Move the ignore list out of seed data into a separate enrichment data store or review file
-- [ ] Fix media enrichment so genre-correct playlists from the wrong decade are filtered or clearly flagged before review
 
 ### Enrichment Orchestration
 
 - [ ] Add a single script that triggers all enrichment passes for one event, including media and images, so one command can refresh the full enrichment state
 - [ ] Add a shared enrichment preview command that shows media and image query plans for one event side by side
-- [ ] Streamline media and image quality reports so they can generate missing provider query results before reporting, instead of requiring separate manual result-generation steps
+- [ ] Streamline media and image q/modeluality reports so they can generate missing provider query results before reporting, instead of requiring separate manual result-generation steps
 
 ### Image Enrichment
 
 - [ ] Add LOC and Internet Archive providers to the image enrichment workflow
-- [ ] Fix artist image queries so they prefer historically relevant/era-appropriate artists instead of only newer artists with matching names
-- [ ] Add place disambiguation to image enrichment so same-name places from other cities or countries are filtered or clearly flagged
 - [ ] Add era checks to venue image candidates so wrong-era venue photos are filtered or clearly flagged
 - [ ] Show why each image candidate was selected during review, including matched query, specificity signals, confidence, and warning reasons
 - [ ] Improve Wild Style image enrichment so fetched images include enough event/context explanation for review

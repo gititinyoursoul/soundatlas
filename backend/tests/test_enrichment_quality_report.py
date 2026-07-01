@@ -203,6 +203,38 @@ def test_compare_quality_reports_highlights_type_quality_deltas() -> None:
     assert event_comparison["quality_direction"] in {"improved", "mixed"}
 
 
+def test_media_quality_report_flags_wrong_era_playlist_candidates() -> None:
+    event = build_event({"media_links": []})
+    route = build_route()
+    place = build_place()
+
+    report = build_quality_report(
+        kind="media",
+        events=[event],
+        routes_by_id={route["id"]: route},
+        places_by_id={place["id"]: place},
+        raw_candidates_by_event_id={
+            event["id"]: [
+                build_media_candidate(
+                    "https://www.youtube.com/playlist?list=wrong-era",
+                    "Best 1990s hip hop playlist",
+                    "playlist",
+                    query="DJ Kool Herc 1973 playlist",
+                    description="Classic rap tracks from the 1990s.",
+                ),
+            ],
+        },
+        limit=3,
+    )
+
+    event_report = report["events"][0]
+
+    assert "wrong_era_playlist" in event_report["warnings"]
+    assert event_report["candidates"][0]["review_warnings"] == [
+        "wrong_era_playlist_candidate",
+    ]
+
+
 def write_seed_files(
     tmp_path: Path,
     *,
@@ -261,8 +293,9 @@ def build_media_candidate(
     *,
     confidence: float = 0.75,
     query: str = "DJ Kool Herc 1973 interview",
+    description: str = "",
 ) -> dict[str, Any]:
-    return {
+    candidate = {
         "provider": "youtube",
         "type": media_type,
         "title": title,
@@ -271,6 +304,9 @@ def build_media_candidate(
         "confidence": confidence,
         "review_status": "draft",
     }
+    if description:
+        candidate["description"] = description
+    return candidate
 
 
 def build_youtube_result_payload() -> dict[str, Any]:

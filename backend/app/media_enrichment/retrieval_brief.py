@@ -57,6 +57,7 @@ def build_retrieval_brief(
     route_title = clean_text(route.get("title"))
     place_name = clean_text(place.get("name"))
     place_type = clean_text(place.get("place_type")).casefold()
+    place_borough = clean_text(place.get("borough"))
     tags = tuple(
         tag
         for tag in (clean_text(value) for value in event.get("tags", []))
@@ -80,6 +81,8 @@ def build_retrieval_brief(
         [
             route_title,
             place_name if place_type in BROAD_PLACE_TYPES else "",
+            place_borough if place_borough not in {"Citywide", "External"} else "",
+            "New York" if place_type in CONCRETE_PLACE_TYPES else "",
             year_phrase,
             *tags,
         ],

@@ -320,7 +320,7 @@ def build_media_link_from_youtube_item(
     if not isinstance(query, str):
         query = ""
 
-    return {
+    candidate = {
         "provider": "youtube",
         "type": media_type,
         "title": html.unescape(title),
@@ -329,6 +329,13 @@ def build_media_link_from_youtube_item(
         "confidence": confidence,
         "review_status": "draft",
     }
+    description = item.get("description")
+    if isinstance(description, str) and description:
+        candidate["description"] = html.unescape(description)
+    published_at = item.get("published_at")
+    if isinstance(published_at, str) and published_at:
+        candidate["published_at"] = published_at
+    return candidate
 
 
 def confidence_hint_to_score(confidence_hint: Any) -> float:

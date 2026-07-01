@@ -246,9 +246,15 @@ def validate_component_for_seed(
         report.warnings.append("strong_terms only contains broad terms.")
     if not strong_terms:
         report.warnings.append("search_control.strong_terms is empty.")
+    if not has_precise_enrichment_anchor(component=component, strong_terms=strong_terms):
+        report.warnings.append(
+            "no precise enrichment anchors found; add a specific artist, work, organization, technique, or historical event.",
+        )
 
     if place:
         place_type = clean_text(place.get("place_type")).casefold()
+        if not component.entities.places:
+            report.warnings.append("entities.places is empty.")
         if place_type in CONCRETE_PLACE_TYPES:
             place_terms = " ".join(component.entities.places).casefold()
             borough = clean_text(place.get("borough")).casefold()
@@ -274,6 +280,22 @@ def validate_component_for_seed(
             )
 
     return report
+
+
+def has_precise_enrichment_anchor(
+    *,
+    component: EventSearchComponent,
+    strong_terms: list[str],
+) -> bool:
+    if (
+        component.entities.artists
+        or component.entities.works
+        or component.entities.organizations
+        or component.entities.techniques
+        or component.entities.historical_events
+    ):
+        return True
+    return any(term.casefold() not in BROAD_ONLY_TERMS for term in strong_terms)
 
 
 def load_component(path: Path) -> EventSearchComponent:

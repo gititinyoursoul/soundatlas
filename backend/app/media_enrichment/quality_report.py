@@ -41,6 +41,8 @@ STOP_WORDS = {
     "to",
     "with",
 }
+YEAR_PATTERN = re.compile(r"\b(19|20)\d{2}\b")
+DECADE_PATTERN = re.compile(r"\b((?:19|20)\d0)s\b")
 
 
 def build_quality_report(
@@ -395,6 +397,9 @@ def summarize_candidate(
         "review_status": candidate.get("review_status") or "",
         "would_add": would_add,
     }
+    review_warnings = candidate_review_warnings(kind=kind, candidate=candidate, event=event)
+    if review_warnings:
+        summary["review_warnings"] = review_warnings
     if kind == "image":
         summary["rights_status"] = candidate.get("rights_status") or "unknown"
         summary["source_url"] = candidate.get("source_url") or ""
@@ -574,6 +579,12 @@ def build_event_warnings(kind: str, report: dict[str, Any]) -> list[str]:
             warnings.append("playlist_only")
         if report["final_candidate_count"] > 0 and type_counts.get("video", 0) == 0:
             warnings.append("no_videos")
+        if any(
+            "wrong_era_playlist_candidate" in candidate.get("review_warnings", [])
+            for candidate in report.get("candidates", [])
+            if isinstance(candidate, dict)
+        ):
+            warnings.append("wrong_era_playlist")
     if kind == "image":
         rights_counts = report.get("rights_status_counts", {})
         if rights_counts.get("unknown", 0) > 0:
@@ -581,6 +592,67 @@ def build_event_warnings(kind: str, report: dict[str, Any]) -> list[str]:
         if any(not candidate.get("source_url") for candidate in report.get("candidates", [])):
             warnings.append("missing_source_url")
     return sorted(set(warnings))
+
+
+def candidate_review_warnings(
+    *,
+    kind: str,
+    candidate: dict[str, Any],
+    event: dict[str, Any],
+) -> list[str]:
+    warnings = []
+    if kind == "media" and candidate.get("type") == "playlist":
+        if media_candidate_has_wrong_era(candidate=candidate, event=event):
+            warnings.append("wrong_era_playlist_candidate")
+    return warnings
+
+
+def media_candidate_has_wrong_era(
+    *,
+    candidate: dict[str, Any],
+    event: dict[str, Any],
+) -> bool:
+    event_range = event_year_range(event)
+    if event_range is None:
+        return False
+
+    primary_text = " ".join(
+        str(candidate.get(field) or "")
+        for field in ("title", "description")
+    )
+    era_ranges = extract_era_ranges(primary_text)
+    if not era_ranges:
+        era_ranges = extract_era_ranges(str(candidate.get("query") or ""))
+    if not era_ranges:
+        return False
+
+    return not any(ranges_overlap(event_range, era_range) for era_range in era_ranges)
+
+
+def event_year_range(event: dict[str, Any]) -> tuple[int, int] | None:
+    year_start = event.get("year_start")
+    year_end = event.get("year_end")
+    if not isinstance(year_start, int):
+        return None
+    if not isinstance(year_end, int):
+        year_end = year_start
+    return (min(year_start, year_end), max(year_start, year_end))
+
+
+def extract_era_ranges(text: str) -> list[tuple[int, int]]:
+    ranges = [
+        (int(match.group(0)), int(match.group(0)))
+        for match in YEAR_PATTERN.finditer(text)
+    ]
+    ranges.extend(
+        (int(match.group(1)), int(match.group(1)) + 9)
+        for match in DECADE_PATTERN.finditer(text)
+    )
+    return ranges
+
+
+def ranges_overlap(left: tuple[int, int], right: tuple[int, int]) -> bool:
+    return max(left[0], right[0]) <= min(left[1], right[1])
 
 
 def comparison_warnings(

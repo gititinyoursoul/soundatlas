@@ -141,21 +141,42 @@ def build_artist_photo_plans(
     yearly_terms = tuple(term for term in time_terms[2:] if term.isdigit())
     role_term = artist_role_term(artist, brief)
     scene_term = primary_scene_context(brief)
+    location_term = artist_location_context(brief)
 
     query_specs = []
     if primary_time:
         query_specs.append((f"{artist} {primary_time}", (primary_time,), 2, "high"))
+    if scene_term and primary_time:
+        query_specs.append(
+            (
+                f"{artist} {scene_term} {primary_time}",
+                (scene_term, primary_time),
+                3,
+                "high",
+            ),
+        )
+    if location_term and primary_time:
+        query_specs.append(
+            (
+                f"{artist} {location_term} {primary_time}",
+                (location_term, primary_time),
+                4,
+                "medium",
+            ),
+        )
     if decade_time:
-        query_specs.append((f"{artist} {decade_time}", (decade_time,), 3, "medium"))
+        query_specs.append((f"{artist} {decade_time}", (decade_time,), 5, "medium"))
     for year_term in yearly_terms:
-        query_specs.append((f"{artist} {year_term}", (year_term,), 4, "medium"))
+        query_specs.append((f"{artist} {year_term}", (year_term,), 6, "medium"))
     if role_term and primary_time:
         query_specs.append(
-            (f"{artist} {role_term} {primary_time}", (role_term, primary_time), 5, "medium"),
+            (f"{artist} {role_term} {primary_time}", (role_term, primary_time), 7, "medium"),
         )
     if scene_term:
-        query_specs.append((f"{artist} {scene_term}", (scene_term,), 6, "medium"))
-    query_specs.append((artist, (), 7, "low"))
+        query_specs.append((f"{artist} {scene_term}", (scene_term,), 8, "medium"))
+    if location_term:
+        query_specs.append((f"{artist} {location_term}", (location_term,), 9, "medium"))
+    query_specs.append((artist, (), 10, "low"))
 
     for query, supporting_terms, priority, confidence_hint in query_specs:
         plans.append(
@@ -167,12 +188,13 @@ def build_artist_photo_plans(
                 supporting_terms=supporting_terms,
                 confidence_hint=confidence_hint,
                 reason=(
-                    "Artist query starts with artist name plus the strongest available "
-                    "time context."
+                    "Artist query prefers era, scene, role, or location context before "
+                    "falling back to the artist name alone."
                 ),
                 review_risks=(
                     "Verify the image subject is the artist and not a modern or unrelated "
                     "same-name result.",
+                    "Prefer results with source dates or descriptions that fit the event era.",
                 ),
             ),
         )
@@ -391,14 +413,31 @@ def venue_location_disambiguators(brief: RetrievalBrief) -> tuple[str, ...]:
     text = combined_event_text(brief)
     terms = []
     for borough in BOROUGH_TERMS:
-        if term_in_text(borough, text) or term_in_text(borough, brief.place_name):
+        if (
+            term_in_text(borough, text)
+            or term_in_text(borough, brief.place_name)
+            or any(term_in_text(borough, term) for term in brief.supporting_terms)
+        ):
             terms.append(borough)
     for city in CITY_TERMS:
-        if term_in_text(city, text) or term_in_text(city, brief.place_name):
+        if (
+            term_in_text(city, text)
+            or term_in_text(city, brief.place_name)
+            or any(term_in_text(city, term) for term in brief.supporting_terms)
+        ):
             terms.append(city)
     if not any(term.casefold() in {"new york", "nyc"} for term in terms):
         terms.append("New York")
     return unique_terms(terms)
+
+
+def artist_location_context(brief: RetrievalBrief) -> str:
+    if brief.place_type not in CONCRETE_PLACE_TYPES and brief.place_name:
+        return brief.place_name
+    for disambiguator in venue_location_disambiguators(brief):
+        if disambiguator.casefold() != "new york":
+            return disambiguator
+    return "New York"
 
 
 def artist_role_term(artist: str, brief: RetrievalBrief) -> str:

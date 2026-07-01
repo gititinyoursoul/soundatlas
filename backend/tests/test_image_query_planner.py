@@ -33,6 +33,34 @@ def test_plan_image_queries_for_concrete_venue_and_artist() -> None:
     assert "1520 Sedgwick Avenue" not in planned_queries(plans)
 
 
+def test_plan_image_queries_uses_place_borough_for_concrete_place_disambiguation() -> None:
+    plans = plan_image_queries(
+        build_retrieval_brief(
+            event={
+                "id": "cedar-park-jams",
+                "route_id": "birth-of-hip-hop",
+                "place_id": "cedar-park",
+                "title": "Breakbeat DJing Spreads Across Parties",
+                "year_start": 1974,
+                "year_end": 1974,
+                "summary": "DJs refine party techniques in park jams.",
+                "significance": "The practice spreads through outdoor parties.",
+                "tags": ["block-party", "dj-culture"],
+            },
+            route={"id": "birth-of-hip-hop", "title": "Birth of Hip-Hop"},
+            place={
+                "id": "cedar-park",
+                "name": "Cedar Park",
+                "borough": "Bronx",
+                "place_type": "park",
+            },
+        ),
+    )
+
+    assert ("venue_photo", "Cedar Park Bronx 1974") in plan_pairs(plans)
+    assert ("venue_photo", "Cedar Park New York 1974") not in plan_pairs(plans)
+
+
 def test_plan_image_queries_for_artist_event_avoids_broad_place_query() -> None:
     plans = plan_image_queries(
         build_retrieval_brief(
@@ -53,12 +81,17 @@ def test_plan_image_queries_for_artist_event_avoids_broad_place_query() -> None:
     )
 
     assert ("artist_photo", "Grandmaster Flash 1975 1977") in plan_pairs(plans)
+    assert ("artist_photo", "Grandmaster Flash hip hop 1975 1977") in plan_pairs(plans)
+    assert ("artist_photo", "Grandmaster Flash South Bronx 1975 1977") in plan_pairs(plans)
     assert ("artist_photo", "Grandmaster Flash 1970s") in plan_pairs(plans)
     assert ("artist_photo", "Grandmaster Flash 1975") in plan_pairs(plans)
     assert ("artist_photo", "Grandmaster Flash 1976") in plan_pairs(plans)
     assert ("artist_photo", "Grandmaster Flash 1977") in plan_pairs(plans)
     assert ("archive_photo", "Grandmaster Flash Refines DJ Techniques 1975 1977") in plan_pairs(plans)
     assert "South Bronx" not in planned_queries(plans)
+    assert ordered_queries(plans).index("Grandmaster Flash") > ordered_queries(plans).index(
+        "Grandmaster Flash South Bronx 1975 1977",
+    )
 
 
 def test_plan_image_queries_for_context_event_does_not_use_region_only_query() -> None:
