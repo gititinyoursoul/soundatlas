@@ -30,21 +30,21 @@ Completed work packages are archived in `docs/done.md`.
 - [ ] Split environment dependency management into prod and dev
 - [ ] Remove design documents and images that are no longer needed
 
+### Seed Data Workflow
+
+- [ ] Add a route seed scaffold or preview command that reduces manual route updates by checking route, place, event, and connection changes before writing seed JSON
+- [ ] Add enrichment-readiness warnings to seed validation so weak query inputs are flagged during seed creation
+
 ### Media Enrichment
 
 - [ ] Add a YouTube media availability audit step to the enrichment workflow that records embed vs external playback mode
 - [ ] Recheck every current YouTube video link for playable, embeddable, external-only, private, deleted, or unavailable status
-- [ ] Draft or revise the `event-search-components` spec so it matches the current image and media planner inputs, including time context, place disambiguation, typed works, and supporting-term handling
 - [ ] Move the ignore list out of seed data into a separate enrichment data store or review file
-- [ ] Compare `docs/media-retrieval/event-search-components.md` with the image retrieval brief approach and choose one shared upstream process for both image and media enrichment
-- [ ] Make `docs/media-retrieval/event-search-components.md` the shared upstream search-input model for both image and media enrichment so query planning starts from the same structured base
-- [ ] Improve `event-search-components` with richer time context, structured place disambiguation, typed works, primary supporting terms, and targeted review warnings
 - [ ] Fix media enrichment so genre-correct playlists from the wrong decade are filtered or clearly flagged before review
 
 ### Enrichment Orchestration
 
 - [ ] Add a single script that triggers all enrichment passes for one event, including media and images, so one command can refresh the full enrichment state
-- [ ] Add a shared event-search-components generator so media and image enrichment start from the same structured input
 - [ ] Add a shared enrichment preview command that shows media and image query plans for one event side by side
 - [ ] Streamline media and image quality reports so they can generate missing provider query results before reporting, instead of requiring separate manual result-generation steps
 

@@ -48,6 +48,14 @@ Archive of completed work packages. The current work list lives in `TODO.md`.
 - [x] Check whether `backend/scripts/enrich_media_links.py` is compatible with the plus-only workflow
 - [x] Add a dry-run enrichment quality report for comparing candidate count, specificity, ignored matches, type mix, and other output-quality signals
 
+## Enrichment
+
+- [x] Draft or revise the `event-search-components` spec so it matches the current image and media planner inputs, including time context, place disambiguation, typed works, and supporting-term handling
+- [x] Compare `docs/media-retrieval/event-search-components.md` with the image retrieval brief approach and choose `event-search-components` as the shared upstream process for image and media enrichment
+- [x] Make `docs/media-retrieval/event-search-components.md` the shared upstream search-input model for both image and media enrichment
+- [x] Improve `event-search-components` with richer time context, structured place disambiguation, typed works, supporting terms, and targeted review warnings
+- [x] Add a shared event-search-components generator so media and image enrichment start from the same structured input
+
 ## Frontend
 
 - [x] Migrate the existing `frontend/` to SvelteKit

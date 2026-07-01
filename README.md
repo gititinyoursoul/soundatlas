@@ -120,6 +120,8 @@ Seed data lives in `data/seed/`:
 - `events.json`
 - `connections.json`
 
+Workflow: `docs/seed-data-workflow.md`
+
 Validation rules: `docs/seed-validation.md`
 
 ## Media Retrieval
