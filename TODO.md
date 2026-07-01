@@ -57,6 +57,7 @@ Completed work packages are archived in `docs/done.md`.
 
 ### Repository Maintenance
 
+- [ ] Review and address 3 low severity frontend npm audit vulnerabilities
 - [ ] Add frontend behavior tests for route selection, timeline selection, map/story synchronization, loading/error states, and admin media controls
 - [ ] Find a test coverage setup for `uv` and `npm`
 - [ ] Split environment dependency management into prod and dev
