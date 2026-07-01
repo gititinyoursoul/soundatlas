@@ -1,167 +1,189 @@
 # SoundAtlas
 
-![Image #1](docs/design/screenshots/drawer-closed-desktop.png)
+![SoundAtlas screenshot](docs/design/screenshots/drawer-closed-desktop.png)
 
-SoundAtlas is an MVP for an interactive music history app. Current scope:
-**New York 1965-1985** across four curated routes:
-**Birth of Hip-Hop: Bronx 1970-1985**,
-**Disco to Dance Music**,
-**Salsa and Latin New York**,
-and **Punk and New Wave Downtown**.
+SoundAtlas is an MVP for an interactive music history app. It makes scenes
+explorable across place, time, and cultural connection with a map-first UI,
+timeline navigation, and a synchronized story panel.
+
+The current product frame is **New York 1965-1985**. The seed data currently
+covers five curated routes:
+
+- `Birth of Hip-Hop`
+- `Disco To Dance Music`
+- `Punk & New Wave Downtown`
+- `Salsa & Latin New York`
+- `Downtown Experiment / No Wave / Loft Jazz`
+
+The first vertical slice remains **Birth of Hip-Hop: Bronx 1970-1985**.
+
+## Stack
+
+- Frontend: SvelteKit, TypeScript, Leaflet
+- Backend: FastAPI, Python 3.13, `uv`
+- Data: curated JSON seed files under `data/seed/`
 
 ## Quick Start
 
+Requirements:
+
+- Python `>=3.13`
+- `uv`
+- Node.js and npm
+- PowerShell for `scripts/start-dev.ps1`, or Bash for `scripts/start-dev.sh`
+
 ### Local
 
-Requirements: Python `>=3.13`, `uv`, Node.js/npm, PowerShell.
+PowerShell:
 
 ```powershell
 .\scripts\start-dev.ps1
 ```
 
-App URLs:
+Bash:
 
-- Backend: `http://127.0.0.1:8000`
+```sh
+./scripts/start-dev.sh
+```
+
+Default URLs:
+
 - Frontend: `http://127.0.0.1:5173`
+- Backend: `http://127.0.0.1:8000`
+- Health: `http://127.0.0.1:8000/health`
 
 ### Docker Compose
 
-```powershell
+```sh
 docker compose up --build
 ```
 
-App URLs:
+Default URLs:
 
-- Backend: `http://localhost:8000`
-- Backend health: `http://localhost:8000/health`
 - Frontend: `http://localhost:5173`
+- Backend: `http://localhost:8000`
+- Health: `http://localhost:8000/health`
 
-Stop the containers:
+Stop the stack:
 
-```powershell
+```sh
 docker compose down
 ```
 
-### Codex CLI Dev Container
-
-Start the containerized Codex workspace:
-
-```powershell
-docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontainer.yml up -d --build workspace
-docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontainer.yml exec --user soundatlas workspace sh .devcontainer/post-create.sh
-docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontainer.yml exec --user soundatlas workspace bash
-```
-
-The `post-create.sh` step is important for CLI-only startup: it seeds Codex
-auth/config into the container volume, trusts `/workspace`, and applies the
-dev-container Codex permission defaults.
-
-Then start Codex inside the container:
-
-```sh
-cd /workspace
-codex
-```
-
-This is the preferred setup for agent-assisted coding. Codex runs inside the
-same isolated workspace as the app, so it sees the project filesystem,
-dependencies, environment variables, test commands, linters, and build tools
-used by the containers. VS Code can still attach to the same workspace through
-the Dev Containers extension, but it is optional.
-
-Details: `docs/dev-container.md`
-
-## Manual Development
+### Manual Development
 
 Backend:
 
-```powershell
+```sh
 cd backend
 uv run uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 ```
 
 Frontend:
 
-```powershell
+```sh
 cd frontend
-$env:VITE_API_BASE_URL='http://127.0.0.1:8000'
-npm run dev -- --host 127.0.0.1 --port 5173
+VITE_API_BASE_URL=http://127.0.0.1:8000 npm run dev -- --host 127.0.0.1 --port 5173
 ```
 
 ## Checks
 
 Backend:
 
-```powershell
+```sh
 cd backend
 uv run pytest
 ```
 
 Frontend:
 
-```powershell
+```sh
 cd frontend
 npm run check
 ```
 
-Inside Docker Compose:
+Optional frontend tests:
 
-```powershell
-docker compose run --rm backend uv run pytest
-docker compose run --rm frontend npm run check
+```sh
+cd frontend
+npm run test
 ```
 
-## Data
+## Data Model
 
-Seed data lives in `data/seed/`:
+Seed data lives under `data/seed/`:
 
 - `routes.json`
 - `places.json`
 - `events.json`
 - `connections.json`
 
-Workflow: `docs/seed-data-workflow.md`
+Key references:
 
-Validation rules: `docs/seed-validation.md`
+- Seed structure: `docs/data/seed-data-structure.md`
+- Seed validation: `docs/data/seed-data-validation.md`
+- Editorial workflow: `docs/content/editorial-workflow.md`
 
-## Media Retrieval
+## API
 
-The automated enrichment workflows create draft `media_links` and
-`image_links`; no audio or video files are stored in the repo.
+The backend is seed-driven and currently exposes:
+
+- `GET /health`
+- `GET /routes`
+- `GET /places`
+- `GET /events`
+- `GET /events/{event_id}`
+- `GET /connections`
+- `PATCH /events/{event_id}/links`
+- `PATCH /events/{event_id}/media-links`
+
+## Enrichment
+
+The repository includes media and image enrichment workflows that generate draft
+external links for review. No audio, video, or image assets are stored in the
+repository.
 
 Useful docs:
 
-- `docs/enrichment-workflow.md`
-- `docs/image-retrieval/image-enrichment-concept.md`
-- `docs/image-retrieval/workflow-commands.md`
-- `docs/media-retrieval/youtube-mvp-workflow.md`
-- `docs/media-retrieval/workflow-commands.md`
-- `docs/media-retrieval/codex-query-curation.md`
+- `docs/enrichment/media/overview.md`
+- `docs/enrichment/media/youtube-mvp-workflow.md`
+- `docs/enrichment/media/workflow-commands.md`
+- `docs/enrichment/image/overview.md`
+- `docs/enrichment/image/workflow-commands.md`
+- `docs/enrichment/upstream/event-search-components.md`
 
-Dry run:
+Example dry run:
 
-```powershell
+```sh
 cd backend
 uv run python scripts/run_youtube_search_requests.py --dry-run
 ```
 
-Live YouTube requests require `YOUTUBE_API_KEY` through `SOUNDATLAS_ENV_FILE`.
-See `.env.example`.
+Real provider credentials should stay outside the repo. See `.env.example` for
+the expected environment variables.
 
 ## Project Structure
 
-- `backend/`: FastAPI app, schemas, tests, and media retrieval scripts
-- `frontend/`: SvelteKit app with map, timeline, route filter, and story panel
-- `data/seed/`: curated MVP JSON data
-- `data/enrichment/`: enrichment plans and results
-- `docs/`: product, data, route, infrastructure, and workflow docs
-- `prompts/`: reusable project prompts for planning, implementation, review,
-  and media retrieval
-- `scripts/`: local helper scripts
+- `backend/`: FastAPI app, schemas, seed repository, enrichment scripts, tests
+- `frontend/`: SvelteKit app, map/timeline/story UI, API client, component tests
+- `data/`: curated seed data and enrichment artifacts
+- `docs/`: product, design, data, and workflow documentation
+- `plans/`: local implementation plan records
+- `prompts/`: reusable project prompts
+- `scripts/`: local developer startup helpers
 
-## Rules
+## Documentation
 
-- Do not commit secrets, tokens, local paths, or private config.
-- Do not store audio or video files in the repo.
-- Keep sources and media as external links.
-- Keep generated media links as `review_status: "draft"` until reviewed.
+- MVP concept: `docs/mvp-concept.md`
+- Current task list: `TODO.md`
+- Completed work archive: `docs/done.md`
+- Dev container workflow: `docs/dev-container.md`
+- Implementation plan workflow: `docs/implementation-plan-workflow.md`
+
+## Working Rules
+
+- Keep changes small and aligned with the MVP scope.
+- Prefer curated, traceable data over automated aggregation.
+- Always include source fields in the data model.
+- Do not commit secrets, tokens, or local machine paths.
+- Do not add audio files to the repository; use external media links only.
