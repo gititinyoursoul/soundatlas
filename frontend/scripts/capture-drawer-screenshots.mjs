@@ -9,7 +9,7 @@ function readArg(name, fallback) {
   return arg ? arg.slice(prefix.length) : fallback;
 }
 
-const url = readArg('--url', 'http://127.0.0.1:5173');
+const url = readArg('--url', 'http://127.0.0.1:5174');
 const outputDir = path.resolve(readArg('--output-dir', '../screenshots'));
 const width = Number(readArg('--width', '1440'));
 const height = Number(readArg('--height', '1000'));
