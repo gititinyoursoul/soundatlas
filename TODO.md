@@ -34,6 +34,8 @@ Completed work packages are archived in `docs/done.md`.
 
 - [ ] Add a YouTube media availability audit step to the enrichment workflow that records embed vs external playback mode
 - [ ] Recheck every current YouTube video link for playable, embeddable, external-only, private, deleted, or unavailable status
+- [ ] Draft or revise the `event-search-components` spec so it matches the current image and media planner inputs, including time context, place disambiguation, typed works, and supporting-term handling
+- [ ] Move the ignore list out of seed data into a separate enrichment data store or review file
 - [ ] Compare `docs/media-retrieval/event-search-components.md` with the image retrieval brief approach and choose one shared upstream process for both image and media enrichment
 - [ ] Make `docs/media-retrieval/event-search-components.md` the shared upstream search-input model for both image and media enrichment so query planning starts from the same structured base
 - [ ] Improve `event-search-components` with richer time context, structured place disambiguation, typed works, primary supporting terms, and targeted review warnings
