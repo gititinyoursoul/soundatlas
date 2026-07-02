@@ -1,0 +1,34 @@
+{
+  "route_id": "birth-of-hip-hop",
+  "active_dossier": "research-dossier-mvp-edit.md",
+  "steps": {
+    "event_list": {
+      "input": "research-dossier-mvp-edit.md",
+      "markdown": "event-list.md",
+      "json": "event-list.json",
+      "review_status": "draft"
+    },
+    "route_concept": {
+      "input": "event-list.json",
+      "markdown": "route-concept.md",
+      "review_status": "draft"
+    },
+    "event_framing": {
+      "input": "route-concept.md",
+      "markdown": "event-framing.md",
+      "events": "event-framing.json",
+      "places": "place-framing.json",
+      "connections": "connection-framing.json",
+      "review_status": "draft"
+    },
+    "seed_preview": {
+      "input": "event-framing.json",
+      "markdown": "seed-transfer-report.md",
+      "review_status": "draft"
+    },
+    "validation": {
+      "markdown": "validation-report.md",
+      "review_status": "draft"
+    }
+  }
+}
