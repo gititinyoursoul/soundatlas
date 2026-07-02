@@ -26,7 +26,8 @@ Use this prompt for:
 * `docs/implementation-plan-workflow.md`
 * `docs/design/current-frontend-design.md`
 * `docs/mvp-concept.md`
-* route concept docs under `docs/content/route-concepts/`
+* route content folders under `docs/content/routes/<route-id>/`
+* legacy route concept docs under `docs/content/route-concepts/`
 * workflow docs under `docs/`
 * durable archive docs such as `docs/done.md`
 

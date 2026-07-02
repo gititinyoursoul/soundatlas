@@ -22,7 +22,9 @@ Project constraints
 
 Process
 - If the seed work is non-trivial, use `prompts/plan-feature.md` first and create or update a GitHub Issue Plan Update before multi-file data changes.
-- Check the route concept in `docs/content/route-concepts/` and MVP scope in `docs/mvp-concept.md`.
+- Check the route content in `docs/content/routes/<route-id>/` for new route
+  work, or the existing legacy concept in `docs/content/route-concepts/`, plus
+  MVP scope in `docs/mvp-concept.md`.
 - Update the smallest necessary set of seed files: routes, places, events, connections.
 - Keep event wording concise: `summary` for what happened, `significance` for why it matters.
 - Validate JSON syntax and cross-references if tooling is available.

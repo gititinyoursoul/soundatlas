@@ -16,10 +16,12 @@ script.
 
 ```mermaid
 flowchart TD
-  A["MVP concept<br/>docs/mvp-concept.md"] --> B["Route concept<br/>docs/content/route-concepts/"]
-  B --> C["Editorial event framing<br/>title, summary, significance, sources"]
-  C --> D["Structured seed transfer<br/>data/seed/"]
-  D --> E["Enrichment upstream prep<br/>docs/enrichment/upstream/"]
+  A["MVP concept<br/>docs/mvp-concept.md"] --> B["Route brief<br/>docs/content/routes/&lt;route-id&gt;/brief.md"]
+  B --> C["Route research dossier<br/>docs/content/routes/&lt;route-id&gt;/"]
+  C --> D["Route concept<br/>docs/content/routes/&lt;route-id&gt;/"]
+  D --> E["Editorial event framing<br/>title, summary, significance, sources"]
+  E --> F["Structured seed transfer<br/>data/seed/"]
+  F --> G["Enrichment upstream prep<br/>docs/enrichment/upstream/"]
 ```
 
 ## Current Editorial Flow
@@ -28,15 +30,23 @@ flowchart TD
    `prompts/plan-feature.md` and create or update a GitHub Issue Plan Update
    before broad multi-file edits.
 2. Start from the MVP concept in `docs/mvp-concept.md`.
-3. Create or revise a route concept in `docs/content/route-concepts/`.
-4. Use `prompts/create-route.md` when route concept work should also produce a
+3. For new route content, create a route folder under
+   `docs/content/routes/<route-id>/` and begin with `brief.md`.
+4. Add or revise route-specific content in that folder. A route folder may
+   contain `brief.md`, a research dossier, a concept file, and any
+   route-specific notes.
+5. Existing documents under `docs/content/route-concepts/` remain valid legacy
+   route concepts until a separate migration moves them into per-route folders.
+6. For route work, create or update a route research dossier using
+   `docs/content/route-editorial-quality-standards.md` before seed transfer.
+7. Use `prompts/create-route.md` when route concept work should also produce a
    seed data plan or seed edits.
-5. Use `prompts/curate-seed-data.md` when the main task is to add or revise the
+8. Use `prompts/curate-seed-data.md` when the main task is to add or revise the
    JSON seed records directly.
-6. Define event titles, summaries, and significance text in editorial form
+9. Define event titles, summaries, and significance text in editorial form
    before translating them into `data/seed/`.
-7. Keep contested or incomplete claims traceable through `source_urls`.
-8. Mark uncertain seed records as `review_status: "draft"`.
+10. Keep contested or incomplete claims traceable through `source_urls`.
+11. Mark uncertain seed records as `review_status: "draft"`.
 
 ## Editorial Rules
 
@@ -44,8 +54,8 @@ flowchart TD
 - Keep event `significance` focused on why the event matters.
 - Avoid overstating contested historical claims.
 - Use explicit artist, place, work, and organization names when they matter.
-- Treat route concepts as editorial source documents, not as the runtime data
-  model.
+- Treat route briefs, dossiers, and concepts as editorial source documents, not
+  as the runtime data model.
 
 ## Future Direction
 
@@ -56,7 +66,9 @@ into seed schema or enrichment execution docs.
 ## Related Docs
 
 - `docs/mvp-concept.md`
-- `docs/content/route-concepts/`
+- `docs/content/routes/`
+- `docs/content/route-concepts/` legacy route concepts
+- `docs/content/route-editorial-quality-standards.md`
 - `docs/data/seed-data-structure.md`
 - `docs/data/seed-data-validation.md`
 - `docs/enrichment/upstream/query-input-quality.md`

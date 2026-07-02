@@ -30,7 +30,8 @@ flowchart TD
 
 ## Current Seed Transfer Flow
 
-1. Start from route concepts in `docs/content/route-concepts/`.
+1. Start from route content in `docs/content/routes/<route-id>/` for new route
+   work, or from existing legacy concepts in `docs/content/route-concepts/`.
 2. Use prompt-driven curation such as `prompts/create-route.md` or
    `prompts/curate-seed-data.md` to draft or revise route and seed content.
 3. Update the smallest necessary set of files under `data/seed/`.
