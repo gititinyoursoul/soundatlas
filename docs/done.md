@@ -7,9 +7,9 @@ Issues; `TODO.md` is a legacy backlog.
 
 - [x] Finalize the guiding question for the MVP
 - [x] Editorially develop the `Birth of Hip-Hop` route
-- [x] Define 8-12 events for the hip-hop route
-- [x] Capture 5-8 places with coordinates
-- [x] Define 8-12 influence connections
+- [x] Define initial events for the hip-hop route
+- [x] Capture initial places with coordinates
+- [x] Define initial influence connections
 - [x] Define the source structure for events
 - [x] Clarify media-link rules: YouTube, Spotify, Internet Archive, or external links
 - [x] Document the media enrichment concept

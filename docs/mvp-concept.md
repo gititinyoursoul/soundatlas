@@ -25,7 +25,7 @@ How did New York become a musical hub between 1965 and 1985, and why does this d
 
 ## MVP Scope
 
-The MVP includes five curated routes:
+The current MVP route set starts with these curated route areas:
 
 1. **Birth of Hip-Hop**
    - Period: roughly 1970-1985
@@ -137,9 +137,9 @@ This route is a good fit because it clearly demonstrates the app's basic princip
 
 The slice contains:
 
-- 8-12 curated events
-- 5-8 places
-- 8-12 connections
+- A curated event sequence selected through the editorial workflow
+- Places and coordinates that make the route geographically legible
+- Connections that explain influence, context, media spread, and scene formation
 - Map, timeline, route switching, and event inspector
 - Data from curated JSON seed files through the FastAPI backend
 
@@ -339,8 +339,8 @@ The MVP is successful if a user understands within five minutes:
 ### Phase 1: Concept and Data
 
 - Finalize this concept
-- Develop the "Birth of Hip-Hop" route with 8-12 events
-- Capture places and coordinates
+- Develop the "Birth of Hip-Hop" route through the editorial workflow
+- Select events, places, and coordinates based on the route dossier and concept
 - Define the source structure
 
 ### Phase 2: Backend Slice
@@ -362,7 +362,8 @@ The MVP is successful if a user understands within five minutes:
 
 ### Phase 4: Editorial Expansion
 
-- Add four more routes with 8-12 events each
+- Expand additional routes through the same brief, dossier, concept, and seed
+  transfer workflow
 - Make connections between routes visible
 - Complete sources
 - Run the first review of the user flow
