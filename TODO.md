@@ -23,38 +23,15 @@ Completed work packages are archived in `docs/done.md`.
 #### Upstream Inputs
 
 - [ ] Add a route seed scaffold or preview command that reduces manual route updates by checking route, place, event, and connection changes before writing seed JSON
-- [ ] Add a shared enrichment preview command that shows media and image query plans for one event side by side
-
-#### Orchestration And Reporting
-
-- [ ] Add a single script that triggers all enrichment passes for one event, including media and images, so one command can refresh the full enrichment state
-- [ ] Streamline media and image quality reports so they can generate missing provider query results before reporting, instead of requiring separate manual result-generation steps
-
-#### Media Enrichment
-
-- [ ] Add a YouTube media availability audit step to the enrichment workflow that records embed vs external playback mode
-- [ ] Recheck every current YouTube video link for playable, embeddable, external-only, private, deleted, or unavailable status
-- [ ] Move the ignore list out of seed data into a separate enrichment data store or review file
 
 #### Image Enrichment
 
 - [ ] Add LOC and Internet Archive providers to the image enrichment workflow
-- [ ] Add era checks to venue image candidates so wrong-era venue photos are filtered or clearly flagged
-- [ ] Show why each image candidate was selected during review, including matched query, specificity signals, confidence, and warning reasons
-- [ ] Improve Wild Style image enrichment so fetched images include enough event/context explanation for review
 - [ ] Define and enforce the public-image visibility boundary so only reviewed image links render in public-facing UI
 - [ ] Implement the reviewed-image presentation behavior in the story panel, including first-image header, attribution, and visible rights notice
-- [ ] Confirm the image enrichment pass can reliably reach 3-5 candidates per event when source coverage exists
-- [ ] Add final cross-query ranking for image enrichment so candidates are collected across planned queries and the best matches are kept per event
-- [ ] Expand provider-specific image normalization so search, pagination, and rights mapping are encapsulated by provider modules
 
 ### Repo And Agent Workflow
 
-- [ ] Check current AI agent setup and documentation, including current security and rights
-- [x] Audit how external env tokens become visible inside the devcontainer, including `SOUNDATLAS_ENV_FILE`, mounted secrets, shell inheritance, and local Compose overrides
-- [x] Upgrade the dev container Codex CLI pin to `@openai/codex` `0.142.4`, rebuild the workspace image, and verify `codex --version`
-- [x] Make devcontainer dependency sync explicit by running locked backend `uv sync` and frontend `npm ci` during post-create or documenting the equivalent setup command
-- [x] Configure Playwright screenshot capture to use a different dev server port than the local browser so both can run at the same time
 - [ ] Turn plan-feature prompt into a skill
 - [ ] Turn backend and frontend implementation prompts into skills
 - [ ] Turn write-tests prompt into a skill
@@ -66,7 +43,6 @@ Completed work packages are archived in `docs/done.md`.
 - [ ] Add frontend behavior tests for route selection, timeline selection, map/story synchronization, loading/error states, and admin media controls
 - [ ] Find a test coverage setup for `uv` and `npm`
 - [ ] Split environment dependency management into prod and dev
-- [x] Remove design documents and images that are no longer needed
 
 ### UX and Design
 
@@ -78,7 +54,6 @@ Completed work packages are archived in `docs/done.md`.
 
 #### Map And Timeline
 
-- [ ] Run current screenshots and recheck whether the map feels dominant enough in the first viewport
 - [ ] Check out Leaflet base map tile style options
 - [ ] Check out Leaflet marker design options
 - [ ] Check out Leaflet popups and tooltip design options
@@ -87,7 +62,6 @@ Completed work packages are archived in `docs/done.md`.
 - [ ] Check out Leaflet controls and map chrome design options
 - [ ] Decide how pre-1970 hip-hop context should appear in route ranges and timeline layout
 - [ ] Decide whether drawer route selection should keep the overlay open or close after selection
-- [ ] Review timeline density behavior for future routes with more events
 - [ ] Review the selected-event focal cue across header, map marker/place chrome, timeline, and inspector
 - [ ] Reconcile the current mobile ordering implementation with the design baseline and update docs as needed
 - [ ] Decide whether timeline event cards should remain, become more compact, or move into the story inspector
