@@ -118,6 +118,12 @@ Seed data lives under `data/seed/`:
 - `events.json`
 - `connections.json`
 
+The current seed authoring workflow is prompt-guided curation, typically using
+`prompts/create-route.md` and `prompts/curate-seed-data.md`, followed by JSON
+validation and backend schema loading. The enrichment scripts under
+`backend/scripts/` do not generate the full seed dataset; they derive helper
+artifacts or append draft link metadata to existing events.
+
 Key references:
 
 - Seed structure: `docs/data/seed-data-structure.md`

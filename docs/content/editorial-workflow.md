@@ -8,6 +8,9 @@ before it is turned into structured seed data.
 This layer includes route concepts, event wording, significance text, and other
 text that later appears in the product. It is intentionally separate from seed
 schema rules and enrichment execution.
+In practice, this editorial-to-seed step is usually performed through the repo
+prompt files plus human review, rather than through a dedicated seed generation
+script.
 
 ## Workflow
 
@@ -26,10 +29,14 @@ flowchart TD
    before broad multi-file edits.
 2. Start from the MVP concept in `docs/mvp-concept.md`.
 3. Create or revise a route concept in `docs/content/route-concepts/`.
-4. Define event titles, summaries, and significance text in editorial form
+4. Use `prompts/create-route.md` when route concept work should also produce a
+   seed data plan or seed edits.
+5. Use `prompts/curate-seed-data.md` when the main task is to add or revise the
+   JSON seed records directly.
+6. Define event titles, summaries, and significance text in editorial form
    before translating them into `data/seed/`.
-5. Keep contested or incomplete claims traceable through `source_urls`.
-6. Mark uncertain seed records as `review_status: "draft"`.
+7. Keep contested or incomplete claims traceable through `source_urls`.
+8. Mark uncertain seed records as `review_status: "draft"`.
 
 ## Editorial Rules
 

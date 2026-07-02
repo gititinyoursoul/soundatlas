@@ -7,6 +7,8 @@ it connects editorial content to enrichment workflows.
 
 Seed data is the structured product layer. It stays smaller and more stable
 than the surrounding editorial and enrichment artifacts.
+It is currently authored through prompt-guided curation and direct JSON edits,
+not generated from a standalone seed-builder script.
 
 ## Seed Files
 
@@ -29,11 +31,25 @@ flowchart TD
 ## Current Seed Transfer Flow
 
 1. Start from route concepts in `docs/content/route-concepts/`.
-2. Update the smallest necessary set of files under `data/seed/`.
-3. Keep stable lowercase, URL-safe IDs.
-4. Preserve references between routes, places, events, and connections.
-5. Validate JSON shape and cross-file references through backend schema loading
+2. Use prompt-driven curation such as `prompts/create-route.md` or
+   `prompts/curate-seed-data.md` to draft or revise route and seed content.
+3. Update the smallest necessary set of files under `data/seed/`.
+4. Keep stable lowercase, URL-safe IDs.
+5. Preserve references between routes, places, events, and connections.
+6. Validate JSON shape and cross-file references through backend schema loading
    and tests.
+
+## What Is Automated
+
+- `data/seed/` remains the source of truth for routes, places, events, and
+  connections.
+- `backend/scripts/generate_event_search_components.py` derives enrichment
+  helper files from existing seed data into `data/enrichment/`.
+- `backend/scripts/enrich_media_links.py` and
+  `backend/scripts/enrich_image_links.py` may append draft link metadata to
+  existing events in `data/seed/events.json`.
+- These scripts do not generate the full route, place, event, or connection
+  seed dataset from scratch.
 
 ## Structural Rules
 
