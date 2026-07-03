@@ -1,0 +1,222 @@
+{
+  "_meta": {
+    "route_id": "birth-of-hip-hop",
+    "source": "event-list.json",
+    "generated_by": "route_content_pipeline.py",
+    "review_status": "draft"
+  },
+  "places": [
+    {
+      "decision": "new",
+      "source_place_text": "Bronx / New York City",
+      "place_id": "bronx-new-york-city",
+      "place": {
+        "id": "bronx-new-york-city",
+        "name": "Bronx / New York City",
+        "borough": "review",
+        "place_type": "review",
+        "latitude": 0.0,
+        "longitude": 0.0,
+        "summary": "Draft place generated from route pipeline; review before seed promotion.",
+        "review_status": "draft",
+        "source_urls": []
+      }
+    },
+    {
+      "decision": "new",
+      "source_place_text": "Bronx",
+      "place_id": "bronx",
+      "place": {
+        "id": "bronx",
+        "name": "Bronx",
+        "borough": "review",
+        "place_type": "review",
+        "latitude": 0.0,
+        "longitude": 0.0,
+        "summary": "Draft place generated from route pipeline; review before seed promotion.",
+        "review_status": "draft",
+        "source_urls": []
+      }
+    },
+    {
+      "decision": "reuse",
+      "source_place_text": "1520 Sedgwick Avenue",
+      "place_id": "1520-sedgwick-avenue"
+    },
+    {
+      "decision": "reuse",
+      "source_place_text": "Cedar Park",
+      "place_id": "cedar-park-bronx"
+    },
+    {
+      "decision": "new",
+      "source_place_text": "Bronx / NYC",
+      "place_id": "bronx-nyc",
+      "place": {
+        "id": "bronx-nyc",
+        "name": "Bronx / NYC",
+        "borough": "review",
+        "place_type": "review",
+        "latitude": 0.0,
+        "longitude": 0.0,
+        "summary": "Draft place generated from route pipeline; review before seed promotion.",
+        "review_status": "draft",
+        "source_urls": []
+      }
+    },
+    {
+      "decision": "new",
+      "source_place_text": "Bronx / NYC subway network",
+      "place_id": "bronx-nyc-subway-network",
+      "place": {
+        "id": "bronx-nyc-subway-network",
+        "name": "Bronx / NYC subway network",
+        "borough": "review",
+        "place_type": "review",
+        "latitude": 0.0,
+        "longitude": 0.0,
+        "summary": "Draft place generated from route pipeline; review before seed promotion.",
+        "review_status": "draft",
+        "source_urls": []
+      }
+    },
+    {
+      "decision": "reuse",
+      "source_place_text": "Bronx River Houses",
+      "place_id": "bronx-river-houses"
+    },
+    {
+      "decision": "reuse",
+      "source_place_text": "New York City",
+      "place_id": "new-york-city"
+    },
+    {
+      "decision": "new",
+      "source_place_text": "New York / New Jersey industry node",
+      "place_id": "new-york-new-jersey-industry-node",
+      "place": {
+        "id": "new-york-new-jersey-industry-node",
+        "name": "New York / New Jersey industry node",
+        "borough": "review",
+        "place_type": "review",
+        "latitude": 0.0,
+        "longitude": 0.0,
+        "summary": "Draft place generated from route pipeline; review before seed promotion.",
+        "review_status": "draft",
+        "source_urls": []
+      }
+    },
+    {
+      "decision": "new",
+      "source_place_text": "NYC / regional industry nodes",
+      "place_id": "nyc-regional-industry-nodes",
+      "place": {
+        "id": "nyc-regional-industry-nodes",
+        "name": "NYC / regional industry nodes",
+        "borough": "review",
+        "place_type": "review",
+        "latitude": 0.0,
+        "longitude": 0.0,
+        "summary": "Draft place generated from route pipeline; review before seed promotion.",
+        "review_status": "draft",
+        "source_urls": []
+      }
+    },
+    {
+      "decision": "new",
+      "source_place_text": "NYC radio sites",
+      "place_id": "nyc-radio-sites",
+      "place": {
+        "id": "nyc-radio-sites",
+        "name": "NYC radio sites",
+        "borough": "review",
+        "place_type": "review",
+        "latitude": 0.0,
+        "longitude": 0.0,
+        "summary": "Draft place generated from route pipeline; review before seed promotion.",
+        "review_status": "draft",
+        "source_urls": []
+      }
+    },
+    {
+      "decision": "new",
+      "source_place_text": "New York City / Bronx context",
+      "place_id": "new-york-city-bronx-context",
+      "place": {
+        "id": "new-york-city-bronx-context",
+        "name": "New York City / Bronx context",
+        "borough": "review",
+        "place_type": "review",
+        "latitude": 0.0,
+        "longitude": 0.0,
+        "summary": "Draft place generated from route pipeline; review before seed promotion.",
+        "review_status": "draft",
+        "source_urls": []
+      }
+    },
+    {
+      "decision": "new",
+      "source_place_text": "Downtown Manhattan",
+      "place_id": "downtown-manhattan",
+      "place": {
+        "id": "downtown-manhattan",
+        "name": "Downtown Manhattan",
+        "borough": "review",
+        "place_type": "review",
+        "latitude": 0.0,
+        "longitude": 0.0,
+        "summary": "Draft place generated from route pipeline; review before seed promotion.",
+        "review_status": "draft",
+        "source_urls": []
+      }
+    },
+    {
+      "decision": "new",
+      "source_place_text": "New York City / broadcast context",
+      "place_id": "new-york-city-broadcast-context",
+      "place": {
+        "id": "new-york-city-broadcast-context",
+        "name": "New York City / broadcast context",
+        "borough": "review",
+        "place_type": "review",
+        "latitude": 0.0,
+        "longitude": 0.0,
+        "summary": "Draft place generated from route pipeline; review before seed promotion.",
+        "review_status": "draft",
+        "source_urls": []
+      }
+    },
+    {
+      "decision": "new",
+      "source_place_text": "NYC / wider media circulation",
+      "place_id": "nyc-wider-media-circulation",
+      "place": {
+        "id": "nyc-wider-media-circulation",
+        "name": "NYC / wider media circulation",
+        "borough": "review",
+        "place_type": "review",
+        "latitude": 0.0,
+        "longitude": 0.0,
+        "summary": "Draft place generated from route pipeline; review before seed promotion.",
+        "review_status": "draft",
+        "source_urls": []
+      }
+    },
+    {
+      "decision": "new",
+      "source_place_text": "NYC / global circulation",
+      "place_id": "nyc-global-circulation",
+      "place": {
+        "id": "nyc-global-circulation",
+        "name": "NYC / global circulation",
+        "borough": "review",
+        "place_type": "review",
+        "latitude": 0.0,
+        "longitude": 0.0,
+        "summary": "Draft place generated from route pipeline; review before seed promotion.",
+        "review_status": "draft",
+        "source_urls": []
+      }
+    }
+  ]
+}

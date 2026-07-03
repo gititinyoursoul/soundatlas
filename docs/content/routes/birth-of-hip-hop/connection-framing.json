@@ -1,0 +1,162 @@
+{
+  "_meta": {
+    "route_id": "birth-of-hip-hop",
+    "source": "research-dossier.md",
+    "generated_by": "route_content_pipeline.py",
+    "review_status": "draft"
+  },
+  "connections": [
+    {
+      "id": "caribbean-soundsystem-context-nyc-to-bronx-record-and-party-culture-before-1973-context",
+      "from_event_id": "caribbean-soundsystem-context-nyc",
+      "to_event_id": "bronx-record-and-party-culture-before-1973",
+      "type": "context",
+      "summary": "Tests how migration, records, sound, and party culture created conditions for Bronx practice.",
+      "review_status": "draft"
+    },
+    {
+      "id": "bronx-record-and-party-culture-before-1973-to-kool-herc-cindy-campbell-sedgwick-party-context",
+      "from_event_id": "bronx-record-and-party-culture-before-1973",
+      "to_event_id": "kool-herc-cindy-campbell-sedgwick-party",
+      "type": "context",
+      "summary": "Places Sedgwick inside a broader local culture rather than as a disconnected beginning.",
+      "review_status": "draft"
+    },
+    {
+      "id": "kool-herc-cindy-campbell-sedgwick-party-to-mobile-sound-and-breakbeat-practice-influence",
+      "from_event_id": "kool-herc-cindy-campbell-sedgwick-party",
+      "to_event_id": "mobile-sound-and-breakbeat-practice",
+      "type": "influence",
+      "summary": "Connects a known party anchor to DJ practice, records, sound equipment, and dance response.",
+      "review_status": "draft"
+    },
+    {
+      "id": "mobile-sound-and-breakbeat-practice-to-bronx-schools-parks-community-centers-parties-scene-formation",
+      "from_event_id": "mobile-sound-and-breakbeat-practice",
+      "to_event_id": "bronx-schools-parks-community-centers-parties",
+      "type": "scene-formation",
+      "summary": "Shows how a practice could spread through repeated community events.",
+      "review_status": "draft"
+    },
+    {
+      "id": "bronx-schools-parks-community-centers-parties-to-mc-crew-and-party-hosting-practices-scene-formation",
+      "from_event_id": "bronx-schools-parks-community-centers-parties",
+      "to_event_id": "mc-crew-and-party-hosting-practices",
+      "type": "scene-formation",
+      "summary": "Connects party space to crews, MCing, hosting, and audience interaction.",
+      "review_status": "draft"
+    },
+    {
+      "id": "bronx-schools-parks-community-centers-parties-to-dance-crews-and-party-floor-culture-scene-formation",
+      "from_event_id": "bronx-schools-parks-community-centers-parties",
+      "to_event_id": "dance-crews-and-party-floor-culture",
+      "type": "scene-formation",
+      "summary": "Makes dance and audience practice part of the route's cultural argument.",
+      "review_status": "draft"
+    },
+    {
+      "id": "bronx-schools-parks-community-centers-parties-to-graffiti-trains-and-visual-culture-scene-formation",
+      "from_event_id": "bronx-schools-parks-community-centers-parties",
+      "to_event_id": "graffiti-trains-and-visual-culture",
+      "type": "scene-formation",
+      "summary": "Explores whether shared crews, spaces, and youth networks connect sound and visual culture.",
+      "review_status": "draft"
+    },
+    {
+      "id": "mobile-sound-and-breakbeat-practice-to-grandmaster-flash-turntable-technique-transmission",
+      "from_event_id": "mobile-sound-and-breakbeat-practice",
+      "to_event_id": "grandmaster-flash-turntable-technique",
+      "type": "transmission",
+      "summary": "Connects general DJ practice to more specific technique and equipment research.",
+      "review_status": "draft"
+    },
+    {
+      "id": "grandmaster-flash-turntable-technique-to-scratching-and-dj-technique-attribution-contrast",
+      "from_event_id": "grandmaster-flash-turntable-technique",
+      "to_event_id": "scratching-and-dj-technique-attribution",
+      "type": "contrast",
+      "summary": "Lets the route compare technique narratives without forcing one invention story.",
+      "review_status": "draft"
+    },
+    {
+      "id": "bronx-schools-parks-community-centers-parties-to-bronx-river-crews-community-organization-scene-formation",
+      "from_event_id": "bronx-schools-parks-community-centers-parties",
+      "to_event_id": "bronx-river-crews-community-organization",
+      "type": "scene-formation",
+      "summary": "Tests how party networks, crews, and community organizations overlap.",
+      "review_status": "draft"
+    },
+    {
+      "id": "blackout-1977-context-and-myth-to-bronx-schools-parks-community-centers-parties-context",
+      "from_event_id": "blackout-1977-context-and-myth",
+      "to_event_id": "bronx-schools-parks-community-centers-parties",
+      "type": "context",
+      "summary": "Lets the route handle the blackout as urban context and retrospective myth.",
+      "review_status": "draft"
+    },
+    {
+      "id": "mc-crew-and-party-hosting-practices-to-rappers-delight-commercial-visibility-media-transition",
+      "from_event_id": "mc-crew-and-party-hosting-practices",
+      "to_event_id": "rappers-delight-commercial-visibility",
+      "type": "media-transition",
+      "summary": "Shows the shift from live performance roles to commercial records and public visibility.",
+      "review_status": "draft"
+    },
+    {
+      "id": "rappers-delight-commercial-visibility-to-early-rap-records-and-independent-labels-transmission",
+      "from_event_id": "rappers-delight-commercial-visibility",
+      "to_event_id": "early-rap-records-and-independent-labels",
+      "type": "transmission",
+      "summary": "Broadens one record into an industry and distribution question.",
+      "review_status": "draft"
+    },
+    {
+      "id": "early-rap-records-and-independent-labels-to-radio-djs-and-broadcast-circulation-transmission",
+      "from_event_id": "early-rap-records-and-independent-labels",
+      "to_event_id": "radio-djs-and-broadcast-circulation",
+      "type": "transmission",
+      "summary": "Investigates how records moved through radio and public listening.",
+      "review_status": "draft"
+    },
+    {
+      "id": "graffiti-trains-and-visual-culture-to-downtown-clubs-art-and-hip-hop-exchange-transmission",
+      "from_event_id": "graffiti-trains-and-visual-culture",
+      "to_event_id": "downtown-clubs-art-and-hip-hop-exchange",
+      "type": "transmission",
+      "summary": "Tests how visual culture and performance entered galleries, clubs, and media spaces.",
+      "review_status": "draft"
+    },
+    {
+      "id": "downtown-clubs-art-and-hip-hop-exchange-to-wild-style-film-documentation-media-transition",
+      "from_event_id": "downtown-clubs-art-and-hip-hop-exchange",
+      "to_event_id": "wild-style-film-documentation",
+      "type": "media-transition",
+      "summary": "Connects cross-scene exchange to film documentation and staging.",
+      "review_status": "draft"
+    },
+    {
+      "id": "wild-style-film-documentation-to-style-wars-and-television-documentation-contrast",
+      "from_event_id": "wild-style-film-documentation",
+      "to_event_id": "style-wars-and-television-documentation",
+      "type": "contrast",
+      "summary": "Compares film and television documentation of overlapping hip-hop practices.",
+      "review_status": "draft"
+    },
+    {
+      "id": "wild-style-film-documentation-to-beat-street-breakin-and-mainstream-film-media-transition",
+      "from_event_id": "wild-style-film-documentation",
+      "to_event_id": "beat-street-breakin-and-mainstream-film",
+      "type": "media-transition",
+      "summary": "Opens research into how early documentation relates to mainstream film visibility.",
+      "review_status": "draft"
+    },
+    {
+      "id": "radio-djs-and-broadcast-circulation-to-international-tours-records-and-media-spread-transmission",
+      "from_event_id": "radio-djs-and-broadcast-circulation",
+      "to_event_id": "international-tours-records-and-media-spread",
+      "type": "transmission",
+      "summary": "Lets the route ask how media channels helped hip-hop travel beyond local scenes.",
+      "review_status": "draft"
+    }
+  ]
+}
