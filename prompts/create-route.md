@@ -35,6 +35,8 @@ Route concept requirements
 - Follow `docs/content/route-editorial-quality-standards.md`.
 - Use `docs/content/route-research-dossier-template.md` as the default Route
   Research Dossier format.
+- Use `docs/content/workflow-commands.md` when route content should move
+  through the route content pipeline or Codex CLI agent drafting.
 - Start new route work with a concise `brief.md` that frames the route idea,
   why it matters, the initial question, thesis hypothesis, research targets,
   candidate anchors, known risks, and dossier questions.
@@ -84,7 +86,14 @@ Recommended workflow
 - Add or revise the Route Research Dossier before selecting final event and
   connection candidates, using `docs/content/route-research-dossier-template.md`
   as the default structure.
-- Then map the researched concept into seed data.
+- When using the route content pipeline, initialize `pipeline.json`, generate
+  missing artifacts, and inspect `status` before seed transfer.
+- When using Codex CLI agent drafting, generate or invoke one agent step at a
+  time, review raw outputs, and mark reviewed variants explicitly before
+  treating them as route content.
+- Commit only reviewed route content artifacts. Do not commit raw
+  `*.ai-draft.*` drafts.
+- Then map the reviewed concept into seed data.
 - Validate JSON syntax.
 - Validate references between routes, places, events, and connections.
 - Capture new planned follow-up work in GitHub Issues. Leave legacy `TODO.md` entries alone unless the approved Issue or plan explicitly includes legacy backlog cleanup.
@@ -98,6 +107,9 @@ Deliverables
 - Route Research Dossier section covering artists/groups, places/venues,
   influences, circumstances, event rationale, connection rationale, editorial
   source leads, media source leads, image source leads, and unresolved risks.
+- Reviewed route-folder variants when Codex CLI agent drafting is used.
+- Pipeline status, seed preview, or validation report notes when the route
+  content pipeline is used.
 - Seed data changes if requested.
 - Related GitHub Issue note, when used.
 - Notes on unresolved source or content questions.
@@ -118,4 +130,6 @@ Acceptance criteria
 - Every connection explains a useful relationship, not just adjacency.
 - Editorial, media, and image source research are separated before seed
   transfer.
+- Agent-generated route artifacts are reviewed variants before they are treated
+  as commit-ready content.
 - Data can be consumed by the existing FastAPI and SvelteKit map flow without schema changes.

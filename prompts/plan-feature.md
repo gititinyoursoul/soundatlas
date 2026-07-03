@@ -28,6 +28,7 @@ Core rule:
   * `AGENTS.md`
   * `docs/implementation-plan-workflow.md`
   * `docs/data/seed-data-validation.md`
+  * `docs/content/workflow-commands.md`
   * `docs/enrichment/media/workflow-commands.md`
 * Constraints and non-goals.
 * Whether implementation or planning-only is requested.

@@ -34,6 +34,7 @@ thin and should not redefine product behavior.
 | Issue planning support | GitHub Issue body/comments | `soundatlas-implementation-planning` at `.codex/skills/soundatlas-implementation-planning` |
 | Backend implementation | approved Issue with Plan Update when needed | `prompts/implement-backend-api.md` when useful |
 | Frontend implementation | approved Issue with Plan Update when needed | `prompts/implement-frontend-map.md` when useful |
+| Route editorial workflow | route folder, approved Issue when non-trivial | `docs/content/workflow-commands.md` and `prompts/create-route.md` |
 | Test planning and implementation | approved Issue and changed behavior | `prompts/write-tests.md` |
 | Durable documentation | approved Issue, workflow change, or code change | `prompts/update-docs.md` |
 | UX audit and critique | current frontend and design baseline | `prompts/design-ux.md` |

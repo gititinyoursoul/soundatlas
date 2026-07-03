@@ -12,6 +12,11 @@ Use the template as draft research scaffolding. It should identify source
 directions and editorial risks, but it does not need publication-grade
 verification before seed transfer.
 
+The route content pipeline can also generate dossier drafts from a route brief.
+Use `docs/content/workflow-commands.md` for the command flow. Codex CLI outputs
+remain draft until they are reviewed and copied into a reviewed route-folder
+variant.
+
 ## Route Working Frame
 
 - Working title:
@@ -169,5 +174,7 @@ birthplace" unless the route explicitly discusses why the phrase is contested.
 - [ ] Every candidate connection has a relationship type and narrative purpose.
 - [ ] Editorial, media, and image source research are separated.
 - [ ] Uncertain claims and source risks are explicit.
+- [ ] Any Codex CLI agent output used for this dossier has been reviewed and
+  promoted into a reviewed route-folder variant.
 - [ ] The selected route, place, event, and connection candidates can be mapped
   into the current seed schema without adding fields.

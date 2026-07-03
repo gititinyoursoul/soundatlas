@@ -23,6 +23,11 @@ per-route folders.
 Use `docs/content/route-research-dossier-template.md` as the default format for
 new route dossiers.
 
+Use `docs/content/workflow-commands.md` when route work should move through the
+route content pipeline or Codex CLI agent drafting. Agent prompts, raw outputs,
+and run metadata are draft local artifacts. Only reviewed route-folder variants
+should be treated as durable route content.
+
 The dossier should cover:
 
 - Route question and thesis: the question the route answers and the argument it
@@ -100,6 +105,10 @@ Before route content is transferred into `data/seed/`, check that:
 - Each candidate connection has a relationship type and narrative purpose.
 - Editorial, media, and image source research are separated.
 - Uncertain claims and source risks are explicit.
+- Codex CLI agent outputs that shaped the route have reviewed variants in the
+  route folder, not only raw `*.ai-draft.*` drafts.
+- The route folder has an inspected `seed-transfer-report.md` and
+  `validation-report.md` when the pipeline is used.
 - Seed changes can be made without changing the current data model.
 
 ## Editorial Smell Tests
