@@ -2,7 +2,9 @@ import argparse
 import json
 import re
 import shutil
+import subprocess
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -25,6 +27,19 @@ PIPELINE_STEPS = (
     "seed_preview",
     "validation",
 )
+AGENT_STEPS = (
+    "brief_to_dossier",
+    "dossier_to_event_review",
+    "event_review_to_concept",
+    "concept_to_event_framing",
+    "validation_to_revision_plan",
+)
+AGENT_STEP_DEPENDENCIES = {
+    "dossier_to_event_review": ("brief_to_dossier",),
+    "event_review_to_concept": ("dossier_to_event_review",),
+    "concept_to_event_framing": ("event_review_to_concept",),
+    "validation_to_revision_plan": ("concept_to_event_framing",),
+}
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -50,6 +65,19 @@ def main(argv: list[str] | None = None) -> int:
                 renew=args.renew,
             )
             print(format_run_summary(result))
+        elif args.command == "agent":
+            result = run_agent_pipeline(
+                content_root=args.content_root,
+                route_id=args.route_id,
+                step=args.step,
+                renew=args.renew,
+                dry_run=args.dry_run,
+                codex_command=args.codex_command,
+                model=args.model,
+                allow_draft_inputs=args.allow_draft_inputs,
+                mark_reviewed=args.mark_reviewed,
+            )
+            print(format_agent_summary(result))
         elif args.command == "status":
             route_dir = route_dir_for(args.content_root, args.route_id)
             manifest = load_or_create_manifest(route_dir, args.route_id)
@@ -117,6 +145,52 @@ def build_parser() -> argparse.ArgumentParser:
         "--renew",
         action="store_true",
         help="Regenerate selected outputs and save .bak copies of overwritten files.",
+    )
+
+    agent_parser = subparsers.add_parser(
+        "agent",
+        help="Generate prompts or invoke Codex CLI for editorial agent steps.",
+    )
+    agent_parser.add_argument("--route-id", required=True)
+    agent_parser.add_argument("--step", choices=AGENT_STEPS)
+    agent_parser.add_argument(
+        "--all",
+        action="store_true",
+        help="Run all agent steps. This is the default when --step is omitted.",
+    )
+    agent_parser.add_argument(
+        "--missing",
+        action="store_true",
+        help="Create only missing agent outputs. This is the default mode.",
+    )
+    agent_parser.add_argument(
+        "--renew",
+        action="store_true",
+        help="Regenerate selected agent outputs and save .bak copies.",
+    )
+    agent_parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Write prompt and run metadata without invoking Codex CLI.",
+    )
+    agent_parser.add_argument(
+        "--codex-command",
+        default="codex",
+        help="Codex CLI executable to invoke.",
+    )
+    agent_parser.add_argument(
+        "--model",
+        help="Optional Codex model name passed to codex exec.",
+    )
+    agent_parser.add_argument(
+        "--allow-draft-inputs",
+        action="store_true",
+        help="Allow later agent steps to consume draft outputs from earlier agent steps.",
+    )
+    agent_parser.add_argument(
+        "--mark-reviewed",
+        action="store_true",
+        help="Mark one existing agent output reviewed and write its reviewed variant.",
     )
 
     status_parser = subparsers.add_parser("status", help="Report route pipeline state.")
@@ -208,6 +282,56 @@ def default_manifest(
                 "review_status": "draft",
             },
         },
+        "agent_steps": default_agent_steps(dossier),
+    }
+
+
+def default_agent_steps(active_dossier: str) -> dict[str, dict[str, Any]]:
+    return {
+        "brief_to_dossier": {
+            "inputs": [
+                "brief.md",
+                "../../route-research-dossier-template.md",
+                "../../route-editorial-quality-standards.md",
+            ],
+            "prompt": "brief_to_dossier-prompt.ai-draft.md",
+            "output": "brief_to_dossier-output.ai-draft.md",
+            "run": "brief_to_dossier-run.ai-draft.json",
+            "reviewed_output": "research-dossier-agent-reviewed.md",
+            "review_status": "draft",
+        },
+        "dossier_to_event_review": {
+            "inputs": [active_dossier],
+            "prompt": "dossier_to_event_review-prompt.ai-draft.md",
+            "output": "dossier_to_event_review-output.ai-draft.md",
+            "run": "dossier_to_event_review-run.ai-draft.json",
+            "reviewed_output": "event-list-agent-reviewed.json",
+            "review_status": "draft",
+        },
+        "event_review_to_concept": {
+            "inputs": ["event-list.json"],
+            "prompt": "event_review_to_concept-prompt.ai-draft.md",
+            "output": "event_review_to_concept-output.ai-draft.md",
+            "run": "event_review_to_concept-run.ai-draft.json",
+            "reviewed_output": "route-concept-agent-reviewed.md",
+            "review_status": "draft",
+        },
+        "concept_to_event_framing": {
+            "inputs": ["route-concept.md", "event-list.json"],
+            "prompt": "concept_to_event_framing-prompt.ai-draft.md",
+            "output": "concept_to_event_framing-output.ai-draft.md",
+            "run": "concept_to_event_framing-run.ai-draft.json",
+            "reviewed_output": "event-framing-agent-reviewed.md",
+            "review_status": "draft",
+        },
+        "validation_to_revision_plan": {
+            "inputs": ["seed-transfer-report.md", "validation-report.md"],
+            "prompt": "validation_to_revision_plan-prompt.ai-draft.md",
+            "output": "validation_to_revision_plan-output.ai-draft.md",
+            "run": "validation_to_revision_plan-run.ai-draft.json",
+            "reviewed_output": "revision-plan-agent-reviewed.md",
+            "review_status": "draft",
+        },
     }
 
 
@@ -225,6 +349,10 @@ def merge_manifest_defaults(
     merged["steps"] = {
         step: {**defaults["steps"][step], **manifest.get("steps", {}).get(step, {})}
         for step in PIPELINE_STEPS
+    }
+    merged["agent_steps"] = {
+        step: {**defaults["agent_steps"][step], **manifest.get("agent_steps", {}).get(step, {})}
+        for step in AGENT_STEPS
     }
     return merged
 
@@ -299,6 +427,346 @@ def run_step(
             renew=renew,
         )
     raise ValueError(f"Unknown pipeline step '{step}'.")
+
+
+def run_agent_pipeline(
+    *,
+    content_root: Path,
+    route_id: str,
+    step: str | None,
+    renew: bool,
+    dry_run: bool,
+    codex_command: str,
+    model: str | None,
+    allow_draft_inputs: bool,
+    mark_reviewed: bool,
+) -> list[dict[str, Any]]:
+    route_dir = route_dir_for(content_root, route_id)
+    manifest = load_or_create_manifest(route_dir, route_id)
+    selected_steps = [step] if step else list(AGENT_STEPS)
+    if mark_reviewed and not step:
+        raise ValueError("--mark-reviewed requires --step.")
+
+    results = []
+    for selected_step in selected_steps:
+        if mark_reviewed:
+            results.append(mark_agent_step_reviewed(route_dir=route_dir, manifest=manifest, step=selected_step))
+        else:
+            results.append(
+                run_agent_step(
+                    route_dir=route_dir,
+                    manifest=manifest,
+                    step=selected_step,
+                    renew=renew,
+                    dry_run=dry_run,
+                    codex_command=codex_command,
+                    model=model,
+                    allow_draft_inputs=allow_draft_inputs,
+                ),
+            )
+    write_json(route_dir / PIPELINE_FILENAME, manifest)
+    return results
+
+
+def run_agent_step(
+    *,
+    route_dir: Path,
+    manifest: dict[str, Any],
+    step: str,
+    renew: bool,
+    dry_run: bool,
+    codex_command: str,
+    model: str | None,
+    allow_draft_inputs: bool,
+) -> dict[str, Any]:
+    agent_step = manifest["agent_steps"][step]
+    enforce_agent_dependencies(
+        route_dir=route_dir,
+        manifest=manifest,
+        step=step,
+        allow_draft_inputs=allow_draft_inputs,
+    )
+    prompt_path = route_dir / agent_step["prompt"]
+    output_path = route_dir / agent_step["output"]
+    run_path = route_dir / agent_step["run"]
+    expected_outputs = [prompt_path, run_path] if dry_run else [prompt_path, output_path, run_path]
+    skipped = maybe_skip_outputs(expected_outputs, renew)
+    if skipped:
+        return {"step": step, "status": "skipped", "outputs": skipped}
+
+    prompt = build_agent_prompt(route_dir=route_dir, manifest=manifest, step=step)
+    write_text(prompt_path, prompt, renew=renew)
+    metadata = build_agent_run_metadata(
+        route_dir=route_dir,
+        step=step,
+        agent_step=agent_step,
+        dry_run=dry_run,
+        codex_command=codex_command,
+        model=model,
+    )
+    if dry_run:
+        metadata["status"] = "dry_run"
+        write_json(run_path, metadata, renew=renew)
+        agent_step["review_status"] = "draft"
+        return {"step": step, "status": "dry_run", "outputs": [prompt_path.name, run_path.name]}
+
+    if output_path.exists() and renew:
+        backup_file(output_path)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    command = build_codex_exec_command(
+        codex_command=codex_command,
+        model=model,
+        output_path=output_path,
+    )
+    completed = subprocess.run(
+        command,
+        input=prompt,
+        text=True,
+        capture_output=True,
+        cwd=REPO_ROOT,
+        check=False,
+    )
+    metadata.update(
+        {
+            "status": "completed" if completed.returncode == 0 else "failed",
+            "returncode": completed.returncode,
+            "stdout": completed.stdout,
+            "stderr": completed.stderr,
+        },
+    )
+    write_json(run_path, metadata, renew=renew)
+    if completed.returncode != 0:
+        raise ValueError(
+            "Codex CLI agent step failed:\n"
+            + (completed.stderr.strip() or completed.stdout.strip() or "no output"),
+        )
+    if not output_path.exists():
+        write_text(output_path, completed.stdout, renew=False)
+    agent_step["review_status"] = "draft"
+    return {"step": step, "status": "written", "outputs": [prompt_path.name, output_path.name, run_path.name]}
+
+
+def enforce_agent_dependencies(
+    *,
+    route_dir: Path,
+    manifest: dict[str, Any],
+    step: str,
+    allow_draft_inputs: bool,
+) -> None:
+    if allow_draft_inputs:
+        return
+    for dependency in AGENT_STEP_DEPENDENCIES.get(step, ()):
+        dependency_step = manifest["agent_steps"][dependency]
+        dependency_output = route_dir / dependency_step["output"]
+        if dependency_output.exists() and dependency_step.get("review_status") != "reviewed":
+            raise ValueError(
+                f"Refusing to run {step} with draft agent output from {dependency}. "
+                "Review it with --mark-reviewed or pass --allow-draft-inputs.",
+            )
+
+
+def mark_agent_step_reviewed(
+    *,
+    route_dir: Path,
+    manifest: dict[str, Any],
+    step: str,
+) -> dict[str, Any]:
+    agent_step = manifest["agent_steps"][step]
+    output_path = route_dir / agent_step["output"]
+    if not output_path.exists():
+        raise ValueError(f"Missing agent output for {step}: {output_path}")
+    reviewed_path = route_dir / agent_step["reviewed_output"]
+    if reviewed_path.exists():
+        backup_file(reviewed_path)
+    reviewed_path.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(output_path, reviewed_path)
+    agent_step["review_status"] = "reviewed"
+    apply_reviewed_agent_output(manifest=manifest, step=step, reviewed_output=agent_step["reviewed_output"])
+    return {"step": step, "status": "reviewed", "outputs": [reviewed_path.name]}
+
+
+def apply_reviewed_agent_output(
+    *,
+    manifest: dict[str, Any],
+    step: str,
+    reviewed_output: str,
+) -> None:
+    if step == "brief_to_dossier":
+        manifest["active_dossier"] = reviewed_output
+        manifest["steps"]["event_list"]["input"] = reviewed_output
+        manifest["agent_steps"]["dossier_to_event_review"]["inputs"] = [reviewed_output]
+    elif step == "dossier_to_event_review":
+        manifest["steps"]["route_concept"]["input"] = reviewed_output
+        manifest["agent_steps"]["event_review_to_concept"]["inputs"] = [reviewed_output]
+    elif step == "event_review_to_concept":
+        manifest["steps"]["event_framing"]["input"] = reviewed_output
+        manifest["agent_steps"]["concept_to_event_framing"]["inputs"] = [reviewed_output, "event-list.json"]
+    elif step == "concept_to_event_framing":
+        manifest["agent_steps"]["validation_to_revision_plan"]["inputs"] = [
+            reviewed_output,
+            "seed-transfer-report.md",
+            "validation-report.md",
+        ]
+
+
+def build_agent_prompt(
+    *,
+    route_dir: Path,
+    manifest: dict[str, Any],
+    step: str,
+) -> str:
+    agent_step = manifest["agent_steps"][step]
+    input_blocks = []
+    for input_file in agent_step.get("inputs", []):
+        input_path = route_dir / input_file
+        if not input_path.exists():
+            raise ValueError(f"Missing input for {step}: {input_path}")
+        input_blocks.append(format_prompt_file_block(input_file, input_path.read_text(encoding="utf-8")))
+
+    return "\n".join(
+        [
+            f"# SoundAtlas Agent Step: {step}",
+            "",
+            "You are running inside the SoundAtlas route editorial workflow.",
+            "Return only the requested artifact content. Do not edit files.",
+            "Do not include wrapping commentary before or after the artifact.",
+            "Keep all historical claims cautious and source-aware.",
+            "Mark unresolved claims, weak source leads, and rights risks explicitly.",
+            "Your job is to improve editorial quality, not merely reformat the input.",
+            "Preserve useful detail, sharpen route logic, and mark unresolved review needs.",
+            "",
+            f"Route ID: `{manifest['route_id']}`",
+            f"Target reviewed variant: `{agent_step['reviewed_output']}`",
+            "",
+            "## Task",
+            "",
+            agent_step_instructions(step),
+            "",
+            "## Inputs",
+            "",
+            "\n\n".join(input_blocks),
+            "",
+        ],
+    )
+
+
+def agent_step_instructions(step: str) -> str:
+    instructions = {
+        "brief_to_dossier": (
+            "Create a route research dossier draft that follows the provided "
+            "template and quality standards. Start from the route brief only; "
+            "do not narrow the research direction beyond what the brief supports."
+        ),
+        "dossier_to_event_review": "\n".join(
+            [
+                "Improve the event selection quality in the active dossier.",
+                "Use only the dossier input. Do not invent new events or close source risks.",
+                "Separate strong route events from context-only or weak candidates.",
+                "Every candidate kept for development must explain its role in the route thesis.",
+                "Preserve candidate IDs, years, places, working titles, inclusion rationale, source leads, and risk notes.",
+                "Return only an event-list JSON draft with `_meta` and `candidates`.",
+                "Use `_meta.review_status: \"draft\"` and keep every candidate decision draft.",
+                "Each candidate must include `candidate_id`, `status`, `years`, `place`, `working_title`, `route_function`, `source_leads`, `risk_notes`, and `next_action`.",
+                "Use statuses such as `develop`, `context`, `defer`, or `reject` to show editorial judgment.",
+                "Do not call candidates final seed events.",
+            ],
+        ),
+        "event_review_to_concept": "\n".join(
+            [
+                "Improve the route argument quality from the reviewed event-list artifact.",
+                "Use the event-list input as the boundary. Do not add new events unless they are clearly marked as proposed additions requiring review.",
+                "Return only a route concept Markdown draft.",
+                "The concept must include story-serving headings, a central question, a route thesis, narrative phases, place logic, candidate sequence, source-risk notes, and open editorial questions.",
+                "Turn event candidates into a coherent editorial argument, not a chronology or checklist.",
+                "Make the route's development over time and across places legible.",
+                "Mark weak transitions, missing source support, and claims that need cautious wording.",
+                "Keep the concept draft status clear; do not claim the route is seed-ready.",
+            ],
+        ),
+        "concept_to_event_framing": "\n".join(
+            [
+                "Improve event-level story quality from the route concept and event list.",
+                "Return only event framing Markdown; do not return seed JSON.",
+                "Use story-serving event headings. Do not use `summary` or `significance` as editorial Markdown headers.",
+                "For each event, include a product-facing event title, one-sentence what-happens prose for later seed `summary`, and one-sentence why-this-matters-here prose for later seed `significance`.",
+                "Event titles should be concise and product-facing, usually under 90 characters.",
+                "What-happens prose should focus on what happened.",
+                "Why-this-matters-here prose should focus on why the event matters to this route.",
+                "The combined what-happens and why-this-matters-here prose should usually stay under 70 words.",
+                "Also include place decision, connection rationale, source needs, and wording risks for each event.",
+                "Avoid `first`, `birthplace`, or sole-origin claims unless the source basis is explicit.",
+                "Do not claim event framing or seed JSON is reviewed.",
+            ],
+        ),
+        "validation_to_revision_plan": "\n".join(
+            [
+                "Improve publication readiness by turning preview and validation findings into an editorial revision plan.",
+                "Use only the seed preview and validation report inputs.",
+                "Return only a Markdown revision plan.",
+                "Prioritize blockers before polish.",
+                "Group fixes by route, place, event, connection, source, and wording risk.",
+                "Separate schema/reference problems from editorial quality problems.",
+                "Call out missing source URLs, unresolved coordinates, weak event prose, unsupported claims, and connection logic gaps.",
+                "Do not edit seed data and do not mark anything reviewed.",
+            ],
+        ),
+    }
+    return instructions[step]
+
+
+def format_prompt_file_block(label: str, content: str) -> str:
+    return "\n".join([f"### `{label}`", "", "```md", content.rstrip(), "```"])
+
+
+def build_agent_run_metadata(
+    *,
+    route_dir: Path,
+    step: str,
+    agent_step: dict[str, Any],
+    dry_run: bool,
+    codex_command: str,
+    model: str | None,
+) -> dict[str, Any]:
+    return {
+        "step": step,
+        "provider": "codex_cli",
+        "dry_run": dry_run,
+        "review_status": "draft",
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "inputs": agent_step.get("inputs", []),
+        "prompt": agent_step["prompt"],
+        "output": agent_step["output"],
+        "reviewed_output": agent_step["reviewed_output"],
+        "command": build_codex_exec_command(
+            codex_command=codex_command,
+            model=model,
+            output_path=route_dir / agent_step["output"],
+        ),
+    }
+
+
+def build_codex_exec_command(
+    *,
+    codex_command: str,
+    model: str | None,
+    output_path: Path,
+) -> list[str]:
+    command = [
+        codex_command,
+        "exec",
+        "--cd",
+        str(REPO_ROOT),
+        "--sandbox",
+        "read-only",
+        "--ask-for-approval",
+        "never",
+        "--output-last-message",
+        str(output_path),
+    ]
+    if model:
+        command.extend(["--model", model])
+    command.append("-")
+    return command
 
 
 def generate_event_list(
@@ -1086,6 +1554,14 @@ def format_run_summary(results: list[dict[str, Any]]) -> str:
     return "\n".join(lines)
 
 
+def format_agent_summary(results: list[dict[str, Any]]) -> str:
+    lines = ["Route content agent run"]
+    for result in results:
+        outputs = ", ".join(result.get("outputs", [])) or "no outputs"
+        lines.append(f"- {result['step']}: {result['status']} {outputs}")
+    return "\n".join(lines)
+
+
 def format_status(route_dir: Path, manifest: dict[str, Any]) -> str:
     lines = [
         "Route content pipeline status",
@@ -1098,11 +1574,23 @@ def format_status(route_dir: Path, manifest: dict[str, Any]) -> str:
     for step_name, step in manifest["steps"].items():
         outputs = step_outputs(route_dir, step)
         output_status = ", ".join(
-            f"{path.name}:{'present' if path.exists() else 'missing'}"
+            f"{route_relative_path(route_dir, path)}:{'present' if path.exists() else 'missing'}"
             for path in outputs
         )
         lines.append(
             f"- {step_name}: review={step.get('review_status', 'draft')} "
+            f"outputs={output_status or 'none'}",
+        )
+    lines.extend(["", "Agent steps"])
+    for step_name, step in manifest.get("agent_steps", {}).items():
+        outputs = step_outputs(route_dir, step)
+        output_status = ", ".join(
+            f"{route_relative_path(route_dir, path)}:{'present' if path.exists() else 'missing'}"
+            for path in outputs
+        )
+        lines.append(
+            f"- {step_name}: review={step.get('review_status', 'draft')} "
+            f"reviewed_output={step.get('reviewed_output', '<missing>')} "
             f"outputs={output_status or 'none'}",
         )
     return "\n".join(lines)
@@ -1110,7 +1598,7 @@ def format_status(route_dir: Path, manifest: dict[str, Any]) -> str:
 
 def step_outputs(route_dir: Path, step: dict[str, Any]) -> list[Path]:
     outputs = []
-    for key in ("markdown", "json", "events", "places", "connections"):
+    for key in ("markdown", "json", "events", "places", "connections", "prompt", "output", "run", "reviewed_output"):
         if isinstance(step.get(key), str):
             outputs.append(route_dir / step[key])
     return outputs
@@ -1162,6 +1650,13 @@ def relative_repo_path(path: Path) -> str:
         return str(path.relative_to(REPO_ROOT))
     except ValueError:
         return str(path)
+
+
+def route_relative_path(route_dir: Path, path: Path) -> str:
+    try:
+        return str(path.relative_to(route_dir))
+    except ValueError:
+        return path.name
 
 
 if __name__ == "__main__":

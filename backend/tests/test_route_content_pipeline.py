@@ -1,4 +1,5 @@
 import json
+import stat
 from pathlib import Path
 
 from scripts import route_content_pipeline
@@ -193,8 +194,264 @@ def test_validation_report_flags_unknown_route_reference(tmp_path: Path) -> None
     assert "references unknown route `missing-route`" in report
 
 
+def test_agent_dry_run_writes_prompt_and_metadata_without_output(
+    tmp_path: Path,
+    capsys,
+) -> None:
+    content_root, seed_dir = write_pipeline_fixture(tmp_path)
+
+    exit_code = main(
+        [
+            "--content-root",
+            str(content_root),
+            "--seed-dir",
+            str(seed_dir),
+            "agent",
+            "--route-id",
+            ROUTE_ID,
+            "--step",
+            "brief_to_dossier",
+            "--dry-run",
+        ],
+    )
+
+    output = capsys.readouterr().out
+    route_dir = content_root / ROUTE_ID
+    run_metadata = json.loads((route_dir / "brief_to_dossier-run.ai-draft.json").read_text(encoding="utf-8"))
+    assert exit_code == 0
+    assert "brief_to_dossier: dry_run" in output
+    assert (route_dir / "brief_to_dossier-prompt.ai-draft.md").exists()
+    assert not (route_dir / "brief_to_dossier-output.ai-draft.md").exists()
+    assert run_metadata["provider"] == "codex_cli"
+    assert run_metadata["review_status"] == "draft"
+    assert run_metadata["dry_run"] is True
+
+
+def test_agent_renew_writes_prompt_backup(tmp_path: Path) -> None:
+    content_root, seed_dir = write_pipeline_fixture(tmp_path)
+    route_dir = content_root / ROUTE_ID
+    assert main(
+        [
+            "--content-root",
+            str(content_root),
+            "--seed-dir",
+            str(seed_dir),
+            "agent",
+            "--route-id",
+            ROUTE_ID,
+            "--step",
+            "brief_to_dossier",
+            "--dry-run",
+        ],
+    ) == 0
+    prompt_path = route_dir / "brief_to_dossier-prompt.ai-draft.md"
+    prompt_path.write_text("manual prompt\n", encoding="utf-8")
+
+    assert main(
+        [
+            "--content-root",
+            str(content_root),
+            "--seed-dir",
+            str(seed_dir),
+            "agent",
+            "--route-id",
+            ROUTE_ID,
+            "--step",
+            "brief_to_dossier",
+            "--dry-run",
+            "--renew",
+        ],
+    ) == 0
+
+    assert (prompt_path.with_name("brief_to_dossier-prompt.ai-draft.md.bak")).read_text(encoding="utf-8") == "manual prompt\n"
+    assert "SoundAtlas Agent Step" in prompt_path.read_text(encoding="utf-8")
+
+
+def test_agent_invokes_codex_cli_and_mark_reviewed_creates_variant(tmp_path: Path) -> None:
+    content_root, seed_dir = write_pipeline_fixture(tmp_path)
+    fake_codex = write_fake_codex(tmp_path)
+    route_dir = content_root / ROUTE_ID
+
+    assert main(
+        [
+            "--content-root",
+            str(content_root),
+            "--seed-dir",
+            str(seed_dir),
+            "agent",
+            "--route-id",
+            ROUTE_ID,
+            "--step",
+            "brief_to_dossier",
+            "--codex-command",
+            str(fake_codex),
+        ],
+    ) == 0
+    assert (route_dir / "brief_to_dossier-output.ai-draft.md").read_text(encoding="utf-8") == "agent output\n"
+
+    assert main(
+        [
+            "--content-root",
+            str(content_root),
+            "--seed-dir",
+            str(seed_dir),
+            "agent",
+            "--route-id",
+            ROUTE_ID,
+            "--step",
+            "brief_to_dossier",
+            "--mark-reviewed",
+        ],
+    ) == 0
+
+    manifest = json.loads((route_dir / "pipeline.json").read_text(encoding="utf-8"))
+    assert (route_dir / "research-dossier-agent-reviewed.md").read_text(encoding="utf-8") == "agent output\n"
+    assert manifest["active_dossier"] == "research-dossier-agent-reviewed.md"
+    assert manifest["agent_steps"]["brief_to_dossier"]["review_status"] == "reviewed"
+
+
+def test_agent_blocks_draft_dependency_unless_allowed(tmp_path: Path, capsys) -> None:
+    content_root, seed_dir = write_pipeline_fixture(tmp_path)
+    fake_codex = write_fake_codex(tmp_path)
+    route_dir = content_root / ROUTE_ID
+    assert main(
+        [
+            "--content-root",
+            str(content_root),
+            "--seed-dir",
+            str(seed_dir),
+            "agent",
+            "--route-id",
+            ROUTE_ID,
+            "--step",
+            "brief_to_dossier",
+            "--codex-command",
+            str(fake_codex),
+        ],
+    ) == 0
+
+    blocked_code = main(
+        [
+            "--content-root",
+            str(content_root),
+            "--seed-dir",
+            str(seed_dir),
+            "agent",
+            "--route-id",
+            ROUTE_ID,
+            "--step",
+            "dossier_to_event_review",
+            "--codex-command",
+            str(fake_codex),
+        ],
+    )
+
+    captured = capsys.readouterr()
+    assert blocked_code == 2
+    assert "Refusing to run dossier_to_event_review with draft agent output" in captured.err
+
+    assert main(
+        [
+            "--content-root",
+            str(content_root),
+            "--seed-dir",
+            str(seed_dir),
+            "agent",
+            "--route-id",
+            ROUTE_ID,
+            "--step",
+            "dossier_to_event_review",
+            "--codex-command",
+            str(fake_codex),
+            "--allow-draft-inputs",
+        ],
+    ) == 0
+    assert (route_dir / "dossier_to_event_review-output.ai-draft.md").exists()
+
+
+def test_agent_prompts_include_editorial_quality_contracts(tmp_path: Path) -> None:
+    content_root, seed_dir = write_pipeline_fixture(tmp_path)
+    route_dir = content_root / ROUTE_ID
+    assert main(["--content-root", str(content_root), "--seed-dir", str(seed_dir), "run", "--route-id", ROUTE_ID]) == 0
+
+    for step in [
+        "dossier_to_event_review",
+        "event_review_to_concept",
+        "concept_to_event_framing",
+        "validation_to_revision_plan",
+    ]:
+        assert main(
+            [
+                "--content-root",
+                str(content_root),
+                "--seed-dir",
+                str(seed_dir),
+                "agent",
+                "--route-id",
+                ROUTE_ID,
+                "--step",
+                step,
+                "--dry-run",
+                "--renew",
+            ],
+        ) == 0
+
+    dossier_prompt = (route_dir / "dossier_to_event_review-prompt.ai-draft.md").read_text(encoding="utf-8")
+    concept_prompt = (route_dir / "event_review_to_concept-prompt.ai-draft.md").read_text(encoding="utf-8")
+    framing_prompt = (route_dir / "concept_to_event_framing-prompt.ai-draft.md").read_text(encoding="utf-8")
+    revision_prompt = (route_dir / "validation_to_revision_plan-prompt.ai-draft.md").read_text(encoding="utf-8")
+
+    for prompt in [dossier_prompt, concept_prompt, framing_prompt, revision_prompt]:
+        assert "improve editorial quality, not merely reformat the input" in prompt
+        assert "mark unresolved review needs" in prompt
+
+    assert "Separate strong route events from context-only or weak candidates" in dossier_prompt
+    assert "`route_function`" in dossier_prompt
+    assert "Do not call candidates final seed events" in dossier_prompt
+
+    assert "coherent editorial argument, not a chronology or checklist" in concept_prompt
+    assert "story-serving headings" in concept_prompt
+    assert "place logic" in concept_prompt
+
+    assert "Do not use `summary` or `significance` as editorial Markdown headers" in framing_prompt
+    assert "what-happens prose" in framing_prompt
+    assert "why-this-matters-here prose" in framing_prompt
+    assert "usually stay under 70 words" in framing_prompt
+    assert "usually under 90 characters" in framing_prompt
+
+    assert "publication readiness" in revision_prompt
+    assert "Prioritize blockers before polish" in revision_prompt
+    assert "schema/reference problems from editorial quality problems" in revision_prompt
+
+
+def test_status_reports_agent_steps(tmp_path: Path, capsys) -> None:
+    content_root, seed_dir = write_pipeline_fixture(tmp_path)
+
+    exit_code = main(
+        [
+            "--content-root",
+            str(content_root),
+            "--seed-dir",
+            str(seed_dir),
+            "status",
+            "--route-id",
+            ROUTE_ID,
+        ],
+    )
+
+    output = capsys.readouterr().out
+    assert exit_code == 0
+    assert "Agent steps" in output
+    assert "brief_to_dossier" in output
+    assert "reviewed_output=research-dossier-agent-reviewed.md" in output
+
+
 def write_pipeline_fixture(tmp_path: Path) -> tuple[Path, Path]:
     content_root = tmp_path / "content" / "routes"
+    content_docs = tmp_path / "content"
+    content_docs.mkdir()
+    (content_docs / "route-research-dossier-template.md").write_text("# Template\n", encoding="utf-8")
+    (content_docs / "route-editorial-quality-standards.md").write_text("# Standards\n", encoding="utf-8")
     route_dir = content_root / ROUTE_ID
     route_dir.mkdir(parents=True)
     (route_dir / "brief.md").write_text("# Brief\n", encoding="utf-8")
@@ -203,6 +460,27 @@ def write_pipeline_fixture(tmp_path: Path) -> tuple[Path, Path]:
     seed_dir.mkdir()
     write_seed_files(seed_dir)
     return content_root, seed_dir
+
+
+def write_fake_codex(tmp_path: Path) -> Path:
+    fake_codex = tmp_path / "fake-codex"
+    fake_codex.write_text(
+        """#!/bin/sh
+out=""
+while [ "$#" -gt 0 ]; do
+  if [ "$1" = "--output-last-message" ]; then
+    shift
+    out="$1"
+  fi
+  shift
+done
+cat >/dev/null
+printf 'agent output\\n' > "$out"
+""",
+        encoding="utf-8",
+    )
+    fake_codex.chmod(fake_codex.stat().st_mode | stat.S_IEXEC)
+    return fake_codex
 
 
 def build_dossier() -> str:

@@ -57,6 +57,9 @@ pnpm-debug.log*
 plans/records/
 specs/
 
+# Local route editorial agent drafts
+docs/content/routes/*/*.ai-draft.*
+
 # OS / editor
 .DS_Store
 Thumbs.db
