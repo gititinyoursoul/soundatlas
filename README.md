@@ -58,6 +58,13 @@ Default URLs:
 docker compose up --build
 ```
 
+This starts the app stack only:
+
+- `backend`
+- `frontend`
+
+It does not start the dev-container `workspace` service.
+
 Default URLs:
 
 - Frontend: `http://localhost:5173`
@@ -69,6 +76,31 @@ Stop the stack:
 ```sh
 docker compose down
 ```
+
+### Workspace Dev Container
+
+To start the long-running `workspace` container used by VS Code Dev Containers
+or Codex CLI, include the dev-container Compose overlay:
+
+```sh
+docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontainer.yml up -d --build workspace
+docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontainer.yml exec --user soundatlas workspace sh .devcontainer/post-create.sh
+docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontainer.yml exec --user soundatlas workspace bash
+```
+
+To start the same workspace through VS Code:
+
+1. Open the repository folder in VS Code.
+2. Install the Dev Containers extension if it is not already installed.
+3. Run `Dev Containers: Reopen in Container` from the Command Palette.
+
+VS Code uses `.devcontainer/devcontainer.json` and starts the `workspace`
+service with the root `docker-compose.yml` plus
+`.devcontainer/docker-compose.devcontainer.yml`.
+
+The workspace also seeds Codex login state from the host `.codex` directory by
+default. If your host uses a different path, set
+`SOUNDATLAS_HOST_CODEX_HOME` before starting the container.
 
 ### Manual Development
 
