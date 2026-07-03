@@ -1,34 +1,29 @@
 {
   "route_id": "birth-of-hip-hop",
-  "active_dossier": "research-dossier-mvp-edit.md",
+  "active_dossier": "research-dossier.md",
   "steps": {
     "event_list": {
-      "input": "research-dossier-mvp-edit.md",
+      "input": "research-dossier.md",
       "markdown": "event-list.md",
-      "json": "event-list.json",
-      "review_status": "draft"
+      "json": "event-list.json"
     },
     "route_concept": {
       "input": "event-list.json",
-      "markdown": "route-concept.md",
-      "review_status": "draft"
+      "markdown": "route-concept.md"
     },
     "event_framing": {
       "input": "route-concept.md",
       "markdown": "event-framing.md",
       "events": "event-framing.json",
       "places": "place-framing.json",
-      "connections": "connection-framing.json",
-      "review_status": "draft"
+      "connections": "connection-framing.json"
     },
     "seed_preview": {
       "input": "event-framing.json",
-      "markdown": "seed-transfer-report.md",
-      "review_status": "draft"
+      "markdown": "seed-transfer-report.md"
     },
     "validation": {
-      "markdown": "validation-report.md",
-      "review_status": "draft"
+      "markdown": "validation-report.md"
     }
   },
   "agent_steps": {
@@ -39,30 +34,24 @@
         "../../route-editorial-quality-standards.md"
       ],
       "prompt": "brief_to_dossier-prompt.ai-draft.md",
-      "output": "brief_to_dossier-output.ai-draft.md",
-      "run": "brief_to_dossier-run.ai-draft.json",
-      "reviewed_output": "research-dossier-agent-reviewed.md",
-      "review_status": "draft"
+      "output": "research-dossier.md",
+      "run": "brief_to_dossier-run.ai-draft.json"
     },
     "dossier_to_event_review": {
       "inputs": [
-        "research-dossier-mvp-edit.md"
+        "research-dossier.md"
       ],
       "prompt": "dossier_to_event_review-prompt.ai-draft.md",
-      "output": "dossier_to_event_review-output.ai-draft.md",
-      "run": "dossier_to_event_review-run.ai-draft.json",
-      "reviewed_output": "event-list-agent-reviewed.json",
-      "review_status": "draft"
+      "output": "event-list.json",
+      "run": "dossier_to_event_review-run.ai-draft.json"
     },
     "event_review_to_concept": {
       "inputs": [
         "event-list.json"
       ],
       "prompt": "event_review_to_concept-prompt.ai-draft.md",
-      "output": "event_review_to_concept-output.ai-draft.md",
-      "run": "event_review_to_concept-run.ai-draft.json",
-      "reviewed_output": "route-concept-agent-reviewed.md",
-      "review_status": "draft"
+      "output": "route-concept.md",
+      "run": "event_review_to_concept-run.ai-draft.json"
     },
     "concept_to_event_framing": {
       "inputs": [
@@ -70,10 +59,8 @@
         "event-list.json"
       ],
       "prompt": "concept_to_event_framing-prompt.ai-draft.md",
-      "output": "concept_to_event_framing-output.ai-draft.md",
-      "run": "concept_to_event_framing-run.ai-draft.json",
-      "reviewed_output": "event-framing-agent-reviewed.md",
-      "review_status": "draft"
+      "output": "event-framing.md",
+      "run": "concept_to_event_framing-run.ai-draft.json"
     },
     "validation_to_revision_plan": {
       "inputs": [
@@ -81,10 +68,8 @@
         "validation-report.md"
       ],
       "prompt": "validation_to_revision_plan-prompt.ai-draft.md",
-      "output": "validation_to_revision_plan-output.ai-draft.md",
-      "run": "validation_to_revision_plan-run.ai-draft.json",
-      "reviewed_output": "revision-plan-agent-reviewed.md",
-      "review_status": "draft"
+      "output": "revision-plan.md",
+      "run": "validation_to_revision_plan-run.ai-draft.json"
     }
   }
 }

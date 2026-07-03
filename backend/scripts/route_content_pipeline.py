@@ -34,12 +34,6 @@ AGENT_STEPS = (
     "concept_to_event_framing",
     "validation_to_revision_plan",
 )
-AGENT_STEP_DEPENDENCIES = {
-    "dossier_to_event_review": ("brief_to_dossier",),
-    "event_review_to_concept": ("dossier_to_event_review",),
-    "concept_to_event_framing": ("event_review_to_concept",),
-    "validation_to_revision_plan": ("concept_to_event_framing",),
-}
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -63,6 +57,7 @@ def main(argv: list[str] | None = None) -> int:
                 route_id=args.route_id,
                 step=args.step,
                 renew=args.renew,
+                variant=args.variant,
             )
             print(format_run_summary(result))
         elif args.command == "agent":
@@ -74,8 +69,7 @@ def main(argv: list[str] | None = None) -> int:
                 dry_run=args.dry_run,
                 codex_command=args.codex_command,
                 model=args.model,
-                allow_draft_inputs=args.allow_draft_inputs,
-                mark_reviewed=args.mark_reviewed,
+                variant=args.variant,
             )
             print(format_agent_summary(result))
         elif args.command == "status":
@@ -90,6 +84,7 @@ def main(argv: list[str] | None = None) -> int:
                 seed_dir=args.seed_dir,
                 route_id=args.route_id,
                 write=args.write,
+                variant=args.variant,
             )
             print(result)
         else:
@@ -146,6 +141,10 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Regenerate selected outputs and save .bak copies of overwritten files.",
     )
+    run_parser.add_argument(
+        "--variant",
+        help="Write/read named route-local variants, for example 'mvp-edit'.",
+    )
 
     agent_parser = subparsers.add_parser(
         "agent",
@@ -169,6 +168,10 @@ def build_parser() -> argparse.ArgumentParser:
         help="Regenerate selected agent outputs and save .bak copies.",
     )
     agent_parser.add_argument(
+        "--variant",
+        help="Write/read named route-local variants, for example 'mvp-edit'.",
+    )
+    agent_parser.add_argument(
         "--dry-run",
         action="store_true",
         help="Write prompt and run metadata without invoking Codex CLI.",
@@ -182,17 +185,6 @@ def build_parser() -> argparse.ArgumentParser:
         "--model",
         help="Optional Codex model name passed to codex exec.",
     )
-    agent_parser.add_argument(
-        "--allow-draft-inputs",
-        action="store_true",
-        help="Allow later agent steps to consume draft outputs from earlier agent steps.",
-    )
-    agent_parser.add_argument(
-        "--mark-reviewed",
-        action="store_true",
-        help="Mark one existing agent output reviewed and write its reviewed variant.",
-    )
-
     status_parser = subparsers.add_parser("status", help="Report route pipeline state.")
     status_parser.add_argument("--route-id", required=True)
 
@@ -206,6 +198,10 @@ def build_parser() -> argparse.ArgumentParser:
         "--write",
         action="store_true",
         help="Write seed files. Omit for dry-run preview.",
+    )
+    promote_parser.add_argument(
+        "--variant",
+        help="Preview or write seed data from named route-local variants.",
     )
     return parser
 
@@ -257,12 +253,10 @@ def default_manifest(
                 "input": dossier,
                 "markdown": "event-list.md",
                 "json": "event-list.json",
-                "review_status": "draft",
             },
             "route_concept": {
                 "input": "event-list.json",
                 "markdown": "route-concept.md",
-                "review_status": "draft",
             },
             "event_framing": {
                 "input": "route-concept.md",
@@ -270,16 +264,13 @@ def default_manifest(
                 "events": "event-framing.json",
                 "places": "place-framing.json",
                 "connections": "connection-framing.json",
-                "review_status": "draft",
             },
             "seed_preview": {
                 "input": "event-framing.json",
                 "markdown": "seed-transfer-report.md",
-                "review_status": "draft",
             },
             "validation": {
                 "markdown": "validation-report.md",
-                "review_status": "draft",
             },
         },
         "agent_steps": default_agent_steps(dossier),
@@ -295,42 +286,32 @@ def default_agent_steps(active_dossier: str) -> dict[str, dict[str, Any]]:
                 "../../route-editorial-quality-standards.md",
             ],
             "prompt": "brief_to_dossier-prompt.ai-draft.md",
-            "output": "brief_to_dossier-output.ai-draft.md",
+            "output": "research-dossier.md",
             "run": "brief_to_dossier-run.ai-draft.json",
-            "reviewed_output": "research-dossier-agent-reviewed.md",
-            "review_status": "draft",
         },
         "dossier_to_event_review": {
             "inputs": [active_dossier],
             "prompt": "dossier_to_event_review-prompt.ai-draft.md",
-            "output": "dossier_to_event_review-output.ai-draft.md",
+            "output": "event-list.json",
             "run": "dossier_to_event_review-run.ai-draft.json",
-            "reviewed_output": "event-list-agent-reviewed.json",
-            "review_status": "draft",
         },
         "event_review_to_concept": {
             "inputs": ["event-list.json"],
             "prompt": "event_review_to_concept-prompt.ai-draft.md",
-            "output": "event_review_to_concept-output.ai-draft.md",
+            "output": "route-concept.md",
             "run": "event_review_to_concept-run.ai-draft.json",
-            "reviewed_output": "route-concept-agent-reviewed.md",
-            "review_status": "draft",
         },
         "concept_to_event_framing": {
             "inputs": ["route-concept.md", "event-list.json"],
             "prompt": "concept_to_event_framing-prompt.ai-draft.md",
-            "output": "concept_to_event_framing-output.ai-draft.md",
+            "output": "event-framing.md",
             "run": "concept_to_event_framing-run.ai-draft.json",
-            "reviewed_output": "event-framing-agent-reviewed.md",
-            "review_status": "draft",
         },
         "validation_to_revision_plan": {
             "inputs": ["seed-transfer-report.md", "validation-report.md"],
             "prompt": "validation_to_revision_plan-prompt.ai-draft.md",
-            "output": "validation_to_revision_plan-output.ai-draft.md",
+            "output": "revision-plan.md",
             "run": "validation_to_revision_plan-run.ai-draft.json",
-            "reviewed_output": "revision-plan-agent-reviewed.md",
-            "review_status": "draft",
         },
     }
 
@@ -358,13 +339,67 @@ def merge_manifest_defaults(
 
 
 def choose_active_dossier(route_dir: Path) -> str:
-    preferred = route_dir / "research-dossier-mvp-edit.md"
+    preferred = route_dir / "research-dossier.md"
     if preferred.exists():
         return preferred.name
     dossiers = sorted(route_dir.glob("research-dossier*.md"))
     if dossiers:
         return dossiers[0].name
     return "research-dossier.md"
+
+
+def manifest_for_variant(
+    *,
+    route_dir: Path,
+    manifest: dict[str, Any],
+    variant: str | None = None,
+) -> dict[str, Any]:
+    if not variant:
+        return manifest
+    validate_variant_name(variant)
+    variant_manifest = json.loads(json.dumps(manifest))
+    active_dossier = variant_manifest["active_dossier"]
+    variant_dossier = variant_filename(active_dossier, variant)
+    variant_manifest["active_dossier"] = variant_dossier
+    variant_manifest["steps"]["event_list"]["input"] = variant_dossier
+    variant_manifest["steps"]["event_list"]["markdown"] = variant_filename("event-list.md", variant)
+    variant_manifest["steps"]["event_list"]["json"] = variant_filename("event-list.json", variant)
+    variant_manifest["steps"]["route_concept"]["input"] = variant_manifest["steps"]["event_list"]["json"]
+    variant_manifest["steps"]["route_concept"]["markdown"] = variant_filename("route-concept.md", variant)
+    variant_manifest["steps"]["event_framing"]["input"] = variant_manifest["steps"]["route_concept"]["markdown"]
+    variant_manifest["steps"]["event_framing"]["markdown"] = variant_filename("event-framing.md", variant)
+    variant_manifest["steps"]["event_framing"]["events"] = variant_filename("event-framing.json", variant)
+    variant_manifest["steps"]["event_framing"]["places"] = variant_filename("place-framing.json", variant)
+    variant_manifest["steps"]["event_framing"]["connections"] = variant_filename("connection-framing.json", variant)
+    variant_manifest["steps"]["seed_preview"]["input"] = variant_manifest["steps"]["event_framing"]["events"]
+    variant_manifest["steps"]["seed_preview"]["markdown"] = variant_filename("seed-transfer-report.md", variant)
+    variant_manifest["steps"]["validation"]["markdown"] = variant_filename("validation-report.md", variant)
+    variant_manifest["agent_steps"]["brief_to_dossier"]["output"] = variant_dossier
+    variant_manifest["agent_steps"]["dossier_to_event_review"]["inputs"] = [variant_dossier]
+    variant_manifest["agent_steps"]["dossier_to_event_review"]["output"] = variant_manifest["steps"]["event_list"]["json"]
+    variant_manifest["agent_steps"]["event_review_to_concept"]["inputs"] = [variant_manifest["steps"]["event_list"]["json"]]
+    variant_manifest["agent_steps"]["event_review_to_concept"]["output"] = variant_manifest["steps"]["route_concept"]["markdown"]
+    variant_manifest["agent_steps"]["concept_to_event_framing"]["inputs"] = [
+        variant_manifest["steps"]["route_concept"]["markdown"],
+        variant_manifest["steps"]["event_list"]["json"],
+    ]
+    variant_manifest["agent_steps"]["concept_to_event_framing"]["output"] = variant_manifest["steps"]["event_framing"]["markdown"]
+    variant_manifest["agent_steps"]["validation_to_revision_plan"]["inputs"] = [
+        variant_manifest["steps"]["seed_preview"]["markdown"],
+        variant_manifest["steps"]["validation"]["markdown"],
+    ]
+    variant_manifest["agent_steps"]["validation_to_revision_plan"]["output"] = variant_filename("revision-plan.md", variant)
+    return variant_manifest
+
+
+def validate_variant_name(variant: str) -> None:
+    if not re.fullmatch(r"[a-z0-9][a-z0-9-]*", variant):
+        raise ValueError("Variant names must use lowercase letters, numbers, and hyphens.")
+
+
+def variant_filename(filename: str, variant: str) -> str:
+    path = Path(filename)
+    return f"{path.stem}.{variant}{path.suffix}"
 
 
 def run_pipeline(
@@ -374,9 +409,11 @@ def run_pipeline(
     route_id: str,
     step: str | None,
     renew: bool,
+    variant: str | None = None,
 ) -> list[dict[str, Any]]:
     route_dir = route_dir_for(content_root, route_id)
     manifest = load_or_create_manifest(route_dir, route_id)
+    manifest = manifest_for_variant(route_dir=route_dir, manifest=manifest, variant=variant)
     selected_steps = [step] if step else list(PIPELINE_STEPS)
     results = []
     for selected_step in selected_steps:
@@ -389,7 +426,8 @@ def run_pipeline(
                 renew=renew,
             ),
         )
-    write_json(route_dir / PIPELINE_FILENAME, manifest)
+    if not variant:
+        write_json(route_dir / PIPELINE_FILENAME, manifest)
     return results
 
 
@@ -438,33 +476,28 @@ def run_agent_pipeline(
     dry_run: bool,
     codex_command: str,
     model: str | None,
-    allow_draft_inputs: bool,
-    mark_reviewed: bool,
+    variant: str | None = None,
 ) -> list[dict[str, Any]]:
     route_dir = route_dir_for(content_root, route_id)
     manifest = load_or_create_manifest(route_dir, route_id)
+    manifest = manifest_for_variant(route_dir=route_dir, manifest=manifest, variant=variant)
     selected_steps = [step] if step else list(AGENT_STEPS)
-    if mark_reviewed and not step:
-        raise ValueError("--mark-reviewed requires --step.")
 
     results = []
     for selected_step in selected_steps:
-        if mark_reviewed:
-            results.append(mark_agent_step_reviewed(route_dir=route_dir, manifest=manifest, step=selected_step))
-        else:
-            results.append(
-                run_agent_step(
-                    route_dir=route_dir,
-                    manifest=manifest,
-                    step=selected_step,
-                    renew=renew,
-                    dry_run=dry_run,
-                    codex_command=codex_command,
-                    model=model,
-                    allow_draft_inputs=allow_draft_inputs,
-                ),
+        results.append(
+            run_agent_step(
+                route_dir=route_dir,
+                manifest=manifest,
+                step=selected_step,
+                renew=renew,
+                dry_run=dry_run,
+                codex_command=codex_command,
+                model=model,
             )
-    write_json(route_dir / PIPELINE_FILENAME, manifest)
+        )
+    if not variant:
+        write_json(route_dir / PIPELINE_FILENAME, manifest)
     return results
 
 
@@ -477,15 +510,8 @@ def run_agent_step(
     dry_run: bool,
     codex_command: str,
     model: str | None,
-    allow_draft_inputs: bool,
 ) -> dict[str, Any]:
     agent_step = manifest["agent_steps"][step]
-    enforce_agent_dependencies(
-        route_dir=route_dir,
-        manifest=manifest,
-        step=step,
-        allow_draft_inputs=allow_draft_inputs,
-    )
     prompt_path = route_dir / agent_step["prompt"]
     output_path = route_dir / agent_step["output"]
     run_path = route_dir / agent_step["run"]
@@ -507,7 +533,6 @@ def run_agent_step(
     if dry_run:
         metadata["status"] = "dry_run"
         write_json(run_path, metadata, renew=renew)
-        agent_step["review_status"] = "draft"
         return {"step": step, "status": "dry_run", "outputs": [prompt_path.name, run_path.name]}
 
     if output_path.exists() and renew:
@@ -518,6 +543,7 @@ def run_agent_step(
         model=model,
         output_path=output_path,
     )
+    print(f"Running Codex CLI for {step}; writing {relative_repo_path(output_path)}...", flush=True)
     completed = subprocess.run(
         command,
         input=prompt,
@@ -542,71 +568,11 @@ def run_agent_step(
         )
     if not output_path.exists():
         write_text(output_path, completed.stdout, renew=False)
-    agent_step["review_status"] = "draft"
-    return {"step": step, "status": "written", "outputs": [prompt_path.name, output_path.name, run_path.name]}
-
-
-def enforce_agent_dependencies(
-    *,
-    route_dir: Path,
-    manifest: dict[str, Any],
-    step: str,
-    allow_draft_inputs: bool,
-) -> None:
-    if allow_draft_inputs:
-        return
-    for dependency in AGENT_STEP_DEPENDENCIES.get(step, ()):
-        dependency_step = manifest["agent_steps"][dependency]
-        dependency_output = route_dir / dependency_step["output"]
-        if dependency_output.exists() and dependency_step.get("review_status") != "reviewed":
-            raise ValueError(
-                f"Refusing to run {step} with draft agent output from {dependency}. "
-                "Review it with --mark-reviewed or pass --allow-draft-inputs.",
-            )
-
-
-def mark_agent_step_reviewed(
-    *,
-    route_dir: Path,
-    manifest: dict[str, Any],
-    step: str,
-) -> dict[str, Any]:
-    agent_step = manifest["agent_steps"][step]
-    output_path = route_dir / agent_step["output"]
-    if not output_path.exists():
-        raise ValueError(f"Missing agent output for {step}: {output_path}")
-    reviewed_path = route_dir / agent_step["reviewed_output"]
-    if reviewed_path.exists():
-        backup_file(reviewed_path)
-    reviewed_path.parent.mkdir(parents=True, exist_ok=True)
-    shutil.copy2(output_path, reviewed_path)
-    agent_step["review_status"] = "reviewed"
-    apply_reviewed_agent_output(manifest=manifest, step=step, reviewed_output=agent_step["reviewed_output"])
-    return {"step": step, "status": "reviewed", "outputs": [reviewed_path.name]}
-
-
-def apply_reviewed_agent_output(
-    *,
-    manifest: dict[str, Any],
-    step: str,
-    reviewed_output: str,
-) -> None:
-    if step == "brief_to_dossier":
-        manifest["active_dossier"] = reviewed_output
-        manifest["steps"]["event_list"]["input"] = reviewed_output
-        manifest["agent_steps"]["dossier_to_event_review"]["inputs"] = [reviewed_output]
-    elif step == "dossier_to_event_review":
-        manifest["steps"]["route_concept"]["input"] = reviewed_output
-        manifest["agent_steps"]["event_review_to_concept"]["inputs"] = [reviewed_output]
-    elif step == "event_review_to_concept":
-        manifest["steps"]["event_framing"]["input"] = reviewed_output
-        manifest["agent_steps"]["concept_to_event_framing"]["inputs"] = [reviewed_output, "event-list.json"]
-    elif step == "concept_to_event_framing":
-        manifest["agent_steps"]["validation_to_revision_plan"]["inputs"] = [
-            reviewed_output,
-            "seed-transfer-report.md",
-            "validation-report.md",
-        ]
+    return {
+        "step": step,
+        "status": "written",
+        "outputs": [prompt_path.name, output_path.name, run_path.name],
+    }
 
 
 def build_agent_prompt(
@@ -636,7 +602,7 @@ def build_agent_prompt(
             "Preserve useful detail, sharpen route logic, and mark unresolved review needs.",
             "",
             f"Route ID: `{manifest['route_id']}`",
-            f"Target reviewed variant: `{agent_step['reviewed_output']}`",
+            f"Target output: `{agent_step['output']}`",
             "",
             "## Task",
             "",
@@ -695,7 +661,7 @@ def agent_step_instructions(step: str) -> str:
                 "The combined what-happens and why-this-matters-here prose should usually stay under 70 words.",
                 "Also include place decision, connection rationale, source needs, and wording risks for each event.",
                 "Avoid `first`, `birthplace`, or sole-origin claims unless the source basis is explicit.",
-                "Do not claim event framing or seed JSON is reviewed.",
+                "Do not claim event framing or seed JSON is publication-ready.",
             ],
         ),
         "validation_to_revision_plan": "\n".join(
@@ -707,7 +673,7 @@ def agent_step_instructions(step: str) -> str:
                 "Group fixes by route, place, event, connection, source, and wording risk.",
                 "Separate schema/reference problems from editorial quality problems.",
                 "Call out missing source URLs, unresolved coordinates, weak event prose, unsupported claims, and connection logic gaps.",
-                "Do not edit seed data and do not mark anything reviewed.",
+                "Do not edit seed data.",
             ],
         ),
     }
@@ -731,12 +697,10 @@ def build_agent_run_metadata(
         "step": step,
         "provider": "codex_cli",
         "dry_run": dry_run,
-        "review_status": "draft",
         "created_at": datetime.now(timezone.utc).isoformat(),
         "inputs": agent_step.get("inputs", []),
         "prompt": agent_step["prompt"],
         "output": agent_step["output"],
-        "reviewed_output": agent_step["reviewed_output"],
         "command": build_codex_exec_command(
             codex_command=codex_command,
             model=model,
@@ -758,8 +722,6 @@ def build_codex_exec_command(
         str(REPO_ROOT),
         "--sandbox",
         "read-only",
-        "--ask-for-approval",
-        "never",
         "--output-last-message",
         str(output_path),
     ]
@@ -805,7 +767,6 @@ def generate_event_list(
     }
     write_text(markdown_path, format_event_list_markdown(payload), renew=renew)
     write_json(json_path, payload, renew=renew)
-    step["review_status"] = "draft"
     return {
         "step": "event_list",
         "status": "written",
@@ -832,7 +793,6 @@ def generate_route_concept(
     event_list = read_json(event_list_path)
     content = format_route_concept_markdown(manifest["route_id"], event_list)
     write_text(output_path, content, renew=renew)
-    step["review_status"] = "draft"
     return {"step": "route_concept", "status": "written", "outputs": [output_path.name]}
 
 
@@ -844,7 +804,7 @@ def generate_event_framing(
     renew: bool,
 ) -> dict[str, Any]:
     step = manifest["steps"]["event_framing"]
-    event_list_path = route_dir / "event-list.json"
+    event_list_path = route_dir / manifest["steps"]["route_concept"]["input"]
     dossier_path = route_dir / manifest["active_dossier"]
     outputs = [
         route_dir / step["markdown"],
@@ -876,7 +836,7 @@ def generate_event_framing(
     events_payload = {
         "_meta": {
             "route_id": manifest["route_id"],
-            "source": "event-list.json",
+            "source": event_list_path.name,
             "generated_by": SCRIPT_NAME,
             "review_status": "draft",
         },
@@ -885,7 +845,7 @@ def generate_event_framing(
     places_payload = {
         "_meta": {
             "route_id": manifest["route_id"],
-            "source": "event-list.json",
+            "source": event_list_path.name,
             "generated_by": SCRIPT_NAME,
             "review_status": "draft",
         },
@@ -904,7 +864,6 @@ def generate_event_framing(
     write_json(outputs[1], events_payload, renew=renew)
     write_json(outputs[2], places_payload, renew=renew)
     write_json(outputs[3], connections_payload, renew=renew)
-    step["review_status"] = "draft"
     return {
         "step": "event_framing",
         "status": "written",
@@ -927,7 +886,6 @@ def generate_seed_preview(
 
     report = build_seed_preview_report(route_dir=route_dir, seed_dir=seed_dir, manifest=manifest)
     write_text(output_path, report, renew=renew)
-    step["review_status"] = "draft"
     return {"step": "seed_preview", "status": "written", "outputs": [output_path.name]}
 
 
@@ -944,11 +902,10 @@ def generate_validation_report(
     if skipped:
         return {"step": "validation", "status": "skipped", "outputs": skipped}
 
-    merged = build_merged_seed_payloads(route_dir=route_dir, seed_dir=seed_dir)
+    merged = build_merged_seed_payloads(route_dir=route_dir, seed_dir=seed_dir, manifest=manifest)
     errors = validate_seed_payloads(merged)
     report = format_validation_report(errors)
     write_text(output_path, report, renew=renew)
-    step["review_status"] = "draft"
     return {"step": "validation", "status": "written", "outputs": [output_path.name]}
 
 
@@ -1304,9 +1261,9 @@ def build_seed_preview_report(
     seed_dir: Path,
     manifest: dict[str, Any],
 ) -> str:
-    merged = build_merged_seed_payloads(route_dir=route_dir, seed_dir=seed_dir)
+    merged = build_merged_seed_payloads(route_dir=route_dir, seed_dir=seed_dir, manifest=manifest)
     seed = load_seed_payloads(seed_dir)
-    drafts = load_draft_payloads(route_dir)
+    drafts = load_draft_payloads(route_dir, manifest)
     warnings = preview_warnings(manifest["route_id"], seed, drafts, merged)
     lines = [
         "# Seed Transfer Preview",
@@ -1381,21 +1338,16 @@ def promote_to_seed(
     seed_dir: Path,
     route_id: str,
     write: bool,
+    variant: str | None,
 ) -> str:
     route_dir = route_dir_for(content_root, route_id)
     manifest = load_or_create_manifest(route_dir, route_id)
+    manifest = manifest_for_variant(route_dir=route_dir, manifest=manifest, variant=variant)
     report = build_seed_preview_report(route_dir=route_dir, seed_dir=seed_dir, manifest=manifest)
     if not write:
         return report
 
-    framing_status = manifest["steps"]["event_framing"].get("review_status")
-    if framing_status != "reviewed":
-        raise ValueError(
-            "Refusing to write seed files until event_framing review_status is 'reviewed' "
-            "in pipeline.json.",
-        )
-
-    merged = build_merged_seed_payloads(route_dir=route_dir, seed_dir=seed_dir)
+    merged = build_merged_seed_payloads(route_dir=route_dir, seed_dir=seed_dir, manifest=manifest)
     errors = validate_seed_payloads(merged)
     if errors:
         raise ValueError("Refusing to write invalid seed data:\n" + "\n".join(errors))
@@ -1406,9 +1358,14 @@ def promote_to_seed(
     return report + "\nSeed files written.\n"
 
 
-def build_merged_seed_payloads(route_dir: Path, seed_dir: Path) -> dict[str, dict[str, Any]]:
+def build_merged_seed_payloads(
+    *,
+    route_dir: Path,
+    seed_dir: Path,
+    manifest: dict[str, Any],
+) -> dict[str, dict[str, Any]]:
     seed = load_seed_payloads(seed_dir)
-    drafts = load_draft_payloads(route_dir)
+    drafts = load_draft_payloads(route_dir, manifest)
     return {
         "routes": seed["routes"],
         "places": upsert_records(seed["places"], "places", drafted_places(drafts)),
@@ -1430,11 +1387,12 @@ def load_seed_payloads(seed_dir: Path) -> dict[str, dict[str, Any]]:
     }
 
 
-def load_draft_payloads(route_dir: Path) -> dict[str, dict[str, Any]]:
+def load_draft_payloads(route_dir: Path, manifest: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    framing_step = manifest["steps"]["event_framing"]
     return {
-        "events": read_optional_json(route_dir / "event-framing.json", {"events": []}),
-        "places": read_optional_json(route_dir / "place-framing.json", {"places": []}),
-        "connections": read_optional_json(route_dir / "connection-framing.json", {"connections": []}),
+        "events": read_optional_json(route_dir / framing_step["events"], {"events": []}),
+        "places": read_optional_json(route_dir / framing_step["places"], {"places": []}),
+        "connections": read_optional_json(route_dir / framing_step["connections"], {"connections": []}),
     }
 
 
@@ -1559,6 +1517,8 @@ def format_agent_summary(results: list[dict[str, Any]]) -> str:
     for result in results:
         outputs = ", ".join(result.get("outputs", [])) or "no outputs"
         lines.append(f"- {result['step']}: {result['status']} {outputs}")
+        if result.get("next"):
+            lines.append(f"  next: {result['next']}")
     return "\n".join(lines)
 
 
@@ -1577,10 +1537,9 @@ def format_status(route_dir: Path, manifest: dict[str, Any]) -> str:
             f"{route_relative_path(route_dir, path)}:{'present' if path.exists() else 'missing'}"
             for path in outputs
         )
-        lines.append(
-            f"- {step_name}: review={step.get('review_status', 'draft')} "
-            f"outputs={output_status or 'none'}",
-        )
+        input_name = step.get("input")
+        input_detail = f" input={input_name}" if input_name else ""
+        lines.append(f"- {step_name}:{input_detail} outputs={output_status or 'none'}")
     lines.extend(["", "Agent steps"])
     for step_name, step in manifest.get("agent_steps", {}).items():
         outputs = step_outputs(route_dir, step)
@@ -1588,17 +1547,14 @@ def format_status(route_dir: Path, manifest: dict[str, Any]) -> str:
             f"{route_relative_path(route_dir, path)}:{'present' if path.exists() else 'missing'}"
             for path in outputs
         )
-        lines.append(
-            f"- {step_name}: review={step.get('review_status', 'draft')} "
-            f"reviewed_output={step.get('reviewed_output', '<missing>')} "
-            f"outputs={output_status or 'none'}",
-        )
+        inputs = ", ".join(step.get("inputs", [])) or "none"
+        lines.append(f"- {step_name}: inputs={inputs} outputs={output_status or 'none'}")
     return "\n".join(lines)
 
 
 def step_outputs(route_dir: Path, step: dict[str, Any]) -> list[Path]:
     outputs = []
-    for key in ("markdown", "json", "events", "places", "connections", "prompt", "output", "run", "reviewed_output"):
+    for key in ("markdown", "json", "events", "places", "connections", "prompt", "output", "run"):
         if isinstance(step.get(key), str):
             outputs.append(route_dir / step[key])
     return outputs
