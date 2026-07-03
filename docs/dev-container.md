@@ -17,11 +17,9 @@ inside the `workspace` container and sees only the repository plus the explicit
 mounts listed below. The `workspace` container does not require VS Code at
 runtime; it is a long-running tools container that can be entered through plain
 `docker compose exec` or, optionally, VS Code Dev Containers. Codex runs as a
-CLI process inside that container. Codex credentials and config are seeded from
-the host so the container CLI can reuse the host login without baking
-credentials into an image. Codex runtime state and writable config stay in a
-Docker volume so SQLite state files and `config.toml` updates are not written
-through Windows bind mounts. App/provider secrets are mounted as a single
+CLI process inside that container. Codex runtime state and writable config stay
+in a Docker volume so SQLite state files and `config.toml` updates are not
+written through host bind mounts. App/provider secrets are mounted as a single
 read-only env file when present; GitHub agent credentials are kept separate
 from app env files.
 
@@ -194,7 +192,9 @@ The `workspace` service uses these mounts:
 - named volume: `frontend_npm_cache` to `/home/soundatlas/.npm`
 - named volume: `codex_home` to `/home/soundatlas/.codex`
 - named volume: `github_cli_config` to `/home/soundatlas/.config/gh`
-- read-only host bind mount: `%USERPROFILE%/.codex` to `/mnt/host-codex`
+- read-only host bind mount:
+  `${SOUNDATLAS_HOST_CODEX_HOME:-${USERPROFILE:-${HOME}}/.codex}` to
+  `/mnt/host-codex`
 - read-only host bind mount: `../secrets/soundatlas/.env` to
   `/run/secrets/soundatlas.env`
 - read-only host bind mount: `../secrets/soundatlas/github-agent.env` to
@@ -202,16 +202,18 @@ The `workspace` service uses these mounts:
 
 Because `CODEX_HOME` points at the `codex_home` volume, Codex can keep its
 container-local SQLite state and writable `config.toml` on a Linux filesystem.
-During post-create setup, host `auth.json` is copied into that volume and host
-`config.toml` is copied only if the container does not already have one. The
-post-create step then applies SoundAtlas dev-container defaults to the
-container-local config: `/workspace` is trusted, Codex starts in
-`workspace-write` with `on-request` approvals, cached web search is used, and
-workspace shell commands can use network access. Network egress is still
-bounded by the container firewall described below. The credentials are not
-copied into the repository or Docker image. The workspace image installs the
-Codex CLI, so terminal sessions inside the container use the seeded login cache
-and configuration.
+During post-create setup, if `/mnt/host-codex` is present, host `auth.json` is
+copied into that volume and host `config.toml` is copied only if the container
+does not already have one. The post-create step then applies SoundAtlas
+dev-container defaults to the container-local config: `/workspace` is trusted,
+Codex starts in `workspace-write` with `on-request` approvals, cached web
+search is used, and workspace shell commands can use network access. Network
+egress is still bounded by the container firewall described below. The
+credentials are not copied into the repository or Docker image. The workspace
+image installs the Codex CLI, so terminal sessions inside the container use the
+seeded login cache and configuration by default when the host `.codex`
+directory exists. Override the host path with `SOUNDATLAS_HOST_CODEX_HOME`
+when needed.
 The workspace intentionally shares dependency/cache volumes with the app
 services so agent-run checks and running services see the same installed
 frontend packages and uv cache.
@@ -430,8 +432,8 @@ terminal:
 `auth.json` is only the cached login state. It does not install or start Codex
 by itself.
 If `codex doctor` reports SQLite state errors under `/home/soundatlas/.codex`,
-remove and recreate the `codex_home` Docker volume rather than bind-mounting
-the whole host `%USERPROFILE%/.codex` directory.
+remove and recreate the `codex_home` Docker volume rather than using the host
+`.codex` directory itself as `CODEX_HOME`.
 
 If Codex asks whether `/workspace` is trusted and then fails with
 `failed to persist config.toml`, rebuild the dev container so `config.toml` is
@@ -465,8 +467,9 @@ edit the repository and use public HTTPS for package installation, Git remotes,
 documentation lookup, and model/API access. The workspace may also call the
 local dev service ports `8000` and `5173` for backend/frontend checks. It
 should not receive direct mounts to host secrets or broader host directories.
-The only host credential mount is the read-only `%USERPROFILE%/.codex` seed
-mount used by the workspace service.
+The only host credential mount is the read-only
+`${SOUNDATLAS_HOST_CODEX_HOME:-${USERPROFILE:-${HOME}}/.codex}` seed mount
+used by the workspace service.
 
 Use `.env.codex.example` for dummy agent/test values. Keep any real
 `.env.codex` file local and untracked. Do not add real tokens, SSH keys,

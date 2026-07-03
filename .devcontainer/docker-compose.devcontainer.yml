@@ -28,9 +28,11 @@ services:
         source: codex_home
         target: /home/soundatlas/.codex
       - type: bind
-        source: ${USERPROFILE}/.codex
+        source: ${SOUNDATLAS_HOST_CODEX_HOME:-${USERPROFILE:-${HOME}}/.codex}
         target: /mnt/host-codex
         read_only: true
+        bind:
+          create_host_path: true
       - type: bind
         source: ../secrets/soundatlas/.env
         target: /run/secrets/soundatlas.env
