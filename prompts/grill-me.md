@@ -102,7 +102,17 @@ Use the smallest mode that fits the request:
 
 ## Output
 
-Run the critique as a sequence of one-finding turns.
+Start with a short overview of the expected number of material findings before
+the one-finding sequence begins. Keep it lightweight, for example:
+
+```md
+I see about 3 material findings. I will take them one at a time.
+```
+
+The count is an estimate, not a promise. If later inspection changes the count,
+say so briefly before continuing.
+
+Then run the critique as a sequence of one-finding turns.
 
 For each finding, return only the next finding that has not yet been discussed.
 Do not batch multiple findings into a single response.
@@ -122,12 +132,27 @@ Ready / Needs revision / Blocked
 - Why this recommendation: <short rationale>
 - What to confirm next: <one concrete question or decision>
 
+Options:
+
+1. <meaningful option>
+2. <meaningful option>
+
+Recommendation: <recommended option and short reason>
+
 ## Recommended Next Step
 
 - Continue with the next finding, revise the artifact, run another grill-me
   pass, create/update a GitHub Issue with `soundatlas-implementation-planning`,
   or proceed to the relevant implementation prompt after approval.
 ```
+
+Include `Options` only when `What to confirm next` asks the user to choose
+between materially different decisions. Do not add filler options. When options
+are presented, always include a recommendation.
+
+If the user asks a short follow-up about an option before choosing, answer that
+question directly and then restate the recommendation if useful. After the user
+chooses, continue to the next finding or recommend Issue planning.
 
 After presenting one finding, pause and wait for the user to confirm before
 moving on to the next finding. When there are no material issues, say so

@@ -14,9 +14,11 @@ default human-facing planning and critique entrypoint. The
 `soundatlas-implementation-planning` skill is the durable Issue-writing
 mechanism after a grill-me pass identifies work that should proceed.
 
-`prompts/grill-me.md` is intentionally interactive: it should present one
-finding at a time, with a recommendation, and pause for user confirmation
-before continuing to the next finding.
+`prompts/grill-me.md` is intentionally interactive: it should first give a
+short estimate of how many material findings it sees, then present one finding
+at a time, with a recommendation, and pause for user confirmation before
+continuing to the next finding. When a finding requires a material decision, it
+should offer meaningful options and a recommended choice.
 
 ## Workflow Rules
 
@@ -58,7 +60,7 @@ before continuing to the next finding.
 2. Use GitHub Issues as the durable planning, implementation, and verification
    record for non-trivial work.
 3. Use `soundatlas-implementation-planning` to turn selected grill-me findings
-   into Issue bodies or comments.
+   and decisions into Issue bodies or comments.
 4. Prefer skills for repeatable execution steps.
 5. Keep prompts as short, stable wrappers while the repo transitions toward
    skills.
