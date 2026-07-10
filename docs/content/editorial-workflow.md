@@ -59,17 +59,20 @@ flowchart TD
 12. Treat `accepted-events.md` as enrichment-ready, not publication-ready. AI
     may draft dossier content and suggest source statuses, but human editors
     confirm source status and source/media readiness.
-13. Define event titles, summaries, and significance text in editorial form
+13. Run the event editorial quality pass from
+    `docs/content/event-editorial-quality-standards.md` before translating
+    accepted events into `data/seed/`.
+14. Define event titles, summaries, and significance text in editorial form
     before translating them into `data/seed/`.
-14. Use the generated seed preview and validation report to inspect draft seed
+15. Use the generated seed preview and validation report to inspect draft seed
     shape before any write into `data/seed/`.
-15. Promote route drafts to seed only after event framing has been manually
+16. Promote route drafts to seed only after event framing has been manually
     inspected.
-16. Keep contested or incomplete claims traceable through `source_urls`.
-17. Mark uncertain seed records as `review_status: "draft"`.
-18. Use `prompts/create-route.md` when route concept work needs agent-written
+17. Keep contested or incomplete claims traceable through `source_urls`.
+18. Mark uncertain seed records as `review_status: "draft"`.
+19. Use `prompts/create-route.md` when route concept work needs agent-written
     editorial content beyond deterministic pipeline artifacts.
-19. Use `prompts/curate-seed-data.md` when the main task is to add or revise
+20. Use `prompts/curate-seed-data.md` when the main task is to add or revise
     JSON seed records directly.
 
 ## Route Folder Artifacts
@@ -135,6 +138,12 @@ uv run --project backend python backend/scripts/route_content_pipeline.py promot
 - Create accepted-event dossiers only after human candidate selection. Do not
   move unresolved `maybe`, unresolved `merge`, or `reject` candidates into
   enrichment or seed framing.
+- Treat older `develop`, `context`, and `defer` candidate labels as draft
+  labels only. Convert them to `keep`, `maybe`, `merge`, or `reject` only after
+  human review.
+- Keep candidate decisions separate from seed `review_status`. `review_status`
+  describes a structured seed/runtime record; it does not decide whether a
+  candidate belongs in the route.
 - Use source status values only as source/claim quality signals:
   `strong`, `medium`, `weak`, `mythologized`, and `needs_review`. AI-suggested
   source statuses remain unconfirmed until human review.
@@ -155,6 +164,7 @@ into seed schema or enrichment execution docs.
 - `docs/content/routes/`
 - `docs/content/editorial-process-alignment.md`
 - `docs/content/accepted-event-dossier-template.md`
+- `docs/content/event-editorial-quality-standards.md`
 - `docs/content/workflow-commands.md`
 - `docs/content/route-concepts/` legacy route concepts
 - `docs/content/route-editorial-quality-standards.md`

@@ -14,6 +14,8 @@ Task
 
 Project constraints
 - Follow `docs/data/seed-data-validation.md`.
+- Follow `docs/content/event-editorial-quality-standards.md` before adding or
+  revising event seed records.
 - Preserve stable IDs once frontend or backend code may reference them.
 - Use `review_status: "draft"` unless the user explicitly asks for reviewed content.
 - Always model `source_urls` and `media_links` as arrays.
@@ -33,6 +35,21 @@ Process
 - When the route folder has `accepted-events.md`, use it as the editorial
   handoff for seed-authoring inputs. Do not convert unresolved `maybe`,
   unresolved `merge`, or `reject` candidates into seed records.
+- Use the editor-facing candidate review vocabulary: `keep`, `maybe`, `merge`,
+  and `reject`. Treat older `develop`, `context`, and `defer` labels as draft
+  labels only, not approval for seed authoring.
+- Before adding or revising event seed records, run an event editorial quality
+  pass. Confirm the event comes from an accepted-event dossier, reviewed route
+  artifact, or explicit human instruction; has an inclusion rationale and route
+  fit; has place and year specificity; uses `summary` for what happened and
+  `significance` for why it matters here; and preserves cautious wording for
+  contested or weakly sourced claims.
+- Do not use seed authoring to resolve candidate review. If candidate status is
+  unclear, stop at a proposal and ask for human review instead of editing
+  `data/seed/`.
+- Keep candidate decisions and seed `review_status` separate. A `keep` event
+  can still become a seed record with `review_status: "draft"`; `review_status`
+  does not replace `accepted-events.md`.
 - Treat raw `*.ai-draft.*` files as local drafts. Use only reviewed
   route-folder variants as seed-authoring inputs.
 - Update the smallest necessary set of seed files: routes, places, events, connections.

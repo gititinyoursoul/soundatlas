@@ -179,6 +179,8 @@ Before seed writing, inspect:
 - candidate event rationale, not only chronology
 - `accepted-events.md`, when present, to confirm that only `keep` candidates
   and human-resolved `merge` outcomes are moving forward
+- the event editorial quality checks in
+  `docs/content/event-editorial-quality-standards.md`
 - event titles, summaries, significance text, and source fields
 - draft place coordinates and source risks
 - connection logic

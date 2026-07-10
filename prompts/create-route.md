@@ -33,6 +33,8 @@ Project constraints
 
 Route concept requirements
 - Follow `docs/content/route-editorial-quality-standards.md`.
+- Follow `docs/content/event-editorial-quality-standards.md` before turning
+  accepted events into seed-shaped records.
 - Use `docs/content/route-research-dossier-template.md` as the default Route
   Research Dossier format.
 - Use `docs/content/workflow-commands.md` when route content should move
@@ -55,6 +57,9 @@ Route concept requirements
 - Identify primary places and explain their role.
 - Propose candidate events for the route, then identify the strongest seed
   candidates after dossier review.
+- Use the editor-facing candidate review vocabulary: `keep`, `maybe`, `merge`,
+  and `reject`. Treat older `develop`, `context`, and `defer` labels as draft
+  labels only, not approval for seed authoring.
 - Propose candidate connections that explain influence, context, media spread,
   or scene formation, then narrow them during seed-transfer planning.
 - Define useful tags for filtering and UI display.
@@ -65,9 +70,13 @@ Seed data requirements
 - Add or update `data/seed/routes.json` for the route metadata.
 - Set route `creator` explicitly.
 - Add or reuse places in `data/seed/places.json`.
-- Add events in `data/seed/events.json`.
+- Add events in `data/seed/events.json` only from accepted events, reviewed
+  route metadata, or explicit human instruction.
 - Add connections in `data/seed/connections.json`.
 - Reuse existing places when the same real-world place already exists.
+- Confirm each seed event has an accepted-event decision, inclusion rationale,
+  route fit, place, year range, cautious summary, cautious significance, and
+  source-risk note before seed transfer.
 - Keep event `summary` focused on what happened.
 - Keep event `significance` focused on why it matters for the route.
 - Keep every new event title, summary, significance, and route description in English.
@@ -94,6 +103,10 @@ Recommended workflow
   `docs/content/accepted-event-dossier-template.md`. Include only `keep`
   candidates and human-resolved `merge` outcomes. Treat the artifact as
   enrichment-ready, not publication-ready.
+- Do not map the full route concept or raw event list into seed data. Map only
+  accepted events and reviewed route metadata into seed-shaped records. Do not
+  convert unresolved `maybe`, unresolved `merge`, or `reject` candidates into
+  seed-shaped records.
 - When using the route content pipeline, initialize `pipeline.json`, generate
   missing artifacts, and inspect `status` before seed transfer.
 - When using Codex CLI agent drafting, generate or invoke one agent step at a
@@ -101,7 +114,7 @@ Recommended workflow
   treating them as route content.
 - Commit only reviewed route content artifacts. Do not commit raw
   `*.ai-draft.*` drafts.
-- Then map the reviewed concept into seed data.
+- Then map only accepted events and reviewed route metadata into seed data.
 - Validate JSON syntax.
 - Validate references between routes, places, events, and connections.
 - Capture new planned follow-up work in GitHub Issues. Leave legacy `TODO.md` entries alone unless the approved Issue or plan explicitly includes legacy backlog cleanup.
@@ -137,6 +150,9 @@ Acceptance criteria
 - The route can be explored chronologically and geographically.
 - Every proposed event has a place, time range, summary, and significance.
 - Every proposed event has an inclusion rationale before seed transfer.
+- Seed event authoring starts from accepted events, not raw candidate lists or
+  unresolved route concept material.
+- Candidate decisions and seed `review_status` are treated as separate layers.
 - Every connection explains a useful relationship, not just adjacency.
 - Editorial, media, and image source research are separated before seed
   transfer.
