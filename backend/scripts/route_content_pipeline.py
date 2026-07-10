@@ -609,11 +609,34 @@ def run_agent_step(
         )
     if not output_path.exists():
         write_text(output_path, completed.stdout, renew=False)
+    extra_outputs = sync_agent_sidecar_outputs(
+        route_dir=route_dir,
+        manifest=manifest,
+        step=step,
+        output_path=output_path,
+        renew=renew,
+    )
     return {
         "step": step,
         "status": "written",
-        "outputs": [prompt_path.name, output_path.name, run_path.name],
+        "outputs": [prompt_path.name, output_path.name, run_path.name, *extra_outputs],
     }
+
+
+def sync_agent_sidecar_outputs(
+    *,
+    route_dir: Path,
+    manifest: dict[str, Any],
+    step: str,
+    output_path: Path,
+    renew: bool,
+) -> list[str]:
+    if step != "dossier_to_event_review":
+        return []
+    event_list = read_json(output_path)
+    markdown_path = route_dir / manifest["steps"]["event_list"]["markdown"]
+    write_text(markdown_path, format_event_list_markdown(event_list), renew=renew)
+    return [markdown_path.name]
 
 
 def build_agent_prompt(
@@ -1245,7 +1268,7 @@ def parse_year_range(value: str) -> tuple[int, int]:
 
 def format_event_list_markdown(payload: dict[str, Any]) -> str:
     route_id = payload["_meta"]["route_id"]
-    source = payload["_meta"]["source"]
+    source = payload["_meta"].get("source") or payload["_meta"].get("basis") or payload["_meta"].get("target_output", "")
     lines = [
         f"# {route_id} Event List",
         "",
@@ -1254,7 +1277,7 @@ def format_event_list_markdown(payload: dict[str, Any]) -> str:
         "This is a review artifact. Candidate decisions must use `keep`,",
         "`maybe`, `merge`, or `reject` before accepted-event handoff work.",
         "",
-        "| Candidate ID | Status | Years | Place | Working title | Route function | Source leads | Risk notes | Next action |",
+        "| Candidate ID | Decision | Years | Place | Working title | Route function | Source leads | Risk notes | Next action |",
         "| --- | --- | --- | --- | --- | --- | --- | --- | --- |",
     ]
     for candidate in payload["candidates"]:
@@ -1262,21 +1285,31 @@ def format_event_list_markdown(payload: dict[str, Any]) -> str:
             "| "
             + " | ".join(
                 [
-                    f"`{candidate['candidate_id']}`",
-                    candidate["status"],
-                    candidate["years"],
-                    candidate["place"],
-                    candidate["working_title"],
-                    candidate["inclusion_rationale"],
-                    candidate["source_leads"],
-                    candidate["risk_notes"],
-                    candidate["next_action"],
+                    f"`{candidate.get('candidate_id', '')}`",
+                    stringify_markdown_cell(candidate.get("status", "")),
+                    stringify_markdown_cell(candidate.get("years", "")),
+                    stringify_markdown_cell(candidate.get("place", "")),
+                    stringify_markdown_cell(candidate.get("working_title", "")),
+                    stringify_markdown_cell(
+                        candidate.get("inclusion_rationale", candidate.get("route_function", "")),
+                    ),
+                    stringify_markdown_cell(candidate.get("source_leads", "")),
+                    stringify_markdown_cell(candidate.get("risk_notes", "")),
+                    stringify_markdown_cell(candidate.get("next_action", "")),
                 ],
             )
             + " |",
         )
     lines.append("")
     return "\n".join(lines)
+
+
+def stringify_markdown_cell(value: Any) -> str:
+    if isinstance(value, list):
+        return "<br>".join(str(item) for item in value)
+    if value is None:
+        return ""
+    return str(value).replace("\n", "<br>")
 
 
 def format_route_concept_markdown(route_id: str, event_list: dict[str, Any]) -> str:

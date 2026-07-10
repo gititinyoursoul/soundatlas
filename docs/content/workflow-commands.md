@@ -77,7 +77,7 @@ the step output:
 | Step | Output |
 | --- | --- |
 | `brief_to_dossier` | `research-dossier.md` |
-| `dossier_to_event_review` | `event-list.json` |
+| `dossier_to_event_review` | `event-list.json`, refreshed `event-list.md` |
 | `event_review_to_concept` | `route-concept.md` |
 | `concept_to_event_framing` | `event-framing.md` |
 | `validation_to_revision_plan` | `revision-plan.md` |

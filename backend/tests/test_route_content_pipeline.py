@@ -333,7 +333,7 @@ def test_run_variant_writes_named_outputs_without_changing_manifest(tmp_path: Pa
 
 def test_agent_steps_can_run_without_review_gate(tmp_path: Path) -> None:
     content_root, seed_dir = write_pipeline_fixture(tmp_path)
-    fake_codex = write_fake_codex(tmp_path)
+    fake_codex = write_fake_codex(tmp_path, output=build_agent_event_list_json())
     route_dir = content_root / ROUTE_ID
 
     assert main(
@@ -351,7 +351,9 @@ def test_agent_steps_can_run_without_review_gate(tmp_path: Path) -> None:
             str(fake_codex),
         ],
     ) == 0
-    assert (route_dir / "event-list.json").read_text(encoding="utf-8") == "agent output\n"
+    assert "agent-reviewed-event" in (route_dir / "event-list.json").read_text(encoding="utf-8")
+    assert "agent-reviewed-event" in (route_dir / "event-list.md").read_text(encoding="utf-8")
+    assert "Agent reviewed event" in (route_dir / "event-list.md").read_text(encoding="utf-8")
 
 
 def test_agent_prompts_include_editorial_quality_contracts(tmp_path: Path) -> None:
@@ -710,10 +712,10 @@ def write_pipeline_fixture(tmp_path: Path) -> tuple[Path, Path]:
     return content_root, seed_dir
 
 
-def write_fake_codex(tmp_path: Path) -> Path:
+def write_fake_codex(tmp_path: Path, output: str = "agent output\n") -> Path:
     fake_codex = tmp_path / "fake-codex"
     fake_codex.write_text(
-        """#!/bin/sh
+        f"""#!/bin/sh
 out=""
 while [ "$#" -gt 0 ]; do
   if [ "$1" = "--output-last-message" ]; then
@@ -723,12 +725,40 @@ while [ "$#" -gt 0 ]; do
   shift
 done
 cat >/dev/null
-printf 'agent output\\n' > "$out"
+cat > "$out" <<'FAKE_CODEX_OUTPUT'
+{output.rstrip()}
+FAKE_CODEX_OUTPUT
 """,
         encoding="utf-8",
     )
     fake_codex.chmod(fake_codex.stat().st_mode | stat.S_IEXEC)
     return fake_codex
+
+
+def build_agent_event_list_json() -> str:
+    return json.dumps(
+        {
+            "_meta": {
+                "route_id": ROUTE_ID,
+                "target_output": "event-list.json",
+                "review_status": "draft",
+            },
+            "candidates": [
+                {
+                    "candidate_id": "agent-reviewed-event",
+                    "status": "keep",
+                    "years": "1973",
+                    "place": "1520 Sedgwick Avenue",
+                    "working_title": "Agent reviewed event",
+                    "route_function": "Shows the agent-authored route function.",
+                    "source_leads": ["Interviews", "Archives"],
+                    "risk_notes": ["Needs source comparison."],
+                    "next_action": "Review accepted-event quality flags.",
+                },
+            ],
+        },
+        indent=2,
+    ) + "\n"
 
 
 def build_dossier() -> str:
