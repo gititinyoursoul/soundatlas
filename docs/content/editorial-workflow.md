@@ -21,7 +21,7 @@ flowchart TD
   B --> I["Optional Codex agent prompt/run files<br/>*.ai-draft.*"]
   I --> C["Research dossier<br/>research-dossier.md"]
   C --> D["Candidate event review<br/>event-list.json"]
-  D --> J["Accepted event dossier<br/>accepted-events.md"]
+  D --> J["Accepted event handoff<br/>accepted-events.json + accepted-events.md"]
   J --> E["Event framing<br/>title, summary, significance, sources"]
   E --> H["Seed preview and validation<br/>route folder reports"]
   H --> F["Seed promotion<br/>data/seed/"]
@@ -53,26 +53,30 @@ flowchart TD
    generate Codex CLI prompts or invoke Codex CLI for one route step.
 10. Review each generated artifact in the route folder before treating it as the
     input to the next editorial decision.
-11. After human candidate review, create or update
-    `accepted-events.md` using `docs/content/accepted-event-dossier-template.md`.
-    Include only `keep` candidates and human-resolved `merge` outcomes.
-12. Treat `accepted-events.md` as enrichment-ready, not publication-ready. AI
-    may draft dossier content and suggest source statuses, but human editors
-    confirm source status and source/media readiness.
-13. Run the event editorial quality pass from
+11. After human candidate review, create or update `accepted-events.json` as
+    the structured accepted-event handoff. Include only `keep` candidates and
+    human-resolved `merge` outcomes.
+12. Use `accepted-events.md` as the human-readable companion dossier. The
+    pipeline generates it only when missing by default, or refreshes it with
+    `--renew`.
+13. Treat accepted-event handoff files as enrichment-ready, not
+    publication-ready. AI may draft dossier content and suggest source
+    statuses, but human editors confirm source status and source/media
+    readiness.
+14. Run the event editorial quality pass from
     `docs/content/event-editorial-quality-standards.md` before translating
     accepted events into `data/seed/`.
-14. Define event titles, summaries, and significance text in editorial form
+15. Define event titles, summaries, and significance text in editorial form
     before translating them into `data/seed/`.
-15. Use the generated seed preview and validation report to inspect draft seed
+16. Use the generated seed preview and validation report to inspect draft seed
     shape before any write into `data/seed/`.
-16. Promote route drafts to seed only after event framing has been manually
+17. Promote route drafts to seed only after event framing has been manually
     inspected.
-17. Keep contested or incomplete claims traceable through `source_urls`.
-18. Mark uncertain seed records as `review_status: "draft"`.
-19. Use `prompts/create-route.md` when route concept work needs agent-written
+18. Keep contested or incomplete claims traceable through `source_urls`.
+19. Mark uncertain seed records as `review_status: "draft"`.
+20. Use `prompts/create-route.md` when route concept work needs agent-written
     editorial content beyond deterministic pipeline artifacts.
-20. Use `prompts/curate-seed-data.md` when the main task is to add or revise
+21. Use `prompts/curate-seed-data.md` when the main task is to add or revise
     JSON seed records directly.
 
 ## Route Folder Artifacts
@@ -93,22 +97,27 @@ For new route work, keep route-specific editorial artifacts under
    `route-concept.mvp-edit.md` when alternate editorial drafts are useful.
 6. `event-list.md` and `event-list.json`: candidate events extracted from the
    active dossier for editorial review.
-7. `accepted-events.md`: route-level accepted-event dossier created after
+7. `accepted-events.json`: structured accepted-event handoff created after
    human candidate review. Include only `keep` candidates and resolved `merge`
-   outcomes. This artifact is enrichment-ready, not publication-ready.
-8. `route-concept.md`: route argument and phase draft based on the accepted
+   outcomes. Required quality flags must pass before downstream route concept,
+   event framing, seed preview, promotion, or post-review agent steps proceed.
+8. `accepted-events.md`: human-readable accepted-event dossier companion. This
+   artifact is generated from `accepted-events.json` when missing by default
+   and is enrichment-ready, not publication-ready.
+9. `route-concept.md`: route argument and phase draft based on the accepted
    event set and candidate-review decisions.
-9. `event-framing.md`, `event-framing.json`, `place-framing.json`, and
+10. `event-framing.md`, `event-framing.json`, `place-framing.json`, and
    `connection-framing.json`: draft seed-shaped records for review.
-10. `seed-transfer-report.md`: preview of what would be merged into seed files.
-11. `validation-report.md`: structural and reference validation findings.
+11. `seed-transfer-report.md`: preview of what would be merged into seed files.
+12. `validation-report.md`: structural, reference, and accepted-events gate
+    findings.
 
 The generated files are working drafts. They should not be treated as final
 historical claims or publication-ready seed data without review.
 
-The current route content pipeline does not yet generate or consume
-`accepted-events.md`; create it manually from the reviewed event list until a
-separate tooling issue adds pipeline support.
+The route content pipeline uses `accepted-events.json` as the enforcement
+contract. `accepted-events.md` remains the readable editorial dossier and is not
+parsed as the source of truth.
 
 ## Pipeline Commands
 

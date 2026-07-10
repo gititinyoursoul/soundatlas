@@ -13,8 +13,8 @@ Use this document before adding or revising event records in
 
 Before seed authoring, confirm that each event:
 
-- comes from an accepted-event dossier, a reviewed route artifact, or explicit
-  human instruction
+- comes from `accepted-events.json`, an accepted-event dossier, a reviewed route
+  artifact, or explicit human instruction
 - has a clear inclusion rationale for this route
 - has enough place and year specificity for the current seed model
 - has a `summary` that says what happened
@@ -43,7 +43,8 @@ Seed `review_status`:
 
 - describes the review state of a structured seed or runtime record
 - does not decide whether a candidate belongs in the route
-- does not replace `accepted-events.md`
+- does not replace `accepted-events.json` or its companion
+  `accepted-events.md` dossier
 
 A `keep` event can still become a seed record with
 `review_status: "draft"`. Use `review_status: "draft"` for generated,

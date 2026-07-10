@@ -80,6 +80,9 @@ the step output:
 | `concept_to_event_framing` | `event-framing.md` |
 | `validation_to_revision_plan` | `revision-plan.md` |
 
+Agent steps after candidate review read `accepted-events.json` and are blocked
+until the accepted-events quality gate passes.
+
 Prompt and run metadata stay in ignored local files:
 
 - `docs/content/routes/*/*-prompt.ai-draft.md`
@@ -113,10 +116,30 @@ uv run --project backend python backend/scripts/route_content_pipeline.py run --
 | Step | Outputs |
 | --- | --- |
 | `event_list` | `event-list.md`, `event-list.json` |
+| `accepted_events` | `accepted-events.json`, `accepted-events.md` |
 | `route_concept` | `route-concept.md` |
 | `event_framing` | `event-framing.md`, `event-framing.json`, `place-framing.json`, `connection-framing.json` |
 | `seed_preview` | `seed-transfer-report.md` |
 | `validation` | `validation-report.md` |
+
+`event_list` generates candidate-review artifacts with `maybe` decisions by
+default. After human review, candidate statuses must use `keep`, `maybe`,
+`merge`, or `reject`. The `accepted_events` step creates or consumes
+`accepted-events.json` as the structured handoff and generates
+`accepted-events.md` as the readable dossier only when missing, unless
+`--renew` is passed.
+
+Downstream `route_concept`, `event_framing`, `seed_preview`, `promote`, and
+post-review agent steps are blocked until every accepted event confirms:
+
+- `route_fit_confirmed`
+- `place_and_year_specificity_confirmed`
+- `source_risks_visible`
+- `seed_draft_ready`
+
+`validation` may still run when the gate is blocked; in that case,
+`validation-report.md` records accepted-events gate errors instead of reporting
+the route as seed-ready.
 
 Run one step:
 
@@ -145,7 +168,8 @@ uv run --project backend python backend/scripts/route_content_pipeline.py status
 ```
 
 Use status before continuing work to confirm the active dossier, configured
-inputs, and which outputs are present or missing.
+inputs, which outputs are present or missing, and whether existing downstream
+artifacts are stale because the accepted-events gate is missing or blocked.
 
 ## Seed Preview And Write
 
@@ -169,7 +193,8 @@ uv run --project backend python backend/scripts/route_content_pipeline.py promot
 
 The command validates the merged seed payloads before writing. It can add or
 update drafted places, events, and connections, but it does not create the route
-metadata record in `routes.json`.
+metadata record in `routes.json`. `--write` refuses to write while the
+accepted-events gate is missing or blocked.
 
 ## Editorial Checks
 
@@ -177,8 +202,10 @@ Before seed writing, inspect:
 
 - the dossier source directions and risk notes
 - candidate event rationale, not only chronology
-- `accepted-events.md`, when present, to confirm that only `keep` candidates
-  and human-resolved `merge` outcomes are moving forward
+- `accepted-events.json`, to confirm that only `keep` candidates and
+  human-resolved `merge` outcomes are moving forward and that the required
+  quality flags are true
+- `accepted-events.md`, as the human-readable companion dossier
 - the event editorial quality checks in
   `docs/content/event-editorial-quality-standards.md`
 - event titles, summaries, significance text, and source fields
@@ -189,11 +216,10 @@ Before seed writing, inspect:
 Generated text should stay cautious. Do not use the pipeline to turn weakly
 sourced or contested claims into settled statements.
 
-The current pipeline does not generate `accepted-events.md`. Create that file
-manually from the reviewed event list using
-`docs/content/accepted-event-dossier-template.md` before enrichment planning or
-seed framing. Treat the file as enrichment-ready only; publication readiness is
-handled by a later final-review step.
+The pipeline uses `accepted-events.json` as the enforcement contract.
+`accepted-events.md` is the companion dossier and is not parsed as the source of
+truth. Treat both files as enrichment-ready handoff material only; publication
+readiness is handled by a later final-review step.
 
 ## Verification
 

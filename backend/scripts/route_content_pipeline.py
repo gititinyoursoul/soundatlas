@@ -22,11 +22,21 @@ SCRIPT_NAME = "route_content_pipeline.py"
 PIPELINE_FILENAME = "pipeline.json"
 PIPELINE_STEPS = (
     "event_list",
+    "accepted_events",
     "route_concept",
     "event_framing",
     "seed_preview",
     "validation",
 )
+ACCEPTED_EVENT_DECISIONS = {"keep", "merge"}
+CANDIDATE_DECISIONS = {"keep", "maybe", "merge", "reject"}
+QUALITY_GATE_FIELDS = (
+    "route_fit_confirmed",
+    "place_and_year_specificity_confirmed",
+    "source_risks_visible",
+    "seed_draft_ready",
+)
+DOWNSTREAM_AGENT_STEPS = {"event_review_to_concept", "concept_to_event_framing"}
 AGENT_STEPS = (
     "brief_to_dossier",
     "dossier_to_event_review",
@@ -254,12 +264,17 @@ def default_manifest(
                 "markdown": "event-list.md",
                 "json": "event-list.json",
             },
-            "route_concept": {
+            "accepted_events": {
                 "input": "event-list.json",
+                "json": "accepted-events.json",
+                "markdown": "accepted-events.md",
+            },
+            "route_concept": {
+                "input": "accepted-events.json",
                 "markdown": "route-concept.md",
             },
             "event_framing": {
-                "input": "route-concept.md",
+                "input": "accepted-events.json",
                 "markdown": "event-framing.md",
                 "events": "event-framing.json",
                 "places": "place-framing.json",
@@ -296,13 +311,13 @@ def default_agent_steps(active_dossier: str) -> dict[str, dict[str, Any]]:
             "run": "dossier_to_event_review-run.ai-draft.json",
         },
         "event_review_to_concept": {
-            "inputs": ["event-list.json"],
+            "inputs": ["accepted-events.json"],
             "prompt": "event_review_to_concept-prompt.ai-draft.md",
             "output": "route-concept.md",
             "run": "event_review_to_concept-run.ai-draft.json",
         },
         "concept_to_event_framing": {
-            "inputs": ["route-concept.md", "event-list.json"],
+            "inputs": ["route-concept.md", "accepted-events.json"],
             "prompt": "concept_to_event_framing-prompt.ai-draft.md",
             "output": "event-framing.md",
             "run": "concept_to_event_framing-run.ai-draft.json",
@@ -335,7 +350,19 @@ def merge_manifest_defaults(
         step: {**defaults["agent_steps"][step], **manifest.get("agent_steps", {}).get(step, {})}
         for step in AGENT_STEPS
     }
+    normalize_accepted_events_manifest(merged)
     return merged
+
+
+def normalize_accepted_events_manifest(manifest: dict[str, Any]) -> None:
+    accepted_json = manifest["steps"]["accepted_events"]["json"]
+    manifest["steps"]["route_concept"]["input"] = accepted_json
+    manifest["steps"]["event_framing"]["input"] = accepted_json
+    manifest["agent_steps"]["event_review_to_concept"]["inputs"] = [accepted_json]
+    manifest["agent_steps"]["concept_to_event_framing"]["inputs"] = [
+        manifest["steps"]["route_concept"]["markdown"],
+        accepted_json,
+    ]
 
 
 def choose_active_dossier(route_dir: Path) -> str:
@@ -364,9 +391,12 @@ def manifest_for_variant(
     variant_manifest["steps"]["event_list"]["input"] = variant_dossier
     variant_manifest["steps"]["event_list"]["markdown"] = variant_filename("event-list.md", variant)
     variant_manifest["steps"]["event_list"]["json"] = variant_filename("event-list.json", variant)
-    variant_manifest["steps"]["route_concept"]["input"] = variant_manifest["steps"]["event_list"]["json"]
+    variant_manifest["steps"]["accepted_events"]["input"] = variant_manifest["steps"]["event_list"]["json"]
+    variant_manifest["steps"]["accepted_events"]["json"] = variant_filename("accepted-events.json", variant)
+    variant_manifest["steps"]["accepted_events"]["markdown"] = variant_filename("accepted-events.md", variant)
+    variant_manifest["steps"]["route_concept"]["input"] = variant_manifest["steps"]["accepted_events"]["json"]
     variant_manifest["steps"]["route_concept"]["markdown"] = variant_filename("route-concept.md", variant)
-    variant_manifest["steps"]["event_framing"]["input"] = variant_manifest["steps"]["route_concept"]["markdown"]
+    variant_manifest["steps"]["event_framing"]["input"] = variant_manifest["steps"]["accepted_events"]["json"]
     variant_manifest["steps"]["event_framing"]["markdown"] = variant_filename("event-framing.md", variant)
     variant_manifest["steps"]["event_framing"]["events"] = variant_filename("event-framing.json", variant)
     variant_manifest["steps"]["event_framing"]["places"] = variant_filename("place-framing.json", variant)
@@ -377,11 +407,11 @@ def manifest_for_variant(
     variant_manifest["agent_steps"]["brief_to_dossier"]["output"] = variant_dossier
     variant_manifest["agent_steps"]["dossier_to_event_review"]["inputs"] = [variant_dossier]
     variant_manifest["agent_steps"]["dossier_to_event_review"]["output"] = variant_manifest["steps"]["event_list"]["json"]
-    variant_manifest["agent_steps"]["event_review_to_concept"]["inputs"] = [variant_manifest["steps"]["event_list"]["json"]]
+    variant_manifest["agent_steps"]["event_review_to_concept"]["inputs"] = [variant_manifest["steps"]["accepted_events"]["json"]]
     variant_manifest["agent_steps"]["event_review_to_concept"]["output"] = variant_manifest["steps"]["route_concept"]["markdown"]
     variant_manifest["agent_steps"]["concept_to_event_framing"]["inputs"] = [
         variant_manifest["steps"]["route_concept"]["markdown"],
-        variant_manifest["steps"]["event_list"]["json"],
+        variant_manifest["steps"]["accepted_events"]["json"],
     ]
     variant_manifest["agent_steps"]["concept_to_event_framing"]["output"] = variant_manifest["steps"]["event_framing"]["markdown"]
     variant_manifest["agent_steps"]["validation_to_revision_plan"]["inputs"] = [
@@ -441,6 +471,8 @@ def run_step(
 ) -> dict[str, Any]:
     if step == "event_list":
         return generate_event_list(route_dir=route_dir, manifest=manifest, renew=renew)
+    if step == "accepted_events":
+        return generate_accepted_events(route_dir=route_dir, manifest=manifest, renew=renew)
     if step == "route_concept":
         return generate_route_concept(route_dir=route_dir, manifest=manifest, renew=renew)
     if step == "event_framing":
@@ -511,6 +543,15 @@ def run_agent_step(
     codex_command: str,
     model: str | None,
 ) -> dict[str, Any]:
+    if step in DOWNSTREAM_AGENT_STEPS:
+        gate_errors = accepted_events_gate_errors(route_dir, manifest)
+        if gate_errors:
+            return {
+                "step": step,
+                "status": "blocked",
+                "outputs": [],
+                "errors": gate_errors,
+            }
     agent_step = manifest["agent_steps"][step]
     prompt_path = route_dir / agent_step["prompt"]
     output_path = route_dir / agent_step["output"]
@@ -633,14 +674,14 @@ def agent_step_instructions(step: str) -> str:
                 "Return only an event-list JSON draft with `_meta` and `candidates`.",
                 "Use `_meta.review_status: \"draft\"` and keep every candidate decision draft.",
                 "Each candidate must include `candidate_id`, `status`, `years`, `place`, `working_title`, `route_function`, `source_leads`, `risk_notes`, and `next_action`.",
-                "Use statuses such as `develop`, `context`, `defer`, or `reject` to show editorial judgment.",
+                "Use only `keep`, `maybe`, `merge`, or `reject` as candidate statuses.",
                 "Do not call candidates final seed events.",
             ],
         ),
         "event_review_to_concept": "\n".join(
             [
-                "Improve the route argument quality from the reviewed event-list artifact.",
-                "Use the event-list input as the boundary. Do not add new events unless they are clearly marked as proposed additions requiring review.",
+                "Improve the route argument quality from the accepted-events handoff artifact.",
+                "Use the accepted-events input as the boundary. Do not add new events unless they are clearly marked as proposed additions requiring review.",
                 "Return only a route concept Markdown draft.",
                 "The concept must include story-serving headings, a central question, a route thesis, narrative phases, place logic, candidate sequence, source-risk notes, and open editorial questions.",
                 "Turn event candidates into a coherent editorial argument, not a chronology or checklist.",
@@ -651,7 +692,7 @@ def agent_step_instructions(step: str) -> str:
         ),
         "concept_to_event_framing": "\n".join(
             [
-                "Improve event-level story quality from the route concept and event list.",
+                "Improve event-level story quality from the route concept and accepted-events handoff.",
                 "Return only event framing Markdown; do not return seed JSON.",
                 "Use story-serving event headings. Do not use `summary` or `significance` as editorial Markdown headers.",
                 "For each event, include a product-facing event title, one-sentence what-happens prose for later seed `summary`, and one-sentence why-this-matters-here prose for later seed `significance`.",
@@ -759,7 +800,7 @@ def generate_event_list(
         "candidates": [
             {
                 **candidate,
-                "status": "develop",
+                "status": "maybe",
                 "next_action": "review candidate",
             }
             for candidate in candidates
@@ -775,6 +816,177 @@ def generate_event_list(
     }
 
 
+def generate_accepted_events(
+    *,
+    route_dir: Path,
+    manifest: dict[str, Any],
+    renew: bool,
+) -> dict[str, Any]:
+    step = manifest["steps"]["accepted_events"]
+    event_list_path = route_dir / step["input"]
+    json_path = route_dir / step["json"]
+    markdown_path = route_dir / step["markdown"]
+    if not event_list_path.exists():
+        raise ValueError(f"Missing event list JSON: {event_list_path}")
+
+    if json_path.exists() and not renew:
+        payload = read_json(json_path)
+        json_written = False
+    else:
+        event_list = read_json(event_list_path)
+        event_list_errors = validate_event_list_decisions(event_list)
+        if event_list_errors:
+            return {
+                "step": "accepted_events",
+                "status": "blocked",
+                "outputs": [],
+                "errors": event_list_errors,
+            }
+        payload = build_accepted_events_payload(
+            route_id=manifest["route_id"],
+            source=event_list_path.name,
+            event_list=event_list,
+        )
+        write_json(json_path, payload, renew=renew)
+        json_written = True
+
+    markdown_written = False
+    if renew or not markdown_path.exists():
+        write_text(markdown_path, format_accepted_events_markdown(payload), renew=renew)
+        markdown_written = True
+
+    outputs = []
+    if json_written:
+        outputs.append(json_path.name)
+    if markdown_written:
+        outputs.append(markdown_path.name)
+    if not outputs:
+        return {"step": "accepted_events", "status": "skipped", "outputs": [json_path.name, markdown_path.name]}
+    return {
+        "step": "accepted_events",
+        "status": "written",
+        "outputs": outputs,
+        "accepted_events": len(payload.get("accepted_events", [])),
+    }
+
+
+def validate_event_list_decisions(event_list: dict[str, Any]) -> list[str]:
+    errors = []
+    for candidate in event_list.get("candidates", []):
+        candidate_id = candidate.get("candidate_id", "<missing>")
+        status = candidate.get("status")
+        if status not in CANDIDATE_DECISIONS:
+            errors.append(
+                f"Candidate `{candidate_id}` has unsupported decision `{status}`; "
+                "use keep, maybe, merge, or reject.",
+            )
+        if status == "merge" and not candidate.get("merge_target_id"):
+            errors.append(f"Candidate `{candidate_id}` is merge but has no merge_target_id.")
+    return errors
+
+
+def build_accepted_events_payload(
+    *,
+    route_id: str,
+    source: str,
+    event_list: dict[str, Any],
+) -> dict[str, Any]:
+    accepted_events = []
+    for candidate in event_list.get("candidates", []):
+        decision = candidate.get("status")
+        if decision not in ACCEPTED_EVENT_DECISIONS:
+            continue
+        accepted_events.append(
+            {
+                "event_id": candidate["candidate_id"],
+                "decision": decision,
+                "merge_target_id": candidate.get("merge_target_id") if decision == "merge" else None,
+                "source_candidate_id": candidate["candidate_id"],
+                "working_title": candidate.get("working_title", ""),
+                "years": candidate.get("years", ""),
+                "place": candidate.get("place", ""),
+                "route_rationale": candidate.get("inclusion_rationale") or candidate.get("route_function", ""),
+                "quality_check": {field: False for field in QUALITY_GATE_FIELDS},
+                "source_leads": list_from_review_value(candidate.get("source_leads")),
+                "media_image_leads": [],
+                "risk_notes": list_from_review_value(candidate.get("risk_notes")),
+            },
+        )
+    return {
+        "_meta": {
+            "route_id": route_id,
+            "source": source,
+            "generated_by": SCRIPT_NAME,
+            "review_status": "draft",
+            "handoff_status": "draft",
+        },
+        "accepted_events": accepted_events,
+    }
+
+
+def list_from_review_value(value: Any) -> list[str]:
+    if isinstance(value, list):
+        return [str(item) for item in value if str(item).strip()]
+    if isinstance(value, str) and value.strip():
+        return [value.strip()]
+    return []
+
+
+def accepted_events_gate_errors(route_dir: Path, manifest: dict[str, Any]) -> list[str]:
+    step = manifest["steps"]["accepted_events"]
+    path = route_dir / step["json"]
+    if not path.exists():
+        return [f"Missing accepted-events gate file `{step['json']}`."]
+    return validate_accepted_events_payload(read_json(path))
+
+
+def validate_accepted_events_payload(payload: dict[str, Any]) -> list[str]:
+    errors = []
+    accepted_events = payload.get("accepted_events")
+    if not isinstance(accepted_events, list) or not accepted_events:
+        return ["Accepted-events gate has no accepted events."]
+
+    event_ids = {
+        event.get("event_id")
+        for event in accepted_events
+        if isinstance(event, dict) and isinstance(event.get("event_id"), str)
+    }
+    for event in accepted_events:
+        if not isinstance(event, dict):
+            errors.append("Accepted-events gate contains a non-object event entry.")
+            continue
+        event_id = event.get("event_id", "<missing>")
+        decision = event.get("decision")
+        if decision not in ACCEPTED_EVENT_DECISIONS:
+            errors.append(f"Accepted event `{event_id}` has unsupported decision `{decision}`.")
+        merge_target_id = event.get("merge_target_id")
+        if decision == "merge":
+            if not merge_target_id:
+                errors.append(f"Accepted event `{event_id}` is merge but has no merge_target_id.")
+            elif merge_target_id == event_id:
+                errors.append(f"Accepted event `{event_id}` merge_target_id must reference another accepted event.")
+            elif merge_target_id not in event_ids:
+                errors.append(
+                    f"Accepted event `{event_id}` merge_target_id `{merge_target_id}` "
+                    "does not reference another accepted event.",
+                )
+        if decision == "keep" and merge_target_id:
+            errors.append(f"Accepted event `{event_id}` is keep but has merge_target_id `{merge_target_id}`.")
+
+        for field in ("source_candidate_id", "working_title", "years", "place", "route_rationale"):
+            if not event.get(field):
+                errors.append(f"Accepted event `{event_id}` is missing `{field}`.")
+
+        quality_check = event.get("quality_check")
+        if not isinstance(quality_check, dict):
+            errors.append(f"Accepted event `{event_id}` is missing `quality_check`.")
+            continue
+        for field in QUALITY_GATE_FIELDS:
+            if quality_check.get(field) is not True:
+                errors.append(f"Accepted event `{event_id}` has unconfirmed quality flag `{field}`.")
+    return errors
+
+
 def generate_route_concept(
     *,
     route_dir: Path,
@@ -782,16 +994,17 @@ def generate_route_concept(
     renew: bool,
 ) -> dict[str, Any]:
     step = manifest["steps"]["route_concept"]
-    event_list_path = route_dir / step["input"]
+    accepted_events_path = route_dir / step["input"]
     output_path = route_dir / step["markdown"]
-    if not event_list_path.exists():
-        raise ValueError(f"Missing event list JSON: {event_list_path}")
+    gate_errors = accepted_events_gate_errors(route_dir, manifest)
+    if gate_errors:
+        return {"step": "route_concept", "status": "blocked", "outputs": [], "errors": gate_errors}
     skipped = maybe_skip_outputs([output_path], renew)
     if skipped:
         return {"step": "route_concept", "status": "skipped", "outputs": skipped}
 
-    event_list = read_json(event_list_path)
-    content = format_route_concept_markdown(manifest["route_id"], event_list)
+    accepted_events = read_json(accepted_events_path)
+    content = format_route_concept_markdown(manifest["route_id"], accepted_events)
     write_text(output_path, content, renew=renew)
     return {"step": "route_concept", "status": "written", "outputs": [output_path.name]}
 
@@ -804,7 +1017,7 @@ def generate_event_framing(
     renew: bool,
 ) -> dict[str, Any]:
     step = manifest["steps"]["event_framing"]
-    event_list_path = route_dir / manifest["steps"]["route_concept"]["input"]
+    accepted_events_path = route_dir / step["input"]
     dossier_path = route_dir / manifest["active_dossier"]
     outputs = [
         route_dir / step["markdown"],
@@ -812,20 +1025,21 @@ def generate_event_framing(
         route_dir / step["places"],
         route_dir / step["connections"],
     ]
-    if not event_list_path.exists():
-        raise ValueError(f"Missing event list JSON: {event_list_path}")
+    gate_errors = accepted_events_gate_errors(route_dir, manifest)
+    if gate_errors:
+        return {"step": "event_framing", "status": "blocked", "outputs": [], "errors": gate_errors}
     if not dossier_path.exists():
         raise ValueError(f"Missing active dossier: {dossier_path}")
     skipped = maybe_skip_outputs(outputs, renew)
     if skipped:
         return {"step": "event_framing", "status": "skipped", "outputs": skipped}
 
-    event_list = read_json(event_list_path)
+    accepted_events = read_json(accepted_events_path)
     seed_places = load_seed_collection(seed_dir, "places")
     seed_place_index = build_place_index(seed_places)
     events, places = build_event_and_place_drafts(
         route_id=manifest["route_id"],
-        event_list=event_list,
+        accepted_events=accepted_events,
         seed_place_index=seed_place_index,
     )
     connections = build_connection_drafts(
@@ -836,7 +1050,7 @@ def generate_event_framing(
     events_payload = {
         "_meta": {
             "route_id": manifest["route_id"],
-            "source": event_list_path.name,
+            "source": accepted_events_path.name,
             "generated_by": SCRIPT_NAME,
             "review_status": "draft",
         },
@@ -845,7 +1059,7 @@ def generate_event_framing(
     places_payload = {
         "_meta": {
             "route_id": manifest["route_id"],
-            "source": event_list_path.name,
+            "source": accepted_events_path.name,
             "generated_by": SCRIPT_NAME,
             "review_status": "draft",
         },
@@ -880,6 +1094,9 @@ def generate_seed_preview(
 ) -> dict[str, Any]:
     step = manifest["steps"]["seed_preview"]
     output_path = route_dir / step["markdown"]
+    gate_errors = accepted_events_gate_errors(route_dir, manifest)
+    if gate_errors:
+        return {"step": "seed_preview", "status": "blocked", "outputs": [], "errors": gate_errors}
     skipped = maybe_skip_outputs([output_path], renew)
     if skipped:
         return {"step": "seed_preview", "status": "skipped", "outputs": skipped}
@@ -902,8 +1119,11 @@ def generate_validation_report(
     if skipped:
         return {"step": "validation", "status": "skipped", "outputs": skipped}
 
-    merged = build_merged_seed_payloads(route_dir=route_dir, seed_dir=seed_dir, manifest=manifest)
-    errors = validate_seed_payloads(merged)
+    gate_errors = accepted_events_gate_errors(route_dir, manifest)
+    errors = list(gate_errors)
+    if not gate_errors:
+        merged = build_merged_seed_payloads(route_dir=route_dir, seed_dir=seed_dir, manifest=manifest)
+        errors.extend(validate_seed_payloads(merged))
     report = format_validation_report(errors)
     write_text(output_path, report, renew=renew)
     return {"step": "validation", "status": "written", "outputs": [output_path.name]}
@@ -1031,8 +1251,8 @@ def format_event_list_markdown(payload: dict[str, Any]) -> str:
         "",
         f"Source: `{source}`",
         "",
-        "This is a review artifact. Candidate statuses are draft decisions and",
-        "can be edited before route concept or seed-transfer work.",
+        "This is a review artifact. Candidate decisions must use `keep`,",
+        "`maybe`, `merge`, or `reject` before accepted-event handoff work.",
         "",
         "| Candidate ID | Status | Years | Place | Working title | Route function | Source leads | Risk notes | Next action |",
         "| --- | --- | --- | --- | --- | --- | --- | --- | --- |",
@@ -1060,16 +1280,18 @@ def format_event_list_markdown(payload: dict[str, Any]) -> str:
 
 
 def format_route_concept_markdown(route_id: str, event_list: dict[str, Any]) -> str:
-    candidates = event_list.get("candidates", [])
-    developed = [candidate for candidate in candidates if candidate.get("status") == "develop"]
+    accepted_events = [
+        event
+        for event in event_list.get("accepted_events", [])
+        if event.get("decision") == "keep"
+    ]
     lines = [
         f"# {route_id} Route Concept Draft",
         "",
-        "Source: `event-list.json`",
+        "Source: `accepted-events.json`",
         "",
-        "This scaffold turns reviewed event-list candidates into a route concept",
-        "draft. Replace scaffold text with source-reviewed narrative before seed",
-        "transfer.",
+        "This scaffold turns accepted-event handoff entries into a route concept",
+        "draft. Replace scaffold text with source-reviewed narrative before seed transfer.",
         "",
         "## Route Argument",
         "",
@@ -1081,16 +1303,16 @@ def format_route_concept_markdown(route_id: str, event_list: dict[str, Any]) -> 
         "| Candidate ID | Years | Place | Working title | Route function |",
         "| --- | --- | --- | --- | --- |",
     ]
-    for candidate in developed:
+    for event in accepted_events:
         lines.append(
             "| "
             + " | ".join(
                 [
-                    f"`{candidate.get('candidate_id', '')}`",
-                    str(candidate.get("years", "")),
-                    str(candidate.get("place", "")),
-                    str(candidate.get("working_title", "")),
-                    str(candidate.get("inclusion_rationale", "")),
+                    f"`{event.get('event_id', '')}`",
+                    str(event.get("years", "")),
+                    str(event.get("place", "")),
+                    str(event.get("working_title", "")),
+                    str(event.get("route_rationale", "")),
                 ],
             )
             + " |",
@@ -1100,7 +1322,6 @@ def format_route_concept_markdown(route_id: str, event_list: dict[str, Any]) -> 
             "",
             "## Open Questions",
             "",
-            "- Which candidates become seed events, route context, or later research?",
             "- Which places need exact coordinates or a justified regional strategy?",
             "- Which claims need source comparison before final wording?",
             "",
@@ -1109,31 +1330,118 @@ def format_route_concept_markdown(route_id: str, event_list: dict[str, Any]) -> 
     return "\n".join(lines)
 
 
+def format_accepted_events_markdown(payload: dict[str, Any]) -> str:
+    route_id = payload["_meta"]["route_id"]
+    source = payload["_meta"]["source"]
+    lines = [
+        f"# Accepted Events: {route_id}",
+        "",
+        "Status: Draft accepted-event dossier for enrichment planning. Not seed-ready or publication-ready.",
+        f"Route: `{route_id}`",
+        f"Source candidate list: `{source}`",
+        "",
+        "## Review Boundary",
+        "",
+        "This file is generated from `accepted-events.json`. It includes only `keep` candidates",
+        "and resolved `merge` outcomes. Source approval, media approval, and publication",
+        "readiness remain human-reviewed.",
+        "",
+        "## Accepted Event Index",
+        "",
+        "| Event ID | Decision | Merge target | Working title | Years | Place | Seed draft ready? | Notes |",
+        "| --- | --- | --- | --- | --- | --- | --- | --- |",
+    ]
+    for event in payload.get("accepted_events", []):
+        quality_check = event.get("quality_check", {})
+        seed_ready = "yes" if quality_check.get("seed_draft_ready") is True else "no"
+        notes = "; ".join(event.get("risk_notes", []))
+        lines.append(
+            "| "
+            + " | ".join(
+                [
+                    f"`{event.get('event_id', '')}`",
+                    f"`{event.get('decision', '')}`",
+                    f"`{event.get('merge_target_id') or ''}`",
+                    str(event.get("working_title", "")),
+                    str(event.get("years", "")),
+                    str(event.get("place", "")),
+                    f"`{seed_ready}`",
+                    notes,
+                ],
+            )
+            + " |",
+        )
+    lines.extend(["", "## Event Dossiers", ""])
+    for event in payload.get("accepted_events", []):
+        lines.extend(
+            [
+                f"### `{event.get('event_id', '')}`: {event.get('working_title', '')}",
+                "",
+                f"Candidate decision: `{event.get('decision', '')}`",
+                f"Merge target: `{event.get('merge_target_id') or ''}`",
+                "",
+                "#### Core Framing",
+                "",
+                f"- Working title: {event.get('working_title', '')}",
+                f"- Year range: {event.get('years', '')}",
+                f"- Place: {event.get('place', '')}",
+                f"- Route rationale: {event.get('route_rationale', '')}",
+                "",
+                "#### Quality Gate",
+                "",
+            ],
+        )
+        quality_check = event.get("quality_check", {})
+        for field in QUALITY_GATE_FIELDS:
+            lines.append(f"- {field}: `{str(quality_check.get(field) is True).lower()}`")
+        lines.extend(
+            [
+                "",
+                "#### Source Leads",
+                "",
+            ],
+        )
+        source_leads = event.get("source_leads", [])
+        if source_leads:
+            lines.extend(f"- {lead}" for lead in source_leads)
+        else:
+            lines.append("- None recorded.")
+        lines.extend(["", "#### Risk Notes", ""])
+        risk_notes = event.get("risk_notes", [])
+        if risk_notes:
+            lines.extend(f"- {note}" for note in risk_notes)
+        else:
+            lines.append("- None recorded.")
+        lines.append("")
+    return "\n".join(lines)
+
+
 def build_event_and_place_drafts(
     *,
     route_id: str,
-    event_list: dict[str, Any],
+    accepted_events: dict[str, Any],
     seed_place_index: dict[str, dict[str, Any]],
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     events = []
     place_records_by_id: dict[str, dict[str, Any]] = {}
-    for candidate in event_list.get("candidates", []):
-        if candidate.get("status") not in {"develop", "context"}:
+    for accepted_event in accepted_events.get("accepted_events", []):
+        if accepted_event.get("decision") != "keep":
             continue
-        place_text = str(candidate.get("place") or "review-place")
+        place_text = str(accepted_event.get("place") or "review-place")
         place_decision = build_place_decision(place_text, seed_place_index)
         place_records_by_id[place_decision["place_id"]] = place_decision
-        year_start, year_end = parse_year_range(str(candidate.get("years") or ""))
+        year_start, year_end = parse_year_range(str(accepted_event.get("years") or ""))
         events.append(
             {
-                "id": candidate["candidate_id"],
+                "id": accepted_event["event_id"],
                 "route_id": route_id,
                 "place_id": place_decision["place_id"],
-                "title": candidate.get("working_title") or candidate["candidate_id"].replace("-", " ").title(),
+                "title": accepted_event.get("working_title")
+                or accepted_event["event_id"].replace("-", " ").title(),
                 "year_start": year_start,
                 "year_end": year_end,
                 "summary": "Draft summary pending source-reviewed event framing.",
-                "significance": candidate.get("inclusion_rationale") or "Draft significance pending review.",
+                "significance": accepted_event.get("route_rationale") or "Draft significance pending review.",
                 "tags": [],
                 "review_status": "draft",
                 "source_urls": [],
@@ -1261,10 +1569,16 @@ def build_seed_preview_report(
     seed_dir: Path,
     manifest: dict[str, Any],
 ) -> str:
-    merged = build_merged_seed_payloads(route_dir=route_dir, seed_dir=seed_dir, manifest=manifest)
     seed = load_seed_payloads(seed_dir)
     drafts = load_draft_payloads(route_dir, manifest)
-    warnings = preview_warnings(manifest["route_id"], seed, drafts, merged)
+    gate_errors = accepted_events_gate_errors(route_dir, manifest)
+    if gate_errors:
+        warnings = list(gate_errors)
+        validation_errors = list(gate_errors)
+    else:
+        merged = build_merged_seed_payloads(route_dir=route_dir, seed_dir=seed_dir, manifest=manifest)
+        warnings = preview_warnings(manifest["route_id"], seed, drafts, merged)
+        validation_errors = validate_seed_payloads(merged)
     lines = [
         "# Seed Transfer Preview",
         "",
@@ -1285,9 +1599,8 @@ def build_seed_preview_report(
     else:
         lines.append("- None")
     lines.extend(["", "## Validation", ""])
-    errors = validate_seed_payloads(merged)
-    if errors:
-        lines.extend(f"- {error}" for error in errors)
+    if validation_errors:
+        lines.extend(f"- {error}" for error in validation_errors)
     else:
         lines.append("- Seed preview validates against current schemas and references.")
     lines.append("")
@@ -1346,6 +1659,10 @@ def promote_to_seed(
     report = build_seed_preview_report(route_dir=route_dir, seed_dir=seed_dir, manifest=manifest)
     if not write:
         return report
+
+    gate_errors = accepted_events_gate_errors(route_dir, manifest)
+    if gate_errors:
+        raise ValueError("Refusing to write before accepted-events gate passes:\n" + "\n".join(gate_errors))
 
     merged = build_merged_seed_payloads(route_dir=route_dir, seed_dir=seed_dir, manifest=manifest)
     errors = validate_seed_payloads(merged)
@@ -1508,7 +1825,11 @@ def format_run_summary(results: list[dict[str, Any]]) -> str:
         detail = ""
         if "candidates" in result:
             detail = f" ({result['candidates']} candidate event(s))"
+        if "accepted_events" in result:
+            detail = f" ({result['accepted_events']} accepted event(s))"
         lines.append(f"- {result['step']}: {result['status']} {outputs}{detail}")
+        for error in result.get("errors", []):
+            lines.append(f"  - {error}")
     return "\n".join(lines)
 
 
@@ -1517,6 +1838,8 @@ def format_agent_summary(results: list[dict[str, Any]]) -> str:
     for result in results:
         outputs = ", ".join(result.get("outputs", [])) or "no outputs"
         lines.append(f"- {result['step']}: {result['status']} {outputs}")
+        for error in result.get("errors", []):
+            lines.append(f"  - {error}")
         if result.get("next"):
             lines.append(f"  next: {result['next']}")
     return "\n".join(lines)
@@ -1540,6 +1863,17 @@ def format_status(route_dir: Path, manifest: dict[str, Any]) -> str:
         input_name = step.get("input")
         input_detail = f" input={input_name}" if input_name else ""
         lines.append(f"- {step_name}:{input_detail} outputs={output_status or 'none'}")
+    gate_errors = accepted_events_gate_errors(route_dir, manifest)
+    lines.extend(["", "Accepted-events gate"])
+    if gate_errors:
+        lines.append("- blocked")
+        for error in gate_errors:
+            lines.append(f"  - {error}")
+        stale_outputs = downstream_outputs_present(route_dir, manifest)
+        if stale_outputs:
+            lines.append("- stale downstream artifacts: " + ", ".join(stale_outputs))
+    else:
+        lines.append("- passed")
     lines.extend(["", "Agent steps"])
     for step_name, step in manifest.get("agent_steps", {}).items():
         outputs = step_outputs(route_dir, step)
@@ -1550,6 +1884,15 @@ def format_status(route_dir: Path, manifest: dict[str, Any]) -> str:
         inputs = ", ".join(step.get("inputs", [])) or "none"
         lines.append(f"- {step_name}: inputs={inputs} outputs={output_status or 'none'}")
     return "\n".join(lines)
+
+
+def downstream_outputs_present(route_dir: Path, manifest: dict[str, Any]) -> list[str]:
+    outputs = []
+    for step_name in ("route_concept", "event_framing", "seed_preview"):
+        for path in step_outputs(route_dir, manifest["steps"][step_name]):
+            if path.exists():
+                outputs.append(route_relative_path(route_dir, path))
+    return outputs
 
 
 def step_outputs(route_dir: Path, step: dict[str, Any]) -> list[Path]:

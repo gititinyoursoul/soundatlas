@@ -7,12 +7,17 @@
       "markdown": "event-list.md",
       "json": "event-list.json"
     },
-    "route_concept": {
+    "accepted_events": {
       "input": "event-list.json",
+      "json": "accepted-events.json",
+      "markdown": "accepted-events.md"
+    },
+    "route_concept": {
+      "input": "accepted-events.json",
       "markdown": "route-concept.md"
     },
     "event_framing": {
-      "input": "route-concept.md",
+      "input": "accepted-events.json",
       "markdown": "event-framing.md",
       "events": "event-framing.json",
       "places": "place-framing.json",
@@ -47,7 +52,7 @@
     },
     "event_review_to_concept": {
       "inputs": [
-        "event-list.json"
+        "accepted-events.json"
       ],
       "prompt": "event_review_to_concept-prompt.ai-draft.md",
       "output": "route-concept.md",
@@ -56,7 +61,7 @@
     "concept_to_event_framing": {
       "inputs": [
         "route-concept.md",
-        "event-list.json"
+        "accepted-events.json"
       ],
       "prompt": "concept_to_event_framing-prompt.ai-draft.md",
       "output": "event-framing.md",
