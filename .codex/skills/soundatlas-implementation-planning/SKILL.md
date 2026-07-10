@@ -12,8 +12,9 @@ with:
 - `docs/implementation-plan-workflow.md`
 - `docs/skills-workflow.md`
 
-Read `prompts/plan-feature.md` only when you need the legacy wrapper wording or
-a reminder of planning output shape.
+Read `prompts/grill-me.md` when the request needs critique, simplification, or
+readiness review before Issue content is drafted. `prompts/plan-feature.md` is
+only a deprecated compatibility alias.
 
 ## Workflow
 

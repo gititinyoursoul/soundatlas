@@ -58,6 +58,11 @@ If the documentation change is non-trivial:
 3. List the exact documentation changes needed.
 4. Note any related code, prompt, workflow, Issue, or commit-guidance updates that should happen together.
 
+Changes to prompts, skills, workflow docs, `AGENTS.md`, planning rules, or
+implementation gates are non-trivial by default. Use `prompts/grill-me.md` first
+when the change needs critique or scope review, then create or update the
+GitHub Issue with `soundatlas-implementation-planning` before editing.
+
 If the documentation update is trivial, make the smallest change directly.
 
 ## Project constraints
@@ -67,6 +72,8 @@ If the documentation update is trivial, make the smallest change directly.
 * Avoid broad rewrites or style-only edits.
 * Do not change curated content unless the task explicitly asks for it.
 * When the workflow changes, keep prompts, skills, `AGENTS.md`, and workflow docs aligned in the same pass.
+* Do not treat prompt, skill, workflow-doc, `AGENTS.md`, planning-rule, or
+  implementation-gate changes as ordinary docs edits.
 * When documentation supports implemented Issue work, keep Issue and commit-reference examples consistent with `docs/implementation-plan-workflow.md`.
 * Do not commit changes unless explicitly requested.
 

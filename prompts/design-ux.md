@@ -6,7 +6,10 @@ This prompt set is the UX entrypoint for the current workflow. If the repo has a
 
 Design UX prompts produce audit findings, critique, and UX slice proposals.
 They do not authorize implementation.
-Use `prompts/plan-feature.md` or direct conversation to turn a selected UX slice into a GitHub Issue Plan Update before implementation.
+Use `prompts/grill-me.md` or direct conversation to critique and narrow a
+selected UX slice before implementation. Use
+`soundatlas-implementation-planning` to turn the selected slice into a GitHub
+Issue Plan Update.
 
 ## Shared Context
 
@@ -77,7 +80,9 @@ Do not make changes yet. Return:
 - Files and components likely affected
 - Suggested audit filename under `docs/design/audits/` if the findings should be saved
 - Suggested mockup filenames under `docs/design/mockups/` if visual artifacts are needed
-- Next step: usually turn the selected UX slice into an implementation plan with `prompts/plan-feature.md`
+- Next step: usually grill the selected UX slice with `prompts/grill-me.md`,
+  then create or update the GitHub Issue Plan Update with
+  `soundatlas-implementation-planning`
 ```
 
 ## UX Pass Plan
@@ -114,7 +119,8 @@ Return:
 - Risks or open questions
 - Recommended audit/design-plan path under `docs/design/audits/`, if this should be saved
 - Recommended mockup path under `docs/design/mockups/`, if visual artifacts are needed
-- Next step: create or update the GitHub Issue Plan Update with `prompts/plan-feature.md`
+- Next step: create or update the GitHub Issue Plan Update with
+  `soundatlas-implementation-planning`
 ```
 
 ## Screenshot Critique
@@ -146,5 +152,7 @@ Return:
 - Whether `docs/design/current-frontend-design.md` should change
 - Whether the critique should be saved under `docs/design/audits/`
 - Whether supporting annotated screenshots or mockups should be saved under `docs/design/mockups/`
-- Next step: usually create the follow-up plan with `prompts/plan-feature.md`, or update the design baseline with `prompts/update-docs.md`
+- Next step: usually grill the follow-up with `prompts/grill-me.md`, create
+  the follow-up Issue plan with `soundatlas-implementation-planning`, or update
+  the design baseline with `prompts/update-docs.md`
 ```

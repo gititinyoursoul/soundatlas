@@ -5,17 +5,25 @@ SoundAtlas uses three lightweight layers for agent-driven work:
 * GitHub Issues are the source of truth for planned agent work.
 * Issue comments and body updates hold Intake Issues, Plan Updates, Detailed Plan
   Updates, and Implementation Reports.
-* Skills and prompts define reusable execution patterns for planning,
+* Skills and prompts define reusable execution patterns for critique, planning,
   implementation, tests, docs, and UX.
 
 Prompts are compatibility entrypoints into those workflows. They should stay
-thin and should not redefine product behavior.
+thin and should not redefine product behavior. `prompts/grill-me.md` is the
+default human-facing planning and critique entrypoint. The
+`soundatlas-implementation-planning` skill is the durable Issue-writing
+mechanism after a grill-me pass identifies work that should proceed.
 
 ## Workflow Rules
 
-* Do not implement from a vague request. Inspect the repo and create or update
-  an Intake Issue for non-trivial work.
-* Capture new planned work with `Task`, `Context`, and `Acceptance Criteria`.
+* Do not implement from a vague request. Use `prompts/grill-me.md` to inspect,
+  critique, simplify, and identify blockers before non-trivial work becomes an
+  Intake Issue or Plan Update.
+* Treat prompt, skill, workflow-doc, `AGENTS.md`, planning-rule, and
+  implementation-gate changes as non-trivial by default. Create or update a
+  GitHub Issue before implementation.
+* Capture new planned work with `Task`, `Context`, and `Acceptance Criteria`
+  through `soundatlas-implementation-planning`.
 * Add a Plan Update or Detailed Plan Update in the Issue when implementation
   needs more decisions.
 * Implement from an approved Issue after explicit wording such as
@@ -30,7 +38,7 @@ thin and should not redefine product behavior.
 
 | Work type | Source of truth | Current entrypoint |
 | --- | --- | --- |
-| Intake and planning | GitHub Issue body/comments | direct agent work, optionally supported by `prompts/plan-feature.md` |
+| Intake critique and planning front door | target artifact, then GitHub Issue when needed | `prompts/grill-me.md` |
 | Issue planning support | GitHub Issue body/comments | `soundatlas-implementation-planning` at `.codex/skills/soundatlas-implementation-planning` |
 | Backend implementation | approved Issue with Plan Update when needed | `prompts/implement-backend-api.md` when useful |
 | Frontend implementation | approved Issue with Plan Update when needed | `prompts/implement-frontend-map.md` when useful |
@@ -41,10 +49,13 @@ thin and should not redefine product behavior.
 
 ## Migration Guidance
 
-1. Prefer conversational planning for day-to-day development.
+1. Prefer `prompts/grill-me.md` or conversational grill-me review for vague,
+   risky, cross-cutting, or editorially sensitive work.
 2. Use GitHub Issues as the durable planning, implementation, and verification
    record for non-trivial work.
-3. Prefer skills for repeatable execution steps.
-4. Keep prompts as short, stable wrappers while the repo transitions toward
+3. Use `soundatlas-implementation-planning` to turn selected grill-me findings
+   into Issue bodies or comments.
+4. Prefer skills for repeatable execution steps.
+5. Keep prompts as short, stable wrappers while the repo transitions toward
    skills.
-5. Update workflow docs together when a skill or prompt boundary changes.
+6. Update workflow docs together when a skill or prompt boundary changes.

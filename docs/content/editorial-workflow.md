@@ -30,8 +30,9 @@ flowchart TD
 ## Current Editorial Flow
 
 1. For non-trivial route or content changes, start with
-   `prompts/plan-feature.md` and create or update a GitHub Issue Plan Update
-   before broad multi-file edits.
+   `prompts/grill-me.md` to critique scope, source risk, editorial boundaries,
+   and publication readiness. Use `soundatlas-implementation-planning` to
+   create or update a GitHub Issue Plan Update before broad multi-file edits.
 2. Start from the MVP concept in `docs/mvp-concept.md`.
 3. For new route content, create a route folder under
    `docs/content/routes/<route-id>/` and begin with `brief.md`.
@@ -131,6 +132,7 @@ into seed schema or enrichment execution docs.
 
 - `docs/mvp-concept.md`
 - `docs/content/routes/`
+- `docs/content/editorial-process-alignment.md`
 - `docs/content/workflow-commands.md`
 - `docs/content/route-concepts/` legacy route concepts
 - `docs/content/route-editorial-quality-standards.md`

@@ -75,7 +75,10 @@ Seed data requirements
 - For event media, use structured entries with `provider`, `type`, `title`, `url`, `query`, `confidence`, and `review_status`.
 
 Recommended workflow
-- For non-trivial route creation or route reshaping, use `prompts/plan-feature.md` first and create or update a GitHub Issue Plan Update before broad seed edits.
+- For non-trivial route creation or route reshaping, use
+  `prompts/grill-me.md` first to critique scope, thesis, source risks, and
+  candidate-event boundaries, then use `soundatlas-implementation-planning` to
+  create or update a GitHub Issue Plan Update before broad seed edits.
 - For new route content, first create or update
   `docs/content/routes/<route-id>/brief.md`.
 - Keep later route-specific files in `docs/content/routes/<route-id>/`. A

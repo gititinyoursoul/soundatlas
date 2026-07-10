@@ -21,7 +21,10 @@ Project constraints
 - Be careful with contested historical claims; mark uncertainty in wording rather than overstating.
 
 Process
-- If the seed work is non-trivial, use `prompts/plan-feature.md` first and create or update a GitHub Issue Plan Update before multi-file data changes.
+- If the seed work is non-trivial, use `prompts/grill-me.md` first to check
+  draft/publish boundaries, source risk, route fit, and data-shape risk, then
+  use `soundatlas-implementation-planning` to create or update a GitHub Issue
+  Plan Update before multi-file data changes.
 - Check the route content in `docs/content/routes/<route-id>/` for new route
   work, or the existing legacy concept in `docs/content/route-concepts/`, plus
   MVP scope in `docs/mvp-concept.md`.

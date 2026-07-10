@@ -60,10 +60,11 @@ Follow these rules for every UX cycle:
 Use the existing prompts in this order:
 
 1. `prompts/design-ux.md` - UX audit, main screen design plan, screenshot critique
-2. `prompts/plan-feature.md` - turn the design idea into one Issue Plan Update when needed
-3. `prompts/implement-frontend-map.md` - implement frontend/map-related changes from an approved Issue with a Plan Update when needed
-4. `prompts/write-tests.md` - add or update focused tests
-5. `prompts/update-docs.md` - update durable docs that the UX change relies on or changes
+2. `prompts/grill-me.md` - critique and narrow the selected UX idea before Issue planning when needed
+3. `soundatlas-implementation-planning` - turn the selected design idea into one Issue Plan Update when needed
+4. `prompts/implement-frontend-map.md` - implement frontend/map-related changes from an approved Issue with a Plan Update when needed
+5. `prompts/write-tests.md` - add or update focused tests
+6. `prompts/update-docs.md` - update durable docs that the UX change relies on or changes
 
 Avoid creating one-off prompts for audit, design direction, or screenshot critique unless `prompts/design-ux.md` no longer covers the work.
 
@@ -191,7 +192,11 @@ Example detailed workflow slice:
 
 ### Step 5: Plan One UX Pass
 
-Use the **UX Pass Plan** template in `prompts/design-ux.md` to narrow the selected workflow slice before implementation planning. Then use `prompts/plan-feature.md` or direct conversation to turn the UX slice into one GitHub Issue Plan Update before implementing non-trivial approved work.
+Use the **UX Pass Plan** template in `prompts/design-ux.md` to narrow the
+selected workflow slice before implementation planning. Then use
+`prompts/grill-me.md` or direct conversation to critique the UX slice, and use
+`soundatlas-implementation-planning` to turn it into one GitHub Issue Plan
+Update before implementing non-trivial approved work.
 
 Plan only one pass at a time.
 
