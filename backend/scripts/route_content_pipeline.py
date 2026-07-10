@@ -30,6 +30,8 @@ PIPELINE_STEPS = (
 )
 ACCEPTED_EVENT_DECISIONS = {"keep", "merge"}
 CANDIDATE_DECISIONS = {"keep", "maybe", "merge", "reject"}
+REVIEW_STATES = {"pending", "approved", "rejected"}
+CLUSTER_RECOMMENDED_ACTIONS = {"keep_separate", "merge", "use_as_context"}
 QUALITY_GATE_FIELDS = (
     "route_fit_confirmed",
     "place_and_year_specificity_confirmed",
@@ -696,8 +698,12 @@ def agent_step_instructions(step: str) -> str:
                 "Preserve candidate IDs, years, places, working titles, inclusion rationale, source leads, and risk notes.",
                 "Return only an event-list JSON draft with `_meta` and `candidates`.",
                 "Use `_meta.review_status: \"draft\"` and keep every candidate decision draft.",
-                "Each candidate must include `candidate_id`, `status`, `years`, `place`, `working_title`, `route_function`, `source_leads`, `risk_notes`, and `next_action`.",
-                "Use only `keep`, `maybe`, `merge`, or `reject` as candidate statuses.",
+                "Each candidate must include `candidate_id`, `status`, `review_state`, `years`, `place`, `working_title`, `route_function`, `decision_rationale`, `review_question`, `source_leads`, `risk_notes`, and `next_action`.",
+                "Use only `keep`, `maybe`, `merge`, or `reject` as candidate statuses. Treat `status` as the agent-proposed decision, not human approval.",
+                "Use only `pending`, `approved`, or `rejected` as `review_state`. New agent drafts should normally use `pending` until human review.",
+                "For every `merge` candidate, include machine-readable `merge_target_id` and `merge_rationale`; do not hide merge targets only in prose.",
+                "When candidates overlap, align, duplicate, or form a context cluster, include top-level `review_clusters` with `cluster_id`, `title`, `member_candidate_ids`, `recommended_anchor_id`, `recommended_action`, `rationale`, and `review_guidance`.",
+                "Use only `keep_separate`, `merge`, or `use_as_context` as cluster `recommended_action`.",
                 "Do not call candidates final seed events.",
             ],
         ),
@@ -824,6 +830,9 @@ def generate_event_list(
             {
                 **candidate,
                 "status": "maybe",
+                "review_state": "pending",
+                "decision_rationale": "",
+                "review_question": "Approve this proposed candidate decision?",
                 "next_action": "review candidate",
             }
             for candidate in candidates
@@ -895,16 +904,63 @@ def generate_accepted_events(
 
 def validate_event_list_decisions(event_list: dict[str, Any]) -> list[str]:
     errors = []
-    for candidate in event_list.get("candidates", []):
+    candidates = event_list.get("candidates", [])
+    candidate_ids = {
+        candidate.get("candidate_id")
+        for candidate in candidates
+        if candidate.get("candidate_id")
+    }
+    for candidate in candidates:
         candidate_id = candidate.get("candidate_id", "<missing>")
         status = candidate.get("status")
+        review_state = candidate.get("review_state")
         if status not in CANDIDATE_DECISIONS:
             errors.append(
                 f"Candidate `{candidate_id}` has unsupported decision `{status}`; "
                 "use keep, maybe, merge, or reject.",
             )
+        if review_state not in REVIEW_STATES:
+            errors.append(
+                f"Candidate `{candidate_id}` has unsupported review_state `{review_state}`; "
+                "use pending, approved, or rejected.",
+            )
+        if status in ACCEPTED_EVENT_DECISIONS and review_state != "approved":
+            errors.append(
+                f"Candidate `{candidate_id}` is `{status}` but review_state is not approved.",
+            )
         if status == "merge" and not candidate.get("merge_target_id"):
             errors.append(f"Candidate `{candidate_id}` is merge but has no merge_target_id.")
+        if status == "merge" and not candidate.get("merge_rationale"):
+            errors.append(f"Candidate `{candidate_id}` is merge but has no merge_rationale.")
+        merge_target_id = candidate.get("merge_target_id")
+        if status == "merge" and merge_target_id:
+            if merge_target_id == candidate_id:
+                errors.append(f"Candidate `{candidate_id}` merge_target_id must reference another candidate.")
+            elif merge_target_id not in candidate_ids:
+                errors.append(
+                    f"Candidate `{candidate_id}` merge_target_id `{merge_target_id}` "
+                    "does not reference another candidate.",
+                )
+    for cluster in event_list.get("review_clusters", []):
+        cluster_id = cluster.get("cluster_id", "<missing>")
+        recommended_action = cluster.get("recommended_action")
+        if recommended_action not in CLUSTER_RECOMMENDED_ACTIONS:
+            errors.append(
+                f"Review cluster `{cluster_id}` has unsupported recommended_action `{recommended_action}`; "
+                "use keep_separate, merge, or use_as_context.",
+            )
+        recommended_anchor_id = cluster.get("recommended_anchor_id")
+        if recommended_anchor_id not in candidate_ids:
+            errors.append(
+                f"Review cluster `{cluster_id}` recommended_anchor_id `{recommended_anchor_id}` "
+                "does not reference a candidate.",
+            )
+        for member_id in cluster.get("member_candidate_ids", []):
+            if member_id not in candidate_ids:
+                errors.append(
+                    f"Review cluster `{cluster_id}` member_candidate_id `{member_id}` "
+                    "does not reference a candidate.",
+                )
     return errors
 
 
@@ -923,6 +979,7 @@ def build_accepted_events_payload(
             {
                 "event_id": candidate["candidate_id"],
                 "decision": decision,
+                "review_state": candidate.get("review_state"),
                 "merge_target_id": candidate.get("merge_target_id") if decision == "merge" else None,
                 "source_candidate_id": candidate["candidate_id"],
                 "working_title": candidate.get("working_title", ""),
@@ -1269,30 +1326,155 @@ def parse_year_range(value: str) -> tuple[int, int]:
 def format_event_list_markdown(payload: dict[str, Any]) -> str:
     route_id = payload["_meta"]["route_id"]
     source = payload["_meta"].get("source") or payload["_meta"].get("basis") or payload["_meta"].get("target_output", "")
+    candidates = payload.get("candidates", [])
     lines = [
         f"# {route_id} Event List",
         "",
         f"Source: `{source}`",
         "",
-        "This is a review artifact. Candidate decisions must use `keep`,",
-        "`maybe`, `merge`, or `reject` before accepted-event handoff work.",
+        "## How To Review",
         "",
-        "| Candidate ID | Decision | Years | Place | Working title | Route function | Source leads | Risk notes | Next action |",
-        "| --- | --- | --- | --- | --- | --- | --- | --- | --- |",
+        "This is a decision-first review artifact. `Decision` is the agent-proposed",
+        "candidate status; `Review state` records human confirmation. Accepted-event",
+        "handoff only includes `keep` and resolved `merge` candidates after their",
+        "`review_state` is `approved`.",
+        "",
+        "## Decision Summary",
+        "",
+        "| Decision | Count | Pending | Approved | Rejected |",
+        "| --- | ---: | ---: | ---: | ---: |",
     ]
-    for candidate in payload["candidates"]:
+    for decision in ["keep", "maybe", "merge", "reject"]:
+        decision_candidates = [
+            candidate
+            for candidate in candidates
+            if candidate.get("status") == decision
+        ]
+        lines.append(
+            "| "
+            + " | ".join(
+                [
+                    f"`{decision}`",
+                    str(len(decision_candidates)),
+                    str(count_by_review_state(decision_candidates, "pending")),
+                    str(count_by_review_state(decision_candidates, "approved")),
+                    str(count_by_review_state(decision_candidates, "rejected")),
+                ],
+            )
+            + " |",
+        )
+
+    lines.extend(["", "## Overlap Clusters", ""])
+    review_clusters = payload.get("review_clusters", [])
+    if review_clusters:
+        lines.extend(
+            [
+                "| Cluster | Recommended action | Anchor | Members | Rationale | Review guidance |",
+                "| --- | --- | --- | --- | --- | --- |",
+            ],
+        )
+        for cluster in review_clusters:
+            lines.append(
+                "| "
+                + " | ".join(
+                    [
+                        f"`{cluster.get('cluster_id', '')}`",
+                        stringify_markdown_cell(cluster.get("recommended_action", "")),
+                        f"`{cluster.get('recommended_anchor_id', '')}`",
+                        stringify_markdown_cell(format_id_list(cluster.get("member_candidate_ids", []))),
+                        stringify_markdown_cell(cluster.get("rationale", "")),
+                        stringify_markdown_cell(cluster.get("review_guidance", "")),
+                    ],
+                )
+                + " |",
+            )
+    else:
+        lines.append("No overlap clusters recorded.")
+
+    lines.extend(["", "## Merge Decisions", ""])
+    merge_candidates = [
+        candidate
+        for candidate in candidates
+        if candidate.get("status") == "merge"
+    ]
+    if merge_candidates:
+        lines.extend(
+            [
+                "| Candidate ID | Review state | Merge target | Merge rationale | Review question |",
+                "| --- | --- | --- | --- | --- |",
+            ],
+        )
+        for candidate in merge_candidates:
+            lines.append(
+                "| "
+                + " | ".join(
+                    [
+                        f"`{candidate.get('candidate_id', '')}`",
+                        stringify_markdown_cell(candidate.get("review_state", "")),
+                        f"`{candidate.get('merge_target_id', '')}`",
+                        stringify_markdown_cell(candidate.get("merge_rationale", "")),
+                        stringify_markdown_cell(candidate.get("review_question", "")),
+                    ],
+                )
+                + " |",
+            )
+    else:
+        lines.append("No merge decisions recorded.")
+
+    lines.extend(["", "## Maybe Items", ""])
+    maybe_candidates = [
+        candidate
+        for candidate in candidates
+        if candidate.get("status") == "maybe"
+    ]
+    if maybe_candidates:
+        lines.extend(
+            [
+                "| Candidate ID | Review state | Working title | Review question | Decision rationale |",
+                "| --- | --- | --- | --- | --- |",
+            ],
+        )
+        for candidate in maybe_candidates:
+            lines.append(
+                "| "
+                + " | ".join(
+                    [
+                        f"`{candidate.get('candidate_id', '')}`",
+                        stringify_markdown_cell(candidate.get("review_state", "")),
+                        stringify_markdown_cell(candidate.get("working_title", "")),
+                        stringify_markdown_cell(candidate.get("review_question", "")),
+                        stringify_markdown_cell(candidate.get("decision_rationale", "")),
+                    ],
+                )
+                + " |",
+            )
+    else:
+        lines.append("No maybe items recorded.")
+
+    lines.extend(
+        [
+            "",
+            "## Candidate Appendix",
+            "",
+            "| Candidate ID | Decision | Review state | Years | Place | Working title | Route function | Decision rationale | Source leads | Risk notes | Next action |",
+            "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
+        ],
+    )
+    for candidate in candidates:
         lines.append(
             "| "
             + " | ".join(
                 [
                     f"`{candidate.get('candidate_id', '')}`",
                     stringify_markdown_cell(candidate.get("status", "")),
+                    stringify_markdown_cell(candidate.get("review_state", "")),
                     stringify_markdown_cell(candidate.get("years", "")),
                     stringify_markdown_cell(candidate.get("place", "")),
                     stringify_markdown_cell(candidate.get("working_title", "")),
                     stringify_markdown_cell(
                         candidate.get("inclusion_rationale", candidate.get("route_function", "")),
                     ),
+                    stringify_markdown_cell(candidate.get("decision_rationale", "")),
                     stringify_markdown_cell(candidate.get("source_leads", "")),
                     stringify_markdown_cell(candidate.get("risk_notes", "")),
                     stringify_markdown_cell(candidate.get("next_action", "")),
@@ -1302,6 +1484,22 @@ def format_event_list_markdown(payload: dict[str, Any]) -> str:
         )
     lines.append("")
     return "\n".join(lines)
+
+
+def count_by_review_state(candidates: list[dict[str, Any]], review_state: str) -> int:
+    return len(
+        [
+            candidate
+            for candidate in candidates
+            if candidate.get("review_state") == review_state
+        ],
+    )
+
+
+def format_id_list(value: Any) -> str:
+    if isinstance(value, list):
+        return "<br>".join(f"`{item}`" for item in value)
+    return stringify_markdown_cell(value)
 
 
 def stringify_markdown_cell(value: Any) -> str:

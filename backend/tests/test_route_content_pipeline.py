@@ -394,6 +394,9 @@ def test_agent_prompts_include_editorial_quality_contracts(tmp_path: Path) -> No
 
     assert "Separate strong route events from context-only or weak candidates" in dossier_prompt
     assert "`route_function`" in dossier_prompt
+    assert "`review_state`" in dossier_prompt
+    assert "`merge_target_id` and `merge_rationale`" in dossier_prompt
+    assert "top-level `review_clusters`" in dossier_prompt
     assert "Do not call candidates final seed events" in dossier_prompt
     assert "Use only `keep`, `maybe`, `merge`, or `reject` as candidate statuses." in dossier_prompt
 
@@ -532,6 +535,165 @@ def test_unresolved_merge_candidate_blocks_accepted_events_generation(tmp_path: 
 
     assert result[0]["status"] == "blocked"
     assert "has no merge_target_id" in "\n".join(result[0]["errors"])
+
+
+def test_unapproved_keep_candidate_blocks_accepted_events_generation(tmp_path: Path) -> None:
+    content_root, seed_dir = write_pipeline_fixture(tmp_path)
+    route_dir = content_root / ROUTE_ID
+    write_event_list_decisions(
+        content_root,
+        seed_dir,
+        route_dir,
+        {"kool-herc-sedgwick-party": "keep"},
+        approve=False,
+    )
+
+    result = route_content_pipeline.run_pipeline(
+        content_root=content_root,
+        seed_dir=seed_dir,
+        route_id=ROUTE_ID,
+        step="accepted_events",
+        renew=False,
+    )
+
+    assert result[0]["status"] == "blocked"
+    assert "review_state is not approved" in "\n".join(result[0]["errors"])
+
+
+def test_merge_candidate_requires_target_and_rationale() -> None:
+    event_list = {
+        "candidates": [
+            {
+                "candidate_id": "source-event",
+                "status": "merge",
+                "review_state": "approved",
+                "merge_target_id": "target-event",
+            },
+            {
+                "candidate_id": "target-event",
+                "status": "keep",
+                "review_state": "approved",
+            },
+        ],
+    }
+
+    errors = route_content_pipeline.validate_event_list_decisions(event_list)
+
+    assert "has no merge_rationale" in "\n".join(errors)
+
+
+def test_review_cluster_references_must_match_candidates() -> None:
+    event_list = {
+        "candidates": [
+            {
+                "candidate_id": "source-event",
+                "status": "maybe",
+                "review_state": "pending",
+            },
+        ],
+        "review_clusters": [
+            {
+                "cluster_id": "missing-member-cluster",
+                "recommended_action": "use_as_context",
+                "recommended_anchor_id": "missing-anchor",
+                "member_candidate_ids": ["source-event", "missing-member"],
+            },
+        ],
+    }
+
+    errors = route_content_pipeline.validate_event_list_decisions(event_list)
+
+    assert "recommended_anchor_id `missing-anchor`" in "\n".join(errors)
+    assert "member_candidate_id `missing-member`" in "\n".join(errors)
+
+
+def test_non_merge_overlap_cluster_is_allowed() -> None:
+    event_list = {
+        "candidates": [
+            {
+                "candidate_id": "context-event",
+                "status": "maybe",
+                "review_state": "pending",
+            },
+            {
+                "candidate_id": "anchor-event",
+                "status": "keep",
+                "review_state": "approved",
+            },
+        ],
+        "review_clusters": [
+            {
+                "cluster_id": "context-cluster",
+                "recommended_action": "use_as_context",
+                "recommended_anchor_id": "anchor-event",
+                "member_candidate_ids": ["context-event", "anchor-event"],
+                "rationale": "Context should support the anchor.",
+                "review_guidance": "Approve the cluster if this framing is useful.",
+            },
+        ],
+    }
+
+    assert route_content_pipeline.validate_event_list_decisions(event_list) == []
+
+
+def test_event_list_markdown_is_decision_first() -> None:
+    payload = {
+        "_meta": {
+            "route_id": ROUTE_ID,
+            "source": "research-dossier.md",
+        },
+        "review_clusters": [
+            {
+                "cluster_id": "context-cluster",
+                "recommended_action": "use_as_context",
+                "recommended_anchor_id": "anchor-event",
+                "member_candidate_ids": ["context-event", "anchor-event"],
+                "rationale": "Context supports the anchor.",
+                "review_guidance": "Approve as route context.",
+            },
+        ],
+        "candidates": [
+            {
+                "candidate_id": "anchor-event",
+                "status": "keep",
+                "review_state": "approved",
+                "years": "1973",
+                "place": "Bronx",
+                "working_title": "Anchor event",
+                "route_function": "Route anchor.",
+                "decision_rationale": "Strong fit.",
+            },
+            {
+                "candidate_id": "merge-event",
+                "status": "merge",
+                "review_state": "pending",
+                "merge_target_id": "anchor-event",
+                "merge_rationale": "Duplicate angle.",
+                "review_question": "Approve this merge?",
+                "working_title": "Merge event",
+            },
+            {
+                "candidate_id": "context-event",
+                "status": "maybe",
+                "review_state": "pending",
+                "working_title": "Context event",
+                "review_question": "Use as context?",
+                "decision_rationale": "Useful but broad.",
+            },
+        ],
+    }
+
+    markdown = route_content_pipeline.format_event_list_markdown(payload)
+
+    assert "## Decision Summary" in markdown
+    assert "## Overlap Clusters" in markdown
+    assert "## Merge Decisions" in markdown
+    assert "## Maybe Items" in markdown
+    assert "## Candidate Appendix" in markdown
+    assert markdown.index("## Overlap Clusters") < markdown.index("## Merge Decisions")
+    assert markdown.index("## Merge Decisions") < markdown.index("## Maybe Items")
+    assert "`merge-event` | pending | `anchor-event` | Duplicate angle." in markdown
+    assert "| Candidate ID | Decision | Review state |" in markdown
 
 
 def test_resolved_merge_requires_another_accepted_event_target(tmp_path: Path) -> None:
@@ -674,6 +836,8 @@ def write_event_list_decisions(
     seed_dir: Path,
     route_dir: Path,
     decisions: dict[str, str],
+    *,
+    approve: bool = True,
 ) -> None:
     assert main(
         [
@@ -693,6 +857,7 @@ def write_event_list_decisions(
     for candidate in event_list["candidates"]:
         if candidate["candidate_id"] in decisions:
             candidate["status"] = decisions[candidate["candidate_id"]]
+            candidate["review_state"] = "approved" if approve else "pending"
     event_list_path.write_text(json.dumps(event_list, indent=2) + "\n", encoding="utf-8")
 
 
@@ -747,10 +912,13 @@ def build_agent_event_list_json() -> str:
                 {
                     "candidate_id": "agent-reviewed-event",
                     "status": "keep",
+                    "review_state": "pending",
                     "years": "1973",
                     "place": "1520 Sedgwick Avenue",
                     "working_title": "Agent reviewed event",
                     "route_function": "Shows the agent-authored route function.",
+                    "decision_rationale": "Strong route fit in the fake fixture.",
+                    "review_question": "Approve this candidate for accepted-event handoff?",
                     "source_leads": ["Interviews", "Archives"],
                     "risk_notes": ["Needs source comparison."],
                     "next_action": "Review accepted-event quality flags.",

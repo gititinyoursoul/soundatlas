@@ -124,13 +124,29 @@ uv run --project backend python backend/scripts/route_content_pipeline.py run --
 | `seed_preview` | `seed-transfer-report.md` |
 | `validation` | `validation-report.md` |
 
-`event_list` generates candidate-review artifacts with `maybe` decisions by
-default. After human review, candidate statuses must use `keep`, `maybe`,
-`merge`, or `reject`. The `accepted_events` step creates or consumes
-`accepted-events.json` as the structured handoff and generates
-`accepted-events.md` as a readable companion view only when missing, unless
-`--renew` is passed. The Markdown file helps humans inspect the same handoff;
-it is not a separate approval gate.
+`event_list` generates candidate-review artifacts with `maybe` decisions and
+`review_state: pending` by default. Agent-reviewed event lists use `status` for
+the proposed candidate decision: `keep`, `maybe`, `merge`, or `reject`.
+Human review uses `review_state`: `pending`, `approved`, or `rejected`.
+`accepted_events` only includes `keep` and resolved `merge` candidates whose
+`review_state` is `approved`. A `merge` candidate must include
+`merge_target_id` and `merge_rationale`; the target cannot live only in prose.
+The `accepted_events` step creates or consumes `accepted-events.json` as the
+structured handoff and generates `accepted-events.md` as a readable companion
+view only when missing, unless `--renew` is passed. The Markdown file helps
+humans inspect the same handoff; it is not a separate approval gate.
+
+`event-list.md` is regenerated as a decision-first review guide:
+
+- overview counts
+- overlap cluster recommendations
+- merge decisions
+- `maybe` items
+- full candidate appendix
+
+Overlap clusters are optional, but when present they should recommend one of
+`keep_separate`, `merge`, or `use_as_context` so review can confirm an agent
+proposal rather than synthesize a decision from scratch.
 
 Downstream `route_concept`, `event_framing`, `seed_preview`, `promote`, and
 post-review agent steps are blocked until every accepted event confirms:
@@ -206,7 +222,9 @@ Before seed writing, inspect:
 
 - the dossier source directions and risk notes
 - candidate event rationale, not only chronology
-- `accepted-events.json`, to confirm that only `keep` candidates and
+- `event-list.md`, starting with overview counts, cluster recommendations,
+  merge decisions, and `maybe` items before the full appendix
+- `accepted-events.json`, to confirm that only approved `keep` candidates and
   human-resolved `merge` outcomes are moving forward and that the required
   quality flags are true. Use `accepted-events.md` as the optional readable
   view for the same review, not as a separate approval gate.

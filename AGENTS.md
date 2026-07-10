@@ -26,6 +26,10 @@ The app should make music history explorable across three axes:
 - Keep changes small, reviewable, and aligned with the MVP scope.
 - Build the vertical slice cleanly first before expanding additional routes.
 - Prefer curated, traceable data over automated aggregation.
+- Minimize human editorial input by having agents propose concrete decisions,
+  rationales, merge targets, and review questions. Human review should approve,
+  reject, or correct agent proposals rather than synthesize decisions from raw
+  artifacts.
 - Always include source fields in the data model, even if they remain empty in the internal MVP.
 - Do not add audio files to the repository; use only external media links in the MVP.
 - Do not commit secrets, tokens, or local paths.
@@ -81,6 +85,9 @@ Events should contain at least:
 - `TODO.md` is a legacy backlog and should not receive new planned work unless the user explicitly asks for a legacy note.
 - If the scope changes, update `docs/mvp-concept.md` first and then create or update the relevant GitHub Issue.
 - Codex may set existing approved GitHub labels on Issues. New labels must be proposed and explicitly approved before Codex creates or uses them.
+- For editorial workflow changes, preserve the minimal-input review principle:
+  agents should surface counts, recommendations, explicit options, and defaults
+  before asking for human decisions.
 
 ## Prompt Authorization Rules
 

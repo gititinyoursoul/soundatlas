@@ -13,6 +13,11 @@ before seed data is changed. The route content pipeline can create and refresh
 those artifacts, but human editorial review still decides which claims, events,
 places, and connections are ready for seed promotion.
 
+The workflow should minimize required human input. Agent-generated artifacts
+should lead with concrete recommendations, counts, merge targets, rationales,
+and review questions so a human can approve, reject, or correct decisions
+instead of reconstructing the decision from raw notes.
+
 ## Workflow
 
 ```mermaid
@@ -51,32 +56,37 @@ flowchart TD
    changed upstream artifact should replace existing downstream drafts.
 9. When editorial production should be automated, use the `agent` command to
    generate Codex CLI prompts or invoke Codex CLI for one route step.
-10. Review each generated artifact in the route folder before treating it as the
-    input to the next editorial decision.
-11. After human candidate review, complete one accepted-events review:
-    confirm `accepted-events.json` includes only `keep` candidates and
+10. Review generated artifacts from the highest-signal summary first. For
+    candidate review, start with overview counts, cluster recommendations,
+    merge decisions, and `maybe` items before reading the full appendix.
+11. Keep human input minimal: the agent should propose candidate decisions,
+    merge targets, overlap-cluster recommendations, rationales, and review
+    questions; the human should normally only approve, reject, or correct those
+    proposals.
+12. After human candidate review, complete one accepted-events review:
+    confirm `accepted-events.json` includes only approved `keep` candidates and
     human-resolved `merge` outcomes, then set its required quality flags.
-12. Use `accepted-events.md` only as the human-readable companion view for that
+13. Use `accepted-events.md` only as the human-readable companion view for that
     same review. The pipeline generates it only when missing by default, or
     refreshes it with `--renew`; it is not a separate approval gate.
-13. Treat accepted-event handoff files as enrichment-ready, not
+14. Treat accepted-event handoff files as enrichment-ready, not
     publication-ready. AI may draft dossier content and suggest source
     statuses, but human editors confirm source status and source/media
     readiness.
-14. Run the event editorial quality pass from
+15. Run the event editorial quality pass from
     `docs/content/event-editorial-quality-standards.md` before translating
     accepted events into `data/seed/`.
-15. Define event titles, summaries, and significance text in editorial form
+16. Define event titles, summaries, and significance text in editorial form
     before translating them into `data/seed/`.
-16. Use the generated seed preview and validation report to inspect draft seed
+17. Use the generated seed preview and validation report to inspect draft seed
     shape before any write into `data/seed/`.
-17. Promote route drafts to seed only after event framing has been manually
+18. Promote route drafts to seed only after event framing has been manually
     inspected.
-18. Keep contested or incomplete claims traceable through `source_urls`.
-19. Mark uncertain seed records as `review_status: "draft"`.
-20. Use `prompts/create-route.md` when route concept work needs agent-written
+19. Keep contested or incomplete claims traceable through `source_urls`.
+20. Mark uncertain seed records as `review_status: "draft"`.
+21. Use `prompts/create-route.md` when route concept work needs agent-written
     editorial content beyond deterministic pipeline artifacts.
-21. Use `prompts/curate-seed-data.md` when the main task is to add or revise
+22. Use `prompts/curate-seed-data.md` when the main task is to add or revise
     JSON seed records directly.
 
 ## Route Folder Artifacts
@@ -96,11 +106,14 @@ For new route work, keep route-specific editorial artifacts under
    `route-concept.alternate-draft.md` when alternate editorial drafts are
    useful.
 6. `event-list.md` and `event-list.json`: candidate events extracted from the
-   active dossier for editorial review.
+   active dossier for editorial review. `event-list.md` should minimize human
+   effort by showing overview counts, overlap-cluster recommendations, merge
+   targets, `maybe` items, and then the full candidate appendix.
 7. `accepted-events.json`: structured accepted-event handoff created after
-   human candidate review. Include only `keep` candidates and resolved `merge`
-   outcomes. Required quality flags must pass before downstream route concept,
-   event framing, seed preview, promotion, or post-review agent steps proceed.
+   human candidate review. Include only approved `keep` candidates and resolved
+   `merge` outcomes. Required quality flags must pass before downstream route
+   concept, event framing, seed preview, promotion, or post-review agent steps
+   proceed.
 8. `accepted-events.md`: optional human-readable companion view for the same
    accepted-events review. This artifact is generated from
    `accepted-events.json` when missing by default and is enrichment-ready, not
@@ -145,9 +158,12 @@ uv run --project backend python backend/scripts/route_content_pipeline.py promot
 - Treat route briefs, dossiers, and concepts as editorial source documents, not
   as the runtime data model.
 - Treat generated pipeline artifacts as drafts until reviewed.
-- Complete the accepted-events handoff only after human candidate selection. Do
-  not move unresolved `maybe`, unresolved `merge`, or `reject` candidates into
-  enrichment or seed framing.
+- Minimize human input during review. Agent outputs should propose decisions,
+  defaults, merge targets, overlap handling, rationales, and next questions
+  before asking for human confirmation.
+- Complete the accepted-events handoff only after human candidate selection.
+  Do not move unapproved `keep`, unresolved `maybe`, unresolved `merge`, or
+  `reject` candidates into enrichment or seed framing.
 - Treat older `develop`, `context`, and `defer` candidate labels as draft
   labels only. Convert them to `keep`, `maybe`, `merge`, or `reject` only after
   human review.
