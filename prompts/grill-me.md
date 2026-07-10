@@ -102,41 +102,33 @@ Use the smallest mode that fits the request:
 
 ## Output
 
-Return:
+Run the critique as a sequence of one-finding turns.
+
+For each finding, return only the next finding that has not yet been discussed.
+Do not batch multiple findings into a single response.
+
+Each finding should use this shape:
 
 ```md
 ## Verdict
 
 Ready / Needs revision / Blocked
 
-## Findings
+## Finding <n>
 
-- Critical:
-- Major:
-- Minor:
-
-## Blocking Questions
-
-- Questions that must be answered before planning or implementation.
-
-## Overcomplexity Check
-
-- What can be simplified, postponed, or removed.
-
-## Editorial Boundary Check
-
-- Decisions that should remain human-reviewed.
-
-## Acceptance Criteria Gaps
-
-- Missing or weak success criteria.
+- Severity: Critical / Major / Minor
+- What I found: <short statement>
+- Decision recommendation: Proceed / Revise / Stop
+- Why this recommendation: <short rationale>
+- What to confirm next: <one concrete question or decision>
 
 ## Recommended Next Step
 
-- Stop, revise the artifact, run another grill-me pass, create/update a GitHub
-  Issue with `soundatlas-implementation-planning`, or proceed to the relevant
-  implementation prompt after approval.
+- Continue with the next finding, revise the artifact, run another grill-me
+  pass, create/update a GitHub Issue with `soundatlas-implementation-planning`,
+  or proceed to the relevant implementation prompt after approval.
 ```
 
-When there are no material issues, say so clearly and identify any remaining
-review or test risk.
+After presenting one finding, pause and wait for the user to confirm before
+moving on to the next finding. When there are no material issues, say so
+clearly and identify any remaining review or test risk.

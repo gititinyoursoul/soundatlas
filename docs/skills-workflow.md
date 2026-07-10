@@ -14,6 +14,10 @@ default human-facing planning and critique entrypoint. The
 `soundatlas-implementation-planning` skill is the durable Issue-writing
 mechanism after a grill-me pass identifies work that should proceed.
 
+`prompts/grill-me.md` is intentionally interactive: it should present one
+finding at a time, with a recommendation, and pause for user confirmation
+before continuing to the next finding.
+
 ## Workflow Rules
 
 * Do not implement from a vague request. Use `prompts/grill-me.md` to inspect,
