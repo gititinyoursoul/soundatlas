@@ -128,8 +128,9 @@ uv run --project backend python backend/scripts/route_content_pipeline.py run --
 default. After human review, candidate statuses must use `keep`, `maybe`,
 `merge`, or `reject`. The `accepted_events` step creates or consumes
 `accepted-events.json` as the structured handoff and generates
-`accepted-events.md` as the readable dossier only when missing, unless
-`--renew` is passed.
+`accepted-events.md` as a readable companion view only when missing, unless
+`--renew` is passed. The Markdown file helps humans inspect the same handoff;
+it is not a separate approval gate.
 
 Downstream `route_concept`, `event_framing`, `seed_preview`, `promote`, and
 post-review agent steps are blocked until every accepted event confirms:
@@ -207,8 +208,8 @@ Before seed writing, inspect:
 - candidate event rationale, not only chronology
 - `accepted-events.json`, to confirm that only `keep` candidates and
   human-resolved `merge` outcomes are moving forward and that the required
-  quality flags are true
-- `accepted-events.md`, as the human-readable companion dossier
+  quality flags are true. Use `accepted-events.md` as the optional readable
+  view for the same review, not as a separate approval gate.
 - the event editorial quality checks in
   `docs/content/event-editorial-quality-standards.md`
 - event titles, summaries, significance text, and source fields
@@ -220,9 +221,9 @@ Generated text should stay cautious. Do not use the pipeline to turn weakly
 sourced or contested claims into settled statements.
 
 The pipeline uses `accepted-events.json` as the enforcement contract.
-`accepted-events.md` is the companion dossier and is not parsed as the source of
-truth. Treat both files as enrichment-ready handoff material only; publication
-readiness is handled by a later final-review step.
+`accepted-events.md` is the companion view and is not parsed as the source of
+truth or approved separately. Treat both files as enrichment-ready handoff
+material only; publication readiness is handled by a later final-review step.
 
 ## Verification
 

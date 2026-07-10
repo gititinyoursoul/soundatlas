@@ -12,7 +12,7 @@ route idea
 -> route brief
 -> candidate event longlist
 -> human candidate review
--> accepted event dossiers
+-> accepted-events handoff
 -> source and media enrichment
 -> human final review
 -> publishable event cards
@@ -37,20 +37,22 @@ SoundAtlas currently uses a route-first workflow:
    events, candidate connections, source leads, media leads, image leads, and
    editorial risks.
 4. `event-list.md` and `event-list.json` hold candidate events for review.
-5. `route-concept.md` turns reviewed candidates into a route argument and phase
+5. `accepted-events.json` is the structured route-level handoff after human
+   candidate review. It includes only `keep` candidates and human-resolved
+   `merge` outcomes, and its quality flags gate downstream work.
+6. `accepted-events.md` is the readable companion view for the same review, not
+   a separate approval gate.
+7. `route-concept.md` turns accepted events into a route argument and phase
    draft.
-6. `accepted-events.md` is the route-level accepted-event dossier to create
-   after human candidate review. It includes only `keep` candidates and
-   human-resolved `merge` outcomes.
-7. `event-framing.*`, `place-framing.json`, and `connection-framing.json`
+8. `event-framing.*`, `place-framing.json`, and `connection-framing.json`
    create seed-shaped drafts.
-8. `seed-transfer-report.md` and `validation-report.md` preview structural
+9. `seed-transfer-report.md` and `validation-report.md` preview structural
    seed changes before promotion.
-9. `data/seed/` is the runtime source for the map, timeline, route switching,
+10. `data/seed/` is the runtime source for the map, timeline, route switching,
    event inspector, sources, connections, media links, and image links.
-10. Enrichment scripts can create event-search components, media query plans,
+11. Enrichment scripts can create event-search components, media query plans,
    YouTube result files, draft `media_links`, and draft `image_links`.
-11. The app has an internal media/image review queue for marking draft links as
+12. The app has an internal media/image review queue for marking draft links as
     reviewed or rejecting them.
 
 The documentation consistently says generated route artifacts are drafts and
@@ -71,9 +73,9 @@ not replace the human editor or authorize publication.
 | Generate a theme brief | `brief.md` in a route folder | Aligned | Keep calling this a route brief for now. |
 | Generate candidate events | Dossier candidate table and `event-list.json` | Aligned | Candidate events are visible before seed promotion. |
 | Review candidates manually | Docs require artifact inspection | Partial | The review point exists, but it is not strongly modeled. |
-| Mark Keep / Maybe / Merge / Reject | Current statuses are `develop`, `context`, `defer`, and `reject` | Partial | The vocabulary should be simplified to editor-facing decisions. |
-| Create dossiers only for accepted events | `accepted-events.md` route-level dossier template | Aligned | Dossier is documented as enrichment-ready, not publication-ready. |
-| Enrich accepted events with sources and media | Enrichment can use accepted-event dossiers as the editorial handoff | Partial | Current scripts still run from seed data; docs now define the accepted-event boundary. |
+| Mark Keep / Maybe / Merge / Reject | `event-list.json` candidate decisions | Aligned | The route pipeline uses the editor-facing vocabulary. |
+| Create handoff only for accepted events | `accepted-events.json` gate and `accepted-events.md` companion view | Aligned | The JSON file is the source of truth; Markdown is not a separate approval gate. |
+| Enrich accepted events with sources and media | Enrichment can use accepted-event handoff files as the editorial boundary | Partial | Current scripts still run from seed data; docs now define the accepted-event boundary. |
 | Human reviews final output | Seed preview, validation report, and link review exist | Partial | There is no single final event-card approval gate. |
 | Publish as map, timeline, route, or event cards | Seed data powers runtime app | Partial | Draft seed records can still appear in the explorer. |
 
@@ -85,11 +87,10 @@ provider calls, confidence hints, review priorities, quality reports, ignore
 lists, and review actions. These are useful, but they should not get ahead of
 the basic editorial decision about which events belong in a route.
 
-The current route pipeline can also over-produce seed-shaped drafts. The
-deterministic event-list step defaults extracted candidates to `develop`, and
-later steps can create event, place, and connection drafts for many weak or
-context-only candidates. That makes candidates look closer to accepted events
-than they really are.
+The route pipeline now blocks seed-shaped drafts behind the accepted-events
+gate. The main remaining risk is editorial friction: editors need a clear way
+to confirm `accepted-events.json` quality flags without treating the companion
+Markdown file as a second approval layer.
 
 The current `review_status` values, `draft` and `reviewed`, are too broad for
 the full editorial lifecycle. They are useful for runtime data and link review,
@@ -107,10 +108,10 @@ be treated as historical or curatorial truth.
 | Theme | Partial | Covered by route topic and route concept. No separate object needed now. |
 | Theme brief | Exists | Implemented as route `brief.md`. |
 | Candidate event | Exists | Dossier tables and `event-list.json`. |
-| Candidate review status | Partial | Current statuses are not the desired editor vocabulary. |
-| Accepted event | Partial | Approximated by `develop` candidates and seed events, but not explicit. |
-| Event dossier | Exists | Implemented as route-level `accepted-events.md` guidance. |
-| Source status | Exists | Source status vocabulary is documented for accepted-event dossiers. |
+| Candidate review status | Exists | Uses `keep`, `maybe`, `merge`, and `reject`. |
+| Accepted event | Exists | Represented by `accepted-events.json`. |
+| Event dossier | Exists | Implemented as `accepted-events.md`, a readable companion view for the JSON handoff. |
+| Source status | Exists | Source status vocabulary is documented for accepted-event handoff notes. |
 | Media search queries | Exists | YouTube request plans and image query ladders. |
 | Human review before publishing | Partial | Link review and seed preview exist, but no final event-card gate. |
 
@@ -126,16 +127,18 @@ Use a simpler candidate review vocabulary:
 - `merge`: combine into another accepted event or route context.
 - `reject`: do not continue for this route.
 
-Only `keep` candidates and resolved `merge` outcomes should move into accepted
-event dossiers.
+Only `keep` candidates and resolved `merge` outcomes should move into
+`accepted-events.json`.
 
 Do not create seed-shaped event, place, and connection drafts for every
-candidate. Create seed-shaped records only after the candidate review pass.
+candidate. Create seed-shaped records only after the accepted-events gate
+passes.
 
 Separate the working layers:
 
 - Candidate layer: route brief, dossier, and longlist.
-- Accepted layer: accepted event dossiers.
+- Accepted layer: `accepted-events.json`, with `accepted-events.md` as the
+  readable companion view.
 - Enrichment layer: source checks, media search queries, draft media, and draft
   images.
 - Publish layer: final event cards promoted into `data/seed/`.
@@ -163,7 +166,7 @@ route input
 -> AI route brief
 -> AI candidate event longlist
 -> human selection: keep / maybe / merge / reject
--> accepted event dossiers
+-> accepted-events handoff
 -> media search queries
 -> source and media enrichment
 -> human final review
@@ -176,8 +179,8 @@ Include:
   leads, and risks.
 - Candidate event longlist with rationale, source leads, and risk notes.
 - Human candidate decision field.
-- Route-level accepted-event dossier covering each kept candidate and resolved
-  merge outcome.
+- Route-level `accepted-events.json` covering each kept candidate and resolved
+  merge outcome, with `accepted-events.md` as the readable companion view.
 - Media search query planning for accepted events only.
 - Draft source, media, and image enrichment.
 - Final human review before seed promotion.
@@ -215,8 +218,8 @@ Candidate event longlist
   |
   v
 Human candidate review
-  |-- keep  --> accepted event dossier
-  |-- merge --> accepted event dossier or route context
+  |-- keep  --> accepted-events handoff
+  |-- merge --> accepted-events handoff or route context
   |-- maybe --> research backlog
   |-- reject -> stop
   |

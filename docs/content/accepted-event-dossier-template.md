@@ -2,22 +2,29 @@
 
 ## Purpose
 
-An accepted-event dossier is the route-level editorial handoff after candidate
-review and before source or media enrichment.
+An accepted-event dossier is the readable view of the route-level editorial
+handoff after candidate review and before source or media enrichment.
 
-For the MVP, keep accepted-event dossiers as one route-level file:
+For the MVP, the pipeline uses one structured gate file and one readable
+companion file:
 
 ```text
+docs/content/routes/<route-id>/accepted-events.json
 docs/content/routes/<route-id>/accepted-events.md
 ```
 
-The file is enrichment-ready, not publication-ready. It helps editors collect
+`accepted-events.json` is the source of truth for the gate. Editors confirm the
+accepted event set and required quality flags there. `accepted-events.md` is a
+human-readable companion view for the same review; it is not a separate
+approval step.
+
+The handoff is enrichment-ready, not publication-ready. It helps editors collect
 the accepted event set, source leads, media leads, claim risks, and unresolved
 questions before any event becomes seed-shaped or enters enrichment planning.
 
 ## Inclusion Rule
 
-Accepted-event dossiers may include only:
+Accepted-event handoff files may include only:
 
 - candidates marked `keep`
 - `merge` candidates after a human editor has resolved the merge target
@@ -29,12 +36,12 @@ Do not include:
 - `reject` candidates
 
 `maybe` candidates can remain in the route event longlist or research backlog.
-Rejected candidates should not continue into accepted-event dossiers,
+Rejected candidates should not continue into accepted-event handoff files,
 enrichment, seed framing, or publication review.
 
 ## AI Boundary
 
-AI may draft accepted-event dossier content and suggest draft source statuses.
+AI may draft accepted-event handoff content and suggest draft source statuses.
 AI output remains review material.
 
 AI must not:
@@ -85,6 +92,9 @@ Editor/date:
 This file includes only human-selected `keep` candidates and resolved `merge`
 outcomes. It excludes unresolved `maybe`, unresolved `merge`, and `reject`
 candidates.
+
+`accepted-events.json` is the enforcement contract for this review. This
+Markdown file is a readable companion view and is not approved separately.
 
 AI may draft event notes and suggest source statuses, but source and media
 approval remain human-reviewed.
@@ -147,4 +157,4 @@ Enrichment-ready: `yes | no`
 - Use `docs/content/editorial-process-alignment.md` for the overall simplified
   editorial process.
 - Use publication readiness guidance only after enrichment and final review.
-  Accepted-event dossiers do not make an event publication-ready.
+  Accepted-event handoff files do not make an event publication-ready.

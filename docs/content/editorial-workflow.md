@@ -53,12 +53,12 @@ flowchart TD
    generate Codex CLI prompts or invoke Codex CLI for one route step.
 10. Review each generated artifact in the route folder before treating it as the
     input to the next editorial decision.
-11. After human candidate review, create or update `accepted-events.json` as
-    the structured accepted-event handoff. Include only `keep` candidates and
-    human-resolved `merge` outcomes.
-12. Use `accepted-events.md` as the human-readable companion dossier. The
-    pipeline generates it only when missing by default, or refreshes it with
-    `--renew`.
+11. After human candidate review, complete one accepted-events review:
+    confirm `accepted-events.json` includes only `keep` candidates and
+    human-resolved `merge` outcomes, then set its required quality flags.
+12. Use `accepted-events.md` only as the human-readable companion view for that
+    same review. The pipeline generates it only when missing by default, or
+    refreshes it with `--renew`; it is not a separate approval gate.
 13. Treat accepted-event handoff files as enrichment-ready, not
     publication-ready. AI may draft dossier content and suggest source
     statuses, but human editors confirm source status and source/media
@@ -101,9 +101,10 @@ For new route work, keep route-specific editorial artifacts under
    human candidate review. Include only `keep` candidates and resolved `merge`
    outcomes. Required quality flags must pass before downstream route concept,
    event framing, seed preview, promotion, or post-review agent steps proceed.
-8. `accepted-events.md`: human-readable accepted-event dossier companion. This
-   artifact is generated from `accepted-events.json` when missing by default
-   and is enrichment-ready, not publication-ready.
+8. `accepted-events.md`: optional human-readable companion view for the same
+   accepted-events review. This artifact is generated from
+   `accepted-events.json` when missing by default and is enrichment-ready, not
+   publication-ready. It is not a separate approval gate.
 9. `route-concept.md`: route argument and phase draft based on the accepted
    event set and candidate-review decisions.
 10. `event-framing.md`, `event-framing.json`, `place-framing.json`, and
@@ -116,8 +117,8 @@ The generated files are working drafts. They should not be treated as final
 historical claims or publication-ready seed data without review.
 
 The route content pipeline uses `accepted-events.json` as the enforcement
-contract. `accepted-events.md` remains the readable editorial dossier and is not
-parsed as the source of truth.
+contract. `accepted-events.md` remains the readable editorial view and is not
+parsed as the source of truth or approved separately.
 
 ## Pipeline Commands
 
@@ -144,8 +145,8 @@ uv run --project backend python backend/scripts/route_content_pipeline.py promot
 - Treat route briefs, dossiers, and concepts as editorial source documents, not
   as the runtime data model.
 - Treat generated pipeline artifacts as drafts until reviewed.
-- Create accepted-event dossiers only after human candidate selection. Do not
-  move unresolved `maybe`, unresolved `merge`, or `reject` candidates into
+- Complete the accepted-events handoff only after human candidate selection. Do
+  not move unresolved `maybe`, unresolved `merge`, or `reject` candidates into
   enrichment or seed framing.
 - Treat older `develop`, `context`, and `defer` candidate labels as draft
   labels only. Convert them to `keep`, `maybe`, `merge`, or `reject` only after
