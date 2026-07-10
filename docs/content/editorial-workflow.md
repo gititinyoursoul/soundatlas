@@ -86,15 +86,15 @@ For new route work, keep route-specific editorial artifacts under
 
 1. `brief.md`: route idea, question, thesis hypothesis, research targets, and
    risks.
-2. `research-dossier.md` or a named dossier variant such as
-   `research-dossier.mvp-edit.md`: source directions, candidate events,
+2. `research-dossier.md`: source directions, candidate events,
    candidate connections, and editorial risks.
 3. `pipeline.json`: route-local pipeline state, active dossier, step outputs,
    and default filenames.
 4. `*.ai-draft.*`: local Codex CLI prompt and run metadata files. These files
    live in the route folder and are ignored by git.
-5. Named variants such as `event-list.mvp-edit.json` or
-   `route-concept.mvp-edit.md` when alternate editorial drafts are useful.
+5. Named variants such as `event-list.alternate-draft.json` or
+   `route-concept.alternate-draft.md` when alternate editorial drafts are
+   useful.
 6. `event-list.md` and `event-list.json`: candidate events extracted from the
    active dossier for editorial review.
 7. `accepted-events.json`: structured accepted-event handoff created after

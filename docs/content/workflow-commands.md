@@ -29,9 +29,11 @@ The workflow has three file modes:
 - `--renew`: regenerate selected outputs and write `.bak` copies before
   overwriting existing files.
 - `--variant <name>`: write a named alternate chain such as
-  `event-list.mvp-edit.json` and `route-concept.mvp-edit.md`.
+  `event-list.alternate-draft.json`,
+  `accepted-events.alternate-draft.json`, and
+  `route-concept.alternate-draft.md`.
 
-Use lowercase hyphenated variant names, for example `mvp-edit`.
+Use lowercase hyphenated variant names, for example `alternate-draft`.
 
 ## Route Setup
 
@@ -97,11 +99,11 @@ uv run --project backend python backend/scripts/route_content_pipeline.py agent 
 Use `--variant` to draft an alternate chain:
 
 ```bash
-uv run --project backend python backend/scripts/route_content_pipeline.py agent --route-id birth-of-hip-hop --step brief_to_dossier --variant mvp-edit
+uv run --project backend python backend/scripts/route_content_pipeline.py agent --route-id birth-of-hip-hop --step brief_to_dossier --variant alternate-draft
 ```
 
-This writes `research-dossier.mvp-edit.md`. Later variant steps read and write
-the matching variant filenames when you pass the same `--variant`.
+This writes `research-dossier.alternate-draft.md`. Later variant steps read and
+write the matching variant filenames when you pass the same `--variant`.
 
 ## Deterministic Steps
 
@@ -145,6 +147,7 @@ Run one step:
 
 ```bash
 uv run --project backend python backend/scripts/route_content_pipeline.py run --route-id birth-of-hip-hop --step event_list
+uv run --project backend python backend/scripts/route_content_pipeline.py run --route-id birth-of-hip-hop --step accepted_events
 ```
 
 Regenerate outputs with backups:
@@ -156,7 +159,7 @@ uv run --project backend python backend/scripts/route_content_pipeline.py run --
 Create a deterministic variant:
 
 ```bash
-uv run --project backend python backend/scripts/route_content_pipeline.py run --route-id birth-of-hip-hop --step event_list --variant mvp-edit
+uv run --project backend python backend/scripts/route_content_pipeline.py run --route-id birth-of-hip-hop --step event_list --variant alternate-draft
 ```
 
 ## Status
@@ -182,7 +185,7 @@ uv run --project backend python backend/scripts/route_content_pipeline.py promot
 Preview a variant:
 
 ```bash
-uv run --project backend python backend/scripts/route_content_pipeline.py promote --route-id birth-of-hip-hop --to-seed --variant mvp-edit
+uv run --project backend python backend/scripts/route_content_pipeline.py promote --route-id birth-of-hip-hop --to-seed --variant alternate-draft
 ```
 
 Write route drafts into seed files:

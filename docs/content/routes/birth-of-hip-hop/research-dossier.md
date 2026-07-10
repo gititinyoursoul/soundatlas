@@ -1,4 +1,4 @@
-# Birth of Hip-Hop Route Research Dossier MVP Edit
+# Birth of Hip-Hop Route Research Dossier
 
 Source basis:
 
@@ -7,15 +7,12 @@ Source basis:
 - `docs/content/route-research-dossier-template.md`
 - `docs/content/route-editorial-quality-standards.md`
 
-This MVP edit is a fresh research dossier. It intentionally does not derive
-from, audit, summarize, or revise
-`docs/content/routes/birth-of-hip-hop/research-dossier.md`.
-
-Here, "MVP edit" means a route-facing research pass for the current SoundAtlas
-MVP after the numeric event, place, and connection targets were removed from
-`docs/mvp-concept.md`. The purpose is to widen the possible research directions
-while keeping the work tied to the MVP product promise: a map-first exploration
-of New York music history across place, time, and sound/culture.
+This research dossier is a route-facing research pass for the current
+SoundAtlas MVP after the numeric event, place, and connection targets were
+removed from `docs/mvp-concept.md`. The purpose is to widen the possible
+research directions while keeping the work tied to the MVP product promise: a
+map-first exploration of New York music history across place, time, and
+sound/culture.
 
 Candidate events and connections below are not final seed selections.
 

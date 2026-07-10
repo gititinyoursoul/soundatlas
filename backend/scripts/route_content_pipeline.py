@@ -153,7 +153,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     run_parser.add_argument(
         "--variant",
-        help="Write/read named route-local variants, for example 'mvp-edit'.",
+        help="Write/read named route-local variants, for example 'alternate-draft'.",
     )
 
     agent_parser = subparsers.add_parser(
@@ -179,7 +179,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     agent_parser.add_argument(
         "--variant",
-        help="Write/read named route-local variants, for example 'mvp-edit'.",
+        help="Write/read named route-local variants, for example 'alternate-draft'.",
     )
     agent_parser.add_argument(
         "--dry-run",
