@@ -40,12 +40,18 @@ data/enrichment/schemas/event-search-components.schema.json
 ## Workflow Position
 
 ```text
-data/seed/events.json
+docs/content/routes/<route-id>/accepted-events.md
+→ data/seed/events.json or accepted event selection
 → data/enrichment/event-search-components/<event-id>.json
 → data/enrichment/youtube-search-requests/<event-id>.json
 → data/enrichment/youtube-search-results/<event-id>.json
 → selected draft media_links in data/seed/events.json
 ```
+
+When a route has an accepted-event dossier, use it as the editorial source for
+which events are enrichment-ready. Current scripts still read seed events, so
+the selected seed event should trace back to a `keep` candidate or a
+human-resolved `merge` outcome.
 
 Only selected media links are merged back into `events.json`. Intermediate search components, request plans, and search results stay in `data/enrichment/`.
 

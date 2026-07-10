@@ -9,19 +9,23 @@ Codex should not invent media links, video IDs, playlist IDs, source URLs, or AP
 ## Recommended Workflow
 
 1. Pick an event from `data/seed/events.json`.
-2. Derive or review event search components with
+2. When available, confirm the event appears in
+   `docs/content/routes/<route-id>/accepted-events.md` as a `keep` candidate or
+   human-resolved `merge` outcome. Do not plan YouTube queries for unresolved
+   `maybe`, unresolved `merge`, or `reject` candidates.
+3. Derive or review event search components with
    `docs/enrichment/upstream/event-search-components.md`.
-3. Ask Codex to create a YouTube request plan using `prompts/generate-youtube-search-queries.md`.
-4. Save the reviewed plan under `data/enrichment/youtube-search-requests/<event-id>.json`.
-5. Validate the plan with:
+4. Ask Codex to create a YouTube request plan using `prompts/generate-youtube-search-queries.md`.
+5. Save the reviewed plan under `data/enrichment/youtube-search-requests/<event-id>.json`.
+6. Validate the plan with:
 
 ```powershell
 cd backend
 uv run python scripts/run_youtube_search_requests.py --event-id <event-id> --dry-run
 ```
 
-6. Run the live YouTube request only after the plan looks correct.
-7. Merge results with `enrich_media_links.py --dry-run` before writing seed changes.
+7. Run the live YouTube request only after the plan looks correct.
+8. Merge results with `enrich_media_links.py --dry-run` before writing seed changes.
 
 ## Compatibility With `enrich_media_links.py`
 

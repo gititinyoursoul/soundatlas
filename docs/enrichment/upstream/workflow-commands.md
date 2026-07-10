@@ -11,12 +11,17 @@ that an event is ready for provider-specific enrichment work.
 ## Workflow Overview
 
 ```text
-seed data
+accepted event dossier or seed data
 -> generate or review event-search-components
 -> inspect query-input warnings
 -> preview quality reports
 -> decide whether to fix editorial text, seed data, or provider plans
 ```
+
+When `docs/content/routes/<route-id>/accepted-events.md` exists, use it to
+confirm that the event is enrichment-ready before generating search components.
+Do not generate enrichment inputs for unresolved `maybe`, unresolved `merge`,
+or `reject` candidates.
 
 For the shared enrichment flow and split points, see
 `docs/enrichment/workflow.md`.

@@ -18,7 +18,8 @@ candidate normalization.
 
 ```mermaid
 flowchart TD
-  A["Curated seed data<br/>events, routes, places"] --> B["Select event or route"]
+  Z["Accepted event dossier<br/>accepted-events.md"] --> A["Curated seed data or accepted events<br/>events, routes, places"]
+  A --> B["Select event or route"]
   B --> C["Build retrieval brief<br/>title, place, years, tags, summary, significance"]
   C --> D["Plan queries"]
 
@@ -45,7 +46,7 @@ flowchart TD
 ```
 
 ```text
-seed data selection
+accepted event dossier or seed data selection
 -> retrieval brief generation
 -> query planning
 -> provider execution
@@ -58,7 +59,16 @@ seed data selection
 
 ## Shared Inputs
 
-Both workflows start from the same curated seed data:
+Both workflows should start from accepted events when route-folder editorial
+work is available. The editorial handoff is:
+
+- `docs/content/routes/<route-id>/accepted-events.md`
+
+Current scripts still read curated seed data, so seed events used for
+enrichment should trace back to an accepted-event dossier or an equivalent
+human review decision.
+
+Both workflows can use the same curated seed data:
 
 - `data/seed/events.json`
 - `data/seed/routes.json`
@@ -73,6 +83,7 @@ The shared retrieval brief can use:
 - tags
 - summary
 - significance
+- source leads and claim risks from `accepted-events.md`
 - other known scene terms already present in the event text
 - optional event-search-components from `data/enrichment/event-search-components/`
 
@@ -101,6 +112,8 @@ Both workflows should follow the same candidate rules:
 
 - keep generated links as `draft`
 - never mark generated candidates as `reviewed`
+- enrich accepted events only; do not enrich unresolved `maybe`, unresolved
+  `merge`, or `reject` candidates
 - preserve existing accepted links
 - deduplicate by stable external URLs or equivalent provider identifiers
 - skip rejected items through the event-level ignore list

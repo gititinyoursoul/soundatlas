@@ -39,15 +39,18 @@ SoundAtlas currently uses a route-first workflow:
 4. `event-list.md` and `event-list.json` hold candidate events for review.
 5. `route-concept.md` turns reviewed candidates into a route argument and phase
    draft.
-6. `event-framing.*`, `place-framing.json`, and `connection-framing.json`
+6. `accepted-events.md` is the route-level accepted-event dossier to create
+   after human candidate review. It includes only `keep` candidates and
+   human-resolved `merge` outcomes.
+7. `event-framing.*`, `place-framing.json`, and `connection-framing.json`
    create seed-shaped drafts.
-7. `seed-transfer-report.md` and `validation-report.md` preview structural
+8. `seed-transfer-report.md` and `validation-report.md` preview structural
    seed changes before promotion.
-8. `data/seed/` is the runtime source for the map, timeline, route switching,
+9. `data/seed/` is the runtime source for the map, timeline, route switching,
    event inspector, sources, connections, media links, and image links.
-9. Enrichment scripts can create event-search components, media query plans,
+10. Enrichment scripts can create event-search components, media query plans,
    YouTube result files, draft `media_links`, and draft `image_links`.
-10. The app has an internal media/image review queue for marking draft links as
+11. The app has an internal media/image review queue for marking draft links as
     reviewed or rejecting them.
 
 The documentation consistently says generated route artifacts are drafts and
@@ -69,8 +72,8 @@ not replace the human editor or authorize publication.
 | Generate candidate events | Dossier candidate table and `event-list.json` | Aligned | Candidate events are visible before seed promotion. |
 | Review candidates manually | Docs require artifact inspection | Partial | The review point exists, but it is not strongly modeled. |
 | Mark Keep / Maybe / Merge / Reject | Current statuses are `develop`, `context`, `defer`, and `reject` | Partial | The vocabulary should be simplified to editor-facing decisions. |
-| Create dossiers only for accepted events | Route dossier exists before candidate selection | Missing | Current dossier is route-wide and includes weak candidates. |
-| Enrich accepted events with sources and media | Enrichment runs from seed events | Partial | Accepted-event boundary is unclear because seed data can still be draft. |
+| Create dossiers only for accepted events | `accepted-events.md` route-level dossier template | Aligned | Dossier is documented as enrichment-ready, not publication-ready. |
+| Enrich accepted events with sources and media | Enrichment can use accepted-event dossiers as the editorial handoff | Partial | Current scripts still run from seed data; docs now define the accepted-event boundary. |
 | Human reviews final output | Seed preview, validation report, and link review exist | Partial | There is no single final event-card approval gate. |
 | Publish as map, timeline, route, or event cards | Seed data powers runtime app | Partial | Draft seed records can still appear in the explorer. |
 
@@ -106,8 +109,8 @@ be treated as historical or curatorial truth.
 | Candidate event | Exists | Dossier tables and `event-list.json`. |
 | Candidate review status | Partial | Current statuses are not the desired editor vocabulary. |
 | Accepted event | Partial | Approximated by `develop` candidates and seed events, but not explicit. |
-| Event dossier | Missing | Dossiers are route-wide, not per accepted event. |
-| Source status | Missing | Source leads and risk notes exist, but not structured statuses. |
+| Event dossier | Exists | Implemented as route-level `accepted-events.md` guidance. |
+| Source status | Exists | Source status vocabulary is documented for accepted-event dossiers. |
 | Media search queries | Exists | YouTube request plans and image query ladders. |
 | Human review before publishing | Partial | Link review and seed preview exist, but no final event-card gate. |
 
@@ -148,6 +151,9 @@ For sources, prefer simple source status values over numeric confidence:
 These should describe source and claim quality, not whether an event is
 important.
 
+AI may suggest draft source statuses, but human editors confirm or revise them
+before the status is treated as editorially approved.
+
 ## Smallest Useful MVP Workflow
 
 The smallest useful editorial MVP is:
@@ -170,7 +176,8 @@ Include:
   leads, and risks.
 - Candidate event longlist with rationale, source leads, and risk notes.
 - Human candidate decision field.
-- Accepted event dossier for each kept or merged event.
+- Route-level accepted-event dossier covering each kept candidate and resolved
+  merge outcome.
 - Media search query planning for accepted events only.
 - Draft source, media, and image enrichment.
 - Final human review before seed promotion.

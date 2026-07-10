@@ -20,8 +20,9 @@ flowchart TD
   A["MVP concept<br/>docs/mvp-concept.md"] --> B["Route brief<br/>docs/content/routes/&lt;route-id&gt;/brief.md"]
   B --> I["Optional Codex agent prompt/run files<br/>*.ai-draft.*"]
   I --> C["Research dossier<br/>research-dossier.md"]
-  C --> D["Event list and route concept<br/>event-list.json, route-concept.md"]
-  D --> E["Event framing<br/>title, summary, significance, sources"]
+  C --> D["Candidate event review<br/>event-list.json"]
+  D --> J["Accepted event dossier<br/>accepted-events.md"]
+  J --> E["Event framing<br/>title, summary, significance, sources"]
   E --> H["Seed preview and validation<br/>route folder reports"]
   H --> F["Seed promotion<br/>data/seed/"]
   F --> G["Enrichment upstream prep<br/>docs/enrichment/upstream/"]
@@ -52,17 +53,23 @@ flowchart TD
    generate Codex CLI prompts or invoke Codex CLI for one route step.
 10. Review each generated artifact in the route folder before treating it as the
     input to the next editorial decision.
-11. Define event titles, summaries, and significance text in editorial form
+11. After human candidate review, create or update
+    `accepted-events.md` using `docs/content/accepted-event-dossier-template.md`.
+    Include only `keep` candidates and human-resolved `merge` outcomes.
+12. Treat `accepted-events.md` as enrichment-ready, not publication-ready. AI
+    may draft dossier content and suggest source statuses, but human editors
+    confirm source status and source/media readiness.
+13. Define event titles, summaries, and significance text in editorial form
     before translating them into `data/seed/`.
-12. Use the generated seed preview and validation report to inspect draft seed
+14. Use the generated seed preview and validation report to inspect draft seed
     shape before any write into `data/seed/`.
-13. Promote route drafts to seed only after event framing has been manually
+15. Promote route drafts to seed only after event framing has been manually
     inspected.
-14. Keep contested or incomplete claims traceable through `source_urls`.
-15. Mark uncertain seed records as `review_status: "draft"`.
-16. Use `prompts/create-route.md` when route concept work needs agent-written
+16. Keep contested or incomplete claims traceable through `source_urls`.
+17. Mark uncertain seed records as `review_status: "draft"`.
+18. Use `prompts/create-route.md` when route concept work needs agent-written
     editorial content beyond deterministic pipeline artifacts.
-17. Use `prompts/curate-seed-data.md` when the main task is to add or revise
+19. Use `prompts/curate-seed-data.md` when the main task is to add or revise
     JSON seed records directly.
 
 ## Route Folder Artifacts
@@ -83,14 +90,22 @@ For new route work, keep route-specific editorial artifacts under
    `route-concept.mvp-edit.md` when alternate editorial drafts are useful.
 6. `event-list.md` and `event-list.json`: candidate events extracted from the
    active dossier for editorial review.
-7. `route-concept.md`: route argument and phase draft based on the event list.
-8. `event-framing.md`, `event-framing.json`, `place-framing.json`, and
+7. `accepted-events.md`: route-level accepted-event dossier created after
+   human candidate review. Include only `keep` candidates and resolved `merge`
+   outcomes. This artifact is enrichment-ready, not publication-ready.
+8. `route-concept.md`: route argument and phase draft based on the accepted
+   event set and candidate-review decisions.
+9. `event-framing.md`, `event-framing.json`, `place-framing.json`, and
    `connection-framing.json`: draft seed-shaped records for review.
-9. `seed-transfer-report.md`: preview of what would be merged into seed files.
-10. `validation-report.md`: structural and reference validation findings.
+10. `seed-transfer-report.md`: preview of what would be merged into seed files.
+11. `validation-report.md`: structural and reference validation findings.
 
 The generated files are working drafts. They should not be treated as final
 historical claims or publication-ready seed data without review.
+
+The current route content pipeline does not yet generate or consume
+`accepted-events.md`; create it manually from the reviewed event list until a
+separate tooling issue adds pipeline support.
 
 ## Pipeline Commands
 
@@ -117,6 +132,12 @@ uv run --project backend python backend/scripts/route_content_pipeline.py promot
 - Treat route briefs, dossiers, and concepts as editorial source documents, not
   as the runtime data model.
 - Treat generated pipeline artifacts as drafts until reviewed.
+- Create accepted-event dossiers only after human candidate selection. Do not
+  move unresolved `maybe`, unresolved `merge`, or `reject` candidates into
+  enrichment or seed framing.
+- Use source status values only as source/claim quality signals:
+  `strong`, `medium`, `weak`, `mythologized`, and `needs_review`. AI-suggested
+  source statuses remain unconfirmed until human review.
 - Prefer `promote --to-seed` as a dry-run preview before using
   `promote --to-seed --write`.
 - Commit route content artifacts only after inspecting them. Do not commit raw
@@ -133,6 +154,7 @@ into seed schema or enrichment execution docs.
 - `docs/mvp-concept.md`
 - `docs/content/routes/`
 - `docs/content/editorial-process-alignment.md`
+- `docs/content/accepted-event-dossier-template.md`
 - `docs/content/workflow-commands.md`
 - `docs/content/route-concepts/` legacy route concepts
 - `docs/content/route-editorial-quality-standards.md`

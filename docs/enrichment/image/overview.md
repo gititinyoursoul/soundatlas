@@ -17,6 +17,12 @@ The shared enrichment workflow is documented in
 `docs/enrichment/workflow.md`. This concept focuses on the image-specific
 branch of that pipeline.
 
+Image enrichment should start only after an event has been accepted for the
+route. When route-folder editorial artifacts are available, use
+`docs/content/routes/<route-id>/accepted-events.md` as the human-reviewed
+handoff before planning image queries. Do not plan image enrichment for
+unresolved `maybe`, unresolved `merge`, or `reject` candidates.
+
 ## Core Principles
 
 - Do not add image files to the repository.

@@ -19,6 +19,12 @@ Image enrichment follows the same shared pipeline, but writes to `image_links`
 instead of `media_links`. The image-specific branch is documented in
 `docs/enrichment/image/overview.md`.
 
+Media enrichment should start only after an event has been accepted for the
+route. When route-folder editorial artifacts are available, use
+`docs/content/routes/<route-id>/accepted-events.md` as the human-reviewed
+handoff before planning YouTube requests. Do not plan media enrichment for
+unresolved `maybe`, unresolved `merge`, or `reject` candidates.
+
 ## Data Model
 
 Events use the `media_links` field. Each entry is a structured object.
@@ -77,6 +83,7 @@ Search components are derived from existing event data:
 - `year_start` and `year_end`
 - event tags
 - known artist, venue, label, or release terms
+- accepted-event dossier source and media leads, when available
 
 Examples:
 

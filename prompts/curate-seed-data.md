@@ -30,6 +30,9 @@ Process
   MVP scope in `docs/mvp-concept.md`.
 - When the route folder has `pipeline.json`, inspect pipeline status and any
   `seed-transfer-report.md` or `validation-report.md` before editing seed data.
+- When the route folder has `accepted-events.md`, use it as the editorial
+  handoff for seed-authoring inputs. Do not convert unresolved `maybe`,
+  unresolved `merge`, or `reject` candidates into seed records.
 - Treat raw `*.ai-draft.*` files as local drafts. Use only reviewed
   route-folder variants as seed-authoring inputs.
 - Update the smallest necessary set of seed files: routes, places, events, connections.

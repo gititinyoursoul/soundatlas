@@ -89,6 +89,11 @@ Recommended workflow
 - Add or revise the Route Research Dossier before selecting final event and
   connection candidates, using `docs/content/route-research-dossier-template.md`
   as the default structure.
+- After human candidate review, create or update
+  `docs/content/routes/<route-id>/accepted-events.md` using
+  `docs/content/accepted-event-dossier-template.md`. Include only `keep`
+  candidates and human-resolved `merge` outcomes. Treat the artifact as
+  enrichment-ready, not publication-ready.
 - When using the route content pipeline, initialize `pipeline.json`, generate
   missing artifacts, and inspect `status` before seed transfer.
 - When using Codex CLI agent drafting, generate or invoke one agent step at a
@@ -110,6 +115,8 @@ Deliverables
 - Route Research Dossier section covering artists/groups, places/venues,
   influences, circumstances, event rationale, connection rationale, editorial
   source leads, media source leads, image source leads, and unresolved risks.
+- Accepted-event dossier at `docs/content/routes/<route-id>/accepted-events.md`
+  when candidate review has selected events for enrichment or seed planning.
 - Reviewed route-folder variants when Codex CLI agent drafting is used.
 - Pipeline status, seed preview, or validation report notes when the route
   content pipeline is used.

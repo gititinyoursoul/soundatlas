@@ -177,6 +177,8 @@ Before seed writing, inspect:
 
 - the dossier source directions and risk notes
 - candidate event rationale, not only chronology
+- `accepted-events.md`, when present, to confirm that only `keep` candidates
+  and human-resolved `merge` outcomes are moving forward
 - event titles, summaries, significance text, and source fields
 - draft place coordinates and source risks
 - connection logic
@@ -184,6 +186,12 @@ Before seed writing, inspect:
 
 Generated text should stay cautious. Do not use the pipeline to turn weakly
 sourced or contested claims into settled statements.
+
+The current pipeline does not generate `accepted-events.md`. Create that file
+manually from the reviewed event list using
+`docs/content/accepted-event-dossier-template.md` before enrichment planning or
+seed framing. Treat the file as enrichment-ready only; publication readiness is
+handled by a later final-review step.
 
 ## Verification
 
