@@ -118,6 +118,37 @@ cd frontend
 VITE_API_BASE_URL=http://127.0.0.1:8000 npm run dev -- --host 127.0.0.1 --port 5173
 ```
 
+### Public Static Mode
+
+The public GitHub Pages deployment is a read-only static frontend. It loads
+generated JSON assets from the curated seed files instead of calling the local
+FastAPI backend.
+
+```sh
+cd frontend
+VITE_DATA_MODE=static VITE_BASE_PATH=/soundatlas npm run build
+```
+
+Local/editorial mode remains API-backed:
+
+```sh
+cd frontend
+VITE_DATA_MODE=api VITE_API_BASE_URL=http://127.0.0.1:8000 npm run dev
+```
+
+`npm run build` regenerates `frontend/static/soundatlas-data/` from
+`data/seed/`. The generated static data is build input and should not replace
+the seed files as the editorial source of truth.
+
+### Release Organization
+
+Deployment work is grouped in the GitHub milestone
+`v0.1 Public Static MVP`. Issues in that milestone track the public static
+frontend, generated seed-data assets, Pages deployment workflow, and docs.
+
+Use GitHub Milestones for release planning and GitHub Releases only after a
+validated deployment is tagged, for example `v0.1.0`.
+
 ## Checks
 
 Backend:

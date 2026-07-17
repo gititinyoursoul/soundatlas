@@ -48,6 +48,7 @@
   export let onNavigateEvent: (eventId: string, routeId?: string) => void = () => {};
   export let initialTab: InspectorTab = 'story';
   export let selectedPreviewUrl: string | null = null;
+  export let showReviewActions = true;
 
   const mediaProviderLabels: Record<MediaProvider, string> = {
     youtube: 'YouTube',
@@ -388,7 +389,7 @@
                 <MediaEmbed
                   mediaLinks={[selectedPreviewItem.mediaLink]}
                   eventId={event.id}
-                  showReviewActions={false}
+                  {showReviewActions}
                 />
               </div>
             {:else if selectedPreviewItem?.kind === 'media' && selectedPreviewItem.mediaLink.playback_mode === 'external'}

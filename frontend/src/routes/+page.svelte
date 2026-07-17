@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount, tick } from 'svelte';
-  import { loadSoundAtlasData, reviewEventLink } from '$lib/api/soundatlas';
+  import { IS_PUBLIC_STATIC_MODE, loadSoundAtlasData, reviewEventLink } from '$lib/api/soundatlas';
   import Icon from '$lib/components/Icon.svelte';
   import MapView from '$lib/components/MapView.svelte';
   import NavigationDrawer from '$lib/components/NavigationDrawer.svelte';
@@ -42,35 +42,37 @@
     counts[route.id] = events.filter((event) => event.route_id === route.id).length;
     return counts;
   }, {});
-  $: reviewQueueItems = events.flatMap((event) => [
-    ...event.media_links
-      .filter((mediaLink) => mediaLink.review_status === 'draft')
-      .map<ReviewQueueItem>((mediaLink) => ({
-        id: `media:${event.id}:${mediaLink.url}`,
-        kind: 'media',
-        eventId: event.id,
-        eventTitle: event.title,
-        routeId: event.route_id,
-        title: mediaLink.title,
-        provider: mediaLink.provider,
-        type: mediaLink.type,
-        url: mediaLink.url
-      })),
-    ...event.image_links
-      .filter((imageLink) => imageLink.review_status === 'draft')
-      .map<ReviewQueueItem>((imageLink) => ({
-        id: `image:${event.id}:${imageLink.image_url}`,
-        kind: 'image',
-        eventId: event.id,
-        eventTitle: event.title,
-        routeId: event.route_id,
-        title: imageLink.title,
-        provider: imageLink.provider,
-        type: imageLink.type,
-        url: imageLink.image_url,
-        previewUrl: imageLink.thumbnail_url ?? imageLink.image_url
-      }))
-  ]);
+  $: reviewQueueItems = IS_PUBLIC_STATIC_MODE
+    ? []
+    : events.flatMap((event) => [
+        ...event.media_links
+          .filter((mediaLink) => mediaLink.review_status === 'draft')
+          .map<ReviewQueueItem>((mediaLink) => ({
+            id: `media:${event.id}:${mediaLink.url}`,
+            kind: 'media',
+            eventId: event.id,
+            eventTitle: event.title,
+            routeId: event.route_id,
+            title: mediaLink.title,
+            provider: mediaLink.provider,
+            type: mediaLink.type,
+            url: mediaLink.url
+          })),
+        ...event.image_links
+          .filter((imageLink) => imageLink.review_status === 'draft')
+          .map<ReviewQueueItem>((imageLink) => ({
+            id: `image:${event.id}:${imageLink.image_url}`,
+            kind: 'image',
+            eventId: event.id,
+            eventTitle: event.title,
+            routeId: event.route_id,
+            title: imageLink.title,
+            provider: imageLink.provider,
+            type: imageLink.type,
+            url: imageLink.image_url,
+            previewUrl: imageLink.thumbnail_url ?? imageLink.image_url
+          }))
+      ]);
   $: selectedEventIsVisible = routeEvents.some((event) => event.id === selectedEventId);
   $: activeSelectedEventId =
     selectedEventIsVisible || routeEvents.length === 0
@@ -100,10 +102,11 @@
   $: headerRouteYears = activeRoute ? `${activeRoute.year_start}-${activeRoute.year_end}` : '';
   $: headerRouteSummary =
     activeRoute?.thesis || activeRoute?.summary || 'Fetching the curated route, event sequence, and map places.';
+  $: dataSourceLabel = IS_PUBLIC_STATIC_MODE ? 'static data' : 'API data';
   $: statusLabel = isLoading
-    ? 'Loading API data'
+    ? `Loading ${dataSourceLabel}`
     : errorMessage
-      ? 'API unavailable'
+      ? `${IS_PUBLIC_STATIC_MODE ? 'Static data' : 'API'} unavailable`
       : `${routeEvents.length} events visible`;
   $: selectedConnections = selectedEvent
     ? buildStoryConnectionItems(selectedEvent, connections, events, places, routes)
@@ -190,6 +193,10 @@
   }
 
   async function reviewQueueItem(item: ReviewQueueItem, action: ReviewAction): Promise<void> {
+    if (IS_PUBLIC_STATIC_MODE) {
+      return;
+    }
+
     reviewSavingItemId = item.id;
     reviewErrorMessage = null;
     selectedRouteId = item.routeId;
@@ -306,6 +313,7 @@
     {reviewQueueItems}
     {reviewSavingItemId}
     {reviewErrorMessage}
+    showAdminReview={!IS_PUBLIC_STATIC_MODE}
     {isLoading}
     {errorMessage}
     onClose={closeNavigation}
@@ -360,9 +368,13 @@
 
       {#if errorMessage}
         <div class="notice error">
-          <strong>Backend unavailable</strong>
+          <strong>{IS_PUBLIC_STATIC_MODE ? 'Static data unavailable' : 'Backend unavailable'}</strong>
           <span>{errorMessage}</span>
-          <small>Start the FastAPI backend on http://127.0.0.1:8000, then refresh this page.</small>
+          {#if IS_PUBLIC_STATIC_MODE}
+            <small>Generate the static seed data, rebuild the frontend, then refresh this page.</small>
+          {:else}
+            <small>Start the FastAPI backend on http://127.0.0.1:8000, then refresh this page.</small>
+          {/if}
         </div>
       {:else}
         <section
@@ -420,6 +432,7 @@
         {errorMessage}
         initialTab={selectedInspectorTab}
         selectedPreviewUrl={selectedPreviewUrl}
+        showReviewActions={!IS_PUBLIC_STATIC_MODE}
       />
     </section>
   </section>

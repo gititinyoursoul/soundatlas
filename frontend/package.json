@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite dev",
     "dev:screenshots": "vite dev --host 127.0.0.1 --port 5174 --strictPort",
-    "build": "vite build",
+    "generate:static-data": "node scripts/generate-static-data.mjs",
+    "build": "npm run generate:static-data && vite build",
     "preview": "vite preview",
     "check": "svelte-kit sync && tsc --noEmit",
     "test": "vitest run",
@@ -19,6 +20,7 @@
   "devDependencies": {
     "@playwright/test": "^1.61.1",
     "@sveltejs/adapter-auto": "^7.0.1",
+    "@sveltejs/adapter-static": "^3.0.10",
     "@sveltejs/kit": "^2.63.1",
     "@types/leaflet": "^1.9.21",
     "@types/node": "^25.9.2",

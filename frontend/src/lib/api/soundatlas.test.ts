@@ -1,6 +1,11 @@
 import { describe, expect, it, vi } from 'vitest';
 import { makeConnection, makeEvent, makePlace, makeRoute } from '$lib/test/fixtures';
-import { API_BASE_URL, loadSoundAtlasData, reviewEventLink } from './soundatlas';
+import {
+  API_BASE_URL,
+  loadApiSoundAtlasData,
+  loadStaticSoundAtlasData,
+  reviewEventLink
+} from './soundatlas';
 
 function jsonResponse(body: unknown, init: ResponseInit = {}): Response {
   return new Response(JSON.stringify(body), {
@@ -25,7 +30,7 @@ describe('SoundAtlas API client', () => {
       .mockResolvedValueOnce(jsonResponse(events))
       .mockResolvedValueOnce(jsonResponse(connections));
 
-    await expect(loadSoundAtlasData(fetcher)).resolves.toEqual({
+    await expect(loadApiSoundAtlasData(fetcher)).resolves.toEqual({
       routes,
       places,
       events,
@@ -47,7 +52,7 @@ describe('SoundAtlas API client', () => {
       .mockResolvedValueOnce(jsonResponse([]))
       .mockResolvedValueOnce(jsonResponse([]));
 
-    await expect(loadSoundAtlasData(fetcher)).resolves.toEqual({
+    await expect(loadApiSoundAtlasData(fetcher)).resolves.toEqual({
       routes: [],
       places: [],
       events: [],
@@ -63,9 +68,35 @@ describe('SoundAtlas API client', () => {
       .mockResolvedValueOnce(jsonResponse([]))
       .mockResolvedValueOnce(jsonResponse([]));
 
-    await expect(loadSoundAtlasData(fetcher)).rejects.toThrow(
+    await expect(loadApiSoundAtlasData(fetcher)).rejects.toThrow(
       'API request failed: 503 Service Unavailable'
     );
+  });
+
+  it('loads static public data from generated assets', async () => {
+    const routes = [makeRoute({ id: 'birth-of-hip-hop' })];
+    const places = [makePlace({ id: '1520-sedgwick-avenue' })];
+    const events = [makeEvent({ id: 'kool-herc-back-to-school-jam' })];
+    const connections = [makeConnection({ id: 'breakbeat-influence' })];
+    const fetcher = vi
+      .fn<typeof fetch>()
+      .mockResolvedValueOnce(jsonResponse(routes))
+      .mockResolvedValueOnce(jsonResponse(places))
+      .mockResolvedValueOnce(jsonResponse(events))
+      .mockResolvedValueOnce(jsonResponse(connections));
+
+    await expect(loadStaticSoundAtlasData(fetcher)).resolves.toEqual({
+      routes,
+      places,
+      events,
+      connections
+    });
+
+    expect(fetcher).toHaveBeenCalledTimes(4);
+    expect(fetcher).toHaveBeenNthCalledWith(1, '/soundatlas-data/routes.json');
+    expect(fetcher).toHaveBeenNthCalledWith(2, '/soundatlas-data/places.json');
+    expect(fetcher).toHaveBeenNthCalledWith(3, '/soundatlas-data/events.json');
+    expect(fetcher).toHaveBeenNthCalledWith(4, '/soundatlas-data/connections.json');
   });
 
   it('sends media review updates and returns the updated event', async () => {

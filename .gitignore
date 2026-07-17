@@ -32,6 +32,7 @@ screenshots/
 !docs/design/screenshots/
 !docs/design/screenshots/**
 test-results/
+frontend/static/soundatlas-data/
 
 # Environment files
 .env

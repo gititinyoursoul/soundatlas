@@ -33,6 +33,7 @@
   export let reviewQueueItems: ReviewQueueItem[] = [];
   export let reviewSavingItemId: string | null = null;
   export let reviewErrorMessage: string | null = null;
+  export let showAdminReview = true;
   export let isLoading = false;
   export let errorMessage: string | null = null;
   export let onClose: () => void = () => {};
@@ -48,7 +49,7 @@
   let didFocusForOpen = false;
   let activePanel: DrawerPanel = 'main';
 
-  $: sections = buildSections(routes.length, reviewQueueItems.length, errorMessage);
+  $: sections = buildSections(routes.length, reviewQueueItems.length, errorMessage, showAdminReview);
   $: if (open && !didFocusForOpen) {
     didFocusForOpen = true;
     void focusDrawer();
@@ -58,8 +59,13 @@
     activePanel = 'main';
   }
 
-  function buildSections(routes: number, reviewItems: number, error: string | null): NavSection[] {
-    return [
+  function buildSections(
+    routes: number,
+    reviewItems: number,
+    error: string | null,
+    includeAdminReview: boolean
+  ): NavSection[] {
+    const baseSections: NavSection[] = [
       {
         id: 'explore',
         title: 'Explore',
@@ -73,7 +79,15 @@
         ],
         emptyMessage: routes === 0 && !error ? 'No route entries loaded.' : undefined,
         errorMessage: error
-      },
+      }
+    ];
+
+    if (!includeAdminReview) {
+      return baseSections;
+    }
+
+    return [
+      ...baseSections,
       {
         id: 'admin',
         title: 'Admin',
@@ -109,6 +123,10 @@
     }
 
     if (item.id === 'media-review') {
+      if (!showAdminReview) {
+        return;
+      }
+
       openMediaReviewPanel();
       return;
     }
@@ -135,6 +153,10 @@
   }
 
   async function openMediaReviewPanel(): Promise<void> {
+    if (!showAdminReview) {
+      return;
+    }
+
     activePanel = 'media-review';
     onSelectItem('media-review');
 
@@ -306,7 +328,7 @@
               </div>
             {/if}
           </section>
-        {:else if activePanel === 'media-review'}
+        {:else if activePanel === 'media-review' && showAdminReview}
           <section class="review-panel" aria-labelledby="drawer-review-heading">
             <button type="button" class="back-button" on:click={returnToMainPanel}>
               <Icon name="collapse" />
@@ -448,10 +470,14 @@
         {#if variant === 'expanded'}
           <div class="session">
             <span>Mode</span>
-            <strong>Admin review</strong>
+            <strong>{showAdminReview ? 'Admin review' : 'Public explorer'}</strong>
           </div>
         {:else}
-          <span class="access-mark" aria-label="Admin review mode" data-tooltip="Admin review">
+          <span
+            class="access-mark"
+            aria-label={showAdminReview ? 'Admin review mode' : 'Public explorer mode'}
+            data-tooltip={showAdminReview ? 'Admin review' : 'Public explorer'}
+          >
             <Icon name="circle" />
           </span>
         {/if}
