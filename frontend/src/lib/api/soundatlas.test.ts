@@ -80,10 +80,10 @@ describe('SoundAtlas API client', () => {
     const connections = [makeConnection({ id: 'breakbeat-influence' })];
     const fetcher = vi
       .fn<typeof fetch>()
-      .mockResolvedValueOnce(jsonResponse(routes))
-      .mockResolvedValueOnce(jsonResponse(places))
-      .mockResolvedValueOnce(jsonResponse(events))
-      .mockResolvedValueOnce(jsonResponse(connections));
+      .mockResolvedValueOnce(jsonResponse({ _meta: {}, routes }))
+      .mockResolvedValueOnce(jsonResponse({ _meta: {}, places }))
+      .mockResolvedValueOnce(jsonResponse({ _meta: {}, events, ignored_links: [] }))
+      .mockResolvedValueOnce(jsonResponse({ _meta: {}, connections }));
 
     await expect(loadStaticSoundAtlasData(fetcher)).resolves.toEqual({
       routes,
@@ -97,6 +97,19 @@ describe('SoundAtlas API client', () => {
     expect(fetcher).toHaveBeenNthCalledWith(2, '/soundatlas-data/places.json');
     expect(fetcher).toHaveBeenNthCalledWith(3, '/soundatlas-data/events.json');
     expect(fetcher).toHaveBeenNthCalledWith(4, '/soundatlas-data/connections.json');
+  });
+
+  it('surfaces malformed static public data', async () => {
+    const fetcher = vi
+      .fn<typeof fetch>()
+      .mockResolvedValueOnce(jsonResponse({ _meta: {}, route_entries: [] }))
+      .mockResolvedValueOnce(jsonResponse({ _meta: {}, places: [] }))
+      .mockResolvedValueOnce(jsonResponse({ _meta: {}, events: [] }))
+      .mockResolvedValueOnce(jsonResponse({ _meta: {}, connections: [] }));
+
+    await expect(loadStaticSoundAtlasData(fetcher)).rejects.toThrow(
+      "Static data file 'routes.json' is missing 'routes' collection."
+    );
   });
 
   it('sends media review updates and returns the updated event', async () => {

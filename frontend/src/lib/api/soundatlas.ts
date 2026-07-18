@@ -45,10 +45,10 @@ export async function loadApiSoundAtlasData(fetcher: typeof fetch = fetch): Prom
 
 export async function loadStaticSoundAtlasData(fetcher: typeof fetch = fetch): Promise<SoundAtlasData> {
   const [routes, places, events, connections] = await Promise.all([
-    requestStaticJson<Route[]>('routes.json', fetcher),
-    requestStaticJson<Place[]>('places.json', fetcher),
-    requestStaticJson<Event[]>('events.json', fetcher),
-    requestStaticJson<Connection[]>('connections.json', fetcher)
+    requestStaticCollection<Route>('routes.json', 'routes', fetcher),
+    requestStaticCollection<Place>('places.json', 'places', fetcher),
+    requestStaticCollection<Event>('events.json', 'events', fetcher),
+    requestStaticCollection<Connection>('connections.json', 'connections', fetcher)
   ]);
 
   return {
@@ -108,4 +108,19 @@ async function requestStaticJson<T>(fileName: string, fetcher: typeof fetch): Pr
   }
 
   return (await response.json()) as T;
+}
+
+async function requestStaticCollection<T>(
+  fileName: string,
+  collectionKey: string,
+  fetcher: typeof fetch
+): Promise<T[]> {
+  const document = await requestStaticJson<Record<string, unknown>>(fileName, fetcher);
+  const collection = document[collectionKey];
+
+  if (!Array.isArray(collection)) {
+    throw new Error(`Static data file '${fileName}' is missing '${collectionKey}' collection.`);
+  }
+
+  return collection as T[];
 }
