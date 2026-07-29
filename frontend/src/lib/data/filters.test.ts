@@ -16,8 +16,8 @@ describe('filterEvents', () => {
   });
 
   it('returns only events for the selected route', () => {
-    expect(filterEvents(events, 'birth-of-hip-hop').map((event) => event.id)).toEqual([
-      'first-bronx-party'
-    ]);
+    expect(
+      filterEvents(events, 'birth-of-hip-hop').map((event) => event.id)
+    ).toEqual(['first-bronx-party']);
   });
 });

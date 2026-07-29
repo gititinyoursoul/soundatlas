@@ -15,11 +15,14 @@ const STATIC_DATA_BASE_PATH = `${base}/soundatlas-data`;
 export const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, '') ?? DEFAULT_API_BASE_URL;
 
-export const DATA_MODE = import.meta.env.VITE_DATA_MODE === 'static' ? 'static' : 'api';
+export const DATA_MODE =
+  import.meta.env.VITE_DATA_MODE === 'static' ? 'static' : 'api';
 
 export const IS_PUBLIC_STATIC_MODE = DATA_MODE === 'static';
 
-export async function loadSoundAtlasData(fetcher: typeof fetch = fetch): Promise<SoundAtlasData> {
+export async function loadSoundAtlasData(
+  fetcher: typeof fetch = fetch
+): Promise<SoundAtlasData> {
   if (DATA_MODE === 'static') {
     return loadStaticSoundAtlasData(fetcher);
   }
@@ -27,7 +30,9 @@ export async function loadSoundAtlasData(fetcher: typeof fetch = fetch): Promise
   return loadApiSoundAtlasData(fetcher);
 }
 
-export async function loadApiSoundAtlasData(fetcher: typeof fetch = fetch): Promise<SoundAtlasData> {
+export async function loadApiSoundAtlasData(
+  fetcher: typeof fetch = fetch
+): Promise<SoundAtlasData> {
   const [routes, places, events, connections] = await Promise.all([
     requestJson<Route[]>('/routes', fetcher),
     requestJson<Place[]>('/places', fetcher),
@@ -43,12 +48,18 @@ export async function loadApiSoundAtlasData(fetcher: typeof fetch = fetch): Prom
   };
 }
 
-export async function loadStaticSoundAtlasData(fetcher: typeof fetch = fetch): Promise<SoundAtlasData> {
+export async function loadStaticSoundAtlasData(
+  fetcher: typeof fetch = fetch
+): Promise<SoundAtlasData> {
   const [routes, places, events, connections] = await Promise.all([
     requestStaticCollection<Route>('routes.json', 'routes', fetcher),
     requestStaticCollection<Place>('places.json', 'places', fetcher),
     requestStaticCollection<Event>('events.json', 'events', fetcher),
-    requestStaticCollection<Connection>('connections.json', 'connections', fetcher)
+    requestStaticCollection<Connection>(
+      'connections.json',
+      'connections',
+      fetcher
+    )
   ]);
 
   return {
@@ -84,7 +95,9 @@ export async function reviewEventLink(
   });
 
   if (!response.ok) {
-    throw new Error(`API request failed: ${response.status} ${response.statusText}`);
+    throw new Error(
+      `API request failed: ${response.status} ${response.statusText}`
+    );
   }
 
   return (await response.json()) as Event;
@@ -94,17 +107,24 @@ async function requestJson<T>(path: string, fetcher: typeof fetch): Promise<T> {
   const response = await fetcher(`${API_BASE_URL}${path}`);
 
   if (!response.ok) {
-    throw new Error(`API request failed: ${response.status} ${response.statusText}`);
+    throw new Error(
+      `API request failed: ${response.status} ${response.statusText}`
+    );
   }
 
   return (await response.json()) as T;
 }
 
-async function requestStaticJson<T>(fileName: string, fetcher: typeof fetch): Promise<T> {
+async function requestStaticJson<T>(
+  fileName: string,
+  fetcher: typeof fetch
+): Promise<T> {
   const response = await fetcher(`${STATIC_DATA_BASE_PATH}/${fileName}`);
 
   if (!response.ok) {
-    throw new Error(`Static data request failed: ${response.status} ${response.statusText}`);
+    throw new Error(
+      `Static data request failed: ${response.status} ${response.statusText}`
+    );
   }
 
   return (await response.json()) as T;
@@ -115,11 +135,16 @@ async function requestStaticCollection<T>(
   collectionKey: string,
   fetcher: typeof fetch
 ): Promise<T[]> {
-  const document = await requestStaticJson<Record<string, unknown>>(fileName, fetcher);
+  const document = await requestStaticJson<Record<string, unknown>>(
+    fileName,
+    fetcher
+  );
   const collection = document[collectionKey];
 
   if (!Array.isArray(collection)) {
-    throw new Error(`Static data file '${fileName}' is missing '${collectionKey}' collection.`);
+    throw new Error(
+      `Static data file '${fileName}' is missing '${collectionKey}' collection.`
+    );
   }
 
   return collection as T[];

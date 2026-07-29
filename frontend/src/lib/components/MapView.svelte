@@ -2,7 +2,11 @@
   import { onMount } from 'svelte';
   import type { Feature, GeoJsonObject } from 'geojson';
   import 'leaflet/dist/leaflet.css';
-  import { boroughColors, nycBoroughs, type BoroughFeature } from '$lib/data/nyc-boroughs';
+  import {
+    boroughColors,
+    nycBoroughs,
+    type BoroughFeature
+  } from '$lib/data/nyc-boroughs';
   import {
     getPlaceGeometriesForPlaceIds,
     placeGeometryColors,
@@ -41,7 +45,11 @@
   let lastFramedRouteId: string | null = null;
 
   $: if (leaflet && placeGeometryLayer && placeGeometryLabelLayer && map) {
-    renderPlaceGeometries(events, selectedPlace?.id ?? null, selectedRoute?.color ?? null);
+    renderPlaceGeometries(
+      events,
+      selectedPlace?.id ?? null,
+      selectedRoute?.color ?? null
+    );
   }
 
   $: if (leaflet && markerLayer && map) {
@@ -159,12 +167,20 @@
 
     markerLayer.clearLayers();
 
-    const placements = getEventMarkerPlacements(currentEvents, currentPlaces, currentRoutes);
+    const placements = getEventMarkerPlacements(
+      currentEvents,
+      currentPlaces,
+      currentRoutes
+    );
     let selectedMarkerPosition: [number, number] | null = null;
 
     for (const placement of placements) {
       const isSelected = activeEventId === placement.event.id;
-      const avatarOptions = getMarkerOptions(isSelected, placement.route.color, placement.event);
+      const avatarOptions = getMarkerOptions(
+        isSelected,
+        placement.route.color,
+        placement.event
+      );
       const marker = leaflet
         .marker(placement.position, {
           riseOnHover: true,
@@ -176,11 +192,14 @@
             iconSize: avatarOptions.iconSize
           })
         })
-        .bindTooltip(`${placement.event.title} (${placement.event.year_start})`, {
-          className: 'event-tooltip',
-          direction: 'top',
-          offset: [0, -20]
-        });
+        .bindTooltip(
+          `${placement.event.title} (${placement.event.year_start})`,
+          {
+            className: 'event-tooltip',
+            direction: 'top',
+            offset: [0, -20]
+          }
+        );
 
       marker.on('click', () => onSelectEvent(placement.event.id));
       marker.addTo(markerLayer);
@@ -213,9 +232,15 @@
 
     try {
       const routeChanged = currentSelectedRouteId !== lastFramedRouteId;
-      const placements = renderMarkers(currentSelectedEventId, currentEvents, currentPlaces, currentRoutes, {
-        panToSelectedEvent: !routeChanged
-      });
+      const placements = renderMarkers(
+        currentSelectedEventId,
+        currentEvents,
+        currentPlaces,
+        currentRoutes,
+        {
+          panToSelectedEvent: !routeChanged
+        }
+      );
 
       if (routeChanged) {
         frameRouteBounds(placements);
@@ -236,7 +261,9 @@
       return;
     }
 
-    const bounds = leaflet.latLngBounds(routePlacements.map((placement) => placement.position));
+    const bounds = leaflet.latLngBounds(
+      routePlacements.map((placement) => placement.position)
+    );
 
     if (!bounds.isValid()) {
       map.setView(defaultMapCenter, defaultMapZoom);
@@ -251,8 +278,11 @@
     });
   }
 
-  function styleBoroughFeature(feature?: Feature): import('leaflet').PathOptions {
-    const boroughName = (feature as BoroughFeature | undefined)?.properties.name;
+  function styleBoroughFeature(
+    feature?: Feature
+  ): import('leaflet').PathOptions {
+    const boroughName = (feature as BoroughFeature | undefined)?.properties
+      .name;
     const fillColor = boroughName ? boroughColors[boroughName] : '#8a99a8';
 
     return {
@@ -289,7 +319,12 @@
         .geoJSON(geometry as GeoJsonObject, {
           pane: 'place-geometries',
           interactive: false,
-          style: (feature) => stylePlaceGeometryFeature(feature, selectedPlaceId, selectedRouteColor)
+          style: (feature) =>
+            stylePlaceGeometryFeature(
+              feature,
+              selectedPlaceId,
+              selectedRouteColor
+            )
         })
         .addTo(placeGeometryLayer);
 
@@ -317,16 +352,23 @@
     selectedPlaceId: string | null,
     selectedRouteColor: string | null
   ): import('leaflet').PathOptions {
-    const properties = (feature as PlaceGeometryFeature | undefined)?.properties;
+    const properties = (feature as PlaceGeometryFeature | undefined)
+      ?.properties;
     const kind = properties?.kind ?? 'cultural_area';
     const isSelected = properties?.placeId === selectedPlaceId;
     const fillColor = placeGeometryColors[kind];
-    const strokeColor = isSelected && selectedRouteColor ? selectedRouteColor : fillColor;
+    const strokeColor =
+      isSelected && selectedRouteColor ? selectedRouteColor : fillColor;
     const isSite = kind === 'site';
 
     return {
       color: strokeColor,
-      dashArray: properties?.precision === 'interpretive' ? (isSelected ? '8 5' : '5 5') : undefined,
+      dashArray:
+        properties?.precision === 'interpretive'
+          ? isSelected
+            ? '8 5'
+            : '5 5'
+          : undefined,
       fillColor,
       fillOpacity: isSelected ? (isSite ? 0.26 : 0.12) : isSite ? 0.2 : 0.07,
       opacity: isSelected ? 0.95 : 0.58,
@@ -357,7 +399,6 @@
         .addTo(boroughLabelLayer);
     }
   }
-
 </script>
 
 <div class="map-shell">
@@ -379,7 +420,8 @@
       <p>
         {selectedPlace.borough}
         {#if selectedPlaceEventCount > 0}
-          · {selectedPlaceEventCount} {selectedPlaceEventCount === 1 ? 'route event' : 'route events'}
+          · {selectedPlaceEventCount}
+          {selectedPlaceEventCount === 1 ? 'route event' : 'route events'}
         {/if}
       </p>
     </aside>

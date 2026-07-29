@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { getCenteredScrollLeft, getCenteredScrollLeftFromRects } from './timeline-centering';
+import {
+  getCenteredScrollLeft,
+  getCenteredScrollLeftFromRects
+} from './timeline-centering';
 
 describe('getCenteredScrollLeft', () => {
   it('centers the selected item when there is room to scroll', () => {

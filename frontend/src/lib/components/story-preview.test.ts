@@ -16,9 +16,12 @@ describe('story preview selection', () => {
       }
     ];
 
-    expect(resolvePreviewItemId(previewItems, 'https://upload.wikimedia.org/example.jpg')).toBe(
-      'image:123'
-    );
+    expect(
+      resolvePreviewItemId(
+        previewItems,
+        'https://upload.wikimedia.org/example.jpg'
+      )
+    ).toBe('image:123');
   });
 
   it('matches a media item by its canonical url', () => {
@@ -35,9 +38,12 @@ describe('story preview selection', () => {
       }
     ];
 
-    expect(resolvePreviewItemId(previewItems, 'https://www.youtube.com/watch?v=example')).toBe(
-      'media:456'
-    );
+    expect(
+      resolvePreviewItemId(
+        previewItems,
+        'https://www.youtube.com/watch?v=example'
+      )
+    ).toBe('media:456');
   });
 
   it('falls back to the first item when there is no match', () => {
@@ -49,8 +55,8 @@ describe('story preview selection', () => {
       }
     ];
 
-    expect(resolvePreviewItemId(previewItems, 'https://example.invalid/no-match')).toBe(
-      'image:123'
-    );
+    expect(
+      resolvePreviewItemId(previewItems, 'https://example.invalid/no-match')
+    ).toBe('image:123');
   });
 });

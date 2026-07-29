@@ -1,13 +1,21 @@
 <script lang="ts">
   import { onMount, tick } from 'svelte';
-  import { IS_PUBLIC_STATIC_MODE, loadSoundAtlasData, reviewEventLink } from '$lib/api/soundatlas';
+  import {
+    IS_PUBLIC_STATIC_MODE,
+    loadSoundAtlasData,
+    reviewEventLink
+  } from '$lib/api/soundatlas';
   import Icon from '$lib/components/Icon.svelte';
   import MapView from '$lib/components/MapView.svelte';
   import NavigationDrawer from '$lib/components/NavigationDrawer.svelte';
   import StoryPanel from '$lib/components/StoryPanel.svelte';
   import Timeline from '$lib/components/Timeline.svelte';
   import { filterEvents } from '$lib/data/filters';
-  import { compareEvents, getFirstEventIdForRoute, getInitialRouteId } from '$lib/data/selection';
+  import {
+    compareEvents,
+    getFirstEventIdForRoute,
+    getInitialRouteId
+  } from '$lib/data/selection';
   import type {
     Connection,
     Event,
@@ -38,11 +46,18 @@
   let selectedInspectorTab: 'story' | 'media' | 'related' = 'story';
   let selectedPreviewUrl: string | null = null;
 
-  $: routeEvents = [...filterEvents(events, selectedRouteId)].sort(compareEvents);
-  $: routeEventCounts = routes.reduce<Record<string, number>>((counts, route) => {
-    counts[route.id] = events.filter((event) => event.route_id === route.id).length;
-    return counts;
-  }, {});
+  $: routeEvents = [...filterEvents(events, selectedRouteId)].sort(
+    compareEvents
+  );
+  $: routeEventCounts = routes.reduce<Record<string, number>>(
+    (counts, route) => {
+      counts[route.id] = events.filter(
+        (event) => event.route_id === route.id
+      ).length;
+      return counts;
+    },
+    {}
+  );
   $: reviewQueueItems = IS_PUBLIC_STATIC_MODE
     ? []
     : events.flatMap((event) => [
@@ -74,22 +89,26 @@
             previewUrl: imageLink.thumbnail_url ?? imageLink.image_url
           }))
       ]);
-  $: selectedEventIsVisible = routeEvents.some((event) => event.id === selectedEventId);
+  $: selectedEventIsVisible = routeEvents.some(
+    (event) => event.id === selectedEventId
+  );
   $: activeSelectedEventId =
     selectedEventIsVisible || routeEvents.length === 0
       ? selectedEventId
       : routeEvents[0].id;
-  $: selectedEvent = routeEvents.find((event) => event.id === activeSelectedEventId) ?? null;
+  $: selectedEvent =
+    routeEvents.find((event) => event.id === activeSelectedEventId) ?? null;
   $: selectedEventIndex = selectedEvent
     ? routeEvents.findIndex((event) => event.id === selectedEvent.id)
     : -1;
-  $: previousEvent = selectedEventIndex > 0 ? routeEvents[selectedEventIndex - 1] : null;
+  $: previousEvent =
+    selectedEventIndex > 0 ? routeEvents[selectedEventIndex - 1] : null;
   $: nextEvent =
     selectedEventIndex >= 0 && selectedEventIndex < routeEvents.length - 1
       ? routeEvents[selectedEventIndex + 1]
       : null;
   $: selectedPlace = selectedEvent
-    ? places.find((place) => place.id === selectedEvent?.place_id) ?? null
+    ? (places.find((place) => place.id === selectedEvent?.place_id) ?? null)
     : null;
   $: selectedPlaceEventCount = selectedPlace
     ? routeEvents.filter((event) => event.place_id === selectedPlace?.id).length
@@ -100,16 +119,26 @@
   $: timelineStartYear = timelineRoute?.year_start ?? 1965;
   $: timelineEndYear = timelineRoute?.year_end ?? 1985;
   $: headerRouteTitle = activeRoute?.title ?? 'Loading route context';
-  $: headerRouteYears = activeRoute ? `${activeRoute.year_start}-${activeRoute.year_end}` : '';
+  $: headerRouteYears = activeRoute
+    ? `${activeRoute.year_start}-${activeRoute.year_end}`
+    : '';
   $: headerRouteSummary =
-    activeRoute?.thesis || activeRoute?.summary || 'Fetching the curated route, event sequence, and map places.';
+    activeRoute?.thesis ||
+    activeRoute?.summary ||
+    'Fetching the curated route, event sequence, and map places.';
   $: statusLabel = isLoading
     ? `Loading ${dataSourceLabel}`
     : errorMessage
       ? `${IS_PUBLIC_STATIC_MODE ? 'Static data' : 'API'} unavailable`
       : `${routeEvents.length} events visible`;
   $: selectedConnections = selectedEvent
-    ? buildStoryConnectionItems(selectedEvent, connections, events, places, routes)
+    ? buildStoryConnectionItems(
+        selectedEvent,
+        connections,
+        events,
+        places,
+        routes
+      )
     : [];
 
   onMount(async () => {
@@ -122,11 +151,20 @@
       const initialRouteId = selectedRouteId ?? getInitialRouteId(data.routes);
       selectedRouteId = initialRouteId;
 
-      if (!selectedEventId || !data.events.some((event) => event.id === selectedEventId && event.route_id === initialRouteId)) {
+      if (
+        !selectedEventId ||
+        !data.events.some(
+          (event) =>
+            event.id === selectedEventId && event.route_id === initialRouteId
+        )
+      ) {
         selectedEventId = getFirstEventIdForRoute(data.events, initialRouteId);
       }
     } catch (error) {
-      errorMessage = error instanceof Error ? error.message : 'Frontend konnte API-Daten nicht laden.';
+      errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Frontend konnte API-Daten nicht laden.';
     } finally {
       isLoading = false;
     }
@@ -158,13 +196,20 @@
     allRoutes: Route[]
   ): StoryConnectionItem[] {
     return allConnections.flatMap<StoryConnectionItem>((connection) => {
-      if (connection.from_event_id !== baseEvent.id && connection.to_event_id !== baseEvent.id) {
+      if (
+        connection.from_event_id !== baseEvent.id &&
+        connection.to_event_id !== baseEvent.id
+      ) {
         return [];
       }
 
       const connectedEventId =
-        connection.from_event_id === baseEvent.id ? connection.to_event_id : connection.from_event_id;
-      const connectedEvent = allEvents.find((event) => event.id === connectedEventId);
+        connection.from_event_id === baseEvent.id
+          ? connection.to_event_id
+          : connection.from_event_id;
+      const connectedEvent = allEvents.find(
+        (event) => event.id === connectedEventId
+      );
 
       if (!connectedEvent) {
         return [];
@@ -175,10 +220,17 @@
           id: connection.id,
           summary: connection.summary,
           type: connection.type,
-          directionLabel: connection.from_event_id === baseEvent.id ? 'Leads to' : 'Linked from',
+          directionLabel:
+            connection.from_event_id === baseEvent.id
+              ? 'Leads to'
+              : 'Linked from',
           event: connectedEvent,
-          place: allPlaces.find((place) => place.id === connectedEvent.place_id) ?? null,
-          route: allRoutes.find((route) => route.id === connectedEvent.route_id) ?? null
+          place:
+            allPlaces.find((place) => place.id === connectedEvent.place_id) ??
+            null,
+          route:
+            allRoutes.find((route) => route.id === connectedEvent.route_id) ??
+            null
         }
       ];
     });
@@ -192,7 +244,10 @@
     activeNavigationItemId = 'media-review';
   }
 
-  async function reviewQueueItem(item: ReviewQueueItem, action: ReviewAction): Promise<void> {
+  async function reviewQueueItem(
+    item: ReviewQueueItem,
+    action: ReviewAction
+  ): Promise<void> {
     if (IS_PUBLIC_STATIC_MODE) {
       return;
     }
@@ -206,10 +261,18 @@
     activeNavigationItemId = 'media-review';
 
     try {
-      const updatedEvent = await reviewEventLink(item.eventId, item.kind, item.url, action);
-      events = events.map((event) => (event.id === updatedEvent.id ? updatedEvent : event));
+      const updatedEvent = await reviewEventLink(
+        item.eventId,
+        item.kind,
+        item.url,
+        action
+      );
+      events = events.map((event) =>
+        event.id === updatedEvent.id ? updatedEvent : event
+      );
     } catch (error) {
-      reviewErrorMessage = error instanceof Error ? error.message : 'Review action failed.';
+      reviewErrorMessage =
+        error instanceof Error ? error.message : 'Review action failed.';
     } finally {
       reviewSavingItemId = null;
     }
@@ -226,7 +289,8 @@
   }
 
   function toggleNavigationVariant(): void {
-    navigationVariant = navigationVariant === 'expanded' ? 'collapsed' : 'expanded';
+    navigationVariant =
+      navigationVariant === 'expanded' ? 'collapsed' : 'expanded';
   }
 
   async function selectNavigationItem(itemId: string): Promise<void> {
@@ -248,7 +312,11 @@
   }
 
   function getNavigationTarget(itemId: string): HTMLElement | null {
-    if (itemId === 'events' || itemId === 'connections' || itemId === 'sources') {
+    if (
+      itemId === 'events' ||
+      itemId === 'connections' ||
+      itemId === 'sources'
+    ) {
       return storyRegionElement;
     }
 
@@ -272,7 +340,8 @@
     }
 
     if (event.key === 'ArrowRight') {
-      const eventToSelect = nextEvent ?? (!selectedEvent ? routeEvents[0] : null);
+      const eventToSelect =
+        nextEvent ?? (!selectedEvent ? routeEvents[0] : null);
 
       if (eventToSelect) {
         event.preventDefault();
@@ -289,7 +358,6 @@
       (target instanceof HTMLElement && target.isContentEditable)
     );
   }
-
 </script>
 
 <svelte:window on:keydown={handleKeydown} />
@@ -368,20 +436,26 @@
 
       {#if errorMessage}
         <div class="notice error">
-          <strong>{IS_PUBLIC_STATIC_MODE ? 'Static data unavailable' : 'Backend unavailable'}</strong>
+          <strong
+            >{IS_PUBLIC_STATIC_MODE
+              ? 'Static data unavailable'
+              : 'Backend unavailable'}</strong
+          >
           <span>{errorMessage}</span>
           {#if IS_PUBLIC_STATIC_MODE}
-            <small>Generate the static seed data, rebuild the frontend, then refresh this page.</small>
+            <small
+              >Generate the static seed data, rebuild the frontend, then refresh
+              this page.</small
+            >
           {:else}
-            <small>Start the FastAPI backend on http://127.0.0.1:8000, then refresh this page.</small>
+            <small
+              >Start the FastAPI backend on http://127.0.0.1:8000, then refresh
+              this page.</small
+            >
           {/if}
         </div>
       {:else}
-        <section
-          class="map-region"
-          tabindex="-1"
-          aria-label="Map exploration"
-        >
+        <section class="map-region" tabindex="-1" aria-label="Map exploration">
           <MapView
             events={routeEvents}
             {places}
@@ -396,11 +470,7 @@
         </section>
       {/if}
 
-      <section
-        class="timeline-region"
-        tabindex="-1"
-        aria-label="Timeline"
-      >
+      <section class="timeline-region" tabindex="-1" aria-label="Timeline">
         <Timeline
           routeStartYear={timelineStartYear}
           routeEndYear={timelineEndYear}
@@ -431,7 +501,7 @@
         {isLoading}
         {errorMessage}
         initialTab={selectedInspectorTab}
-        selectedPreviewUrl={selectedPreviewUrl}
+        {selectedPreviewUrl}
         showReviewActions={!IS_PUBLIC_STATIC_MODE}
       />
     </section>

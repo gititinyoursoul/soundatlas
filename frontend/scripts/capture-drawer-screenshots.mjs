@@ -13,11 +13,20 @@ const url = readArg('--url', 'http://127.0.0.1:5174');
 const outputDir = path.resolve(readArg('--output-dir', '../screenshots'));
 const width = Number(readArg('--width', '1440'));
 const height = Number(readArg('--height', '1000'));
-const openSelector = readArg('--open-selector', 'button[aria-label="Open navigation"]');
-const collapseSelector = readArg('--collapse-selector', 'button[aria-label="Collapse navigation"]');
+const openSelector = readArg(
+  '--open-selector',
+  'button[aria-label="Open navigation"]'
+);
+const collapseSelector = readArg(
+  '--collapse-selector',
+  'button[aria-label="Collapse navigation"]'
+);
 const closedName = readArg('--closed-name', 'drawer-closed-desktop.png');
 const expandedName = readArg('--expanded-name', 'drawer-expanded-desktop.png');
-const collapsedName = readArg('--collapsed-name', 'drawer-collapsed-desktop.png');
+const collapsedName = readArg(
+  '--collapsed-name',
+  'drawer-collapsed-desktop.png'
+);
 const routesName = readArg('--routes-name', 'drawer-routes-desktop.png');
 const settleDelayMs = Number(readArg('--settle-delay-ms', '200'));
 
@@ -35,11 +44,15 @@ try {
   await page.locator('main.app-shell').waitFor();
   await page.screenshot({ path: path.join(outputDir, closedName) });
 
-  const drawer = page.locator('div[role="dialog"][aria-label="Primary navigation"]');
+  const drawer = page.locator(
+    'div[role="dialog"][aria-label="Primary navigation"]'
+  );
 
   await page.locator(openSelector).click();
   await page.waitForFunction(
-    (selector) => document.querySelector(selector)?.getAttribute('aria-expanded') === 'true',
+    (selector) =>
+      document.querySelector(selector)?.getAttribute('aria-expanded') ===
+      'true',
     openSelector
   );
   await drawer.waitFor({ state: 'visible' });

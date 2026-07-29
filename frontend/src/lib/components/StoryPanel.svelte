@@ -45,7 +45,10 @@
   export let nextEvent: Event | null = null;
   export let isLoading = false;
   export let errorMessage: string | null = null;
-  export let onNavigateEvent: (eventId: string, routeId?: string) => void = () => {};
+  export let onNavigateEvent: (
+    eventId: string,
+    routeId?: string
+  ) => void = () => {};
   export let initialTab: InspectorTab = 'story';
   export let selectedPreviewUrl: string | null = null;
   export let showReviewActions = true;
@@ -96,19 +99,30 @@
     activeTab = initialTab;
     selectedPreviewId = resolvePreviewItemId(previewItems, selectedPreviewUrl);
   }
-  $: if (event?.id === lastEventId && activeTab !== initialTab && initialTab !== 'story') {
+  $: if (
+    event?.id === lastEventId &&
+    activeTab !== initialTab &&
+    initialTab !== 'story'
+  ) {
     activeTab = initialTab;
   }
   $: if (selectedPreviewUrl) {
-    const resolvedPreviewItemId = resolvePreviewItemId(previewItems, selectedPreviewUrl);
+    const resolvedPreviewItemId = resolvePreviewItemId(
+      previewItems,
+      selectedPreviewUrl
+    );
     if (resolvedPreviewItemId && resolvedPreviewItemId !== selectedPreviewId) {
       selectedPreviewId = resolvedPreviewItemId;
     }
   }
-  $: if (previewItems.length > 0 && !previewItems.some((item) => item.id === selectedPreviewId)) {
+  $: if (
+    previewItems.length > 0 &&
+    !previewItems.some((item) => item.id === selectedPreviewId)
+  ) {
     selectedPreviewId = previewItems[0].id;
   }
-  $: selectedPreviewItem = previewItems.find((item) => item.id === selectedPreviewId) ?? null;
+  $: selectedPreviewItem =
+    previewItems.find((item) => item.id === selectedPreviewId) ?? null;
   $: mediaCount = event?.media_links.length ?? 0;
   $: imageCount = event?.image_links.length ?? 0;
   $: connectionCount = connections.length;
@@ -118,31 +132,41 @@
       return [];
     }
 
-    const imageItems = currentEvent.image_links.map<PreviewItem>((imageLink) => ({
-      id: `image:${imageLink.image_url}`,
-      kind: 'image',
-      title: imageLink.title,
-      subtitle: formatImageDescriptor(imageLink.provider, imageLink.type),
-      selectionUrl: imageLink.image_url,
-      previewUrl: imageLink.thumbnail_url ?? imageLink.image_url,
-      imageLink
-    }));
+    const imageItems = currentEvent.image_links.map<PreviewItem>(
+      (imageLink) => ({
+        id: `image:${imageLink.image_url}`,
+        kind: 'image',
+        title: imageLink.title,
+        subtitle: formatImageDescriptor(imageLink.provider, imageLink.type),
+        selectionUrl: imageLink.image_url,
+        previewUrl: imageLink.thumbnail_url ?? imageLink.image_url,
+        imageLink
+      })
+    );
 
-    const mediaItems = currentEvent.media_links.map<PreviewItem>((mediaLink) => ({
-      id: `media:${mediaLink.url}`,
-      kind: 'media',
-      title: mediaLink.title,
-      subtitle: formatMediaDescriptor(mediaLink.provider, mediaLink.type),
-      selectionUrl: mediaLink.url,
-      previewUrl: mediaLink.url,
-      mediaLink,
-      embed: mediaLink.playback_mode === 'external' ? null : parseYouTubeEmbed(mediaLink.url)
-    }));
+    const mediaItems = currentEvent.media_links.map<PreviewItem>(
+      (mediaLink) => ({
+        id: `media:${mediaLink.url}`,
+        kind: 'media',
+        title: mediaLink.title,
+        subtitle: formatMediaDescriptor(mediaLink.provider, mediaLink.type),
+        selectionUrl: mediaLink.url,
+        previewUrl: mediaLink.url,
+        mediaLink,
+        embed:
+          mediaLink.playback_mode === 'external'
+            ? null
+            : parseYouTubeEmbed(mediaLink.url)
+      })
+    );
 
     return [...imageItems, ...mediaItems];
   }
 
-  function formatMediaDescriptor(provider: MediaProvider, type: MediaType): string {
+  function formatMediaDescriptor(
+    provider: MediaProvider,
+    type: MediaType
+  ): string {
     return `${mediaProviderLabels[provider]} ${humanize(type)}`;
   }
 
@@ -190,7 +214,8 @@
     try {
       const url = new URL(sourceUrl);
       const host = url.hostname.replace(/^www\./, '');
-      const hostLabel = sourceHostLabels[host] ?? sourceHostLabels[getBaseHost(host)];
+      const hostLabel =
+        sourceHostLabels[host] ?? sourceHostLabels[getBaseHost(host)];
 
       if (hostLabel) {
         return hostLabel;
@@ -198,7 +223,10 @@
 
       return getBaseHost(host)
         .split('.')
-        .filter((part) => part !== 'com' && part !== 'org' && part !== 'gov' && part !== 'edu')
+        .filter(
+          (part) =>
+            part !== 'com' && part !== 'org' && part !== 'gov' && part !== 'edu'
+        )
         .map((part) => humanize(part.replace(/-/g, '_')))
         .join(' ');
     } catch {
@@ -216,7 +244,11 @@
     return parts.slice(-2).join('.');
   }
 
-  function formatEventMeta(currentEvent: Event, currentPlace: Place | null, currentRoute: Route | null): string {
+  function formatEventMeta(
+    currentEvent: Event,
+    currentPlace: Place | null,
+    currentRoute: Route | null
+  ): string {
     const parts = [formatEventYears(currentEvent)];
 
     if (currentPlace) {
@@ -250,7 +282,8 @@
           <p class="event-meta-line">
             {#if route}
               <span class="meta-route">
-                <span class="route-dot" style={`--route-color: ${route.color}`}></span>
+                <span class="route-dot" style={`--route-color: ${route.color}`}
+                ></span>
                 {formatEventMeta(event, place, route)}
               </span>
             {:else}
@@ -261,7 +294,11 @@
       </div>
 
       <div class="header-controls">
-        <div class="inspector-tabs" role="tablist" aria-label="Inspector sections">
+        <div
+          class="inspector-tabs"
+          role="tablist"
+          aria-label="Inspector sections"
+        >
           <button
             id="inspector-tab-story"
             type="button"
@@ -305,7 +342,9 @@
             disabled={!previousEvent}
             aria-label="Previous event"
             data-tooltip={previousEvent?.title}
-            on:click={() => previousEvent && onNavigateEvent(previousEvent.id, previousEvent.route_id)}
+            on:click={() =>
+              previousEvent &&
+              onNavigateEvent(previousEvent.id, previousEvent.route_id)}
           >
             <Icon name="chevron-left" />
             <span class="sr-only">Previous event</span>
@@ -315,14 +354,14 @@
             disabled={!nextEvent}
             aria-label="Next event"
             data-tooltip={nextEvent?.title}
-            on:click={() => nextEvent && onNavigateEvent(nextEvent.id, nextEvent.route_id)}
+            on:click={() =>
+              nextEvent && onNavigateEvent(nextEvent.id, nextEvent.route_id)}
           >
             <Icon name="chevron-right" />
             <span class="sr-only">Next event</span>
           </button>
         </nav>
       </div>
-
     </header>
 
     <div class="inspector-body">
@@ -359,7 +398,9 @@
                 {/each}
               </ul>
             {:else}
-              <p class="empty-inline">No source URLs have been added for this event yet.</p>
+              <p class="empty-inline">
+                No source URLs have been added for this event yet.
+              </p>
             {/if}
           </section>
         </div>
@@ -404,23 +445,33 @@
                   <h3>{selectedPreviewItem.title}</h3>
                   <p>{selectedPreviewItem.subtitle}</p>
                 </div>
-                <!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
-                <a href={selectedPreviewItem.mediaLink.url} target="_blank" rel="noreferrer">
+                <!-- eslint-disable svelte/no-navigation-without-resolve -->
+                <a
+                  href={selectedPreviewItem.mediaLink.url}
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   {selectedPreviewItem.mediaLink.provider === 'youtube'
                     ? 'Open on YouTube'
                     : 'Open media link'}
                 </a>
+                <!-- eslint-enable svelte/no-navigation-without-resolve -->
               </div>
             {:else if selectedPreviewItem?.kind === 'media'}
               <div class="media-placeholder">
                 <h3>{selectedPreviewItem.title}</h3>
                 <p>{selectedPreviewItem.subtitle}</p>
-                <!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
-                <a href={selectedPreviewItem.mediaLink.url} target="_blank" rel="noreferrer">
+                <!-- eslint-disable svelte/no-navigation-without-resolve -->
+                <a
+                  href={selectedPreviewItem.mediaLink.url}
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   {selectedPreviewItem.mediaLink.provider === 'youtube'
                     ? 'Open on YouTube'
                     : 'Open media link'}
                 </a>
+                <!-- eslint-enable svelte/no-navigation-without-resolve -->
               </div>
             {:else}
               <div class="media-placeholder">
@@ -442,9 +493,16 @@
                     on:click={() => (selectedPreviewId = previewItem.id)}
                   >
                     {#if previewItem.kind === 'image'}
-                      <img src={previewItem.previewUrl} alt="" aria-hidden="true" loading="lazy" />
+                      <img
+                        src={previewItem.previewUrl}
+                        alt=""
+                        aria-hidden="true"
+                        loading="lazy"
+                      />
                     {:else}
-                      <span class="preview-badge">{previewItem.embed ? 'Play' : 'Open'}</span>
+                      <span class="preview-badge"
+                        >{previewItem.embed ? 'Play' : 'Open'}</span
+                      >
                     {/if}
                     <span class="preview-text">
                       <strong>{previewItem.title}</strong>
@@ -454,7 +512,9 @@
                 {/each}
               </div>
             {:else}
-              <p class="empty-inline">No media has been added for this event yet.</p>
+              <p class="empty-inline">
+                No media has been added for this event yet.
+              </p>
             {/if}
           </section>
         </div>
@@ -474,26 +534,39 @@
                     <button
                       type="button"
                       class="connection-row"
-                      on:click={() => onNavigateEvent(connection.event.id, connection.event.route_id)}
+                      on:click={() =>
+                        onNavigateEvent(
+                          connection.event.id,
+                          connection.event.route_id
+                        )}
                     >
                       <span class="connection-kicker">
                         <span>{connection.directionLabel}</span>
                         <span>{formatConnectionType(connection)}</span>
                       </span>
-                      <span class="connection-title">{connection.event.title}</span>
+                      <span class="connection-title"
+                        >{connection.event.title}</span
+                      >
                       <span class="connection-meta">
                         {#if connection.route}
-                          <span class="route-dot" style={`--route-color: ${connection.route.color}`}></span>
+                          <span
+                            class="route-dot"
+                            style={`--route-color: ${connection.route.color}`}
+                          ></span>
                         {/if}
                         {formatConnectionMeta(connection)}
                       </span>
-                      <span class="connection-summary">{connection.summary}</span>
+                      <span class="connection-summary"
+                        >{connection.summary}</span
+                      >
                     </button>
                   </li>
                 {/each}
               </ul>
             {:else}
-              <p class="empty-inline">No related events are attached to this event yet.</p>
+              <p class="empty-inline">
+                No related events are attached to this event yet.
+              </p>
             {/if}
           </section>
         </div>
@@ -502,7 +575,10 @@
   {:else}
     <div class="empty">
       <h2>Select an event</h2>
-      <p>Select a timeline item or map marker to see context, significance, media, and sources.</p>
+      <p>
+        Select a timeline item or map marker to see context, significance,
+        media, and sources.
+      </p>
     </div>
   {/if}
 </aside>
@@ -946,7 +1022,11 @@
     border: 1px solid #d7dfe7;
     border-radius: 8px;
     background:
-      linear-gradient(135deg, rgba(23, 32, 42, 0.08) 0%, rgba(23, 32, 42, 0) 42%),
+      linear-gradient(
+        135deg,
+        rgba(23, 32, 42, 0.08) 0%,
+        rgba(23, 32, 42, 0) 42%
+      ),
       #f9fbfc;
   }
 

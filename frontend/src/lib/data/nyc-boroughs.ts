@@ -1,4 +1,5 @@
-export type BoroughName = 'Bronx' | 'Manhattan' | 'Brooklyn' | 'Queens' | 'Staten Island';
+export type BoroughName =
+  'Bronx' | 'Manhattan' | 'Brooklyn' | 'Queens' | 'Staten Island';
 
 export type BoroughRing = [number, number][];
 

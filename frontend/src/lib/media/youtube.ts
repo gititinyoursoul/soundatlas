@@ -58,7 +58,11 @@ function extractVideoId(parsedUrl: URL, hostname: string): string | null {
 }
 
 function isYouTubeHostname(hostname: string): boolean {
-  return hostname === 'youtube.com' || hostname === 'music.youtube.com' || hostname === 'youtube-nocookie.com';
+  return (
+    hostname === 'youtube.com' ||
+    hostname === 'music.youtube.com' ||
+    hostname === 'youtube-nocookie.com'
+  );
 }
 
 function cleanId(value: string | null): string | null {

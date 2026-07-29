@@ -1,11 +1,23 @@
 <script lang="ts">
   import { tick } from 'svelte';
-  import type { ReviewAction, ReviewQueueItem, Route } from '$lib/types/soundatlas';
+  import type {
+    ReviewAction,
+    ReviewQueueItem,
+    Route
+  } from '$lib/types/soundatlas';
   import Icon from './Icon.svelte';
 
   type DrawerVariant = 'expanded' | 'collapsed';
   type DrawerPanel = 'main' | 'routes' | 'media-review';
-  type NavIcon = 'book' | 'circle' | 'layers' | 'map' | 'route' | 'settings' | 'sparkles' | 'timeline';
+  type NavIcon =
+    | 'book'
+    | 'circle'
+    | 'layers'
+    | 'map'
+    | 'route'
+    | 'settings'
+    | 'sparkles'
+    | 'timeline';
 
   type NavItem = {
     id: string;
@@ -41,15 +53,22 @@
   export let onSelectItem: (itemId: string) => void = () => {};
   export let onSelectRoute: (routeId: string) => void = () => {};
   export let onSelectReviewItem: (item: ReviewQueueItem) => void = () => {};
-  export let onReviewQueueItem: (item: ReviewQueueItem, action: ReviewAction) => Promise<void> =
-    async () => {};
+  export let onReviewQueueItem: (
+    item: ReviewQueueItem,
+    action: ReviewAction
+  ) => Promise<void> = async () => {};
 
   let drawerElement: HTMLDivElement;
   let panelHeadingElement: HTMLHeadingElement;
   let lastHandledOpen = false;
   let activePanel: DrawerPanel = 'main';
 
-  $: sections = buildSections(routes.length, reviewQueueItems.length, errorMessage, showAdminReview);
+  $: sections = buildSections(
+    routes.length,
+    reviewQueueItems.length,
+    errorMessage,
+    showAdminReview
+  );
   $: if (open !== lastHandledOpen) {
     lastHandledOpen = open;
     if (open) {
@@ -77,7 +96,8 @@
             badge: routes > 0 ? String(routes) : undefined
           }
         ],
-        emptyMessage: routes === 0 && !error ? 'No route entries loaded.' : undefined,
+        emptyMessage:
+          routes === 0 && !error ? 'No route entries loaded.' : undefined,
         errorMessage: error
       }
     ];
@@ -191,7 +211,9 @@
       drawerElement.querySelectorAll<HTMLElement>(
         'button, [href], [tabindex]:not([tabindex="-1"])'
       )
-    ).filter((element) => !element.hasAttribute('disabled') && element.tabIndex !== -1);
+    ).filter(
+      (element) => !element.hasAttribute('disabled') && element.tabIndex !== -1
+    );
 
     if (focusableElements.length === 0) {
       event.preventDefault();
@@ -249,7 +271,9 @@
           <button
             type="button"
             class="icon-button"
-            aria-label={variant === 'expanded' ? 'Collapse navigation' : 'Expand navigation'}
+            aria-label={variant === 'expanded'
+              ? 'Collapse navigation'
+              : 'Expand navigation'}
             data-tooltip={variant === 'expanded' ? 'Collapse' : 'Expand'}
             on:click={onToggleVariant}
           >
@@ -282,14 +306,22 @@
           </section>
         {:else if activePanel === 'routes'}
           <section class="routes-panel" aria-labelledby="drawer-routes-heading">
-            <button type="button" class="back-button" on:click={returnToMainPanel}>
+            <button
+              type="button"
+              class="back-button"
+              on:click={returnToMainPanel}
+            >
               <Icon name="collapse" />
               <span>Back to navigation</span>
             </button>
 
             <div class="panel-heading">
               <span>Routes</span>
-              <h2 id="drawer-routes-heading" bind:this={panelHeadingElement} tabindex="-1">
+              <h2
+                id="drawer-routes-heading"
+                bind:this={panelHeadingElement}
+                tabindex="-1"
+              >
                 Choose active route
               </h2>
             </div>
@@ -307,7 +339,9 @@
                     class:active={selectedRouteId === route.id}
                     class="route-option"
                     style={`--route-color: ${route.color}`}
-                    aria-current={selectedRouteId === route.id ? 'page' : undefined}
+                    aria-current={selectedRouteId === route.id
+                      ? 'page'
+                      : undefined}
                     on:click={() => handleRouteClick(route.id)}
                   >
                     <span class="route-swatch" aria-hidden="true"></span>
@@ -316,7 +350,10 @@
                       <span>
                         {route.year_start}-{route.year_end}
                         {#if routeEventCounts[route.id]}
-                          · {routeEventCounts[route.id]} {routeEventCounts[route.id] === 1 ? 'event' : 'events'}
+                          · {routeEventCounts[route.id]}
+                          {routeEventCounts[route.id] === 1
+                            ? 'event'
+                            : 'events'}
                         {/if}
                       </span>
                     </span>
@@ -330,14 +367,22 @@
           </section>
         {:else if activePanel === 'media-review' && showAdminReview}
           <section class="review-panel" aria-labelledby="drawer-review-heading">
-            <button type="button" class="back-button" on:click={returnToMainPanel}>
+            <button
+              type="button"
+              class="back-button"
+              on:click={returnToMainPanel}
+            >
               <Icon name="collapse" />
               <span>Back to navigation</span>
             </button>
 
             <div class="panel-heading">
               <span>Admin</span>
-              <h2 id="drawer-review-heading" bind:this={panelHeadingElement} tabindex="-1">
+              <h2
+                id="drawer-review-heading"
+                bind:this={panelHeadingElement}
+                tabindex="-1"
+              >
                 Media Review
               </h2>
               <p>
@@ -362,7 +407,10 @@
                 <span>No draft media or image links to review.</span>
               </div>
             {:else}
-              <div class="review-list" aria-label="Draft media and image review queue">
+              <div
+                class="review-list"
+                aria-label="Draft media and image review queue"
+              >
                 {#each reviewQueueItems as item (item.id)}
                   <article class="review-item">
                     <button
@@ -370,7 +418,10 @@
                       class="review-summary"
                       on:click={() => onSelectReviewItem(item)}
                     >
-                      <span class="kind" class:media-kind={item.kind === 'media'}>
+                      <span
+                        class="kind"
+                        class:media-kind={item.kind === 'media'}
+                      >
                         {formatReviewKind(item)}
                       </span>
                       <strong>{item.title}</strong>
@@ -378,15 +429,22 @@
                       <small>{item.eventTitle}</small>
                     </button>
 
-                    <div class="review-actions" aria-label={`Review actions for ${item.title}`}>
+                    <div
+                      class="review-actions"
+                      aria-label={`Review actions for ${item.title}`}
+                    >
                       <!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
-                      <a href={item.url} target="_blank" rel="noreferrer">Open</a>
+                      <a href={item.url} target="_blank" rel="noreferrer"
+                        >Open</a
+                      >
                       <button
                         type="button"
                         disabled={reviewSavingItemId === item.id}
                         on:click={() => onReviewQueueItem(item, 'reviewed')}
                       >
-                        {reviewSavingItemId === item.id ? 'Saving' : 'Mark reviewed'}
+                        {reviewSavingItemId === item.id
+                          ? 'Saving'
+                          : 'Mark reviewed'}
                       </button>
                       <button
                         type="button"
@@ -403,11 +461,18 @@
             {/if}
           </section>
         {:else}
-          <h2 class="visually-hidden" bind:this={panelHeadingElement} tabindex="-1">
+          <h2
+            class="visually-hidden"
+            bind:this={panelHeadingElement}
+            tabindex="-1"
+          >
             Main navigation
           </h2>
           {#each sections as section (section.id)}
-            <section class="nav-section" aria-labelledby={`drawer-section-${section.id}`}>
+            <section
+              class="nav-section"
+              aria-labelledby={`drawer-section-${section.id}`}
+            >
               {#if variant === 'expanded'}
                 <h2 id={`drawer-section-${section.id}`}>{section.title}</h2>
               {:else}
@@ -421,7 +486,9 @@
                     <div>
                       <strong>Loading failed</strong>
                       <p>{section.errorMessage}</p>
-                      <button type="button" on:click={retryLoading}>Retry</button>
+                      <button type="button" on:click={retryLoading}
+                        >Retry</button
+                      >
                     </div>
                   {/if}
                 </div>
@@ -444,7 +511,9 @@
                     aria-current={activeItemId === item.id ? 'page' : undefined}
                     aria-disabled={item.disabled ? 'true' : undefined}
                     aria-label={item.label}
-                    data-tooltip={item.disabled ? item.disabledReason : item.label}
+                    data-tooltip={item.disabled
+                      ? item.disabledReason
+                      : item.label}
                     on:click={() => handleItemClick(item)}
                   >
                     <span class="item-icon"><Icon name={item.icon} /></span>
@@ -471,12 +540,16 @@
         {#if variant === 'expanded'}
           <div class="session">
             <span>Mode</span>
-            <strong>{showAdminReview ? 'Admin review' : 'Public explorer'}</strong>
+            <strong
+              >{showAdminReview ? 'Admin review' : 'Public explorer'}</strong
+            >
           </div>
         {:else}
           <span
             class="access-mark"
-            aria-label={showAdminReview ? 'Admin review mode' : 'Public explorer mode'}
+            aria-label={showAdminReview
+              ? 'Admin review mode'
+              : 'Public explorer mode'}
             data-tooltip={showAdminReview ? 'Admin review' : 'Public explorer'}
           >
             <Icon name="circle" />

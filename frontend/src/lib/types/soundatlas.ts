@@ -20,10 +20,7 @@ export type ImageType =
   | 'map_image'
   | 'press_scan';
 export type RightsStatus =
-  | 'open_license'
-  | 'public_domain'
-  | 'provider_restricted'
-  | 'unknown';
+  'open_license' | 'public_domain' | 'provider_restricted' | 'unknown';
 
 export type Route = {
   id: string;

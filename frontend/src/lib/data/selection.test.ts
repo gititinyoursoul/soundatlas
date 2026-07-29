@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { makeEvent, makeRoute } from '$lib/test/fixtures';
-import { getFirstEventIdForRoute, getInitialRouteId, getOrderedEventsForRoute } from './selection';
+import {
+  getFirstEventIdForRoute,
+  getInitialRouteId,
+  getOrderedEventsForRoute
+} from './selection';
 
 describe('route and event selection', () => {
   it('chooses the birth of hip-hop route by default when available', () => {
@@ -37,25 +41,44 @@ describe('route and event selection', () => {
       })
     ];
 
-    expect(getFirstEventIdForRoute(events, 'birth-of-hip-hop')).toBe('early-event');
+    expect(getFirstEventIdForRoute(events, 'birth-of-hip-hop')).toBe(
+      'early-event'
+    );
   });
 
   it('uses end year and title to keep same-start-year events deterministic', () => {
     const events = [
-      makeEvent({ id: 'z-title', title: 'Zulu Nation', year_start: 1973, year_end: 1975 }),
-      makeEvent({ id: 'a-title', title: 'Apartment Jam', year_start: 1973, year_end: 1973 }),
-      makeEvent({ id: 'b-title', title: 'Block Party', year_start: 1973, year_end: 1973 })
+      makeEvent({
+        id: 'z-title',
+        title: 'Zulu Nation',
+        year_start: 1973,
+        year_end: 1975
+      }),
+      makeEvent({
+        id: 'a-title',
+        title: 'Apartment Jam',
+        year_start: 1973,
+        year_end: 1973
+      }),
+      makeEvent({
+        id: 'b-title',
+        title: 'Block Party',
+        year_start: 1973,
+        year_end: 1973
+      })
     ];
 
-    expect(getOrderedEventsForRoute(events, 'birth-of-hip-hop').map((event) => event.id)).toEqual([
-      'a-title',
-      'b-title',
-      'z-title'
-    ]);
+    expect(
+      getOrderedEventsForRoute(events, 'birth-of-hip-hop').map(
+        (event) => event.id
+      )
+    ).toEqual(['a-title', 'b-title', 'z-title']);
   });
 
   it('returns null when the selected route has no events', () => {
-    const events = [makeEvent({ id: 'bronx-event', route_id: 'birth-of-hip-hop' })];
+    const events = [
+      makeEvent({ id: 'bronx-event', route_id: 'birth-of-hip-hop' })
+    ];
 
     expect(getFirstEventIdForRoute(events, 'downtown-experiment')).toBeNull();
   });

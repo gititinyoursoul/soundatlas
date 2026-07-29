@@ -22,13 +22,22 @@
   $: axisSpan = Math.max(axisEnd - axisStart, 1);
   $: hasEventRange = eventStartYear !== null && eventEndYear !== null;
   $: highlightedStartYear = hasEventRange
-    ? Math.max(axisStart, Math.min(eventStartYear ?? axisStart, eventEndYear ?? axisStart))
+    ? Math.max(
+        axisStart,
+        Math.min(eventStartYear ?? axisStart, eventEndYear ?? axisStart)
+      )
     : axisStart;
   $: highlightedEndYear = hasEventRange
-    ? Math.min(axisEnd, Math.max(eventStartYear ?? axisStart, eventEndYear ?? axisStart))
+    ? Math.min(
+        axisEnd,
+        Math.max(eventStartYear ?? axisStart, eventEndYear ?? axisStart)
+      )
     : axisStart;
   $: highlightedStart = ((highlightedStartYear - axisStart) / axisSpan) * 100;
-  $: highlightedWidth = Math.max(((highlightedEndYear - highlightedStartYear) / axisSpan) * 100, 0);
+  $: highlightedWidth = Math.max(
+    ((highlightedEndYear - highlightedStartYear) / axisSpan) * 100,
+    0
+  );
   $: selectedEventCenteringKey = selectedEventId
     ? `${selectedEventId}:${events.length}:${eventListResizeVersion}`
     : '';
@@ -120,8 +129,16 @@
           style:width={`${Math.max(0, Math.min(100, highlightedWidth))}%`}
         ></div>
       {/if}
-      <div class="tick start" style:left={`${toPercent(axisStart)}%`} aria-hidden="true"></div>
-      <div class="tick end" style:left={`${toPercent(axisEnd)}%`} aria-hidden="true"></div>
+      <div
+        class="tick start"
+        style:left={`${toPercent(axisStart)}%`}
+        aria-hidden="true"
+      ></div>
+      <div
+        class="tick end"
+        style:left={`${toPercent(axisEnd)}%`}
+        aria-hidden="true"
+      ></div>
 
       <!-- @todo Switch to clustered or compact ticks when route event density makes labels overlap. -->
       {#each events as event (event.id)}
@@ -142,7 +159,11 @@
 
     {#if events.length > 0}
       <!-- @todo Revisit this horizontal list when future routes contain many more events. -->
-      <div bind:this={eventListElement} class="event-list" aria-label="Route events">
+      <div
+        bind:this={eventListElement}
+        class="event-list"
+        aria-label="Route events"
+      >
         {#each events as event (event.id)}
           <button
             class:active={selectedEventId === event.id}
@@ -162,7 +183,6 @@
       <p class="empty">No events for this route.</p>
     {/if}
   </div>
-
 </section>
 
 <style>
@@ -312,5 +332,4 @@
     color: #6b7785;
     font-size: 0.85rem;
   }
-
 </style>

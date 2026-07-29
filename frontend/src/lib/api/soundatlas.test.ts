@@ -1,5 +1,10 @@
 import { describe, expect, it, vi } from 'vitest';
-import { makeConnection, makeEvent, makePlace, makeRoute } from '$lib/test/fixtures';
+import {
+  makeConnection,
+  makeEvent,
+  makePlace,
+  makeRoute
+} from '$lib/test/fixtures';
 import {
   API_BASE_URL,
   loadApiSoundAtlasData,
@@ -63,7 +68,9 @@ describe('SoundAtlas API client', () => {
   it('surfaces collection request failures', async () => {
     const fetcher = vi
       .fn<typeof fetch>()
-      .mockResolvedValueOnce(jsonResponse([], { status: 503, statusText: 'Service Unavailable' }))
+      .mockResolvedValueOnce(
+        jsonResponse([], { status: 503, statusText: 'Service Unavailable' })
+      )
       .mockResolvedValueOnce(jsonResponse([]))
       .mockResolvedValueOnce(jsonResponse([]))
       .mockResolvedValueOnce(jsonResponse([]));
@@ -82,7 +89,9 @@ describe('SoundAtlas API client', () => {
       .fn<typeof fetch>()
       .mockResolvedValueOnce(jsonResponse({ _meta: {}, routes }))
       .mockResolvedValueOnce(jsonResponse({ _meta: {}, places }))
-      .mockResolvedValueOnce(jsonResponse({ _meta: {}, events, ignored_links: [] }))
+      .mockResolvedValueOnce(
+        jsonResponse({ _meta: {}, events, ignored_links: [] })
+      )
       .mockResolvedValueOnce(jsonResponse({ _meta: {}, connections }));
 
     await expect(loadStaticSoundAtlasData(fetcher)).resolves.toEqual({
@@ -96,7 +105,10 @@ describe('SoundAtlas API client', () => {
     expect(fetcher).toHaveBeenNthCalledWith(1, '/soundatlas-data/routes.json');
     expect(fetcher).toHaveBeenNthCalledWith(2, '/soundatlas-data/places.json');
     expect(fetcher).toHaveBeenNthCalledWith(3, '/soundatlas-data/events.json');
-    expect(fetcher).toHaveBeenNthCalledWith(4, '/soundatlas-data/connections.json');
+    expect(fetcher).toHaveBeenNthCalledWith(
+      4,
+      '/soundatlas-data/connections.json'
+    );
   });
 
   it('surfaces malformed static public data', async () => {
@@ -113,8 +125,13 @@ describe('SoundAtlas API client', () => {
   });
 
   it('sends media review updates and returns the updated event', async () => {
-    const updatedEvent = makeEvent({ id: 'kool-herc-back-to-school-jam', review_status: 'reviewed' });
-    const fetcher = vi.fn<typeof fetch>().mockResolvedValueOnce(jsonResponse(updatedEvent));
+    const updatedEvent = makeEvent({
+      id: 'kool-herc-back-to-school-jam',
+      review_status: 'reviewed'
+    });
+    const fetcher = vi
+      .fn<typeof fetch>()
+      .mockResolvedValueOnce(jsonResponse(updatedEvent));
 
     await expect(
       reviewEventLink(

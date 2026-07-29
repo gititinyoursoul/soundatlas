@@ -1,4 +1,5 @@
-export type PlaceGeometryId = 'south-bronx' | 'cedar-park-bronx' | 'east-harlem-el-barrio';
+export type PlaceGeometryId =
+  'south-bronx' | 'cedar-park-bronx' | 'east-harlem-el-barrio';
 
 export type PlaceGeometryKind = 'cultural_area' | 'site';
 export type PlaceGeometryPrecision = 'interpretive' | 'site';
@@ -45,7 +46,8 @@ export const nycPlaceGeometries: PlaceGeometryFeatureCollection = {
         kind: 'cultural_area',
         precision: 'interpretive',
         source: 'curated',
-        sourceNote: 'Curated cultural-area outline, not an administrative boundary.',
+        sourceNote:
+          'Curated cultural-area outline, not an administrative boundary.',
         label: {
           latitude: 40.8176,
           longitude: -73.9182
@@ -117,7 +119,8 @@ export const nycPlaceGeometries: PlaceGeometryFeatureCollection = {
         kind: 'cultural_area',
         precision: 'interpretive',
         source: 'curated',
-        sourceNote: 'Curated cultural-area outline, not an administrative boundary.',
+        sourceNote:
+          'Curated cultural-area outline, not an administrative boundary.',
         label: {
           latitude: 40.7947,
           longitude: -73.9425
@@ -150,10 +153,15 @@ export const placeGeometryColors: Record<PlaceGeometryKind, string> = {
 };
 
 export const placeGeometryByPlaceId = new Map(
-  nycPlaceGeometries.features.map((feature) => [feature.properties.placeId, feature])
+  nycPlaceGeometries.features.map((feature) => [
+    feature.properties.placeId,
+    feature
+  ])
 );
 
-export function getPlaceGeometriesForPlaceIds(placeIds: string[]): PlaceGeometryFeature[] {
+export function getPlaceGeometriesForPlaceIds(
+  placeIds: string[]
+): PlaceGeometryFeature[] {
   const seenPlaceIds = new Set<string>();
   const placeGeometries: PlaceGeometryFeature[] = [];
 

@@ -10,7 +10,9 @@ export function resolvePreviewItemId(
 ): string {
   if (selectedPreviewUrl) {
     const selectedPreviewItem = previewItems.find(
-      (item) => item.selectionUrl === selectedPreviewUrl || item.previewUrl === selectedPreviewUrl
+      (item) =>
+        item.selectionUrl === selectedPreviewUrl ||
+        item.previewUrl === selectedPreviewUrl
     );
 
     if (selectedPreviewItem) {

@@ -1,6 +1,8 @@
 import type { Connection, Event, Place, Route } from '$lib/types/soundatlas';
 
-export function makeRoute(overrides: Partial<Route> & Pick<Route, 'id'>): Route {
+export function makeRoute(
+  overrides: Partial<Route> & Pick<Route, 'id'>
+): Route {
   const { id, ...routeOverrides } = overrides;
 
   return {
@@ -19,7 +21,9 @@ export function makeRoute(overrides: Partial<Route> & Pick<Route, 'id'>): Route 
   };
 }
 
-export function makePlace(overrides: Partial<Place> & Pick<Place, 'id'>): Place {
+export function makePlace(
+  overrides: Partial<Place> & Pick<Place, 'id'>
+): Place {
   const { id, ...placeOverrides } = overrides;
 
   return {
@@ -36,7 +40,9 @@ export function makePlace(overrides: Partial<Place> & Pick<Place, 'id'>): Place 
   };
 }
 
-export function makeEvent(overrides: Partial<Event> & Pick<Event, 'id'>): Event {
+export function makeEvent(
+  overrides: Partial<Event> & Pick<Event, 'id'>
+): Event {
   const { id, ...eventOverrides } = overrides;
 
   return {

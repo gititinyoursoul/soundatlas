@@ -13,11 +13,16 @@ export function getVisibleRoutes(routes: Route[], events: Event[]): Route[] {
   return routes.filter((route) => visibleRouteIds.has(route.id));
 }
 
-export function groupEventsByPlaceId(eventsToGroup: Event[]): Map<string, Event[]> {
+export function groupEventsByPlaceId(
+  eventsToGroup: Event[]
+): Map<string, Event[]> {
   const groupedEvents = new Map<string, Event[]>();
 
   for (const event of eventsToGroup) {
-    groupedEvents.set(event.place_id, [...(groupedEvents.get(event.place_id) ?? []), event]);
+    groupedEvents.set(event.place_id, [
+      ...(groupedEvents.get(event.place_id) ?? []),
+      event
+    ]);
   }
 
   return groupedEvents;
@@ -36,8 +41,12 @@ export function getEventMarkerPlacements(
   currentRoutes: Route[]
 ): EventMarkerPlacement[] {
   const eventsByPlaceId = groupEventsByPlaceId(eventsToPlace);
-  const currentPlaceById = new Map(currentPlaces.map((place) => [place.id, place]));
-  const currentRouteById = new Map(currentRoutes.map((route) => [route.id, route]));
+  const currentPlaceById = new Map(
+    currentPlaces.map((place) => [place.id, place])
+  );
+  const currentRouteById = new Map(
+    currentRoutes.map((route) => [route.id, route])
+  );
   const placements: EventMarkerPlacement[] = [];
 
   for (const event of eventsToPlace) {
@@ -49,8 +58,14 @@ export function getEventMarkerPlacements(
     }
 
     const colocatedEvents = eventsByPlaceId.get(event.place_id) ?? [event];
-    const eventIndex = colocatedEvents.findIndex((colocatedEvent) => colocatedEvent.id === event.id);
-    const position = getMarkerPosition(place, eventIndex, colocatedEvents.length);
+    const eventIndex = colocatedEvents.findIndex(
+      (colocatedEvent) => colocatedEvent.id === event.id
+    );
+    const position = getMarkerPosition(
+      place,
+      eventIndex,
+      colocatedEvents.length
+    );
 
     placements.push({
       event,
@@ -76,12 +91,17 @@ export function getMarkerPosition(
   const radiusInMeters = 170;
   const latitudeOffset = (Math.sin(angle) * radiusInMeters) / 111_320;
   const longitudeOffset =
-    (Math.cos(angle) * radiusInMeters) / (111_320 * Math.cos((place.latitude * Math.PI) / 180));
+    (Math.cos(angle) * radiusInMeters) /
+    (111_320 * Math.cos((place.latitude * Math.PI) / 180));
 
   return [place.latitude + latitudeOffset, place.longitude + longitudeOffset];
 }
 
-export function getMarkerOptions(isSelected: boolean, routeColor: string, event: Event): MarkerOptions {
+export function getMarkerOptions(
+  isSelected: boolean,
+  routeColor: string,
+  event: Event
+): MarkerOptions {
   const size = isSelected ? 38 : 30;
   const initials = getEventInitials(event.title);
   const accentColor = getAccentColor(event.id);
@@ -102,7 +122,9 @@ function getEventAvatarUrl(
   accentColor: string,
   initials: string
 ): string {
-  const imageLink = event.image_links.find((link) => link.thumbnail_url || link.image_url);
+  const imageLink = event.image_links.find(
+    (link) => link.thumbnail_url || link.image_url
+  );
 
   if (imageLink) {
     return imageLink.thumbnail_url ?? imageLink.image_url;
@@ -126,7 +148,14 @@ function getEventInitials(title: string): string {
 }
 
 function getAccentColor(eventId: string): string {
-  const accents = ['#365f6b', '#8b5e3c', '#4f6f52', '#7b5167', '#6b6d42', '#566a8f'];
+  const accents = [
+    '#365f6b',
+    '#8b5e3c',
+    '#4f6f52',
+    '#7b5167',
+    '#6b6d42',
+    '#566a8f'
+  ];
   let hash = 0;
 
   for (const character of eventId) {

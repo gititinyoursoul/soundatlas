@@ -1,10 +1,23 @@
 import { describe, expect, it } from 'vitest';
-import { boroughColors, nycBoroughs, type BoroughFeature, type BoroughName } from './nyc-boroughs';
+import {
+  boroughColors,
+  nycBoroughs,
+  type BoroughFeature,
+  type BoroughName
+} from './nyc-boroughs';
 
-const expectedBoroughs: BoroughName[] = ['Bronx', 'Manhattan', 'Brooklyn', 'Queens', 'Staten Island'];
+const expectedBoroughs: BoroughName[] = [
+  'Bronx',
+  'Manhattan',
+  'Brooklyn',
+  'Queens',
+  'Staten Island'
+];
 
 function getBorough(boroughName: BoroughName): BoroughFeature {
-  const borough = nycBoroughs.features.find((feature) => feature.properties.name === boroughName);
+  const borough = nycBoroughs.features.find(
+    (feature) => feature.properties.name === boroughName
+  );
 
   if (!borough) {
     throw new Error(`Missing borough: ${boroughName}`);
@@ -44,12 +57,18 @@ function getBounds(coordinates: [number, number][]): {
 
 describe('NYC borough map data', () => {
   it('exposes exactly the five NYC boroughs', () => {
-    expect(nycBoroughs.features.map((feature) => feature.properties.name)).toEqual(expectedBoroughs);
+    expect(
+      nycBoroughs.features.map((feature) => feature.properties.name)
+    ).toEqual(expectedBoroughs);
   });
 
   it('defines one unique color for every borough', () => {
-    expect(Object.keys(boroughColors).sort()).toEqual([...expectedBoroughs].sort());
-    expect(new Set(Object.values(boroughColors)).size).toBe(expectedBoroughs.length);
+    expect(Object.keys(boroughColors).sort()).toEqual(
+      [...expectedBoroughs].sort()
+    );
+    expect(new Set(Object.values(boroughColors)).size).toBe(
+      expectedBoroughs.length
+    );
   });
 
   it('defines label coordinates for every borough', () => {

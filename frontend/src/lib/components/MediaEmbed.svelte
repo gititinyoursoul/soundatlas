@@ -17,18 +17,33 @@
 
   $: playableLinks = mediaLinks
     .filter((mediaLink) => mediaLink.playback_mode !== 'external')
-    .map((mediaLink) => ({ mediaLink, embed: parseYouTubeEmbed(mediaLink.url) }))
-    .filter((entry): entry is { mediaLink: MediaLink; embed: NonNullable<ReturnType<typeof parseYouTubeEmbed>> } =>
-      Boolean(entry.embed)
+    .map((mediaLink) => ({
+      mediaLink,
+      embed: parseYouTubeEmbed(mediaLink.url)
+    }))
+    .filter(
+      (
+        entry
+      ): entry is {
+        mediaLink: MediaLink;
+        embed: NonNullable<ReturnType<typeof parseYouTubeEmbed>>;
+      } => Boolean(entry.embed)
     );
 
-  $: if (playableLinks.length > 0 && !playableLinks.some((entry) => entry.mediaLink.url === selectedUrl)) {
+  $: if (
+    playableLinks.length > 0 &&
+    !playableLinks.some((entry) => entry.mediaLink.url === selectedUrl)
+  ) {
     selectedUrl = playableLinks[0].mediaLink.url;
   }
 
-  $: selectedEntry = playableLinks.find((entry) => entry.mediaLink.url === selectedUrl) ?? playableLinks[0];
+  $: selectedEntry =
+    playableLinks.find((entry) => entry.mediaLink.url === selectedUrl) ??
+    playableLinks[0];
 
-  async function reviewSelectedMediaLink(action: 'reviewed' | 'reject'): Promise<void> {
+  async function reviewSelectedMediaLink(
+    action: 'reviewed' | 'reject'
+  ): Promise<void> {
     if (!selectedEntry || isSaving) {
       return;
     }
@@ -39,7 +54,8 @@
     try {
       await onReviewMediaLink(eventId, selectedEntry.mediaLink.url, action);
     } catch (error) {
-      errorMessage = error instanceof Error ? error.message : 'Could not update media link.';
+      errorMessage =
+        error instanceof Error ? error.message : 'Could not update media link.';
     } finally {
       isSaving = false;
     }
@@ -76,7 +92,8 @@
       <div class="review-actions" aria-label="Media review actions">
         <button
           type="button"
-          disabled={isSaving || selectedEntry.mediaLink.review_status === 'reviewed'}
+          disabled={isSaving ||
+            selectedEntry.mediaLink.review_status === 'reviewed'}
           on:click={() => reviewSelectedMediaLink('reviewed')}
         >
           Mark reviewed

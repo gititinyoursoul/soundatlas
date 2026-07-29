@@ -14,9 +14,13 @@ describe('map utils', () => {
       makeRoute({ id: 'birth-of-hip-hop' }),
       makeRoute({ id: 'downtown-experiment', title: 'Downtown Experiment' })
     ];
-    const events = [makeEvent({ id: 'early-event', route_id: 'birth-of-hip-hop' })];
+    const events = [
+      makeEvent({ id: 'early-event', route_id: 'birth-of-hip-hop' })
+    ];
 
-    expect(getVisibleRoutes(routes, events).map((route) => route.id)).toEqual(['birth-of-hip-hop']);
+    expect(getVisibleRoutes(routes, events).map((route) => route.id)).toEqual([
+      'birth-of-hip-hop'
+    ]);
   });
 
   it('groups colocated events by place in insertion order', () => {
@@ -27,10 +31,12 @@ describe('map utils', () => {
     ];
 
     expect(
-      Array.from(groupEventsByPlaceId(events).entries()).map(([placeId, groupedEvents]) => [
-        placeId,
-        groupedEvents.map((event) => event.id)
-      ])
+      Array.from(groupEventsByPlaceId(events).entries()).map(
+        ([placeId, groupedEvents]) => [
+          placeId,
+          groupedEvents.map((event) => event.id)
+        ]
+      )
     ).toEqual([
       ['same-place', ['first', 'third']],
       ['other-place', ['second']]
@@ -38,7 +44,11 @@ describe('map utils', () => {
   });
 
   it('keeps a single event on the place coordinate and offsets colocated events', () => {
-    const place = makePlace({ id: 'same-place', latitude: 40.82, longitude: -73.93 });
+    const place = makePlace({
+      id: 'same-place',
+      latitude: 40.82,
+      longitude: -73.93
+    });
 
     expect(getMarkerPosition(place, 0, 1)).toEqual([40.82, -73.93]);
 
@@ -51,7 +61,11 @@ describe('map utils', () => {
   });
 
   it('builds a generated avatar marker with route color and initials', () => {
-    const avatar = getMarkerOptions(false, '#e4572e', makeEvent({ id: 'first-event', title: 'Grand Opening' }));
+    const avatar = getMarkerOptions(
+      false,
+      '#e4572e',
+      makeEvent({ id: 'first-event', title: 'Grand Opening' })
+    );
 
     expect(avatar.className).toBe('event-avatar-marker');
     expect(avatar.iconSize).toEqual([30, 30]);
@@ -91,7 +105,11 @@ describe('map utils', () => {
   });
 
   it('grows the selected avatar marker', () => {
-    const avatar = getMarkerOptions(true, '#e4572e', makeEvent({ id: 'first-event', title: 'Grand Opening' }));
+    const avatar = getMarkerOptions(
+      true,
+      '#e4572e',
+      makeEvent({ id: 'first-event', title: 'Grand Opening' })
+    );
 
     expect(avatar.className).toBe('event-avatar-marker selected');
     expect(avatar.iconSize).toEqual([38, 38]);
@@ -100,7 +118,9 @@ describe('map utils', () => {
 
   it('builds marker placements only for events with known places and routes', () => {
     const routes = [makeRoute({ id: 'birth-of-hip-hop' })];
-    const places = [makePlace({ id: 'same-place', latitude: 40.82, longitude: -73.93 })];
+    const places = [
+      makePlace({ id: 'same-place', latitude: 40.82, longitude: -73.93 })
+    ];
     const events = [
       makeEvent({ id: 'first', place_id: 'same-place' }),
       makeEvent({ id: 'second', place_id: 'same-place' }),
@@ -108,13 +128,13 @@ describe('map utils', () => {
       makeEvent({ id: 'missing-route', route_id: 'downtown-experiment' })
     ];
 
-    expect(getEventMarkerPlacements(events, places, routes).map((placement) => placement.event.id)).toEqual([
-      'first',
-      'second'
-    ]);
-    expect(getEventMarkerPlacements(events, places, routes)[0].position).not.toEqual([
-      40.82,
-      -73.93
-    ]);
+    expect(
+      getEventMarkerPlacements(events, places, routes).map(
+        (placement) => placement.event.id
+      )
+    ).toEqual(['first', 'second']);
+    expect(
+      getEventMarkerPlacements(events, places, routes)[0].position
+    ).not.toEqual([40.82, -73.93]);
   });
 });

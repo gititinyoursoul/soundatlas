@@ -8,7 +8,11 @@ import {
   type PlaceGeometryId
 } from './nyc-place-geometries';
 
-const expectedPlaceIds: PlaceGeometryId[] = ['south-bronx', 'cedar-park-bronx', 'east-harlem-el-barrio'];
+const expectedPlaceIds: PlaceGeometryId[] = [
+  'south-bronx',
+  'cedar-park-bronx',
+  'east-harlem-el-barrio'
+];
 
 function getCoordinates(feature: PlaceGeometryFeature): [number, number][] {
   return feature.geometry.coordinates.flat();
@@ -33,16 +37,23 @@ function getBounds(coordinates: [number, number][]): {
 
 describe('NYC place geometries', () => {
   it('defines contextual geometries for current MVP area and site places', () => {
-    expect(nycPlaceGeometries.features.map((feature) => feature.properties.placeId)).toEqual(expectedPlaceIds);
+    expect(
+      nycPlaceGeometries.features.map((feature) => feature.properties.placeId)
+    ).toEqual(expectedPlaceIds);
   });
 
   it('keeps a color for every place geometry kind', () => {
-    expect(Object.keys(placeGeometryColors).sort()).toEqual(['cultural_area', 'site']);
+    expect(Object.keys(placeGeometryColors).sort()).toEqual([
+      'cultural_area',
+      'site'
+    ]);
   });
 
   it('indexes place geometries by place id', () => {
     for (const placeId of expectedPlaceIds) {
-      expect(placeGeometryByPlaceId.get(placeId)?.properties.placeId).toBe(placeId);
+      expect(placeGeometryByPlaceId.get(placeId)?.properties.placeId).toBe(
+        placeId
+      );
     }
   });
 
@@ -68,11 +79,15 @@ describe('NYC place geometries', () => {
   });
 
   it('marks cultural areas as interpretive and site geometry as site precision', () => {
-    expect(placeGeometryByPlaceId.get('south-bronx')?.properties.precision).toBe('interpretive');
-    expect(placeGeometryByPlaceId.get('east-harlem-el-barrio')?.properties.precision).toBe(
-      'interpretive'
-    );
-    expect(placeGeometryByPlaceId.get('cedar-park-bronx')?.properties.precision).toBe('site');
+    expect(
+      placeGeometryByPlaceId.get('south-bronx')?.properties.precision
+    ).toBe('interpretive');
+    expect(
+      placeGeometryByPlaceId.get('east-harlem-el-barrio')?.properties.precision
+    ).toBe('interpretive');
+    expect(
+      placeGeometryByPlaceId.get('cedar-park-bronx')?.properties.precision
+    ).toBe('site');
   });
 
   it('returns visible geometries in first-seen place order without duplicates', () => {
