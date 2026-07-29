@@ -756,7 +756,6 @@
   .story-copy p,
   .significance-note p,
   .empty-inline,
-  .supporting-note,
   li,
   a {
     margin: 0;
@@ -774,10 +773,6 @@
   .significance-note p {
     color: #536170;
     font-size: 0.88rem;
-  }
-
-  .supporting-note {
-    color: #6b7785;
   }
 
   .connection-list,
