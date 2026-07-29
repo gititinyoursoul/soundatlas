@@ -8,5 +8,16 @@
   "workspaceFolder": "/workspace",
   "remoteUser": "soundatlas",
   "overrideCommand": false,
-  "postCreateCommand": "sh .devcontainer/post-create.sh"
+  "postCreateCommand": "sh .devcontainer/post-create.sh",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "python.defaultInterpreterPath": "/home/soundatlas/.cache/uv/venvs/backend/bin/python3",
+        "python.testing.pytestEnabled": true,
+        "python.testing.unittestEnabled": false,
+        "python.testing.cwd": "${workspaceFolder}/backend",
+        "python.testing.pytestArgs": ["tests"]
+      }
+    }
+  }
 }
