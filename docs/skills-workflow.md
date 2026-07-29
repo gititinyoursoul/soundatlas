@@ -37,6 +37,9 @@ should offer meaningful options and a recommended choice.
 * Use a skill or prompt entrypoint to carry out the approved Issue content.
 * Let Codex set existing approved Issue labels when useful. New labels must be
   proposed and explicitly approved before Codex creates or uses them.
+* When creating an Issue, choose exactly one approved `priority:p*` label with
+  explicit rationale. Use `priority:p2` only as the neutral fallback when no
+  stronger priority signal applies.
 * Post an Implementation Report after non-trivial implementation.
 * End every workflow result with a short `Next step` handoff when useful.
 

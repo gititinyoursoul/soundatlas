@@ -30,6 +30,11 @@ only a deprecated compatibility alias.
    Keep planning content in the GitHub Issue body or comments. Do not create
    local or repo-versioned implementation plan files.
 
+   When creating an Issue, choose exactly one approved `priority:p*` label by
+   reasoning from blocking level, MVP/release impact, risk reduction, and
+   urgency. Use `priority:p2` only as the neutral fallback when `p0`, `p1`, or
+   `p3` are not clearly justified. Briefly state the priority rationale.
+
 4. Keep the Issue decision-complete for implementation.
    Make assumptions for low-risk implementation details. Stop for approval when
    uncertainty affects product intent, data shape, security, privacy, external

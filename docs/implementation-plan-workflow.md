@@ -67,7 +67,25 @@ Recommended label families are:
 * `type:refactor`
 * `type:chore`
 * `area:<feature-or-component>`
+* `priority:p0`
+* `priority:p1`
+* `priority:p2`
+* `priority:p3`
 * `blocked`
+
+When Codex creates an Issue, it should assign exactly one approved priority
+label unless the human explicitly asks not to. Choose the priority by reasoning
+from blocking level, MVP or release impact, risk reduction, and urgency. Use
+`priority:p2` only as the neutral fallback when `p0`, `p1`, or `p3` are not
+clearly justified. Briefly state the priority rationale when creating the Issue.
+
+Priority meanings:
+
+* `priority:p0`: urgent or blocking; release or development work cannot
+  continue safely.
+* `priority:p1`: next up; directly supports current MVP or reduces major risk.
+* `priority:p2`: important later; valuable but not blocking current work.
+* `priority:p3`: backlog or nice-to-have; no near-term commitment.
 
 ## Plan Update
 

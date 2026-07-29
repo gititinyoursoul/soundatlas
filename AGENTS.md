@@ -85,6 +85,7 @@ Events should contain at least:
 - `TODO.md` is a legacy backlog and should not receive new planned work unless the user explicitly asks for a legacy note.
 - If the scope changes, update `docs/mvp-concept.md` first and then create or update the relevant GitHub Issue.
 - Codex may set existing approved GitHub labels on Issues. New labels must be proposed and explicitly approved before Codex creates or uses them.
+- When creating a GitHub Issue, Codex should choose exactly one approved `priority:p*` label by reasoning from blocking level, MVP/release impact, risk reduction, and urgency. Use `priority:p2` only as the neutral fallback when `p0`, `p1`, or `p3` are not clearly justified, and briefly state the priority rationale.
 - For editorial workflow changes, preserve the minimal-input review principle:
   agents should surface counts, recommendations, explicit options, and defaults
   before asking for human decisions.
