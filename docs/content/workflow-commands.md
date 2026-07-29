@@ -255,5 +255,7 @@ For broader backend confidence:
 
 ```bash
 cd backend
+uv run ruff check .
+uv run pyright
 uv run pytest
 ```

@@ -301,6 +301,8 @@ Run backend tests from the workspace container:
 
 ```sh
 cd /workspace/backend
+uv run ruff check .
+uv run pyright
 uv run pytest
 ```
 
@@ -308,7 +310,9 @@ Run frontend checks from the workspace container:
 
 ```sh
 cd /workspace/frontend
+npm run lint
 npm run check
+npm run test
 ```
 
 Install frontend dependencies if needed:

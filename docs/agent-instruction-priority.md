@@ -36,8 +36,8 @@ This document records how agent instructions should be interpreted in this repos
 
    - Feature work follows the implementation-plan workflow in `docs/implementation-plan-workflow.md`.
    - The map is the primary interface.
-   - Frontend changes run `npm run check`.
-   - Backend changes run `uv run pytest`.
+   - Frontend changes run `npm run lint`, `npm run check`, and relevant tests.
+   - Backend changes run `uv run ruff check .`, `uv run pyright`, and `uv run pytest`.
    - Commits require an explicit user request.
 
    Configurable: yes. This is the strongest repository-controlled place for broad agent guardrails.

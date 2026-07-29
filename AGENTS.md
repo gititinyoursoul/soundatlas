@@ -63,7 +63,7 @@ Events should contain at least:
 - FastAPI code should live under `backend/app/`.
 - API responses should be typed with Pydantic schemas.
 - Endpoints should read from the seed files in a data-driven way until a database is introduced.
-- Run tests, when present, with `uv run pytest`.
+- Run backend lint, type checks, and tests with `uv run ruff check .`, `uv run pyright`, and `uv run pytest`.
 
 ## Frontend Rules
 
@@ -115,7 +115,7 @@ Events should contain at least:
 ## Working Defaults
 
 - Prefer small, reviewable changes over large jumps
-- When frontend code changes, run `npm run check`; for larger changes, also run `npm run build`
-- When backend code changes, run `uv run pytest`
+- When frontend code changes, run `npm run lint`, `npm run check`, and relevant tests; for larger changes, also run `npm run build`
+- When backend code changes, run `uv run ruff check .`, `uv run pyright`, and `uv run pytest`
 - When data or seed files change, check the JSON structure and references
 - When new work packages arise, create or update the relevant GitHub Issue rather than `TODO.md`

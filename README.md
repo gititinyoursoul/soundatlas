@@ -155,6 +155,8 @@ Backend:
 
 ```sh
 cd backend
+uv run ruff check .
+uv run pyright
 uv run pytest
 ```
 
@@ -162,13 +164,8 @@ Frontend:
 
 ```sh
 cd frontend
+npm run lint
 npm run check
-```
-
-Optional frontend tests:
-
-```sh
-cd frontend
 npm run test
 ```
 

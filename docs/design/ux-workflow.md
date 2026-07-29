@@ -243,6 +243,7 @@ If the pass changes shared state, filtering, API behavior, or interaction logic,
 For frontend changes, run:
 
 ```bash
+npm run lint
 npm test
 npm run check
 ```
@@ -320,7 +321,7 @@ Stop a UX cycle when:
 
 - The planned pass is implemented.
 - Acceptance criteria pass.
-- `npm test` and `npm run check` pass for frontend changes.
+- `npm run lint`, `npm run test`, and `npm run check` pass for frontend changes.
 - Screenshot critique shows no high-impact issue that belongs in the same pass.
 - Remaining issues can be captured as follow-up work.
 
