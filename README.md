@@ -98,6 +98,11 @@ VS Code uses `.devcontainer/devcontainer.json` and starts the `workspace`
 service with the root `docker-compose.yml` plus
 `.devcontainer/docker-compose.devcontainer.yml`.
 
+The dev container config also owns container-specific VS Code settings such as
+the Linux backend Python interpreter path. Local Windows VS Code users should
+select their own backend interpreter locally after running the `uv` workflow;
+`.vscode/` remains ignored so machine-specific editor paths are not committed.
+
 The workspace also seeds Codex login state from the host `.codex` directory by
 default. If your host uses a different path, set
 `SOUNDATLAS_HOST_CODEX_HOME` before starting the container.

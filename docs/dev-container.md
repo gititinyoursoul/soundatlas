@@ -81,6 +81,16 @@ branch/status information in the prompt.
 
 VS Code Dev Containers runs the configured `postCreateCommand` automatically.
 
+The dev container also provisions a focused set of VS Code extensions for the
+project stack and applies container-only editor settings under
+`.devcontainer/devcontainer.json`. Those settings include the Linux backend
+Python interpreter path created by `UV_PROJECT_ENVIRONMENT`.
+
+Local Windows VS Code workspaces should not reuse that Linux interpreter path.
+Run the backend `uv` workflow locally and select the resulting interpreter in
+VS Code user or workspace-local settings. The repo keeps `.vscode/` ignored so
+host-specific interpreter paths stay out of source control.
+
 ## Workspace Image
 
 The `workspace` service is built from `.devcontainer/Dockerfile`.

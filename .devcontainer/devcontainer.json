@@ -11,6 +11,17 @@
   "postCreateCommand": "sh .devcontainer/post-create.sh",
   "customizations": {
     "vscode": {
+      "extensions": [
+        "bradlc.vscode-tailwindcss",
+        "charliermarsh.ruff",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "ms-playwright.playwright",
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "svelte.svelte-vscode",
+        "vitest.explorer"
+      ],
       "settings": {
         "python.defaultInterpreterPath": "/home/soundatlas/.cache/uv/venvs/backend/bin/python3",
         "python.testing.pytestEnabled": true,
