@@ -24,7 +24,9 @@ explicitly asks for a legacy note.
 6. Agent implements from the approved Issue content.
 7. Agent validates the change with the relevant checks.
 8. Agent posts an Implementation Report in the Issue or final response.
-9. Human reviews the local diff and explicitly approves closing the Issue.
+9. Human reviews the local diff. A request to commit completed Issue work counts
+   as approval to close the associated Issue after the commit succeeds, unless
+   the human explicitly asks to keep it open.
 ```
 
 For clearly trivial changes, the agent may proceed directly when the request is
@@ -157,9 +159,16 @@ comment:
 ```
 
 Do not close the Issue just because implementation has started or the report was
-posted. Close the Issue with `gh issue close <number>` only when the human
-explicitly requests or clearly approves closure after reviewing the local
-result.
+posted.
+
+When work was implemented from a GitHub Issue, a human request to commit that
+work counts as approval to close the Issue after the commit succeeds, unless the
+human explicitly says to keep it open. Close with a comment that references the
+commit hash.
+
+Do not auto-close when the commit is partial or WIP, acceptance criteria remain
+incomplete, multiple Issues are ambiguously involved, or the human asks to keep
+the ticket open.
 
 Do not add a separate `done` label for completion.
 
