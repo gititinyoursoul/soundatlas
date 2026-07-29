@@ -63,8 +63,10 @@ def build_quality_report(
         event_id = event.get("id")
         if not isinstance(event_id, str):
             continue
-        route = routes_by_id.get(event.get("route_id"), {})
-        place = places_by_id.get(event.get("place_id"), {})
+        route_id = event.get("route_id")
+        place_id = event.get("place_id")
+        route = routes_by_id.get(route_id, {}) if isinstance(route_id, str) else {}
+        place = places_by_id.get(place_id, {}) if isinstance(place_id, str) else {}
         event_reports.append(
             build_event_quality_report(
                 kind=kind,
@@ -105,8 +107,10 @@ def build_seed_baseline_report(
         event_id = event.get("id")
         if not isinstance(event_id, str):
             continue
-        route = routes_by_id.get(event.get("route_id"), {})
-        place = places_by_id.get(event.get("place_id"), {})
+        route_id = event.get("route_id")
+        place_id = event.get("place_id")
+        route = routes_by_id.get(route_id, {}) if isinstance(route_id, str) else {}
+        place = places_by_id.get(place_id, {}) if isinstance(place_id, str) else {}
         links = [link for link in event.get(link_field, []) if isinstance(link, dict)]
         event_reports.append(
             build_event_quality_report(
@@ -469,7 +473,7 @@ def aggregate_event_reports(event_reports: list[dict[str, Any]]) -> dict[str, An
         "high_confidence_count",
         "missing_confidence_count",
     ]
-    aggregate = {
+    aggregate: dict[str, Any] = {
         "event_count": len(event_reports),
         "events_with_no_candidates": sum(
             1 for report in event_reports if report.get("final_candidate_count") == 0
@@ -530,7 +534,7 @@ def aggregate_comparisons(comparisons: list[dict[str, Any]]) -> dict[str, Any]:
         "new_candidate_identity_count",
         "lost_candidate_identity_count",
     ]
-    aggregate = {"event_count": len(comparisons)}
+    aggregate: dict[str, Any] = {"event_count": len(comparisons)}
     for field in additive_fields:
         aggregate[field] = sum(int(comparison.get(field) or 0) for comparison in comparisons)
     aggregate["type_count_deltas"] = merge_count_maps(

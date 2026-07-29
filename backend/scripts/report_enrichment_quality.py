@@ -234,8 +234,10 @@ def build_image_quality_report(
         event_id = event.get("id")
         if not isinstance(event_id, str):
             continue
-        route = routes_by_id.get(event.get("route_id"), {})
-        place = places_by_id.get(event.get("place_id"), {})
+        route_id = event.get("route_id")
+        place_id = event.get("place_id")
+        route = routes_by_id.get(route_id, {}) if isinstance(route_id, str) else {}
+        place = places_by_id.get(place_id, {}) if isinstance(place_id, str) else {}
         try:
             candidates, planned_query_count, query_count_with_candidates = extract_image_report_inputs(
                 event=event,

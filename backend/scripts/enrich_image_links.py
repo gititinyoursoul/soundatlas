@@ -300,8 +300,10 @@ def print_image_query_preview(
 
     output_blocks = []
     for event in events:
-        route = routes_by_id.get(event.get("route_id"), {})
-        place = places_by_id.get(event.get("place_id"), {})
+        route_id = event.get("route_id")
+        place_id = event.get("place_id")
+        route = routes_by_id.get(route_id, {}) if isinstance(route_id, str) else {}
+        place = places_by_id.get(place_id, {}) if isinstance(place_id, str) else {}
         output_blocks.append(
             format_image_query_preview(
                 event=event,
@@ -419,6 +421,7 @@ def request_wikimedia_json(
                 raise
             time.sleep(delay)
             delay *= 2
+    raise MediaProviderError("Wikimedia request failed after retries.")
 
 
 def should_retry_wikimedia_request(exc: MediaProviderError) -> bool:
@@ -460,8 +463,10 @@ def enrich_events_payload(
     changed_events = 0
     for event in events:
         candidates: list[dict[str, Any]] = []
-        route = routes_by_id.get(event.get("route_id"), {})
-        place = places_by_id.get(event.get("place_id"), {})
+        route_id = event.get("route_id")
+        place_id = event.get("place_id")
+        route = routes_by_id.get(route_id, {}) if isinstance(route_id, str) else {}
+        place = places_by_id.get(place_id, {}) if isinstance(place_id, str) else {}
 
         if "wikimedia" in providers:
             try:

@@ -97,11 +97,13 @@ def seed_ids(path: Path, collection_key: str) -> list[str]:
     if not isinstance(records, list):
         return []
 
-    ids = [
-        record.get("id")
-        for record in records
-        if isinstance(record, dict) and isinstance(record.get("id"), str)
-    ]
+    ids: list[str] = []
+    for record in records:
+        if not isinstance(record, dict):
+            continue
+        record_id = record.get("id")
+        if isinstance(record_id, str):
+            ids.append(record_id)
     return sorted(ids)
 
 

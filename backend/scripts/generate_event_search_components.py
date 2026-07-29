@@ -141,8 +141,10 @@ def generate_components(
 
     records = []
     for event in events:
-        route = routes_by_id.get(event.get("route_id"), {})
-        place = places_by_id.get(event.get("place_id"), {})
+        route_id = event.get("route_id")
+        place_id = event.get("place_id")
+        route = routes_by_id.get(route_id, {}) if isinstance(route_id, str) else {}
+        place = places_by_id.get(place_id, {}) if isinstance(place_id, str) else {}
         component = build_event_search_component(event=event, route=route, place=place)
         report = validate_component_for_seed(
             component=component,
