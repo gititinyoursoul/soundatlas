@@ -47,6 +47,10 @@ jobs:
         with:
           version: latest
 
+      - name: Lint backend
+        run: uv run ruff check .
+        working-directory: backend
+
       - name: Test backend
         run: uv run pytest
         working-directory: backend
