@@ -158,6 +158,7 @@ cd backend
 uv run ruff check .
 uv run pyright
 uv run pytest
+uv run pytest --cov
 ```
 
 Frontend:
