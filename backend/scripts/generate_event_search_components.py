@@ -24,7 +24,6 @@ from scripts.enrich_image_links import (
     select_events,
 )
 
-
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_COMPONENT_DIR = REPO_ROOT / "data" / "enrichment" / "event-search-components"
 

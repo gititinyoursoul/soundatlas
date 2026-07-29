@@ -12,7 +12,6 @@ if str(BACKEND_ROOT) not in sys.path:
 from app.media_enrichment.services import MediaProviderError, request_json
 from app.media_enrichment.settings import MediaEnrichmentSettings
 
-
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_REQUEST_DIR = REPO_ROOT / "data" / "enrichment" / "youtube-search-requests"
 DEFAULT_OUTPUT_DIR = REPO_ROOT / "data" / "enrichment" / "youtube-search-results"

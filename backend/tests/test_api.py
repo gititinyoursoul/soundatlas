@@ -5,7 +5,6 @@ from fastapi.testclient import TestClient
 from app.main import app, create_app
 from app.seed_repository import SeedRepository
 
-
 client = TestClient(app)
 
 

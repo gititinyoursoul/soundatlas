@@ -2,7 +2,6 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, field_validator, model_validator
 
-
 ReviewStatus = Literal["draft", "reviewed"]
 MediaReviewAction = Literal["reviewed", "reject"]
 LinkReviewKind = Literal["media", "image"]

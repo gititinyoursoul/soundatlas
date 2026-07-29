@@ -5,7 +5,6 @@ from pathlib import Path
 from scripts import route_content_pipeline
 from scripts.route_content_pipeline import main
 
-
 ROUTE_ID = "birth-of-hip-hop"
 
 

@@ -9,9 +9,8 @@ BACKEND_ROOT = Path(__file__).resolve().parents[1]
 if str(BACKEND_ROOT) not in sys.path:
     sys.path.insert(0, str(BACKEND_ROOT))
 
-from scripts.run_youtube_search_requests import DEFAULT_OUTPUT_DIR
 from app.link_ignores import build_ignored_link_index, link_is_ignored
-
+from scripts.run_youtube_search_requests import DEFAULT_OUTPUT_DIR
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 EVENTS_PATH = REPO_ROOT / "data" / "seed" / "events.json"

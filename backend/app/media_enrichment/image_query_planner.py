@@ -8,7 +8,6 @@ from app.media_enrichment.retrieval_brief import (
     unique_terms,
 )
 
-
 ARTIST_MARKERS = {"dj", "flash", "herc", "bambaataa", "gang", "force", "five"}
 BOROUGH_TERMS = ("Bronx", "Brooklyn", "Manhattan", "Queens", "Staten Island")
 CITY_TERMS = ("New York", "NYC")

@@ -1,5 +1,5 @@
-from app.seed_repository import SeedRepository
 from app.schemas import ImageLink, MediaLink
+from app.seed_repository import SeedRepository
 
 
 def test_seed_repository_loads_routes_places_events_and_connections() -> None:

@@ -3,8 +3,6 @@ import json
 from pathlib import Path
 from urllib.request import Request
 
-import pytest
-
 from app.media_enrichment import services
 from app.media_enrichment.settings import MediaEnrichmentSettings
 

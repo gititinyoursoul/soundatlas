@@ -10,7 +10,6 @@ if str(BACKEND_ROOT) not in sys.path:
 
 from app.link_ignores import iter_ignored_links
 
-
 REPO_ROOT = Path(__file__).resolve().parents[2]
 EVENTS_PATH = REPO_ROOT / "data" / "seed" / "events.json"
 ROUTES_PATH = REPO_ROOT / "data" / "seed" / "routes.json"

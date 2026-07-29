@@ -2,7 +2,6 @@ import re
 from dataclasses import dataclass
 from typing import Any
 
-
 CONCRETE_PLACE_TYPES = {"building", "club", "housing_complex", "park", "venue"}
 BROAD_PLACE_TYPES = {"city", "neighborhood", "region"}
 DEFAULT_AVOID_TERMS = (

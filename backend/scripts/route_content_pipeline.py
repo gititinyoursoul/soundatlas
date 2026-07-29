@@ -14,7 +14,6 @@ if str(BACKEND_ROOT) not in sys.path:
 
 from app.schemas import Connection, Event, Place, Route
 
-
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_CONTENT_ROOT = REPO_ROOT / "docs" / "content" / "routes"
 DEFAULT_SEED_DIR = REPO_ROOT / "data" / "seed"

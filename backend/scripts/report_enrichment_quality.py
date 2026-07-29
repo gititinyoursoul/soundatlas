@@ -21,8 +21,8 @@ from scripts.enrich_image_links import (
     ROUTES_PATH,
     build_places_by_id,
     build_routes_by_id,
-    build_wikimedia_search_queries,
     build_wikimedia_image_link,
+    build_wikimedia_search_queries,
     dedupe_image_links,
     fetch_wikimedia_imageinfo,
     request_wikimedia_json,
@@ -35,7 +35,6 @@ from scripts.enrich_media_links import (
     confidence_hint_to_score,
     load_youtube_result_payloads,
 )
-
 
 SUPPORTED_KINDS = {"media", "image"}
 

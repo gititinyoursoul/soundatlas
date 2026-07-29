@@ -7,16 +7,16 @@ from app.schemas import ImageLink
 from scripts import enrich_image_links
 from scripts.enrich_image_links import (
     build_event_image_queries,
-    build_wikimedia_search_queries,
     build_wikimedia_image_link,
+    build_wikimedia_search_queries,
     dedupe_image_links,
     enrich_events_payload,
     fetch_wikimedia_image_candidates,
     infer_image_type,
     main,
     merge_image_links,
-    score_image_candidate,
     request_wikimedia_json,
+    score_image_candidate,
 )
 
 

@@ -19,11 +19,10 @@ from app.media_enrichment.event_search_components import (
     load_component,
     retrieval_brief_from_component,
 )
-from app.media_enrichment.image_query_planner import ImageQueryPlan, plan_image_queries
+from app.media_enrichment.image_query_planner import plan_image_queries
 from app.media_enrichment.retrieval_brief import build_retrieval_brief
 from app.media_enrichment.services import MediaProviderError, request_json
 from app.schemas import ImageLink
-
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DATA_SEED_DIR = REPO_ROOT / "data" / "seed"

@@ -1,12 +1,11 @@
 from __future__ import annotations
 
+import re
 from collections import Counter
 from statistics import mean
-import re
 from typing import Any
 
 from app.link_ignores import link_is_ignored
-
 
 GENERIC_QUERY_TOKENS = {
     "archive",

@@ -4,7 +4,6 @@ from pathlib import Path
 
 from app.config import DEFAULT_CODEX_ENV_FILE
 
-
 ALLOWED_ENV_KEYS = {
     "YOUTUBE_API_KEY",
     "SOUNDATLAS_USE_DUMMY_SERVICES",

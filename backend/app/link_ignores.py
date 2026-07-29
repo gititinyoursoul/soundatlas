@@ -3,7 +3,6 @@ from __future__ import annotations
 from collections.abc import Iterable
 from typing import Any
 
-
 IGNORED_LINKS_KEY = "ignored_links"
 IGNORED_LINK_FIELDS = ("url", "image_url", "source_url", "thumbnail_url")
 

@@ -15,7 +15,6 @@ from app.media_enrichment.retrieval_brief import (
     unique_terms,
 )
 
-
 EventType = Literal[
     "scene_context",
     "technique_development",
