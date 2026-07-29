@@ -46,17 +46,17 @@
 
   let drawerElement: HTMLDivElement;
   let panelHeadingElement: HTMLHeadingElement;
-  let didFocusForOpen = false;
+  let lastHandledOpen = false;
   let activePanel: DrawerPanel = 'main';
 
   $: sections = buildSections(routes.length, reviewQueueItems.length, errorMessage, showAdminReview);
-  $: if (open && !didFocusForOpen) {
-    didFocusForOpen = true;
-    void focusDrawer();
-  }
-  $: if (!open && didFocusForOpen) {
-    didFocusForOpen = false;
-    activePanel = 'main';
+  $: if (open !== lastHandledOpen) {
+    lastHandledOpen = open;
+    if (open) {
+      void focusDrawer();
+    } else {
+      activePanel = 'main';
+    }
   }
 
   function buildSections(
@@ -301,7 +301,7 @@
               </div>
             {:else}
               <div class="route-list" aria-label="Available routes">
-                {#each routes as route}
+                {#each routes as route (route.id)}
                   <button
                     type="button"
                     class:active={selectedRouteId === route.id}
@@ -363,7 +363,7 @@
               </div>
             {:else}
               <div class="review-list" aria-label="Draft media and image review queue">
-                {#each reviewQueueItems as item}
+                {#each reviewQueueItems as item (item.id)}
                   <article class="review-item">
                     <button
                       type="button"
@@ -379,6 +379,7 @@
                     </button>
 
                     <div class="review-actions" aria-label={`Review actions for ${item.title}`}>
+                      <!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
                       <a href={item.url} target="_blank" rel="noreferrer">Open</a>
                       <button
                         type="button"
@@ -405,7 +406,7 @@
           <h2 class="visually-hidden" bind:this={panelHeadingElement} tabindex="-1">
             Main navigation
           </h2>
-          {#each sections as section}
+          {#each sections as section (section.id)}
             <section class="nav-section" aria-labelledby={`drawer-section-${section.id}`}>
               {#if variant === 'expanded'}
                 <h2 id={`drawer-section-${section.id}`}>{section.title}</h2>
@@ -434,7 +435,7 @@
               {/if}
 
               <div class="nav-items">
-                {#each section.items as item}
+                {#each section.items as item (item.id)}
                   <button
                     type="button"
                     class:active={activeItemId === item.id}

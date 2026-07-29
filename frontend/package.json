@@ -9,6 +9,7 @@
     "generate:static-data": "node scripts/generate-static-data.mjs",
     "build": "npm run generate:static-data && vite build",
     "preview": "vite preview",
+    "lint": "eslint .",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -18,6 +19,7 @@
     "leaflet": "^1.9.4"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.61.1",
     "@sveltejs/adapter-auto": "^7.0.1",
     "@sveltejs/adapter-static": "^3.0.10",
@@ -25,10 +27,16 @@
     "@tailwindcss/vite": "^4.3.3",
     "@types/leaflet": "^1.9.21",
     "@types/node": "^25.9.2",
+    "eslint": "^10.8.0",
+    "eslint-plugin-security": "^4.0.1",
+    "eslint-plugin-svelte": "^3.22.0",
+    "globals": "^17.8.0",
     "svelte": "^5.56.3",
     "svelte-check": "^4.7.4",
+    "svelte-eslint-parser": "^1.8.0",
     "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3",
+    "typescript-eslint": "^8.65.0",
     "vite": "^8.0.16",
     "vitest": "^4.1.9"
   }

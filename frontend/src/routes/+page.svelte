@@ -33,6 +33,7 @@
   let headerRegionElement: HTMLElement;
   let storyRegionElement: HTMLElement;
   let reviewSavingItemId: string | null = null;
+  const dataSourceLabel = IS_PUBLIC_STATIC_MODE ? 'static data' : 'API data';
   let reviewErrorMessage: string | null = null;
   let selectedInspectorTab: 'story' | 'media' | 'related' = 'story';
   let selectedPreviewUrl: string | null = null;
@@ -102,7 +103,6 @@
   $: headerRouteYears = activeRoute ? `${activeRoute.year_start}-${activeRoute.year_end}` : '';
   $: headerRouteSummary =
     activeRoute?.thesis || activeRoute?.summary || 'Fetching the curated route, event sequence, and map places.';
-  $: dataSourceLabel = IS_PUBLIC_STATIC_MODE ? 'static data' : 'API data';
   $: statusLabel = isLoading
     ? `Loading ${dataSourceLabel}`
     : errorMessage

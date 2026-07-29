@@ -349,8 +349,9 @@
             <h3>Sources</h3>
             {#if event.source_urls.length > 0}
               <ul class="source-list compact">
-                {#each event.source_urls as sourceUrl}
+                {#each event.source_urls as sourceUrl (sourceUrl)}
                   <li>
+                    <!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
                     <a href={sourceUrl} target="_blank" rel="noreferrer">
                       {formatSourceLabel(sourceUrl)}
                     </a>
@@ -403,6 +404,7 @@
                   <h3>{selectedPreviewItem.title}</h3>
                   <p>{selectedPreviewItem.subtitle}</p>
                 </div>
+                <!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
                 <a href={selectedPreviewItem.mediaLink.url} target="_blank" rel="noreferrer">
                   {selectedPreviewItem.mediaLink.provider === 'youtube'
                     ? 'Open on YouTube'
@@ -413,6 +415,7 @@
               <div class="media-placeholder">
                 <h3>{selectedPreviewItem.title}</h3>
                 <p>{selectedPreviewItem.subtitle}</p>
+                <!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
                 <a href={selectedPreviewItem.mediaLink.url} target="_blank" rel="noreferrer">
                   {selectedPreviewItem.mediaLink.provider === 'youtube'
                     ? 'Open on YouTube'
@@ -431,7 +434,7 @@
             <h3>Media to explore</h3>
             {#if previewItems.length > 0}
               <div class="preview-list" aria-label="Media thumbnails">
-                {#each previewItems as previewItem}
+                {#each previewItems as previewItem (previewItem.id)}
                   <button
                     type="button"
                     class:active={selectedPreviewItem?.id === previewItem.id}
@@ -466,7 +469,7 @@
             <h3>Related events</h3>
             {#if connections.length > 0}
               <ul class="connection-list compact">
-                {#each connections as connection}
+                {#each connections as connection (connection.id)}
                   <li>
                     <button
                       type="button"

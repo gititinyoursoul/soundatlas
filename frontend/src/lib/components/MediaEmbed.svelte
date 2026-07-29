@@ -100,7 +100,7 @@
       <label class="media-selector">
         <span>Switch media</span>
         <select bind:value={selectedUrl}>
-          {#each playableLinks as entry}
+          {#each playableLinks as entry (entry.mediaLink.url)}
             <option value={entry.mediaLink.url}>{entry.mediaLink.title}</option>
           {/each}
         </select>

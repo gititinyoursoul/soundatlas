@@ -13,7 +13,7 @@
     <p class="empty">No routes loaded.</p>
   {:else}
     <div class="routes">
-      {#each routes as route}
+      {#each routes as route (route.id)}
         <button
           class:active={selectedRouteId === route.id}
           type="button"

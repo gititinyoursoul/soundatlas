@@ -124,7 +124,7 @@
       <div class="tick end" style:left={`${toPercent(axisEnd)}%`} aria-hidden="true"></div>
 
       <!-- @todo Switch to clustered or compact ticks when route event density makes labels overlap. -->
-      {#each events as event}
+      {#each events as event (event.id)}
         <button
           class:active={selectedEventId === event.id}
           class="event-tick"
@@ -143,7 +143,7 @@
     {#if events.length > 0}
       <!-- @todo Revisit this horizontal list when future routes contain many more events. -->
       <div bind:this={eventListElement} class="event-list" aria-label="Route events">
-        {#each events as event}
+        {#each events as event (event.id)}
           <button
             class:active={selectedEventId === event.id}
             data-event-id={event.id}

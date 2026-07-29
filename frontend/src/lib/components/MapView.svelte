@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import type { Feature, GeoJsonObject } from 'geojson';
   import 'leaflet/dist/leaflet.css';
   import { boroughColors, nycBoroughs, type BoroughFeature } from '$lib/data/nyc-boroughs';
   import {
@@ -111,7 +112,7 @@
       .addTo(map);
 
     boroughLayer = leaflet
-      .geoJSON(nycBoroughs as GeoJSON.GeoJsonObject, {
+      .geoJSON(nycBoroughs as GeoJsonObject, {
         pane: 'boroughs',
         interactive: false,
         style: styleBoroughFeature
@@ -250,7 +251,7 @@
     });
   }
 
-  function styleBoroughFeature(feature?: GeoJSON.Feature): import('leaflet').PathOptions {
+  function styleBoroughFeature(feature?: Feature): import('leaflet').PathOptions {
     const boroughName = (feature as BoroughFeature | undefined)?.properties.name;
     const fillColor = boroughName ? boroughColors[boroughName] : '#8a99a8';
 
@@ -285,7 +286,7 @@
 
     for (const geometry of visibleGeometries) {
       leaflet
-        .geoJSON(geometry as GeoJSON.GeoJsonObject, {
+        .geoJSON(geometry as GeoJsonObject, {
           pane: 'place-geometries',
           interactive: false,
           style: (feature) => stylePlaceGeometryFeature(feature, selectedPlaceId, selectedRouteColor)
@@ -312,7 +313,7 @@
   }
 
   function stylePlaceGeometryFeature(
-    feature: GeoJSON.Feature | undefined,
+    feature: Feature | undefined,
     selectedPlaceId: string | null,
     selectedRouteColor: string | null
   ): import('leaflet').PathOptions {
