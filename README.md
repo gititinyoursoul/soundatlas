@@ -158,7 +158,6 @@ cd backend
 uv run ruff check .
 uv run pyright
 uv run pytest
-uv run pytest --cov
 ```
 
 Frontend:
@@ -168,6 +167,15 @@ cd frontend
 npm run lint
 npm run check
 npm run test
+```
+
+Optional coverage reports:
+
+```sh
+cd backend
+uv run pytest --cov
+
+cd ../frontend
 npm run test:coverage
 ```
 

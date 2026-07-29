@@ -315,6 +315,19 @@ npm run check
 npm run test
 ```
 
+Generate optional coverage reports from the workspace container:
+
+```sh
+cd /workspace/backend
+uv run pytest --cov
+
+cd /workspace/frontend
+npm run test:coverage
+```
+
+Coverage reports are informational only. They do not currently enforce minimum
+thresholds in local validation or CI.
+
 Install frontend dependencies if needed:
 
 ```sh
