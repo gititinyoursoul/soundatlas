@@ -92,7 +92,7 @@ Installed runtime tools:
 - `uv`
 - Node.js `24.11.1`
 - npm
-- Codex CLI `@openai/codex` `0.142.4`
+- Codex CLI `@openai/codex` `0.146.0`
 - GitHub CLI `gh`
 - Git
 - Bash with programmable completion and Git prompt support
