@@ -47,8 +47,24 @@
     syncMapState(selectedRouteId, selectedEventId, events, places, routes);
   }
 
-  onMount(async () => {
+  onMount(() => {
+    let isMounted = true;
+
+    void initializeMap(() => isMounted);
+
+    return () => {
+      isMounted = false;
+      disposeMap();
+    };
+  });
+
+  async function initializeMap(isMounted: () => boolean): Promise<void> {
     leaflet = await import('leaflet');
+
+    if (!isMounted()) {
+      leaflet = null;
+      return;
+    }
 
     map = leaflet.map(mapContainer, {
       zoomControl: false,
@@ -111,20 +127,23 @@
     leaflet.control.zoom({ position: 'bottomright' }).addTo(map);
     markerLayer = leaflet.layerGroup().addTo(map);
     syncMapState(selectedRouteId, selectedEventId, events, places, routes);
+  }
 
-    return () => {
-      boroughLayer?.remove();
-      boroughLayer = null;
-      boroughLabelLayer?.remove();
-      boroughLabelLayer = null;
-      placeGeometryLayer?.remove();
-      placeGeometryLayer = null;
-      placeGeometryLabelLayer?.remove();
-      placeGeometryLabelLayer = null;
-      map?.remove();
-      map = null;
-    };
-  });
+  function disposeMap(): void {
+    boroughLayer?.remove();
+    boroughLayer = null;
+    boroughLabelLayer?.remove();
+    boroughLabelLayer = null;
+    placeGeometryLayer?.remove();
+    placeGeometryLayer = null;
+    placeGeometryLabelLayer?.remove();
+    placeGeometryLabelLayer = null;
+    markerLayer?.remove();
+    markerLayer = null;
+    map?.remove();
+    map = null;
+    leaflet = null;
+  }
 
   function renderMarkers(
     activeEventId = selectedEventId,

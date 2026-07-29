@@ -22,10 +22,10 @@
   $: axisSpan = Math.max(axisEnd - axisStart, 1);
   $: hasEventRange = eventStartYear !== null && eventEndYear !== null;
   $: highlightedStartYear = hasEventRange
-    ? Math.max(axisStart, Math.min(eventStartYear, eventEndYear))
+    ? Math.max(axisStart, Math.min(eventStartYear ?? axisStart, eventEndYear ?? axisStart))
     : axisStart;
   $: highlightedEndYear = hasEventRange
-    ? Math.min(axisEnd, Math.max(eventStartYear, eventEndYear))
+    ? Math.min(axisEnd, Math.max(eventStartYear ?? axisStart, eventEndYear ?? axisStart))
     : axisStart;
   $: highlightedStart = ((highlightedStartYear - axisStart) / axisSpan) * 100;
   $: highlightedWidth = Math.max(((highlightedEndYear - highlightedStartYear) / axisSpan) * 100, 0);
