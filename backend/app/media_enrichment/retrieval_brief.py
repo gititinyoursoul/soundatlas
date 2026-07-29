@@ -57,11 +57,7 @@ def build_retrieval_brief(
     place_name = clean_text(place.get("name"))
     place_type = clean_text(place.get("place_type")).casefold()
     place_borough = clean_text(place.get("borough"))
-    tags = tuple(
-        tag
-        for tag in (clean_text(value) for value in event.get("tags", []))
-        if tag
-    )
+    tags = tuple(tag for tag in (clean_text(value) for value in event.get("tags", [])) if tag)
     summary = clean_text(event.get("summary"))
     significance = clean_text(event.get("significance"))
     year_start = int_or_none(event.get("year_start"))

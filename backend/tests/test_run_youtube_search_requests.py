@@ -66,9 +66,7 @@ def test_run_request_plan_injects_key_and_writes_redacted_results() -> None:
     assert captured_params[0]["key"] == "real-youtube-key"
     assert result["results"][0]["request"]["params"]["key"] == "YOUTUBE_API_KEY"
     assert "real-youtube-key" not in result["results"][0]["request"]["url"]
-    assert result["results"][0]["items"][0]["url"] == (
-        "https://www.youtube.com/watch?v=abc123"
-    )
+    assert result["results"][0]["items"][0]["url"] == ("https://www.youtube.com/watch?v=abc123")
 
 
 def test_normalize_youtube_search_items_supports_playlists() -> None:

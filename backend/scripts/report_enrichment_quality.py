@@ -170,7 +170,9 @@ def build_media_quality_report(
         current_event_id = payload.get("event_id")
         if not isinstance(current_event_id, str):
             continue
-        candidates, planned_query_count, query_count_with_candidates = extract_media_report_inputs(payload)
+        candidates, planned_query_count, query_count_with_candidates = extract_media_report_inputs(
+            payload
+        )
         raw_candidates_by_event_id[current_event_id] = candidates
         planned_query_counts_by_event_id[current_event_id] = planned_query_count
         query_counts_with_candidates_by_event_id[current_event_id] = query_count_with_candidates
@@ -239,12 +241,14 @@ def build_image_quality_report(
         route = routes_by_id.get(route_id, {}) if isinstance(route_id, str) else {}
         place = places_by_id.get(place_id, {}) if isinstance(place_id, str) else {}
         try:
-            candidates, planned_query_count, query_count_with_candidates = extract_image_report_inputs(
-                event=event,
-                route=route,
-                place=place,
-                query_planner=query_planner,
-                limit=limit,
+            candidates, planned_query_count, query_count_with_candidates = (
+                extract_image_report_inputs(
+                    event=event,
+                    route=route,
+                    place=place,
+                    query_planner=query_planner,
+                    limit=limit,
+                )
             )
         except MediaProviderError as exc:
             print(
@@ -367,7 +371,13 @@ def format_quality_report(report: dict[str, Any]) -> str:
 
     comparison = report.get("comparison")
     if comparison:
-        lines.extend(["", f"Comparison baseline: {comparison.get('baseline_source')}", "Comparison aggregate"])
+        lines.extend(
+            [
+                "",
+                f"Comparison baseline: {comparison.get('baseline_source')}",
+                "Comparison aggregate",
+            ]
+        )
         comp_aggregate = comparison.get("aggregate", {})
         lines.extend(
             [

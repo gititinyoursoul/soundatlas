@@ -39,9 +39,7 @@ MAX_QUERIES_PER_EVENT = 6
 SEARCH_RESULTS_PER_QUERY = 8
 
 RequestJson = Callable[[str, dict[str, str] | None], dict[str, Any]]
-WIKIMEDIA_USER_AGENT = (
-    "SoundAtlas/0.1 (https://soundatlas.local; contact: local-development)"
-)
+WIKIMEDIA_USER_AGENT = "SoundAtlas/0.1 (https://soundatlas.local; contact: local-development)"
 WIKIMEDIA_MAXLAG_SECONDS = "1"
 WIKIMEDIA_REQUEST_CACHE: dict[tuple[str, tuple[tuple[str, str], ...]], dict[str, Any]] = {}
 
@@ -342,12 +340,15 @@ def select_events(
     events = [
         event
         for event in events_payload.get("events", [])
-        if isinstance(event, dict) and event_matches_filters(event, event_id=event_id, route_id=route_id)
+        if isinstance(event, dict)
+        and event_matches_filters(event, event_id=event_id, route_id=route_id)
     ]
 
     if event_id and not events:
         raise ValueError(f"No event found for --event-id '{event_id}'.")
-    if route_id and not any(route.get("id") == route_id for route in routes_payload.get("routes", [])):
+    if route_id and not any(
+        route.get("id") == route_id for route in routes_payload.get("routes", [])
+    ):
         raise ValueError(f"No route found for --route-id '{route_id}'.")
     return events
 

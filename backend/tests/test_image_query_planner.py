@@ -87,7 +87,9 @@ def test_plan_image_queries_for_artist_event_avoids_broad_place_query() -> None:
     assert ("artist_photo", "Grandmaster Flash 1975") in plan_pairs(plans)
     assert ("artist_photo", "Grandmaster Flash 1976") in plan_pairs(plans)
     assert ("artist_photo", "Grandmaster Flash 1977") in plan_pairs(plans)
-    assert ("archive_photo", "Grandmaster Flash Refines DJ Techniques 1975 1977") in plan_pairs(plans)
+    assert ("archive_photo", "Grandmaster Flash Refines DJ Techniques 1975 1977") in plan_pairs(
+        plans
+    )
     assert "South Bronx" not in planned_queries(plans)
     assert ordered_queries(plans).index("Grandmaster Flash") > ordered_queries(plans).index(
         "Grandmaster Flash South Bronx 1975 1977",
@@ -113,7 +115,9 @@ def test_plan_image_queries_for_context_event_does_not_use_region_only_query() -
         ),
     )
 
-    assert ("archive_photo", "Caribbean Sound System Influences Reach the Bronx") in plan_pairs(plans)
+    assert ("archive_photo", "Caribbean Sound System Influences Reach the Bronx") in plan_pairs(
+        plans
+    )
     assert "South Bronx" not in planned_queries(plans)
     assert "bronx" not in planned_queries(plans)
 

@@ -77,8 +77,7 @@ def resolve_env_file(
         env_file = Path(configured_path).expanduser()
         if not env_file.exists():
             raise ValueError(
-                "SOUNDATLAS_ENV_FILE points to a missing file: "
-                f"{env_file}",
+                f"SOUNDATLAS_ENV_FILE points to a missing file: {env_file}",
             )
         return env_file, "external"
     if codex_env_file.exists():

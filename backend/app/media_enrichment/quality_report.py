@@ -564,13 +564,22 @@ def build_event_warnings(kind: str, report: dict[str, Any]) -> list[str]:
     warnings = []
     if report["final_candidate_count"] == 0:
         warnings.append("no_candidates")
-    if report["raw_candidate_count"] > 0 and report["ignored_match_count"] == report["deduped_candidate_count"]:
+    if (
+        report["raw_candidate_count"] > 0
+        and report["ignored_match_count"] == report["deduped_candidate_count"]
+    ):
         warnings.append("all_candidates_ignored")
     if report["limit_dropped_count"] > 0:
         warnings.append("limit_reached")
-    if report["final_candidate_count"] > 0 and report["low_specificity_count"] == report["final_candidate_count"]:
+    if (
+        report["final_candidate_count"] > 0
+        and report["low_specificity_count"] == report["final_candidate_count"]
+    ):
         warnings.append("only_low_specificity_candidates")
-    if report["final_candidate_count"] > 0 and report["low_confidence_count"] == report["final_candidate_count"]:
+    if (
+        report["final_candidate_count"] > 0
+        and report["low_confidence_count"] == report["final_candidate_count"]
+    ):
         warnings.append("only_low_confidence_candidates")
     if any(not candidate.get("query") for candidate in report.get("candidates", [])):
         warnings.append("missing_query")
@@ -619,10 +628,7 @@ def media_candidate_has_wrong_era(
     if event_range is None:
         return False
 
-    primary_text = " ".join(
-        str(candidate.get(field) or "")
-        for field in ("title", "description")
-    )
+    primary_text = " ".join(str(candidate.get(field) or "") for field in ("title", "description"))
     era_ranges = extract_era_ranges(primary_text)
     if not era_ranges:
         era_ranges = extract_era_ranges(str(candidate.get("query") or ""))
@@ -643,13 +649,9 @@ def event_year_range(event: dict[str, Any]) -> tuple[int, int] | None:
 
 
 def extract_era_ranges(text: str) -> list[tuple[int, int]]:
-    ranges = [
-        (int(match.group(0)), int(match.group(0)))
-        for match in YEAR_PATTERN.finditer(text)
-    ]
+    ranges = [(int(match.group(0)), int(match.group(0))) for match in YEAR_PATTERN.finditer(text)]
     ranges.extend(
-        (int(match.group(1)), int(match.group(1)) + 9)
-        for match in DECADE_PATTERN.finditer(text)
+        (int(match.group(1)), int(match.group(1)) + 9) for match in DECADE_PATTERN.finditer(text)
     )
     return ranges
 
@@ -673,10 +675,9 @@ def comparison_warnings(
     candidate_unknown_rights = candidate_event.get("rights_status_counts", {}).get("unknown", 0)
     if candidate_unknown_rights > baseline_unknown_rights:
         warnings.add("more_unknown_rights_images")
-    if (
-        candidate_types.get("archive_photo", 0) > baseline_types.get("archive_photo", 0)
-        and candidate_types.get("venue_photo", 0) < baseline_types.get("venue_photo", 0)
-    ):
+    if candidate_types.get("archive_photo", 0) > baseline_types.get(
+        "archive_photo", 0
+    ) and candidate_types.get("venue_photo", 0) < baseline_types.get("venue_photo", 0):
         warnings.add("candidate_mix_shifted_to_generic_archive_photos")
     return warnings
 
@@ -833,8 +834,16 @@ def compare_quality_by_field(
     )
     comparisons = {}
     for value in values:
-        baseline_group = [candidate for candidate in baseline_candidates if (candidate.get(field) or "unknown") == value]
-        candidate_group = [candidate for candidate in candidate_candidates if (candidate.get(field) or "unknown") == value]
+        baseline_group = [
+            candidate
+            for candidate in baseline_candidates
+            if (candidate.get(field) or "unknown") == value
+        ]
+        candidate_group = [
+            candidate
+            for candidate in candidate_candidates
+            if (candidate.get(field) or "unknown") == value
+        ]
         comparisons[value] = {
             "baseline_count": len(baseline_group),
             "candidate_count": len(candidate_group),

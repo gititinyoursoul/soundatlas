@@ -91,7 +91,9 @@ def test_wikimedia_request_wrapper_adds_maxlag_caches_and_retries(
     sleeps: list[float] = []
     attempts = {"count": 0}
 
-    def fake_request(url: str, params: dict[str, str] | None = None, headers=None) -> dict[str, Any]:
+    def fake_request(
+        url: str, params: dict[str, str] | None = None, headers=None
+    ) -> dict[str, Any]:
         assert url == enrich_image_links.WIKIMEDIA_API_URL
         assert headers is not None
         calls.append(dict(params or {}))
@@ -176,10 +178,18 @@ def test_build_wikimedia_image_link_rejects_generic_broad_place_matches() -> Non
 
 def test_deduplication_uses_image_thumbnail_and_source_urls() -> None:
     image_links = [
-        build_candidate("https://img.example/1.jpg", "https://thumb.example/a.jpg", "https://src.example/1"),
-        build_candidate("https://img.example/2.jpg", "https://thumb.example/a.jpg", "https://src.example/2"),
-        build_candidate("https://img.example/3.jpg", "https://thumb.example/c.jpg", "https://src.example/1"),
-        build_candidate("https://img.example/4.jpg", "https://thumb.example/d.jpg", "https://src.example/4"),
+        build_candidate(
+            "https://img.example/1.jpg", "https://thumb.example/a.jpg", "https://src.example/1"
+        ),
+        build_candidate(
+            "https://img.example/2.jpg", "https://thumb.example/a.jpg", "https://src.example/2"
+        ),
+        build_candidate(
+            "https://img.example/3.jpg", "https://thumb.example/c.jpg", "https://src.example/1"
+        ),
+        build_candidate(
+            "https://img.example/4.jpg", "https://thumb.example/d.jpg", "https://src.example/4"
+        ),
     ]
 
     deduped_links = dedupe_image_links(image_links)
@@ -223,7 +233,9 @@ def test_enrich_events_payload_filters_event_route_and_limit() -> None:
         "events": [
             build_event({"id": "target", "route_id": "birth-of-hip-hop", "image_links": []}),
             build_event({"id": "other", "route_id": "birth-of-hip-hop", "image_links": []}),
-            build_event({"id": "other-route", "route_id": "disco-to-dance-music", "image_links": []}),
+            build_event(
+                {"id": "other-route", "route_id": "disco-to-dance-music", "image_links": []}
+            ),
         ],
     }
     changed_events = enrich_events_payload(
@@ -283,7 +295,9 @@ def test_enrich_events_payload_uses_v2_query_planner_by_default() -> None:
 
     assert changed_events == 1
     assert searched_queries[0] == "1520 Sedgwick Avenue Bronx 1973"
-    assert events_payload["events"][0]["image_links"][0]["query"] == "1520 Sedgwick Avenue Bronx 1973"
+    assert (
+        events_payload["events"][0]["image_links"][0]["query"] == "1520 Sedgwick Avenue Bronx 1973"
+    )
 
 
 def test_enrich_events_payload_can_use_legacy_query_planner() -> None:
@@ -635,7 +649,9 @@ def build_imageinfo_page(
     }
 
 
-def build_event(overrides: dict[str, Any] | None = None, **keyword_overrides: Any) -> dict[str, Any]:
+def build_event(
+    overrides: dict[str, Any] | None = None, **keyword_overrides: Any
+) -> dict[str, Any]:
     event = {
         "id": "kool-herc-back-to-school-jam",
         "route_id": "birth-of-hip-hop",

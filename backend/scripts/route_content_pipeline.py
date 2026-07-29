@@ -392,34 +392,70 @@ def manifest_for_variant(
     variant_manifest["steps"]["event_list"]["input"] = variant_dossier
     variant_manifest["steps"]["event_list"]["markdown"] = variant_filename("event-list.md", variant)
     variant_manifest["steps"]["event_list"]["json"] = variant_filename("event-list.json", variant)
-    variant_manifest["steps"]["accepted_events"]["input"] = variant_manifest["steps"]["event_list"]["json"]
-    variant_manifest["steps"]["accepted_events"]["json"] = variant_filename("accepted-events.json", variant)
-    variant_manifest["steps"]["accepted_events"]["markdown"] = variant_filename("accepted-events.md", variant)
-    variant_manifest["steps"]["route_concept"]["input"] = variant_manifest["steps"]["accepted_events"]["json"]
-    variant_manifest["steps"]["route_concept"]["markdown"] = variant_filename("route-concept.md", variant)
-    variant_manifest["steps"]["event_framing"]["input"] = variant_manifest["steps"]["accepted_events"]["json"]
-    variant_manifest["steps"]["event_framing"]["markdown"] = variant_filename("event-framing.md", variant)
-    variant_manifest["steps"]["event_framing"]["events"] = variant_filename("event-framing.json", variant)
-    variant_manifest["steps"]["event_framing"]["places"] = variant_filename("place-framing.json", variant)
-    variant_manifest["steps"]["event_framing"]["connections"] = variant_filename("connection-framing.json", variant)
-    variant_manifest["steps"]["seed_preview"]["input"] = variant_manifest["steps"]["event_framing"]["events"]
-    variant_manifest["steps"]["seed_preview"]["markdown"] = variant_filename("seed-transfer-report.md", variant)
-    variant_manifest["steps"]["validation"]["markdown"] = variant_filename("validation-report.md", variant)
+    variant_manifest["steps"]["accepted_events"]["input"] = variant_manifest["steps"]["event_list"][
+        "json"
+    ]
+    variant_manifest["steps"]["accepted_events"]["json"] = variant_filename(
+        "accepted-events.json", variant
+    )
+    variant_manifest["steps"]["accepted_events"]["markdown"] = variant_filename(
+        "accepted-events.md", variant
+    )
+    variant_manifest["steps"]["route_concept"]["input"] = variant_manifest["steps"][
+        "accepted_events"
+    ]["json"]
+    variant_manifest["steps"]["route_concept"]["markdown"] = variant_filename(
+        "route-concept.md", variant
+    )
+    variant_manifest["steps"]["event_framing"]["input"] = variant_manifest["steps"][
+        "accepted_events"
+    ]["json"]
+    variant_manifest["steps"]["event_framing"]["markdown"] = variant_filename(
+        "event-framing.md", variant
+    )
+    variant_manifest["steps"]["event_framing"]["events"] = variant_filename(
+        "event-framing.json", variant
+    )
+    variant_manifest["steps"]["event_framing"]["places"] = variant_filename(
+        "place-framing.json", variant
+    )
+    variant_manifest["steps"]["event_framing"]["connections"] = variant_filename(
+        "connection-framing.json", variant
+    )
+    variant_manifest["steps"]["seed_preview"]["input"] = variant_manifest["steps"]["event_framing"][
+        "events"
+    ]
+    variant_manifest["steps"]["seed_preview"]["markdown"] = variant_filename(
+        "seed-transfer-report.md", variant
+    )
+    variant_manifest["steps"]["validation"]["markdown"] = variant_filename(
+        "validation-report.md", variant
+    )
     variant_manifest["agent_steps"]["brief_to_dossier"]["output"] = variant_dossier
     variant_manifest["agent_steps"]["dossier_to_event_review"]["inputs"] = [variant_dossier]
-    variant_manifest["agent_steps"]["dossier_to_event_review"]["output"] = variant_manifest["steps"]["event_list"]["json"]
-    variant_manifest["agent_steps"]["event_review_to_concept"]["inputs"] = [variant_manifest["steps"]["accepted_events"]["json"]]
-    variant_manifest["agent_steps"]["event_review_to_concept"]["output"] = variant_manifest["steps"]["route_concept"]["markdown"]
+    variant_manifest["agent_steps"]["dossier_to_event_review"]["output"] = variant_manifest[
+        "steps"
+    ]["event_list"]["json"]
+    variant_manifest["agent_steps"]["event_review_to_concept"]["inputs"] = [
+        variant_manifest["steps"]["accepted_events"]["json"]
+    ]
+    variant_manifest["agent_steps"]["event_review_to_concept"]["output"] = variant_manifest[
+        "steps"
+    ]["route_concept"]["markdown"]
     variant_manifest["agent_steps"]["concept_to_event_framing"]["inputs"] = [
         variant_manifest["steps"]["route_concept"]["markdown"],
         variant_manifest["steps"]["accepted_events"]["json"],
     ]
-    variant_manifest["agent_steps"]["concept_to_event_framing"]["output"] = variant_manifest["steps"]["event_framing"]["markdown"]
+    variant_manifest["agent_steps"]["concept_to_event_framing"]["output"] = variant_manifest[
+        "steps"
+    ]["event_framing"]["markdown"]
     variant_manifest["agent_steps"]["validation_to_revision_plan"]["inputs"] = [
         variant_manifest["steps"]["seed_preview"]["markdown"],
         variant_manifest["steps"]["validation"]["markdown"],
     ]
-    variant_manifest["agent_steps"]["validation_to_revision_plan"]["output"] = variant_filename("revision-plan.md", variant)
+    variant_manifest["agent_steps"]["validation_to_revision_plan"]["output"] = variant_filename(
+        "revision-plan.md", variant
+    )
     return variant_manifest
 
 
@@ -652,7 +688,9 @@ def build_agent_prompt(
         input_path = route_dir / input_file
         if not input_path.exists():
             raise ValueError(f"Missing input for {step}: {input_path}")
-        input_blocks.append(format_prompt_file_block(input_file, input_path.read_text(encoding="utf-8")))
+        input_blocks.append(
+            format_prompt_file_block(input_file, input_path.read_text(encoding="utf-8"))
+        )
 
     return "\n".join(
         [
@@ -696,7 +734,7 @@ def agent_step_instructions(step: str) -> str:
                 "Every candidate kept for development must explain its role in the route thesis.",
                 "Preserve candidate IDs, years, places, working titles, inclusion rationale, source leads, and risk notes.",
                 "Return only an event-list JSON draft with `_meta` and `candidates`.",
-                "Use `_meta.review_status: \"draft\"` and keep every candidate decision draft.",
+                'Use `_meta.review_status: "draft"` and keep every candidate decision draft.',
                 "Each candidate must include `candidate_id`, `status`, `review_state`, `years`, `place`, `working_title`, `route_function`, `decision_rationale`, `review_question`, `source_leads`, `risk_notes`, and `next_action`.",
                 "Use only `keep`, `maybe`, `merge`, or `reject` as candidate statuses. Treat `status` as the agent-proposed decision, not human approval.",
                 "Use only `pending`, `approved`, or `rejected` as `review_state`. New agent drafts should normally use `pending` until human review.",
@@ -892,7 +930,11 @@ def generate_accepted_events(
     if markdown_written:
         outputs.append(markdown_path.name)
     if not outputs:
-        return {"step": "accepted_events", "status": "skipped", "outputs": [json_path.name, markdown_path.name]}
+        return {
+            "step": "accepted_events",
+            "status": "skipped",
+            "outputs": [json_path.name, markdown_path.name],
+        }
     return {
         "step": "accepted_events",
         "status": "written",
@@ -905,9 +947,7 @@ def validate_event_list_decisions(event_list: dict[str, Any]) -> list[str]:
     errors = []
     candidates = event_list.get("candidates", [])
     candidate_ids = {
-        candidate.get("candidate_id")
-        for candidate in candidates
-        if candidate.get("candidate_id")
+        candidate.get("candidate_id") for candidate in candidates if candidate.get("candidate_id")
     }
     for candidate in candidates:
         candidate_id = candidate.get("candidate_id", "<missing>")
@@ -934,7 +974,9 @@ def validate_event_list_decisions(event_list: dict[str, Any]) -> list[str]:
         merge_target_id = candidate.get("merge_target_id")
         if status == "merge" and merge_target_id:
             if merge_target_id == candidate_id:
-                errors.append(f"Candidate `{candidate_id}` merge_target_id must reference another candidate.")
+                errors.append(
+                    f"Candidate `{candidate_id}` merge_target_id must reference another candidate."
+                )
             elif merge_target_id not in candidate_ids:
                 errors.append(
                     f"Candidate `{candidate_id}` merge_target_id `{merge_target_id}` "
@@ -979,12 +1021,15 @@ def build_accepted_events_payload(
                 "event_id": candidate["candidate_id"],
                 "decision": decision,
                 "review_state": candidate.get("review_state"),
-                "merge_target_id": candidate.get("merge_target_id") if decision == "merge" else None,
+                "merge_target_id": candidate.get("merge_target_id")
+                if decision == "merge"
+                else None,
                 "source_candidate_id": candidate["candidate_id"],
                 "working_title": candidate.get("working_title", ""),
                 "years": candidate.get("years", ""),
                 "place": candidate.get("place", ""),
-                "route_rationale": candidate.get("inclusion_rationale") or candidate.get("route_function", ""),
+                "route_rationale": candidate.get("inclusion_rationale")
+                or candidate.get("route_function", ""),
                 "quality_check": {field: False for field in QUALITY_GATE_FIELDS},
                 "source_leads": list_from_review_value(candidate.get("source_leads")),
                 "media_image_leads": [],
@@ -1043,14 +1088,18 @@ def validate_accepted_events_payload(payload: dict[str, Any]) -> list[str]:
             if not merge_target_id:
                 errors.append(f"Accepted event `{event_id}` is merge but has no merge_target_id.")
             elif merge_target_id == event_id:
-                errors.append(f"Accepted event `{event_id}` merge_target_id must reference another accepted event.")
+                errors.append(
+                    f"Accepted event `{event_id}` merge_target_id must reference another accepted event."
+                )
             elif merge_target_id not in event_ids:
                 errors.append(
                     f"Accepted event `{event_id}` merge_target_id `{merge_target_id}` "
                     "does not reference another accepted event.",
                 )
         if decision == "keep" and merge_target_id:
-            errors.append(f"Accepted event `{event_id}` is keep but has merge_target_id `{merge_target_id}`.")
+            errors.append(
+                f"Accepted event `{event_id}` is keep but has merge_target_id `{merge_target_id}`."
+            )
 
         for field in ("source_candidate_id", "working_title", "years", "place", "route_rationale"):
             if not event.get(field):
@@ -1062,7 +1111,9 @@ def validate_accepted_events_payload(payload: dict[str, Any]) -> list[str]:
             continue
         for field in QUALITY_GATE_FIELDS:
             if quality_check.get(field) is not True:
-                errors.append(f"Accepted event `{event_id}` has unconfirmed quality flag `{field}`.")
+                errors.append(
+                    f"Accepted event `{event_id}` has unconfirmed quality flag `{field}`."
+                )
     return errors
 
 
@@ -1201,7 +1252,9 @@ def generate_validation_report(
     gate_errors = accepted_events_gate_errors(route_dir, manifest)
     errors = list(gate_errors)
     if not gate_errors:
-        merged = build_merged_seed_payloads(route_dir=route_dir, seed_dir=seed_dir, manifest=manifest)
+        merged = build_merged_seed_payloads(
+            route_dir=route_dir, seed_dir=seed_dir, manifest=manifest
+        )
         errors.extend(validate_seed_payloads(merged))
     report = format_validation_report(errors)
     write_text(output_path, report, renew=renew)
@@ -1324,7 +1377,11 @@ def parse_year_range(value: str) -> tuple[int, int]:
 
 def format_event_list_markdown(payload: dict[str, Any]) -> str:
     route_id = payload["_meta"]["route_id"]
-    source = payload["_meta"].get("source") or payload["_meta"].get("basis") or payload["_meta"].get("target_output", "")
+    source = (
+        payload["_meta"].get("source")
+        or payload["_meta"].get("basis")
+        or payload["_meta"].get("target_output", "")
+    )
     candidates = payload.get("candidates", [])
     lines = [
         f"# {route_id} Event List",
@@ -1345,9 +1402,7 @@ def format_event_list_markdown(payload: dict[str, Any]) -> str:
     ]
     for decision in ["keep", "maybe", "merge", "reject"]:
         decision_candidates = [
-            candidate
-            for candidate in candidates
-            if candidate.get("status") == decision
+            candidate for candidate in candidates if candidate.get("status") == decision
         ]
         lines.append(
             "| "
@@ -1380,7 +1435,9 @@ def format_event_list_markdown(payload: dict[str, Any]) -> str:
                         f"`{cluster.get('cluster_id', '')}`",
                         stringify_markdown_cell(cluster.get("recommended_action", "")),
                         f"`{cluster.get('recommended_anchor_id', '')}`",
-                        stringify_markdown_cell(format_id_list(cluster.get("member_candidate_ids", []))),
+                        stringify_markdown_cell(
+                            format_id_list(cluster.get("member_candidate_ids", []))
+                        ),
                         stringify_markdown_cell(cluster.get("rationale", "")),
                         stringify_markdown_cell(cluster.get("review_guidance", "")),
                     ],
@@ -1391,11 +1448,7 @@ def format_event_list_markdown(payload: dict[str, Any]) -> str:
         lines.append("No overlap clusters recorded.")
 
     lines.extend(["", "## Merge Decisions", ""])
-    merge_candidates = [
-        candidate
-        for candidate in candidates
-        if candidate.get("status") == "merge"
-    ]
+    merge_candidates = [candidate for candidate in candidates if candidate.get("status") == "merge"]
     if merge_candidates:
         lines.extend(
             [
@@ -1421,11 +1474,7 @@ def format_event_list_markdown(payload: dict[str, Any]) -> str:
         lines.append("No merge decisions recorded.")
 
     lines.extend(["", "## Maybe Items", ""])
-    maybe_candidates = [
-        candidate
-        for candidate in candidates
-        if candidate.get("status") == "maybe"
-    ]
+    maybe_candidates = [candidate for candidate in candidates if candidate.get("status") == "maybe"]
     if maybe_candidates:
         lines.extend(
             [
@@ -1487,11 +1536,7 @@ def format_event_list_markdown(payload: dict[str, Any]) -> str:
 
 def count_by_review_state(candidates: list[dict[str, Any]], review_state: str) -> int:
     return len(
-        [
-            candidate
-            for candidate in candidates
-            if candidate.get("review_state") == review_state
-        ],
+        [candidate for candidate in candidates if candidate.get("review_state") == review_state],
     )
 
 
@@ -1511,9 +1556,7 @@ def stringify_markdown_cell(value: Any) -> str:
 
 def format_route_concept_markdown(route_id: str, event_list: dict[str, Any]) -> str:
     accepted_events = [
-        event
-        for event in event_list.get("accepted_events", [])
-        if event.get("decision") == "keep"
+        event for event in event_list.get("accepted_events", []) if event.get("decision") == "keep"
     ]
     lines = [
         f"# {route_id} Route Concept Draft",
@@ -1671,7 +1714,8 @@ def build_event_and_place_drafts(
                 "year_start": year_start,
                 "year_end": year_end,
                 "summary": "Draft summary pending source-reviewed event framing.",
-                "significance": accepted_event.get("route_rationale") or "Draft significance pending review.",
+                "significance": accepted_event.get("route_rationale")
+                or "Draft significance pending review.",
                 "tags": [],
                 "review_status": "draft",
                 "source_urls": [],
@@ -1770,7 +1814,9 @@ def format_event_framing_markdown(
             f"| `{event['id']}` | {event['year_start']}-{event['year_end']} | "
             f"`{event['place_id']}` | {event['title']} |",
         )
-    lines.extend(["", "## Places", "", "| Place ID | Decision | Source place |", "| --- | --- | --- |"])
+    lines.extend(
+        ["", "## Places", "", "| Place ID | Decision | Source place |", "| --- | --- | --- |"]
+    )
     for place in places:
         lines.append(
             f"| `{place['place_id']}` | {place['decision']} | {place['source_place_text']} |",
@@ -1806,7 +1852,9 @@ def build_seed_preview_report(
         warnings = list(gate_errors)
         validation_errors = list(gate_errors)
     else:
-        merged = build_merged_seed_payloads(route_dir=route_dir, seed_dir=seed_dir, manifest=manifest)
+        merged = build_merged_seed_payloads(
+            route_dir=route_dir, seed_dir=seed_dir, manifest=manifest
+        )
         warnings = preview_warnings(manifest["route_id"], seed, drafts, merged)
         validation_errors = validate_seed_payloads(merged)
     lines = [
@@ -1866,9 +1914,7 @@ def count_new_records(
     collection_key: str,
 ) -> str:
     seed_ids = {
-        item.get("id")
-        for item in seed_payload.get(collection_key, [])
-        if isinstance(item, dict)
+        item.get("id") for item in seed_payload.get(collection_key, []) if isinstance(item, dict)
     }
     new_count = sum(1 for item in draft_records if item.get("id") not in seed_ids)
     update_count = sum(1 for item in draft_records if item.get("id") in seed_ids)
@@ -1892,7 +1938,9 @@ def promote_to_seed(
 
     gate_errors = accepted_events_gate_errors(route_dir, manifest)
     if gate_errors:
-        raise ValueError("Refusing to write before accepted-events gate passes:\n" + "\n".join(gate_errors))
+        raise ValueError(
+            "Refusing to write before accepted-events gate passes:\n" + "\n".join(gate_errors)
+        )
 
     merged = build_merged_seed_payloads(route_dir=route_dir, seed_dir=seed_dir, manifest=manifest)
     errors = validate_seed_payloads(merged)
@@ -1939,7 +1987,9 @@ def load_draft_payloads(route_dir: Path, manifest: dict[str, Any]) -> dict[str, 
     return {
         "events": read_optional_json(route_dir / framing_step["events"], {"events": []}),
         "places": read_optional_json(route_dir / framing_step["places"], {"places": []}),
-        "connections": read_optional_json(route_dir / framing_step["connections"], {"connections": []}),
+        "connections": read_optional_json(
+            route_dir / framing_step["connections"], {"connections": []}
+        ),
     }
 
 
@@ -1958,9 +2008,7 @@ def upsert_records(
 ) -> dict[str, Any]:
     next_payload = json.loads(json.dumps(payload))
     records = [
-        record
-        for record in next_payload.get(collection_key, [])
-        if isinstance(record, dict)
+        record for record in next_payload.get(collection_key, []) if isinstance(record, dict)
     ]
     draft_by_id = {
         record["id"]: record
@@ -2022,7 +2070,9 @@ def validate_collection(
         try:
             valid.append(model(**item))
         except Exception as exc:
-            errors.append(f"{collection_key} `{item.get('id', '<missing>')}` failed schema validation: {exc}")
+            errors.append(
+                f"{collection_key} `{item.get('id', '<missing>')}` failed schema validation: {exc}"
+            )
     return valid
 
 
@@ -2138,11 +2188,7 @@ def load_seed_collection(seed_dir: Path, collection_key: str) -> list[dict[str, 
     if not path.exists():
         return []
     payload = read_json(path)
-    return [
-        item
-        for item in payload.get(collection_key, [])
-        if isinstance(item, dict)
-    ]
+    return [item for item in payload.get(collection_key, []) if isinstance(item, dict)]
 
 
 def read_json(path: Path) -> dict[str, Any]:

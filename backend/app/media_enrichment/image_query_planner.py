@@ -217,8 +217,7 @@ def build_work_plans(
             supporting_terms=(primary_time_term,) if primary_time_term else (),
             confidence_hint="high" if primary_time_term else "medium",
             reason=(
-                "Quoted release or track title plus time context may identify relevant "
-                "cover art."
+                "Quoted release or track title plus time context may identify relevant cover art."
             ),
             review_risks=(
                 "Verify rights and that the image is the relevant release or work, not "
@@ -245,8 +244,7 @@ def build_film_work_plans(
                 supporting_terms=(primary_time_term,),
                 confidence_hint="high",
                 reason=(
-                    "Quoted film title plus release year is the most concise "
-                    "disambiguating query."
+                    "Quoted film title plus release year is the most concise disambiguating query."
                 ),
                 review_risks=(
                     "Verify the result refers to the film context, not decorative or "
@@ -307,9 +305,7 @@ def build_archive_photo_plans(
                 supporting_terms=(primary_time_term, scene_term),
                 confidence_hint="low",
                 reason="Event title plus time and scene context is a fallback archive-image query.",
-                review_risks=(
-                    "Reject generic, modern, or only loosely related results.",
-                ),
+                review_risks=("Reject generic, modern, or only loosely related results.",),
             ),
         )
     if primary_time_term:
@@ -322,9 +318,7 @@ def build_archive_photo_plans(
                 supporting_terms=(primary_time_term,),
                 confidence_hint="low",
                 reason="Event title plus time context is a fallback archive-image query.",
-                review_risks=(
-                    "Reject generic, modern, or only loosely related results.",
-                ),
+                review_risks=("Reject generic, modern, or only loosely related results.",),
             ),
         )
     plans.append(
@@ -336,9 +330,7 @@ def build_archive_photo_plans(
             supporting_terms=(),
             confidence_hint="low",
             reason="Event title can be used as the broadest fallback archive-image query.",
-            review_risks=(
-                "Reject generic, modern, or only loosely related results.",
-            ),
+            review_risks=("Reject generic, modern, or only loosely related results.",),
         ),
     )
     return tuple(plans)
@@ -367,9 +359,7 @@ def work_terms(brief: RetrievalBrief) -> tuple[str, ...]:
             if term != brief.event_title and not term_is_place_like(term, brief)
         )
     return unique_terms(
-        term
-        for term in terms
-        if len(term) >= 3 and term.casefold() not in WORK_STOP_TERMS
+        term for term in terms if len(term) >= 3 and term.casefold() not in WORK_STOP_TERMS
     )
 
 
@@ -378,10 +368,7 @@ def extract_quoted_terms(text: str) -> list[str]:
         clean_text(match.group(1))
         for match in re.finditer(r"(?<!\w)'((?:[^']|'(?=\w)){3,}?)'(?!\w)", text)
     ]
-    terms.extend(
-        clean_text(match.group(1))
-        for match in re.finditer(r'"([^"]{3,})"', text)
-    )
+    terms.extend(clean_text(match.group(1)) for match in re.finditer(r'"([^"]{3,})"', text))
     return terms
 
 
@@ -403,8 +390,7 @@ def decade_terms(year_start: int | None, year_end: int | None) -> tuple[str, ...
         return ()
     end_year = year_end if year_end is not None else year_start
     return tuple(
-        f"{decade}s"
-        for decade in range((year_start // 10) * 10, (end_year // 10) * 10 + 1, 10)
+        f"{decade}s" for decade in range((year_start // 10) * 10, (end_year // 10) * 10 + 1, 10)
     )
 
 
@@ -487,8 +473,7 @@ def term_in_text(term: str, text: str) -> bool:
 def term_is_place_like(term: str, brief: RetrievalBrief) -> bool:
     normalized = term.casefold()
     return bool(brief.place_name and normalized == brief.place_name.casefold()) or any(
-        marker in normalized
-        for marker in ("avenue", "street", "park", "bronx", "new york", "room")
+        marker in normalized for marker in ("avenue", "street", "park", "bronx", "new york", "room")
     )
 
 

@@ -125,11 +125,7 @@ def summarize_event_links(
     event_id = str(event.get("id") or "")
     media_count = count_link_collection(event.get("media_links", []))
     image_count = count_link_collection(event.get("image_links", []))
-    ignored_for_event = [
-        entry
-        for entry in ignored_entries
-        if entry.get("event_id") == event_id
-    ]
+    ignored_for_event = [entry for entry in ignored_entries if entry.get("event_id") == event_id]
     ignored_count = len(ignored_for_event)
     ignored_value_count = sum(
         len(entry.get("values", []))
@@ -207,8 +203,7 @@ def format_seed_link_counts_report(report: dict[str, Any]) -> str:
             lines.append(f"  {event_id}")
             for kind, summary in kind_rows.items():
                 lines.append(
-                    "    "
-                    + f"{kind}: {summary['entries']} entry(s), {summary['values']} value(s)",
+                    "    " + f"{kind}: {summary['entries']} entry(s), {summary['values']} value(s)",
                 )
         for event_id, kind_rows in ignored_groups.items():
             if event_id in seen_event_ids:
@@ -216,8 +211,7 @@ def format_seed_link_counts_report(report: dict[str, Any]) -> str:
             lines.append(f"  {event_id}")
             for kind, summary in kind_rows.items():
                 lines.append(
-                    "    "
-                    + f"{kind}: {summary['entries']} entry(s), {summary['values']} value(s)",
+                    "    " + f"{kind}: {summary['entries']} entry(s), {summary['values']} value(s)",
                 )
     return "\n".join(lines)
 

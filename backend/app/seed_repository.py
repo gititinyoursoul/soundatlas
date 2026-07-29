@@ -178,9 +178,7 @@ class SeedRepository:
         if route_id is None:
             return self._connections
 
-        route_event_ids = {
-            event.id for event in self._events if event.route_id == route_id
-        }
+        route_event_ids = {event.id for event in self._events if event.route_id == route_id}
         return [
             connection
             for connection in self._connections
@@ -247,6 +245,7 @@ class SeedRepository:
             ]
             write_json_payload(events_path, payload)
             return
+
 
 def _read_collection(
     path: Path,

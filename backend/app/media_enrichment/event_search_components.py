@@ -201,7 +201,9 @@ def retrieval_brief_from_component(
         place_id=clean_text(event.get("place_id") or place.get("id")) or fallback.place_id,
         place_name=clean_text(place.get("name")) or fallback.place_name,
         place_type=clean_text(place.get("place_type")).casefold() or fallback.place_type,
-        year_start=time_context.year_start if time_context.year_start is not None else fallback.year_start,
+        year_start=time_context.year_start
+        if time_context.year_start is not None
+        else fallback.year_start,
         year_end=time_context.year_end if time_context.year_end is not None else fallback.year_end,
         year_phrase=time_context.query_year_phrase or fallback.year_phrase,
         tags=tuple(clean_text(value) for value in event.get("tags", []) if clean_text(value)),
@@ -236,11 +238,7 @@ def validate_component_for_seed(
             f"('{expected_year_phrase}').",
         )
 
-    strong_terms = [
-        term
-        for term in component.search_control.strong_terms
-        if clean_text(term)
-    ]
+    strong_terms = [term for term in component.search_control.strong_terms if clean_text(term)]
     if strong_terms and all(term.casefold() in BROAD_ONLY_TERMS for term in strong_terms):
         report.warnings.append("strong_terms only contains broad terms.")
     if not strong_terms:
@@ -258,7 +256,9 @@ def validate_component_for_seed(
             place_terms = " ".join(component.entities.places).casefold()
             borough = clean_text(place.get("borough")).casefold()
             has_city_context = any(term in place_terms for term in ("new york", "nyc"))
-            has_borough_context = bool(borough and borough not in {"citywide", "external"} and borough in place_terms)
+            has_borough_context = bool(
+                borough and borough not in {"citywide", "external"} and borough in place_terms
+            )
             if not has_city_context and not has_borough_context:
                 report.warnings.append("concrete place lacks borough or city disambiguation.")
 
@@ -434,11 +434,7 @@ def build_review_notes(
 
 
 def normalized_tags(event: dict[str, Any]) -> list[str]:
-    return [
-        tag.casefold()
-        for tag in event.get("tags", [])
-        if isinstance(tag, str) and tag.strip()
-    ]
+    return [tag.casefold() for tag in event.get("tags", []) if isinstance(tag, str) and tag.strip()]
 
 
 def combined_text(
@@ -452,7 +448,9 @@ def combined_text(
             clean_text(event.get("title")),
             clean_text(event.get("summary")),
             clean_text(event.get("significance")),
-            " ".join(tag.replace("-", " ") for tag in event.get("tags", []) if isinstance(tag, str)),
+            " ".join(
+                tag.replace("-", " ") for tag in event.get("tags", []) if isinstance(tag, str)
+            ),
             clean_text(route.get("title")),
             clean_text(place.get("name")),
         )
@@ -465,10 +463,7 @@ def extract_quoted_terms(text: str) -> list[str]:
         clean_text(match.group(1))
         for match in re.finditer(r"(?<!\w)'((?:[^']|'(?=\w)){3,}?)'(?!\w)", text)
     ]
-    terms.extend(
-        clean_text(match.group(1))
-        for match in re.finditer(r'"([^"]{3,})"', text)
-    )
+    terms.extend(clean_text(match.group(1)) for match in re.finditer(r'"([^"]{3,})"', text))
     return unique_strings(terms)
 
 
