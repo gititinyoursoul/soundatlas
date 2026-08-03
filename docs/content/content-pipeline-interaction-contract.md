@@ -12,6 +12,10 @@ every behavior is implemented today. Each requirement is marked `Current`,
 `Partial`, or `Future` so planning and implementation do not confuse intended
 behavior with current capability.
 
+SoundAtlas should begin with a small, human review loop, not an admin platform:
+preview the story, choose what belongs, notice the warnings, and publish the
+route.
+
 ## Authority And Boundaries
 
 This contract owns interaction requirements for pipeline review. It does not
