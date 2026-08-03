@@ -4,9 +4,9 @@ Use this prompt as the default SoundAtlas planning and critique entrypoint
 before non-trivial feature, route, seed, enrichment, documentation, UX, or
 workflow work.
 
-This prompt replaces `prompts/plan-feature.md` as the human-facing planning
-front door. It does not replace the GitHub Issue workflow or the
-`soundatlas-implementation-planning` skill.
+This prompt is the human-facing planning and critique entrypoint. It does not
+replace the GitHub Issue workflow or the `soundatlas-implementation-planning`
+skill.
 
 Core rule:
 

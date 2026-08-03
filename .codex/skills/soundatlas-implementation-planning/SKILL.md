@@ -13,8 +13,7 @@ with:
 - `docs/skills-workflow.md`
 
 Read `prompts/grill-me.md` when the request needs critique, simplification, or
-readiness review before Issue content is drafted. `prompts/plan-feature.md` is
-only a deprecated compatibility alias.
+readiness review before Issue content is drafted.
 
 ## Workflow
 

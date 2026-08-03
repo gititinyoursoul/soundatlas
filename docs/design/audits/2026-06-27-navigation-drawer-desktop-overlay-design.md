@@ -1,6 +1,6 @@
 # Desktop Navigation Drawer Overlay Design
 
-This document applies `prompts/plan-feature.md` to a planning-only UX concept for a desktop-only overlay navigation drawer.
+This document applies `prompts/grill-me.md` to a planning-only UX concept for a desktop-only overlay navigation drawer.
 
 Related mockup screens:
 

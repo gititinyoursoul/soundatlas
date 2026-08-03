@@ -32,7 +32,6 @@ Completed work packages are archived in `docs/done.md`.
 
 ### Repo And Agent Workflow
 
-- [ ] Turn plan-feature prompt into a skill
 - [ ] Turn backend and frontend implementation prompts into skills
 - [ ] Turn write-tests prompt into a skill
 - [ ] Turn update-docs prompt into a skill
