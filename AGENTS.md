@@ -34,6 +34,23 @@ The app should make music history explorable across three axes:
 - Do not add audio files to the repository; use only external media links in the MVP.
 - Do not commit secrets, tokens, or local paths.
 
+## Lean MVP Guardrail
+
+- Default to the smallest end-to-end change that satisfies the current request.
+- SoundAtlas is currently a pre-user MVP. Do not design for scale, multi-user
+  administration, generalized platforms, persistence, or speculative automation
+  unless an approved Issue explicitly requires it.
+- Prefer existing JSON files, CLI commands, route artifacts, and manual review
+  over new services, state models, abstractions, or interfaces.
+- Keep the first editorial review loop thin: preview the story, choose what
+  belongs, notice warnings, and publish the route.
+- During planning, identify the smallest useful slice and list platform-style
+  behavior as a non-goal unless the approved scope requires it.
+- Do not create or expand linked Issues for speculative future work unless the
+  human explicitly requests it or the existing Issue workflow requires it.
+- When a request can be satisfied by a local change within the approved scope
+  and workflow gates, make that change and stop.
+
 ## Data Rules
 
 Seed data lives under `data/seed/` and should keep a stable structure:
