@@ -52,6 +52,18 @@ Validation rules:
 - `latitude` is a number between `-90` and `90`.
 - `longitude` is a number between `-180` and `180`.
 - `source_urls` is an array of strings.
+- `geometry` is optional and, when present, is GeoJSON `Polygon` or
+  `MultiPolygon`.
+- Every polygon contains at least one closed ring of at least four
+  longitude/latitude positions; all positions remain within coordinate bounds.
+- Geometry requires `geometry_precision` (`site` or `interpretive`),
+  `geometry_source_type` (`external` or `curated`), and a non-empty
+  `geometry_source_note`.
+- External geometry also requires `geometry_source_url` and
+  `geometry_license`.
+- SoundAtlas-curated geometry uses an explicit curated source type and
+  interpretive note without inventing an external URL or license.
+- Geometry provenance fields must not appear without geometry.
 
 ## `events.json`
 
@@ -60,6 +72,9 @@ Required fields per event:
 - `id`
 - `route_id`
 - `place_id`
+- `place_ids`
+- `default_place_id`
+- `place_relationships`
 - `title`
 - `year_start`
 - `year_end`
@@ -102,7 +117,17 @@ Required fields per event:
 Validation rules:
 
 - `route_id` references a route from `routes.json`.
-- `place_id` references a place from `places.json`.
+- `place_ids` is a non-empty ordered collection of unique references to
+  places from `places.json`.
+- `default_place_id` appears in `place_ids`.
+- During the compatibility window, `place_id` equals `default_place_id`.
+  Legacy input containing only `place_id` normalizes to the canonical fields.
+- `place_relationships` is an array. Each relationship uses two distinct
+  endpoints from the event's own `place_ids`, directionality of
+  `undirected`, `forward`, or `reciprocal`, a non-empty context label,
+  and at least one source URL.
+- A place relationship inherits the containing event's review and publication
+  state; it does not have an independent `review_status`.
 - `year_start` is less than or equal to `year_end`.
 - `tags` and `source_urls` are arrays of strings.
 - `media_links` is an array of media-link objects.
@@ -132,6 +157,6 @@ The first seed dataset is technically usable when:
 
 - at least one route exists
 - every route has at least one event
-- every event has a valid place
+- every event has at least one valid place and a valid default place
 - every connection points to existing events
 - all required fields are present

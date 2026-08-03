@@ -2,13 +2,14 @@
 
 ## Purpose
 
-This document is the authoritative MVP proposal for presenting one event across
+This document is the authoritative MVP design for presenting one event across
 one or more point and area places in SoundAtlas. It defines the minimum
 conceptual data, coordinated selection behavior, and map semantics needed to
 avoid forcing every route event into one marker.
 
-The proposal does not change runtime schemas, seed data, route artifacts, or
-candidate decisions. Implementation requires separately approved work.
+Issue #81 implements this design across seed data, backend schemas, API/static
+delivery, frontend selection, map presentation, StoryPanel access, and tests.
+It does not change route-candidate decisions.
 
 ## Decision Summary
 
@@ -32,16 +33,16 @@ heterogeneous event geography.
 
 - `docs/design/current-frontend-design.md` remains the baseline for the current
   implemented frontend and links here for the target extension.
-- `docs/data/seed-data-structure.md` remains descriptive of current seed files
-  and links here for the proposed future data boundary.
+- `docs/data/seed-data-structure.md` describes the implemented seed boundary
+  and links here for the presentation rules.
 - `docs/content/routes/birth-of-hip-hop/event-list.json` remains authoritative
   for candidate status and human review state. The matrix below does not alter
   either field.
 - `docs/content/content-pipeline-interaction-contract.md` owns pipeline review
   and publication interaction rather than public map presentation.
 
-Issue #70 is documentation and design work only. It does not authorize schema,
-API, seed, frontend, pipeline, or editorial changes.
+Issue #70 established this design. Issue #81 is the approved runtime
+implementation authority.
 
 ## Why Composition Fits The MVP
 
@@ -68,8 +69,7 @@ Event identity and story
 
 ## Minimum Conceptual Data
 
-Field names below are proposed for a future implementation. They document the
-required meaning; Issue #70 does not add them to runtime data.
+The fields below are the implemented runtime contract.
 
 ### Place Geometry
 
@@ -88,9 +88,8 @@ route-relevant place may additionally carry area geometry and its provenance.
     "coordinates": []
   },
   "geometry_precision": "interpretive",
-  "geometry_source_url": "https://example.org/source",
-  "geometry_source_note": "Curated cultural-area outline, not an administrative boundary.",
-  "geometry_license": "Source-specific license or terms"
+  "geometry_source_type": "curated",
+  "geometry_source_note": "SoundAtlas-curated cultural-area outline, not an administrative boundary."
 }
 ```
 
@@ -110,8 +109,8 @@ Minimum geometry rules:
 
 ### Event Spatial Presentation
 
-An event references at least one place. The primary place supplies the initial
-focus when the event is selected outside the map.
+An event references at least one place. The default place supplies focus only
+when the event does not already have a valid focused place.
 
 ```json
 {
@@ -120,7 +119,7 @@ focus when the event is selected outside the map.
     "cedar-park-bronx",
     "bronx-river-houses"
   ],
-  "primary_place_id": "1520-sedgwick-avenue",
+  "default_place_id": "1520-sedgwick-avenue",
   "place_relationships": []
 }
 ```
@@ -129,7 +128,8 @@ Rules:
 
 - `place_ids` contains unique, existing place IDs and preserves editorial
   order.
-- `primary_place_id` must appear in `place_ids`.
+- `default_place_id` must appear in `place_ids`.
+- Legacy `place_id` is a temporary alias equal to `default_place_id`.
 - Membership says only that the places participate in the same event story. It
   does not imply that every place connects to every other place.
 - One event may reference points, areas, several areas, or a mixture.
@@ -220,8 +220,8 @@ State rules:
 2. Clicking another location in the same event changes only
    `selectedPlaceId`.
 3. Timeline, related-event, previous/next, or route navigation selects the
-   event and focuses its primary place, falling back deterministically to the
-   first `place_ids` item.
+   event, preserves an already valid focused place, and otherwise focuses its
+   `default_place_id`.
 4. Changing events resets stale place focus.
 5. The map frames all event locations after event-level navigation. A direct
    map location click may retain the user's zoom while emphasizing the focused
@@ -246,8 +246,9 @@ State rules:
 - Each event remains one timeline entry regardless of its location count.
 - `year_start` and `year_end` continue to control ordering, ticks, and range
   highlighting.
-- Selecting a timeline entry selects the event as a whole and initializes place
-  focus from `primary_place_id` or the first referenced place.
+- Selecting a timeline entry selects the event as a whole, preserves a focus
+  that belongs to the event, and otherwise initializes focus from
+  `default_place_id`.
 - Approximate time remains explained in event prose for this MVP; the timeline
   does not invent new temporal precision fields.
 
@@ -283,21 +284,21 @@ State rules:
 - Touch targets and selected/focused states follow the existing frontend's
   accessible control sizing and contrast expectations.
 
-## Current-System Assessment
+## Implemented System Boundary
 
-| Surface | Current assumption | Required future change |
+| Surface | Previous assumption | Implemented behavior |
 | --- | --- | --- |
-| `data/seed/events.json` | One required `place_id` | Add ordered place references, primary place, and optional place relationships with compatibility for `place_id` |
-| `data/seed/places.json` | Every place is only a latitude/longitude point | Add optional area geometry, precision, and geometry provenance |
-| Backend `Event` schema | One `place_id` | Validate referenced place collection, primary membership, edge endpoints, directionality, labels, and sources |
-| Backend `Place` schema | Coordinates only | Type and validate optional Polygon/MultiPolygon and provenance |
+| `data/seed/events.json` | One required `place_id` | Ordered `place_ids`, `default_place_id`, optional place relationships, and a temporary matching `place_id` alias |
+| `data/seed/places.json` | Every place is only a latitude/longitude point | Optional area geometry, precision, and conditional external/curated provenance |
+| Backend `Event` schema | One `place_id` | Normalizes legacy input and validates collection, default membership, edge endpoints, directionality, labels, and sources |
+| Backend `Place` schema | Coordinates only | Types and validates optional Polygon/MultiPolygon geometry and provenance |
 | Event connections | `from_event_id` and `to_event_id` relate events | Remain unchanged; place relationships are event-internal spatial presentation, not event-to-event influence |
-| Frontend `Event`/`Place` types | Mirror current backend shapes | Add matching optional composition and geometry types |
-| Shared page state | `selectedPlace` is derived from one event place | Add `selectedPlaceId` and constrain it to the selected event |
-| `MapView` | One marker per event; contextual areas come from a frontend lookup | Render each event's point/area collection and relationship layer from shared data |
+| Frontend `Event`/`Place` types | Mirrored point-only backend shapes | Match composition, geometry, provenance, and relationship types and normalize legacy static input |
+| Shared page state | `selectedPlace` was derived from one event place | Own `selectedPlaceId`, preserve valid focus, and otherwise use the events default |
+| `MapView` | One marker per event; contextual areas came from a frontend lookup | Render points, shared areas, relationship layers, and shared-place choice from API/static data |
 | `Timeline` | One event equals one timeline entry | Remain event-based; initialize focused place on selection |
-| `StoryPanel` | Shows one place in event metadata | Add an accessible event-place list and relationship descriptions |
-| Static public data | Mirrors the four seed collections | Carry the same optional fields as the API; no frontend-only route geometry lookup |
+| `StoryPanel` | Showed one place in event metadata | Provides accessible event-place focus controls and relationship/precision text |
+| Static public data | Mirrored the four point-only seed collections | Carries the same compositional fields as the API with no frontend-only route geometry lookup |
 | Enrichment and review | Media/source work keys on event ID | Remain unchanged because `Event` identity remains stable |
 
 ## Birth Of Hip-Hop Candidate Presentation Fit
@@ -360,8 +361,7 @@ instruction.
 
 ## Implementation Boundary
 
-Future implementation should be split only through separately approved work and
-should preserve this order:
+Issue #81 implements the following layers in this order:
 
 1. Shared seed/Pydantic/TypeScript shapes and validation.
 2. API and static-data compatibility.
@@ -373,3 +373,6 @@ should preserve this order:
 No route candidate should be promoted or rewritten merely to exercise the
 model. Deterministic test fixtures can cover every footprint before editorial
 data adopts it.
+
+The remaining compatibility boundary is the legacy `place_id` alias. Its
+removal is not part of Issue #81 and requires separately approved work.

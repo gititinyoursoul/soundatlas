@@ -15,8 +15,8 @@ not generated from a standalone seed-builder script.
 Seed data lives under `data/seed/`:
 
 - `routes.json`: route metadata
-- `places.json`: places with coordinates
-- `events.json`: historical events
+- `places.json`: reusable point or area places with focus coordinates
+- `events.json`: historical events with one or more ordered place references
 - `connections.json`: relationships between events
 
 ## Workflow Position
@@ -60,17 +60,27 @@ flowchart TD
   more detailed than normal prose, tags, places, and sources.
 - Use `review_status: "draft"` for uncertain or unreviewed records.
 
-## Proposed Heterogeneous Event Geography
+## Heterogeneous Event Geography
 
-`docs/design/route-entry-spatial-presentation.md` is the authoritative proposal
-for a future data-driven extension in which an event may reference one or more
-point or area places and optional explicit relationships between them. The
-proposal keeps `Event` as the MVP runtime umbrella and keeps existing
-`place_id`, `year_start`, and `year_end` behavior as the compatibility boundary.
+`docs/design/route-entry-spatial-presentation.md` defines the implemented MVP
+model in which an event references an ordered `place_ids` collection, uses
+`default_place_id` only when no valid event place is already focused, and may
+contain source-backed relationships between its referenced places.
 
-This proposal is not implemented in the current seed schema. Current files and
-validation rules remain unchanged until separately approved implementation
-work updates seed, backend, static-data, and frontend consumers together.
+A place always retains latitude and longitude as its label, focus, relationship
+anchor, and point fallback. It may also carry GeoJSON `Polygon` or
+`MultiPolygon` geometry plus precision and provenance. The backend API and
+generated public static data carry the same fields; route-relevant geometry is
+not maintained in a separate frontend lookup.
+
+`place_id` remains a temporary compatibility alias equal to
+`default_place_id`. Repository seed events carry both the canonical and
+compatibility fields. Backend and frontend loaders also normalize legacy
+single-`place_id` input. Removing the alias requires separately approved work.
+
+Current production events retain their existing single-place editorial
+meaning. Deterministic tests, rather than unapproved seed additions, cover
+multi-point, multi-area, mixed, and directional relationship combinations.
 
 ## Related Docs
 

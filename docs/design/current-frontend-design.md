@@ -33,7 +33,8 @@ This means:
 4. The timeline shows the route event sequence.
 5. User selects an event from the map, timeline, or inspector navigation.
 6. Map, timeline, and event inspector update from the same selected event state.
-7. User inspects event summary, significance, place, route context, sources, and media.
+7. User may focus any place within the selected event from the map or inspector.
+8. User inspects event summary, significance, places, route context, sources, and media.
 
 ## Screen Structure
 
@@ -63,6 +64,7 @@ The main page owns the shared exploration state:
 - `connections`
 - `selectedRouteId`
 - `selectedEventId`
+- `selectedPlaceId`
 - `isLoading`
 - `errorMessage`
 - `isNavigationOpen`
@@ -84,12 +86,12 @@ Derived state includes:
 - route event counts
 - review queue items
 
-Map marker clicks, timeline clicks, route selection, inspector navigation, related-event clicks, and keyboard navigation should continue to use this shared state rather than creating separate local selection models.
-
-The target extension for events spanning one or more point and area places is
-defined in `docs/design/route-entry-spatial-presentation.md`. It preserves
-selected event as the primary state and adds optional focused-place state; it
-is not implemented by this current-design baseline.
+Map marker and polygon clicks, timeline clicks, route selection, inspector
+navigation, StoryPanel place controls, related-event clicks, and keyboard
+navigation use this shared state rather than separate local selection models.
+The selected event remains the story identity; `selectedPlaceId` is constrained
+to that event's places and falls back to `default_place_id` only when the
+current focus is not valid for the event.
 
 ## Component Roles
 
@@ -107,19 +109,23 @@ Provides the local line icons used by the drawer trigger and navigation drawer u
 
 ### `MapView`
 
-Displays places/events spatially with route color and selected marker state. It should remain browser-safe around Leaflet loading and should not require real map tiles for tests. It currently renders avatar-style markers, contextual borough/place geometry overlays, and selected-place chrome, and it no longer carries the old top-left legend.
+Displays compositional event geography with route color, selected-event state,
+and stronger focused-place state. It remains browser-safe around Leaflet
+loading and does not require real map tiles for tests. It renders point markers,
+shared Polygon/MultiPolygon place geometry, explicit relationship connectors,
+selected-place chrome, and separate ambient borough context.
 
 Map color hierarchy:
 
 - Borough color describes ambient geography.
-- Contextual place polygon color describes place type or area context.
+- Place polygon color and line style describe site or interpretive area context.
 - Route color describes narrative selection through marker rings, selected-place chrome, and selected contextual polygon outlines.
 - Route color should not dominate large map polygon fills; selected contextual polygons should keep semantic fills and use route color as an accent.
 
-Future heterogeneous event geography, multi-area presentation, and
-place-to-place relationship graphics should follow
-`route-entry-spatial-presentation.md` rather than extending the current
-frontend-only place-geometry lookup ad hoc.
+Shared geography follows `route-entry-spatial-presentation.md` and arrives
+through the same API/static place data as point locations. When several visible
+events share a clicked area, the current applicable event is preserved, a sole
+matching event is selected, or a compact event chooser is shown.
 
 ### `Timeline`
 
@@ -131,7 +137,13 @@ Currently exists as a reusable component for route switching, but it is not part
 
 ### `StoryPanel`
 
-Implements the selected event inspector. It explains the selected event with a compact title-and-metadata header, stable previous/next navigation with adjacent-event tooltips, Story/Media/Related tabs, readable source labels inline in the Story tab, a continuous story reading block with a quieter significance note, and clickable related-event rows that show relationship direction and type. The media tab is framed as exploratory listening and viewing rather than admin review. Media that cannot be embedded should use a dedicated external-open preview state, not the generic empty placeholder.
+Implements the selected event inspector. It explains the selected event with a
+compact title-and-metadata header, stable previous/next navigation, Story,
+Media, and Related tabs, readable sources, and a continuous story block. Its
+Story tab exposes every event place as a keyboard/touch focus control and gives
+area precision and place-relationship direction, context, and sources textual
+equivalents. The media tab remains exploratory rather than an admin review
+surface.
 
 ### `MediaEmbed`
 
