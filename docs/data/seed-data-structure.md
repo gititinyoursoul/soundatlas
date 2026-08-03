@@ -60,9 +60,22 @@ flowchart TD
   more detailed than normal prose, tags, places, and sources.
 - Use `review_status: "draft"` for uncertain or unreviewed records.
 
+## Proposed Heterogeneous Event Geography
+
+`docs/design/route-entry-spatial-presentation.md` is the authoritative proposal
+for a future data-driven extension in which an event may reference one or more
+point or area places and optional explicit relationships between them. The
+proposal keeps `Event` as the MVP runtime umbrella and keeps existing
+`place_id`, `year_start`, and `year_end` behavior as the compatibility boundary.
+
+This proposal is not implemented in the current seed schema. Current files and
+validation rules remain unchanged until separately approved implementation
+work updates seed, backend, static-data, and frontend consumers together.
+
 ## Related Docs
 
 - `docs/data/seed-data-validation.md`
+- `docs/design/route-entry-spatial-presentation.md`
 - `docs/content/editorial-workflow.md`
 - `docs/enrichment/workflow.md`
 - `docs/enrichment/upstream/event-search-components.md`

@@ -86,6 +86,11 @@ Derived state includes:
 
 Map marker clicks, timeline clicks, route selection, inspector navigation, related-event clicks, and keyboard navigation should continue to use this shared state rather than creating separate local selection models.
 
+The target extension for events spanning one or more point and area places is
+defined in `docs/design/route-entry-spatial-presentation.md`. It preserves
+selected event as the primary state and adds optional focused-place state; it
+is not implemented by this current-design baseline.
+
 ## Component Roles
 
 ### `frontend/src/routes/+page.svelte`
@@ -110,6 +115,11 @@ Map color hierarchy:
 - Contextual place polygon color describes place type or area context.
 - Route color describes narrative selection through marker rings, selected-place chrome, and selected contextual polygon outlines.
 - Route color should not dominate large map polygon fills; selected contextual polygons should keep semantic fills and use route color as an accent.
+
+Future heterogeneous event geography, multi-area presentation, and
+place-to-place relationship graphics should follow
+`route-entry-spatial-presentation.md` rather than extending the current
+frontend-only place-geometry lookup ad hoc.
 
 ### `Timeline`
 
@@ -162,5 +172,6 @@ Embeds playable media links when available. The active admin review workflow now
 ## Related Documents
 
 - `docs/design/ux-workflow.md`
+- `docs/design/route-entry-spatial-presentation.md`
 - `prompts/design-ux.md`
 - `docs/mvp-concept.md`
