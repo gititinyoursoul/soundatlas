@@ -228,81 +228,20 @@ The MVP should be data-driven. The frontend only renders what the backend provid
 }
 ```
 
-## Backend Concept
+## System Architecture
 
-Technology:
+The MVP concept defines product intent and scope. Stable technical descriptions
+now live in the architecture documentation:
 
-- Python
-- `uv`
-- FastAPI
-- Curated JSON seed files for the MVP
-- Optional later: SQLite, once editing, imports, source maintenance, or more complex filters are needed
-- Optional later: PostgreSQL/PostGIS
+- [System overview](architecture/system-overview.md)
+- [Backend architecture](architecture/backend.md)
+- [Frontend architecture](architecture/frontend.md)
+- [Runtime data flow](architecture/data-flow.md)
 
-Current structure:
-
-```text
-backend/
-  app/
-    main.py
-    config.py
-    seed_repository.py
-    schemas.py
-    media_enrichment/
-      services.py
-      settings.py
-  scripts/
-  pyproject.toml
-  uv.lock
-```
-
-MVP endpoints:
-
-```text
-GET /health
-GET /routes
-GET /events?from_year=1965&to_year=1985&route_id=birth-of-hip-hop
-GET /events/{event_id}
-PATCH /events/{event_id}/links
-GET /places
-GET /connections?route_id=birth-of-hip-hop
-```
-
-The backend currently loads data from static JSON seed files. SQLite becomes useful once editing, imports, source maintenance, or more complex filters are needed.
-
-## Frontend Concept
-
-Technology:
-
-- SvelteKit
-- Leaflet in the MVP
-- TypeScript recommended
-- Optional later: MapLibre GL, if vector maps, layer styling, or more complex map interactions become important
-
-Current structure:
-
-```text
-frontend/
-  src/
-    lib/
-      api/
-      components/
-        MapView.svelte
-        Timeline.svelte
-        RouteFilter.svelte
-        StoryPanel.svelte
-      types/
-    routes/
-      +page.svelte
-```
-
-Frontend state:
-
-- Active route
-- Selected event
-- Loaded events, places, and connections
-- Navigation drawer state
-- Review queue state for draft media/image links
+The MVP remains data-driven: the frontend renders backend or generated static
+data, while the curated seed files remain the source of truth. Detailed seed
+contracts are documented in [`docs/data/seed-data-structure.md`](../docs/data/seed-data-structure.md)
+and [`docs/data/seed-data-validation.md`](../docs/data/seed-data-validation.md).
 
 ## UX Principles
 

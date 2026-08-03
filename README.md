@@ -186,39 +186,17 @@ cd ../frontend
 npm run test:coverage
 ```
 
-## Data Model
+## Architecture and data
 
-Seed data lives under `data/seed/`:
+The system architecture, component boundaries, API overview, and runtime data
+flow are documented in [`docs/architecture/`](docs/architecture/README.md).
+Seed files remain under `data/seed/`; their contracts and validation rules live
+in [`docs/data/`](docs/data/seed-data-structure.md).
 
-- `routes.json`
-- `places.json`
-- `events.json`
-- `connections.json`
-
-The current seed authoring workflow is prompt-guided curation, typically using
-`prompts/create-route.md` and `prompts/curate-seed-data.md`, followed by JSON
-validation and backend schema loading. The enrichment scripts under
-`backend/scripts/` do not generate the full seed dataset; they derive helper
-artifacts or append draft link metadata to existing events.
-
-Key references:
-
-- Seed structure: `docs/data/seed-data-structure.md`
-- Seed validation: `docs/data/seed-data-validation.md`
-- Editorial workflow: `docs/content/editorial-workflow.md`
-
-## API
-
-The backend is seed-driven and currently exposes:
-
-- `GET /health`
-- `GET /routes`
-- `GET /places`
-- `GET /events`
-- `GET /events/{event_id}`
-- `GET /connections`
-- `PATCH /events/{event_id}/links`
-- `PATCH /events/{event_id}/media-links`
+The current seed authoring workflow is prompt-guided curation, followed by JSON
+validation and backend schema loading. See the [editorial workflow](docs/content/editorial-workflow.md)
+and [enrichment documentation](docs/enrichment/workflow.md) for those domain
+workflows.
 
 ## Enrichment
 
@@ -247,16 +225,20 @@ the expected environment variables.
 
 ## Project Structure
 
-- `backend/`: FastAPI app, schemas, seed repository, enrichment scripts, tests
-- `frontend/`: SvelteKit app, map/timeline/story UI, API client, component tests
+The [system overview](docs/architecture/system-overview.md) documents the
+repository components and their boundaries. The top-level areas are:
+
+- `backend/`: FastAPI application and backend tooling
+- `frontend/`: SvelteKit application
 - `data/`: curated seed data and enrichment artifacts
-- `docs/`: product, design, data, and workflow documentation
+- `docs/`: product, architecture, design, data, and workflow documentation
 - `prompts/`: reusable project prompts
 - `scripts/`: local developer startup helpers
 
 ## Documentation
 
 - MVP concept: `docs/mvp-concept.md`
+- Architecture: `docs/architecture/README.md`
 - Planned agent work: GitHub Issues
 - Legacy backlog: `TODO.md`
 - Completed work archive: `docs/done.md`
