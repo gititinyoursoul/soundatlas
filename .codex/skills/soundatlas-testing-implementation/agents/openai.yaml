@@ -1,0 +1,4 @@
+interface:
+  display_name: "SoundAtlas Testing Implementation"
+  short_description: "Plan and implement SoundAtlas tests"
+  default_prompt: "Use $soundatlas-testing-implementation to plan or implement the approved testing Issue."

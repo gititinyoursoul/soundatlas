@@ -47,8 +47,8 @@ proposal that must be narrowed before implementation. Current examples include
 Grill-Me review, UX audit and critique, route editorial work, seed curation, and
 YouTube query planning.
 
-Documentation and testing prompts may remain the active entrypoint until their
-corresponding skill extraction is completed; their registry row must identify
+Documentation prompts may remain the active entrypoint until their
+corresponding skill extraction is completed; the registry row must identify
 that transitional status.
 
 ### Use a compatibility wrapper during migration
@@ -99,7 +99,7 @@ For an approved prompt-to-skill extraction:
 | Frontend implementation | Skill, with legacy wrapper | `soundatlas-frontend-implementation` |
 | Backend implementation | Skill, with legacy wrapper | `soundatlas-backend-implementation` |
 | Documentation updates | Prompt until a docs skill exists | `prompts/update-docs.md` |
-| Test planning and implementation | Prompt until a testing skill exists | `prompts/write-tests.md` |
+| Test planning and implementation | Skill, with legacy wrapper | `soundatlas-testing-implementation` |
 | Editorial route and seed curation | Interactive prompt | `prompts/create-route.md`, `prompts/curate-seed-data.md` |
 | UX critique and review | Interactive prompt | `prompts/design-ux.md`, `prompts/grill-me.md` |
 | Enrichment query planning | Human-reviewed prompt | `prompts/generate-youtube-search-queries.md` |
@@ -150,7 +150,7 @@ by the agent.
 | Frontend implementation                 | Skill plus compatibility wrapper       | Approved Issue; Grill-Me and Plan Update when risk-flagged                   | Approved GitHub Issue; `.codex/skills/soundatlas-frontend-implementation/SKILL.md` | `.codex/skills/soundatlas-frontend-implementation/SKILL.md` with `prompts/implement-frontend-map.md` as wrapper | Frontend changes and implementation report                          |
 | Backend implementation                  | Skill plus compatibility wrapper       | Approved Issue; Grill-Me and Plan Update when risk-flagged                   | Approved GitHub Issue; `.codex/skills/soundatlas-backend-implementation/SKILL.md` | `.codex/skills/soundatlas-backend-implementation/SKILL.md` with `prompts/implement-backend-api.md` as wrapper | Backend changes and implementation report                           |
 | Documentation and workflow changes      | Skill plus compatibility wrapper       | Approved Issue; Grill-Me for workflow or other risk-flagged changes          | Approved GitHub Issue; `.codex/skills/soundatlas-documentation-implementation/SKILL.md` | `.codex/skills/soundatlas-documentation-implementation/SKILL.md` with `prompts/update-docs.md` as wrapper        | Documentation changes and implementation report                     |
-| Test planning and implementation        | Compatibility wrapper; skill candidate | Focused test plan; Grill-Me for risk-flagged Issue work                      | Approved GitHub Issue and changed behavior                                         | `prompts/write-tests.md`                                                                                        | Tests and verification report                                       |
+| Test planning and implementation        | Skill plus compatibility wrapper       | Approved Issue or focused test scope; Grill-Me for risk-flagged work         | Approved GitHub Issue or focused scope; `.codex/skills/soundatlas-testing-implementation/SKILL.md` | `.codex/skills/soundatlas-testing-implementation/SKILL.md` with `prompts/write-tests.md` as wrapper               | Tests and verification report                                       |
 | UX audit and critique                   | Prompt                                 | Inspection before implementation; Grill-Me before Issue planning when needed | `docs/design/current-frontend-design.md` and relevant audit                        | `prompts/design-ux.md`                                                                                          | Findings, UX slice, or audit                                        |
 | Route editorial workflow                | Prompt plus command reference          | Grill-Me and approved Issue before broad route/seed changes                  | Route-folder artifacts and `docs/content/editorial-workflow.md`                    | `prompts/create-route.md` and `docs/content/workflow-commands.md`                                               | Route artifacts and reviewed seed proposal                          |
 | Seed data curation                      | Prompt                                 | Grill-Me and accepted-event boundary for non-trivial work                    | `docs/data/seed-data-validation.md` and accepted route artifacts                   | `prompts/curate-seed-data.md`                                                                                   | Seed changes or review proposal                                     |
@@ -160,9 +160,8 @@ The registry covers active human-facing entrypoints and source-of-truth
 documents. Generated route artifacts, `*.ai-draft.*` files, screenshots,
 mockups, and archival records are not registry entries.
 
-The testing prompt remains a compatibility wrapper until its corresponding skill
-Issue is completed. The frontend, backend, and documentation implementation
-prompts are compatibility wrappers for their completed skills. `grill-me.md`
+The frontend, backend, documentation, and testing implementation prompts are
+compatibility wrappers for their completed skills. `grill-me.md`
 and the YouTube query prompt remain prompts because their interactive or
 specialized output boundaries are intentional.
 
