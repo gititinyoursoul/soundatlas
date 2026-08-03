@@ -16,6 +16,11 @@ SoundAtlas should begin with a small, human review loop, not an admin platform:
 preview the story, choose what belongs, notice the warnings, and publish the
 route.
 
+For the no-user MVP, publication uses one fixed-scope review. The review must
+show enough read-only context for an informed decision, but it is a policy and
+handoff boundary rather than a dashboard or generalized content-management
+surface.
+
 ## Authority And Boundaries
 
 This contract owns interaction requirements for pipeline review. It does not
@@ -30,6 +35,11 @@ map presentation, or runtime data shapes.
   future map presentation and data model for heterogeneous route entries.
 - [Issue #71](https://github.com/gititinyoursoul/soundatlas/issues/71) owns the
   future pipeline implementation of the two-gate cascade defined here.
+- [Issue #73](https://github.com/gititinyoursoul/soundatlas/issues/73) owns the
+  future publication review, approval action, and publication-state behavior.
+- [Issue #77](https://github.com/gititinyoursoul/soundatlas/issues/77) owns the
+  later transition from draft-visible seed content to route-approved-only
+  public content.
 
 When this target contract differs from current pipeline behavior, the current
 workflow documentation remains descriptive of what the software does until the
@@ -52,8 +62,15 @@ corresponding implementation Issue is completed.
   editorial gate.
 - **Active working state:** the run currently used for ongoing work.
 - **Archived run:** an earlier, read-only run and its intermediate results.
-- **Publication summary:** one route-level view of selected content and all
-  unresolved warnings before final approval.
+- **Publication review:** one route-level view of selected content and all
+  unresolved warnings before final approval. For the MVP, it identifies the
+  exact route result, lists every selected entry with essential context, keeps
+  warnings connected to what they affect, shows technical readiness, and
+  offers one publish action.
+- **Publication authorization:** the human decision to make the complete route
+  public with its warning state visible. Initial authorization uses the
+  publication review and publish action. A later authorized human edit is
+  itself renewed publication authorization.
 
 ## Target Cascade
 
@@ -63,7 +80,7 @@ CLI starts route pipeline run
   -> human gate 1: Yes/No for each event
   -> selected events continue through draft processing
   -> warnings and technical diagnostics remain visible
-  -> publication summary
+  -> publication review
   -> human gate 2: approve the complete route for publication
 ```
 
@@ -98,14 +115,47 @@ normal Yes/No decision surface without a separately approved requirement.
 
 | ID | Support | Requirement |
 | --- | --- | --- |
-| `CPI-R9` | Future | Missing sources, uncertain claims, place uncertainty, unreviewed media, and other editorial concerns appear as warnings or flags for the MVP rather than technical publication blockers. |
-| `CPI-R10` | Future | The publication summary displays all unresolved warnings for the selected route without requiring separate acknowledgment of each warning. |
-| `CPI-R11` | Future | One route-level approval records the human publication decision after the warning summary is shown. |
-| `CPI-R12` | Current | Structurally invalid data or unresolved references may stop technical execution independently of editorial warning policy. |
+| `CPI-R9` | Future | Missing or weak sources, unresolved claims or merges, uncertain place or time data, unreviewed media or images, and other unresolved editorial risks appear as warnings or flags for the MVP rather than technical publication blockers. |
+| `CPI-R10` | Future | The publication review identifies the exact route result using the minimum run context from `CPI-R18`, lists every selected route entry with its title and essential place/time context, associates every entry-specific warning with the affected entry, shows route-level warnings separately, and shows technical readiness distinctly from non-blocking editorial warnings. |
+| `CPI-R11` | Future | Initial publication uses one explicit, human-only route-level approval after the publication review is shown. Approval records publication authorization for the complete route with the warning state then displayed; it does not state that warnings were resolved. A later authorized human edit is itself renewed publication authorization and remains approved without another publish action. |
+| `CPI-R12` | Current | Structurally invalid data or failed or unresolved references may stop technical execution independently of editorial warning policy. |
+| `CPI-R25` | Current | Until Issue #77 is implemented, the public explorer may display any runtime seed content, including records marked as drafts; record-level review status is not a route-publication filter. |
+| `CPI-R26` | Future | Automatic processes cannot alter approved content or treat an automatic change as renewed publication authorization. |
 
 Warnings inform human judgment. They must not be hidden, automatically
 resolved, or treated as human approval. Publication approval does not convert a
 warning into a statement that the underlying concern was corrected.
+
+The fixed-scope MVP publication review presents:
+
+- **Route and result identity:** the route plus the model, prompt or
+  editorial-rule version, pipeline version, and timestamp required by
+  `CPI-R18`, so the human can verify the exact result under review.
+- **Selected content:** a compact list of every selected route entry, including
+  its title and essential place/time context. Uncertain place or time details
+  remain visible as warnings rather than being presented as false precision.
+- **Editorial warnings:** each entry-specific warning appears with the affected
+  entry, while route-level warnings appear separately. Together they expose
+  every unresolved warning for the complete selected set.
+- **Technical readiness:** structural validity and reference failures are shown
+  separately from editorial warnings. A technical error may prevent the
+  publish action; an editorial warning does not.
+- **Publication decision:** one action publishes the complete route.
+
+The review may organize warnings by the entry they affect, but it does not turn
+them into a management workflow or ask the human to resolve, categorize,
+filter, or acknowledge them individually. It provides no dashboard, roles,
+editing tools, recommendations, or automated approval. Candidate selection,
+downstream draft processing, and route publication remain distinct states even
+while the temporary `CPI-R25` policy allows drafts to appear in the public
+explorer.
+
+Initial publication records the human decision made after this complete review
+is shown. If an authorized human later edits approved content, that edit itself
+renews publication authorization for the edited content and its then-current
+warning state. This is a policy rule, not an authentication or audit-system
+requirement. Automatic processes receive no equivalent authority and cannot
+change approved content.
 
 ### CLI And Admin Responsibilities
 
@@ -113,7 +163,7 @@ warning into a statement that the underlying concern was corrected.
 | --- | --- | --- |
 | `CPI-R13` | Current | Pipeline runs are started through the CLI for the MVP. |
 | `CPI-R14` | Future | The admin experience presents the navigable review result and records event-level Yes/No decisions. |
-| `CPI-R15` | Future | The admin experience presents the route-level publication summary and records the final publication decision. |
+| `CPI-R15` | Future | The admin experience presents the route-level publication review and records the final publication decision. |
 | `CPI-R16` | Future | Starting, configuring, skipping, or rerunning pipeline steps is not required in the MVP admin experience. Corrections and reruns remain CLI operations. |
 
 ### Pipeline Transparency
@@ -146,7 +196,9 @@ step or newer model produced it.
 | Distinguish candidate, accepted, and draft data | Partial | Existing workflow; revised cascade in Issue #71 |
 | Navigate a pre-approval route preview | Future | Issues #70 and #71 plus future admin work |
 | Record route-scoped event Yes/No decisions | Future | Issue #71 plus future admin work |
-| Show one warning summary and approve the route | Future | Future publication/admin implementation |
+| Show the fixed-scope publication review and approve the route | Future | Issue #73 |
+| Display draft seed content in the public explorer | Current temporary policy | Issue #77 owns the approved-only transition |
+| Protect approved content from automatic changes | Future | Issues #71 and #73 implementation boundaries |
 | Inspect immutable archived runs and intermediate results | Future | Follow-up storage and admin implementation |
 | Compare separate pipeline runs | Out of MVP scope | Unplanned |
 
@@ -166,6 +218,9 @@ step or newer model produced it.
 | `CPI-AC10` | Every requirement states whether support is current, partial, future, or outside MVP scope. |
 | `CPI-AC11` | Map presentation/data modeling and pipeline implementation remain owned by Issues #70 and #71 respectively. |
 | `CPI-AC12` | The contract contains no requirement to compare or diff separate pipeline runs for the MVP. |
+| `CPI-AC13` | One fixed-scope publication review identifies the exact route result, lists every selected entry with essential place/time context, associates warnings with affected entries or the route, distinguishes technical readiness, and offers one publish action without adding management workflows or extra human decisions. |
+| `CPI-AC14` | Initial approval and later authorized human edits preserve publication authorization with the warning state then present, while automatic processes cannot alter approved content or grant authorization. |
+| `CPI-AC15` | The temporary public policy permits draft seed content until Issue #77 implements route-approved-only visibility. |
 
 ## Follow-Up Boundary
 
@@ -175,5 +230,8 @@ replacement behavior is implemented and verified.
 
 Issue #71 should implement the two-gate pipeline cascade. Issue #70 should
 define how heterogeneous route entries are represented across the map,
-timeline, and story experience. Future admin and publication work should cite
-the relevant `CPI-R*` and `CPI-AC*` IDs rather than copying this contract.
+timeline, and story experience. Issue #73 should implement the publication
+review, approval action, and publication-state behavior. Issue #77 should
+replace the temporary draft-visible policy with route-approved-only public
+content. These Issues should cite the relevant `CPI-R*` and `CPI-AC*` IDs
+rather than copying this contract.
