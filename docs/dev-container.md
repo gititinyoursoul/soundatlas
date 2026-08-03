@@ -2,9 +2,9 @@
 
 This document describes the current containerized development setup for
 SoundAtlas. It is based on `.devcontainer/docker-compose.devcontainer.yml`,
-the root `docker-compose.yml`, and the related Dockerfiles. The optional
-`.devcontainer/devcontainer.json` file lets VS Code Dev Containers attach to
-the same Compose workspace.
+the root `docker-compose.yml`, and the related Dockerfiles. VS Code
+integration is optional; `.devcontainer/devcontainer.json` configures VS Code
+Dev Containers to attach to the same Compose workspace.
 
 ## Purpose
 
@@ -20,8 +20,8 @@ runtime; it is a long-running tools container that can be entered through plain
 CLI process inside that container. Codex runtime state and writable config stay
 in a Docker volume so SQLite state files and `config.toml` updates are not
 written through host bind mounts. App/provider secrets are mounted as a single
-read-only env file when present; GitHub agent credentials are kept separate
-from app env files.
+read-only env file; GitHub agent credentials are kept separate from app env
+files.
 
 It starts three Compose services:
 
@@ -30,6 +30,29 @@ It starts three Compose services:
 - `frontend`: SvelteKit/Vite development server on port `5173`
 
 The repository is mounted in the workspace container at `/workspace`.
+
+## Prerequisites
+
+Install Docker with the Docker Compose plugin before starting the stack. The
+Compose override mounts two local secret files read-only, so both files must
+exist and contain the required values before Compose startup:
+
+```sh
+mkdir -p ../secrets/soundatlas
+$EDITOR ../secrets/soundatlas/.env
+$EDITOR ../secrets/soundatlas/github-agent.env
+```
+
+The first file contains SoundAtlas app/provider settings such as
+`YOUTUBE_API_KEY`; the second contains the repository-scoped GitHub agent
+credential used by `gh`. Empty placeholder files are not a supported startup
+configuration. Keep both files outside the repository and never commit their
+contents.
+
+Importing host Codex state is optional. When used, the host `.codex` directory
+is mounted read-only at `/mnt/host-codex` only in the `workspace` service, and
+post-create setup copies the supported login/config files into the
+workspace-only `codex_home` volume.
 
 ## Entry Points
 
@@ -100,9 +123,9 @@ Installed runtime tools:
 - Python 3.13 through the `ghcr.io/astral-sh/uv:python3.13-bookworm-slim` base
   image
 - `uv`
-- Node.js `24.11.1`
+- Node.js (version pinned in `.devcontainer/Dockerfile`)
 - npm
-- Codex CLI `@openai/codex` `0.146.0`
+- Codex CLI `@openai/codex` (version pinned in `.devcontainer/Dockerfile`)
 - GitHub CLI `gh`
 - Git
 - Bash with programmable completion and Git prompt support
@@ -138,11 +161,14 @@ SOUNDATLAS_GIT_AUTHOR_NAME=
 SOUNDATLAS_GIT_AUTHOR_EMAIL=
 UV_PROJECT_ENVIRONMENT=/home/soundatlas/.cache/uv/venvs/backend
 SOUNDATLAS_EGRESS_GUARD=enabled
-SOUNDATLAS_ALLOWED_OUTBOUND_PORTS=8000 5173
+SOUNDATLAS_ALLOWED_OUTBOUND_DESTINATIONS=backend:8000 frontend:5173
 SOUNDATLAS_WRITABLE_PATHS=/workspace/frontend/node_modules /home/soundatlas/.cache/ms-playwright /home/soundatlas/.cache/uv /home/soundatlas/.config/gh /home/soundatlas/.npm /home/soundatlas/.codex
 ```
 
-The workspace waits for the `backend` and `frontend` services to start.
+The workspace depends on the `backend` and `frontend` services with
+`condition: service_started`. This means their containers have started; it
+does not mean they are healthy or ready to accept requests. The `frontend`
+service itself waits for the backend healthcheck before starting.
 
 The `workspace` service also sets `seccomp=unconfined` so Codex's Linux
 sandbox helper can create the user namespaces required by Bubblewrap inside
@@ -152,8 +178,8 @@ namespace error.
 
 ### `backend`
 
-Defined in the root `docker-compose.yml` and extended by the dev container
-Compose override.
+Defined in the root `docker-compose.yml` and started as a dependency of the
+`workspace` service.
 
 Responsibilities:
 
@@ -525,9 +551,13 @@ Current dev container behavior:
 
 This is a pragmatic agent-coding boundary, not a full sandbox. The agent can
 edit the repository and use public HTTPS for package installation, Git remotes,
-documentation lookup, and model/API access. The workspace may also call the
-local dev service ports `8000` and `5173` for backend/frontend checks. It
-should not receive direct mounts to host secrets or broader host directories.
+documentation lookup, and model/API access. The workspace may call only the
+resolved Docker `backend:8000` and `frontend:5173` service destinations for
+local backend/frontend checks. The egress guard resolves those service names at
+startup and permits those exact destination IP/port pairs; it does not allow
+arbitrary private addresses on ports `8000` or `5173`. If a configured service
+cannot be resolved, workspace startup fails closed. It should not receive
+direct mounts to host secrets or broader host directories.
 The only host credential mount is the read-only
 `${SOUNDATLAS_HOST_CODEX_HOME:-${USERPROFILE:-${HOME}}/.codex}` seed mount
 used by the workspace service.
