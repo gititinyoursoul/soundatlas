@@ -122,5 +122,5 @@ Return:
 
 ## Next step
 
-- Review the Implementation Report, then commit the backend change with the Issue footer or run `prompts/write-tests.md` / `prompts/update-docs.md` if follow-up coverage or docs are needed.
+- Review the Implementation Report, then commit the backend change with the Issue footer or run `prompts/write-tests.md` / `prompts/update-docs.md` if follow-up coverage or docs are needed. After a successful commit for completed Issue work, capture the hash, verify acceptance criteria and Issue-relevant working-tree state, post the standard completion comment, and close the Issue. Leave it open for partial/WIP or incomplete work, ambiguous Issue scope, an explicit keep-open request, or a failed GitHub operation.
 ```

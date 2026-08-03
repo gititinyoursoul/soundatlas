@@ -42,6 +42,10 @@ should offer meaningful options and a recommended choice.
   explicit rationale. Use `priority:p2` only as the neutral fallback when no
   stronger priority signal applies.
 - Post an Implementation Report after non-trivial implementation.
+- After a successful commit for completed Issue work, capture the hash, verify
+  Issue-relevant completeness, post the standard completion comment, and close
+  the Issue. Preserve the documented exceptions in
+  `docs/implementation-plan-workflow.md`.
 - End every workflow result with a short `Next step` handoff when useful.
 
 ## Canonical Workflow Registry

@@ -58,6 +58,12 @@ Changes` section instead of silently rewriting the meaning of the Issue.
    with wording such as `implement issue #<number>` or the change is clearly
    trivial. Explicit wording does not bypass required review or planning gates.
 
+8. After a completed Issue-based implementation is committed, complete the
+   post-commit lifecycle: capture the hash, verify acceptance criteria, confirm
+   no Issue-relevant changes remain uncommitted, post the standard completion
+   comment, and close the Issue. Leave the Issue open and report the failure if
+   verification, commenting, or closing cannot be completed.
+
 ## Issue Shapes
 
 Use this shape for a new Intake Issue:
@@ -113,6 +119,17 @@ Use this shape after implementation:
 ## Remaining Risks
 ```
 
+The standard post-commit completion comment is:
+
+```md
+## Completed
+
+- Commit: `<commit hash>`
+- Issue: #<number>
+- Acceptance criteria: complete
+- Verification: `<checks or report reference>`
+```
+
 ## Planning Rules
 
 - Keep GitHub Issues as the default source of truth for planning,
@@ -129,6 +146,10 @@ Use this shape after implementation:
   unresolved.
 - Do not define behavior outside the requested change.
 - Prefer small, reviewable revisions over broad rewrites.
+- Do not close an Issue for uncommitted, partial, WIP, incomplete, or
+  ambiguously scoped work, or when the human explicitly asks to keep it open.
+- Unrelated uncommitted changes do not block closure; verify only the
+  Issue-relevant working-tree state.
 - For cross-cutting changes, plan in this order: data or schema impact, backend
   impact, frontend state impact, UX impact, tests or checks, docs or Issue
   updates.

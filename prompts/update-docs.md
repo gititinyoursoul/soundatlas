@@ -79,6 +79,11 @@ If the documentation update is trivial, make the smallest change directly.
 - Do not treat prompt, skill, workflow-doc, `AGENTS.md`, planning-rule, or
   implementation-gate changes as ordinary docs edits.
 - When documentation supports implemented Issue work, keep Issue and commit-reference examples consistent with `docs/implementation-plan-workflow.md`.
+- When approved Issue documentation work is committed and complete, follow the
+  canonical post-commit sequence: capture the hash, verify acceptance criteria
+  and Issue-relevant working-tree state, post the standard completion comment,
+  then close the Issue. Preserve the documented exceptions and leave the Issue
+  open if commenting or closing fails.
 - Do not commit changes unless explicitly requested.
 
 ## Deliverables

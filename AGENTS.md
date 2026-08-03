@@ -106,8 +106,10 @@ Events should contain at least:
 
 - Do not make commits without an explicit user request.
 - When work was implemented from a GitHub Issue, a user request to commit that work counts as approval to close the Issue after the commit succeeds, unless the user explicitly says to keep it open.
-- Close the Issue with a comment referencing the commit hash when the committed work clearly satisfies the Issue acceptance criteria.
-- Do not auto-close an Issue when the commit is partial or WIP, acceptance criteria remain incomplete, multiple Issues are ambiguously involved, or the user asks to keep the ticket open.
+- After a successful commit, capture its hash, verify all acceptance criteria, confirm that no Issue-relevant changes remain uncommitted, post the standard commit-referencing completion comment, and then close the Issue.
+- Unrelated user-owned working-tree changes do not block closure and must not be included merely to make the tree clean.
+- Do not close an Issue when work is uncommitted, the commit is partial or WIP, acceptance criteria remain incomplete, multiple Issues are ambiguously involved, or the user asks to keep the ticket open.
+- If the completion comment or close operation fails, report the failure and leave the Issue open when possible.
 - Prefer meaningful commit groups: documentation, data, backend, and frontend separately.
 - Keep local folders such as `.venv/`, `node_modules/`, `.vscode/`, and `.github/` ignored.
 

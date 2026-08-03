@@ -25,9 +25,13 @@ explicitly asks for a legacy note.
 7. Agent implements from the approved Issue content.
 8. Agent validates the change with the relevant checks.
 9. Agent posts an `## Implementation Report` in the Issue or final response.
-10. Human reviews the local diff. A request to commit completed Issue work counts
-   as approval to close the associated Issue after the commit succeeds, unless
-   the human explicitly asks to keep it open.
+10. Human reviews the local diff and explicitly requests a commit when the work
+    is ready.
+11. After a successful commit, agent captures the commit hash, verifies the
+    acceptance criteria, confirms that no Issue-relevant changes remain
+    uncommitted, posts the standard completion comment, and closes the Issue.
+12. If any post-commit verification or GitHub operation fails, agent reports
+    the failure and leaves the Issue open when possible.
 ```
 
 For clearly trivial, local, low-risk changes, the agent may proceed directly
@@ -207,14 +211,41 @@ comment:
 Do not close the Issue just because implementation has started or the report was
 posted.
 
-When work was implemented from a GitHub Issue, a human request to commit that
-work counts as approval to close the Issue after the commit succeeds, unless the
-human explicitly says to keep it open. Close with a comment that references the
-commit hash.
+## Post-Commit Completion and Issue Closure
 
-Do not auto-close when the commit is partial or WIP, acceptance criteria remain
-incomplete, multiple Issues are ambiguously involved, or the human asks to keep
-the ticket open.
+For completed Issue-based work, a request to commit counts as authorization to
+close the associated Issue unless the human explicitly asks to keep it open.
+Issue closure is a mandatory, ordered post-commit step:
+
+1. Capture the successful commit hash.
+2. Verify every acceptance criterion against the committed change and checks.
+3. Confirm that no Issue-relevant files remain modified or uncommitted. Unrelated
+   user-owned changes do not block closure and must not be included merely to
+   make the tree clean.
+4. Post the completion comment using this format:
+
+   ```md
+   ## Completed
+
+   - Commit: `<commit hash>`
+   - Issue: #<number>
+   - Acceptance criteria: complete
+   - Verification: `<checks or report reference>`
+   ```
+
+5. Close the Issue only after the completion comment succeeds.
+
+Do not close the Issue when the work is uncommitted, the commit is partial or
+WIP, an acceptance criterion is incomplete, the commit covers multiple Issues
+without an unambiguous mapping, or the human explicitly asks to keep the Issue
+open. If the completion comment or close operation fails, report the failure
+and leave the Issue open when possible.
+
+The completion sequence must remain distinct in the workflow record: the
+Implementation Report describes the result, the commit records the change, the
+working-tree check verifies relevant completeness, the completion comment
+provides Issue evidence, and closing the Issue records the final lifecycle
+state.
 
 Do not add a separate `done` label for completion.
 
