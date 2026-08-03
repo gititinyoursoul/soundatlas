@@ -6,11 +6,11 @@ This prompt is the backend implementation entrypoint for the current workflow. I
 
 ## Context to provide
 
-* Approved GitHub Issue number or URL.
-* Endpoint or backend behavior to implement.
-* Relevant seed data and expected API response shape.
-* Error behavior and filtering requirements.
-* Whether implementation is approved now or backend planning only.
+- Approved GitHub Issue number or URL.
+- Endpoint or backend behavior to implement.
+- Relevant seed data and expected API response shape.
+- Error behavior and filtering requirements.
+- Whether implementation is approved now or backend planning only.
 
 ## Implementation Gate
 
@@ -18,11 +18,18 @@ Before implementing, read the approved GitHub Issue, including any Plan Update o
 
 Implementation may proceed only when:
 
-* An approved GitHub Issue or clearly trivial request exists.
-* For Issue-based work, the human has explicitly requested implementation with wording such as `implement issue #<number>`.
-* Requirements are clear enough to implement.
-* Acceptance criteria are testable enough to verify.
-* Blocking questions are resolved or intentionally deferred.
+- An approved GitHub Issue or clearly trivial request exists.
+- For Issue-based work, the human has explicitly requested implementation with wording such as `implement issue #<number>`.
+- Requirements are clear enough to implement.
+- Acceptance criteria are testable enough to verify.
+- Blocking questions are resolved or intentionally deferred.
+- If the Issue has risk flags, it includes a `## Grill-Me Review` comment with
+  required decisions confirmed and a `## Plan Update` or `## Detailed Plan
+Update` that incorporates them.
+
+Explicit implementation wording does not bypass required Grill-Me review or
+planning gates. Clearly trivial, local, low-risk changes may proceed without
+those markers.
 
 Do not implement behavior outside the approved GitHub Issue.
 
@@ -36,23 +43,23 @@ Do not rewrite the product behavior from the prompt. Treat the approved Issue as
 
 ## Project constraints
 
-* Backend application code should live under `backend/app/`.
-* Load MVP data from `data/seed/` until a database is introduced.
-* Use Pydantic schemas for response models.
-* Keep route, place, event, and connection field names aligned with seed data.
-* Preserve documented seed contracts from `docs/data/seed-data-validation.md`.
-* Do not introduce a database until explicitly requested.
-* Do not commit changes unless explicitly requested.
-* Do not commit secrets, API keys, local paths, generated media files, audio, or video.
+- Backend application code should live under `backend/app/`.
+- Load MVP data from `data/seed/` until a database is introduced.
+- Use Pydantic schemas for response models.
+- Keep route, place, event, and connection field names aligned with seed data.
+- Preserve documented seed contracts from `docs/data/seed-data-validation.md`.
+- Do not introduce a database until explicitly requested.
+- Do not commit changes unless explicitly requested.
+- Do not commit secrets, API keys, local paths, generated media files, audio, or video.
 
 ## Expected MVP endpoints
 
-* `GET /health`
-* `GET /routes`
-* `GET /events`
-* `GET /events/{event_id}`
-* `GET /places`
-* `GET /connections`
+- `GET /health`
+- `GET /routes`
+- `GET /events`
+- `GET /events/{event_id}`
+- `GET /places`
+- `GET /connections`
 
 ## Process
 

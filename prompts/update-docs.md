@@ -6,12 +6,12 @@ This prompt is the documentation entrypoint for the current workflow. If the rep
 
 ## Context to provide
 
-* Target docs or documentation area.
-* Why the documentation needs to change now.
-* Related feature, GitHub Issue, workflow, or code change.
-* Whether the docs change should update Issue workflow or commit guidance.
-* Whether the task is documentation-only or accompanies another change.
-* Constraints on wording, scope, or source of truth.
+- Target docs or documentation area.
+- Why the documentation needs to change now.
+- Related feature, GitHub Issue, workflow, or code change.
+- Whether the docs change should update Issue workflow or commit guidance.
+- Whether the task is documentation-only or accompanies another change.
+- Constraints on wording, scope, or source of truth.
 
 ## Task
 
@@ -23,29 +23,29 @@ Do not treat this as a generic cleanup prompt. Use it for durable docs that othe
 
 Use this prompt for:
 
-* `docs/implementation-plan-workflow.md`
-* `docs/design/current-frontend-design.md`
-* `docs/mvp-concept.md`
-* route content folders under `docs/content/routes/<route-id>/`
-* legacy route concept docs under `docs/content/route-concepts/`
-* workflow docs under `docs/`
-* durable archive docs such as `docs/done.md`
+- `docs/implementation-plan-workflow.md`
+- `docs/design/current-frontend-design.md`
+- `docs/mvp-concept.md`
+- route content folders under `docs/content/routes/<route-id>/`
+- legacy route concept docs under `docs/content/route-concepts/`
+- workflow docs under `docs/`
+- durable archive docs such as `docs/done.md`
 
 Do not use it for:
 
-* Trivial copy edits
-* Pure formatting cleanup
-* Comments-only changes
-* Code changes that merely mention docs as a side effect
+- Trivial copy edits
+- Pure formatting cleanup
+- Comments-only changes
+- Code changes that merely mention docs as a side effect
 
 ## Document categories
 
 Classify the target docs before editing:
 
-* Source of truth
-* Derived guidance
-* Workflow / process
-* Archive / history
+- Source of truth
+- Derived guidance
+- Workflow / process
+- Archive / history
 
 Preserve the role of the document. Do not turn an archive into a source of truth or duplicate one source across multiple files.
 
@@ -63,19 +63,23 @@ implementation gates are non-trivial by default. Use `prompts/grill-me.md` first
 when the change needs critique or scope review, then create or update the
 GitHub Issue with `soundatlas-implementation-planning` before editing.
 
+For risk-flagged documentation or workflow changes, record the confirmed review
+under `## Grill-Me Review` before adding a `## Plan Update` or implementing.
+Explicit implementation wording does not bypass those gates.
+
 If the documentation update is trivial, make the smallest change directly.
 
 ## Project constraints
 
-* Keep wording concise and aligned with repo conventions.
-* Preserve source-of-truth documents unless the change explicitly updates them.
-* Avoid broad rewrites or style-only edits.
-* Do not change curated content unless the task explicitly asks for it.
-* When the workflow changes, keep prompts, skills, `AGENTS.md`, and workflow docs aligned in the same pass.
-* Do not treat prompt, skill, workflow-doc, `AGENTS.md`, planning-rule, or
+- Keep wording concise and aligned with repo conventions.
+- Preserve source-of-truth documents unless the change explicitly updates them.
+- Avoid broad rewrites or style-only edits.
+- Do not change curated content unless the task explicitly asks for it.
+- When the workflow changes, keep prompts, skills, `AGENTS.md`, and workflow docs aligned in the same pass.
+- Do not treat prompt, skill, workflow-doc, `AGENTS.md`, planning-rule, or
   implementation-gate changes as ordinary docs edits.
-* When documentation supports implemented Issue work, keep Issue and commit-reference examples consistent with `docs/implementation-plan-workflow.md`.
-* Do not commit changes unless explicitly requested.
+- When documentation supports implemented Issue work, keep Issue and commit-reference examples consistent with `docs/implementation-plan-workflow.md`.
+- Do not commit changes unless explicitly requested.
 
 ## Deliverables
 

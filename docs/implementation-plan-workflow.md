@@ -5,9 +5,9 @@ work.
 
 The default workflow is Issue-led:
 
-> Do not implement from a vague request. Capture non-trivial planned agent work
-> in a GitHub Issue, refine the plan in that Issue, and implement only after an
-> explicit implementation request such as `implement issue #<number>`.
+> Create an Intake Issue first. For risky, vague, or cross-cutting work, run
+> Grill-Me and record confirmed decisions before adding a Plan Update or
+> implementing. Explicit implementation wording does not bypass those gates.
 
 GitHub Issues are the source of truth for planned agent work. `TODO.md` is a
 legacy backlog and should not receive new planned work unless the human
@@ -18,19 +18,22 @@ explicitly asks for a legacy note.
 ```text
 1. Human gives a feature/change request.
 2. Agent inspects the repo before asking questions when local context can answer them.
-3. Agent creates or updates an Intake Issue for non-trivial planned work.
-4. Agent adds a Plan Update or Detailed Plan Update in the Issue when planning is needed.
-5. Human starts implementation with explicit wording such as "implement issue #<number>".
-6. Agent implements from the approved Issue content.
-7. Agent validates the change with the relevant checks.
-8. Agent posts an Implementation Report in the Issue or final response.
-9. Human reviews the local diff. A request to commit completed Issue work counts
+3. Agent creates an Intake Issue containing only Task, Context, and Acceptance Criteria.
+4. If risk flags are present, agent runs Grill-Me and records a `## Grill-Me Review` comment with findings and confirmed decisions.
+5. Agent adds a `## Plan Update` or `## Detailed Plan Update` after required decisions are confirmed.
+6. Human starts implementation with explicit wording such as "implement issue #<number>".
+7. Agent implements from the approved Issue content.
+8. Agent validates the change with the relevant checks.
+9. Agent posts an `## Implementation Report` in the Issue or final response.
+10. Human reviews the local diff. A request to commit completed Issue work counts
    as approval to close the associated Issue after the commit succeeds, unless
    the human explicitly asks to keep it open.
 ```
 
-For clearly trivial changes, the agent may proceed directly when the request is
-clear and low-risk.
+For clearly trivial, local, low-risk changes, the agent may proceed directly
+when the request is clear. This exception does not apply to security,
+credentials, infrastructure, networking, workflow, UX, editorial,
+cross-cutting, user-visible, or materially ambiguous work.
 
 ## Intake Issue
 
@@ -55,23 +58,40 @@ Use this minimum structure:
 
 Keep the intake lightweight. The `Task` can be close to a TODO item. Avoid
 forcing a broad product `Goal` when the work is a small task, review,
-investigation, or decision.
+investigation, or decision. An Intake Issue is not implementation-ready and
+must not include speculative implementation steps, technical assumptions, or
+prematurely resolved open questions.
+
+## Grill-Me Review
+
+For any risk-flagged work, run `prompts/grill-me.md` after intake creation and
+before planning or implementation. Record the review in an Issue comment with
+the heading `## Grill-Me Review`.
+
+Each material finding must state whether user confirmation is required. User
+confirmation is required for product behavior, scope, security, privacy,
+external API behavior, editorial or source decisions, irreversible workflow
+behavior, and production stability. Low-risk implementation details may be
+assumed when recorded in the later Plan Update.
+
+Do not mark open questions as resolved while a material decision remains
+unconfirmed.
 
 Codex may set existing approved GitHub labels on Issues. New labels must be
 proposed and explicitly approved before Codex creates or uses them.
 
 Recommended label families are:
 
-* `type:feature`
-* `type:bug`
-* `type:refactor`
-* `type:chore`
-* `area:<feature-or-component>`
-* `priority:p0`
-* `priority:p1`
-* `priority:p2`
-* `priority:p3`
-* `blocked`
+- `type:feature`
+- `type:bug`
+- `type:refactor`
+- `type:chore`
+- `area:<feature-or-component>`
+- `priority:p0`
+- `priority:p1`
+- `priority:p2`
+- `priority:p3`
+- `blocked`
 
 When Codex creates an Issue, it should assign exactly one approved priority
 label unless the human explicitly asks not to. Choose the priority by reasoning
@@ -81,11 +101,11 @@ clearly justified. Briefly state the priority rationale when creating the Issue.
 
 Priority meanings:
 
-* `priority:p0`: urgent or blocking; release or development work cannot
+- `priority:p0`: urgent or blocking; release or development work cannot
   continue safely.
-* `priority:p1`: next up; directly supports current MVP or reduces major risk.
-* `priority:p2`: important later; valuable but not blocking current work.
-* `priority:p3`: backlog or nice-to-have; no near-term commitment.
+- `priority:p1`: next up; directly supports current MVP or reduces major risk.
+- `priority:p2`: important later; valuable but not blocking current work.
+- `priority:p3`: backlog or nice-to-have; no near-term commitment.
 
 ## Plan Update
 
@@ -123,12 +143,14 @@ detail that future implementation should not rediscover decisions:
 
 Rules:
 
-* Keep the plan in the GitHub Issue, not in a local or repo-versioned plan file.
-* Use `Acceptance Criteria Changes` whenever the original criteria are changed.
+- Keep the plan in the GitHub Issue, not in a local or repo-versioned plan file.
+- For risk-flagged work, add the Plan Update only after the Issue contains a
+  `## Grill-Me Review` comment with required decisions confirmed.
+- Use `Acceptance Criteria Changes` whenever the original criteria are changed.
   Do not silently rewrite the meaning of the Issue.
-* Use `Requirements` only when complex product, API, data, security, or workflow
+- Use `Requirements` only when complex product, API, data, security, or workflow
   rules would otherwise be unclear.
-* Stop for approval when open questions affect product intent, data shape,
+- Stop for approval when open questions affect product intent, data shape,
   security, privacy, external API behavior, generated media review boundaries,
   historically sensitive claims, irreversible workflow behavior, or production
   stability.
@@ -137,18 +159,24 @@ Rules:
 
 Implementation may proceed when:
 
-* The human explicitly requests implementation of an Issue with wording such as
+- The human explicitly requests implementation of an Issue with wording such as
   `implement issue #<number>`, or the change is clearly trivial.
-* The Issue contains enough Task, Plan, and Acceptance Criteria detail to
+- The Issue contains enough Task, Plan, and Acceptance Criteria detail to
   implement safely.
-* Blocking questions are resolved or intentionally deferred.
+- Blocking questions are resolved or intentionally deferred.
+- For risk-flagged work, the Issue contains a `## Grill-Me Review` comment and a
+  confirmed `## Plan Update` or `## Detailed Plan Update`.
+
+Explicit implementation wording does not bypass a required Grill-Me review or
+Plan Update. A low-risk assumption may be recorded and carried forward; a
+material unresolved decision requires user confirmation before implementation.
 
 The agent must not implement behavior outside the approved Issue content. If
 implementation reveals missing behavior, the agent should:
 
-* Continue and record an assumption when the decision is low-risk and local to
+- Continue and record an assumption when the decision is low-risk and local to
   implementation.
-* Stop for approval when the decision changes product behavior or another
+- Stop for approval when the decision changes product behavior or another
   high-risk boundary.
 
 ## Implementation Report
@@ -208,15 +236,15 @@ workflow.
 
 Plans and implementation should respect these project constraints:
 
-* Keep changes small, reviewable, and MVP-oriented.
-* Current product scope is New York 1965-1985 with curated routes, events,
+- Keep changes small, reviewable, and MVP-oriented.
+- Current product scope is New York 1965-1985 with curated routes, events,
   places, connections, and external media links.
-* Use existing project conventions in `AGENTS.md`.
-* Prefer data-driven implementation from `data/seed/` over hardcoded UI mock
+- Use existing project conventions in `AGENTS.md`.
+- Prefer data-driven implementation from `data/seed/` over hardcoded UI mock
   data.
-* Preserve seed file shapes documented in `docs/data/seed-data-validation.md`.
-* Keep generated media links as `review_status: "draft"` until manually
+- Preserve seed file shapes documented in `docs/data/seed-data-validation.md`.
+- Keep generated media links as `review_status: "draft"` until manually
   reviewed.
-* Do not store audio or video files in the repository.
-* Do not commit secrets, API keys, local paths, or generated media files.
-* Do not commit changes unless explicitly requested.
+- Do not store audio or video files in the repository.
+- Do not commit secrets, API keys, local paths, or generated media files.
+- Do not commit changes unless explicitly requested.

@@ -3,6 +3,7 @@
 Use this prompt when adding or updating curated SoundAtlas seed data.
 
 Context to provide
+
 - Route or topic to add, e.g. `birth-of-hip-hop`.
 - Intended time range, places, events, and connections.
 - Source material or known uncertainty.
@@ -10,9 +11,11 @@ Context to provide
 - Whether this is draft content or publication-ready content.
 
 Task
+
 - Add or update seed data under `data/seed/`.
 
 Project constraints
+
 - Follow `docs/data/seed-data-validation.md`.
 - Follow `docs/content/event-editorial-quality-standards.md` before adding or
   revising event seed records.
@@ -23,10 +26,12 @@ Project constraints
 - Be careful with contested historical claims; mark uncertainty in wording rather than overstating.
 
 Process
+
 - If the seed work is non-trivial, use `prompts/grill-me.md` first to check
   draft/publish boundaries, source risk, route fit, and data-shape risk, then
-  use `soundatlas-implementation-planning` to create or update a GitHub Issue
-  Plan Update before multi-file data changes.
+  record the confirmed review in a `## Grill-Me Review` Issue comment. Then use
+  `soundatlas-implementation-planning` to create or update a GitHub Issue Plan
+  Update before multi-file data changes.
 - Check the route content in `docs/content/routes/<route-id>/` for new route
   work, or the existing legacy concept in `docs/content/route-concepts/`, plus
   MVP scope in `docs/mvp-concept.md`.
@@ -58,6 +63,7 @@ Process
 - Capture new planned follow-up work in GitHub Issues. Leave legacy `TODO.md` entries alone unless the approved Issue or plan explicitly includes legacy backlog cleanup.
 
 Deliverables
+
 - Updated seed files.
 - Any updated route or validation docs.
 - Pipeline or reviewed-variant note when route-folder automation informed the

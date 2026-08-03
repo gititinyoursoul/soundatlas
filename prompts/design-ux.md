@@ -9,7 +9,8 @@ They do not authorize implementation.
 Use `prompts/grill-me.md` or direct conversation to critique and narrow a
 selected UX slice before implementation. Use
 `soundatlas-implementation-planning` to turn the selected slice into a GitHub
-Issue Plan Update.
+Issue Plan Update after recording the confirmed review under `## Grill-Me
+Review`.
 
 ## Shared Context
 

@@ -78,7 +78,13 @@ Events should contain at least:
 - GitHub Issues are the source of truth for planned agent work.
 - New planned work should be captured in an Intake Issue with `Task`, `Context`, and `Acceptance Criteria`.
 - For feature work, follow the implementation-plan workflow in `docs/implementation-plan-workflow.md`.
-- Implementation may start from an approved Issue after explicit wording such as `implement issue #<number>`, or from a clearly trivial request.
+- New Issues are intake records, not implementation-ready plans. For risky,
+  vague, or cross-cutting work, Grill-Me review and a confirmed Plan Update are
+  required before implementation; explicit wording such as `implement issue
+#<number>` does not bypass those gates. Clearly trivial, local, low-risk work
+  may proceed directly.
+- Use standardized Issue comments: `## Grill-Me Review`, `## Plan Update` or
+  `## Detailed Plan Update`, and `## Implementation Report`.
 - Plan Updates, Detailed Plan Updates, and Implementation Reports should live in the GitHub Issue rather than local or repo-versioned plan files.
 - Use `docs/skills-workflow.md` as the routing guide for repeatable execution work that should live in skills or prompt wrappers.
 - Use the repo skill at `.codex/skills/soundatlas-implementation-planning` when an Issue needs an Intake structure, Plan Update, Detailed Plan Update, or Implementation Report.

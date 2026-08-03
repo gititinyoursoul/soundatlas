@@ -6,30 +6,34 @@ This prompt is the frontend implementation entrypoint for the current workflow. 
 
 ## Context to provide
 
-* Approved GitHub Issue number or URL.
-* Desired frontend behavior or component.
-* Related backend endpoints or seed fields.
-* Expected interaction:
+- Approved GitHub Issue number or URL.
+- Desired frontend behavior or component.
+- Related backend endpoints or seed fields.
+- Expected interaction:
 
-  * route filter
-  * timeline range
-  * marker selection
-  * Story Panel behavior
-* Primary viewport target:
+  - route filter
+  - timeline range
+  - marker selection
+  - Story Panel behavior
 
-  * desktop
-  * mobile
-  * both
-* Route selection model:
+- Primary viewport target:
 
-  * single-select
-  * multi-select
-* Surface type:
+  - desktop
+  - mobile
+  - both
 
-  * public-facing
-  * admin-only
-  * mixed
-* Whether implementation is approved now or frontend planning only.
+- Route selection model:
+
+  - single-select
+  - multi-select
+
+- Surface type:
+
+  - public-facing
+  - admin-only
+  - mixed
+
+- Whether implementation is approved now or frontend planning only.
 
 ## Implementation Gate
 
@@ -37,11 +41,18 @@ Before implementing, read the approved GitHub Issue, including any Plan Update o
 
 Implementation may proceed only when:
 
-* An approved GitHub Issue or clearly trivial request exists.
-* For Issue-based work, the human has explicitly requested implementation with wording such as `implement issue #<number>`.
-* The requirements are clear enough to implement.
-* Acceptance criteria are testable enough to verify.
-* Blocking questions are resolved or intentionally deferred.
+- An approved GitHub Issue or clearly trivial request exists.
+- For Issue-based work, the human has explicitly requested implementation with wording such as `implement issue #<number>`.
+- The requirements are clear enough to implement.
+- Acceptance criteria are testable enough to verify.
+- Blocking questions are resolved or intentionally deferred.
+- If the Issue has risk flags, it includes a `## Grill-Me Review` comment with
+  required decisions confirmed and a `## Plan Update` or `## Detailed Plan
+Update` that incorporates them.
+
+Explicit implementation wording does not bypass required Grill-Me review or
+planning gates. Clearly trivial, local, low-risk changes may proceed without
+those markers.
 
 Do not implement behavior outside the approved GitHub Issue.
 
@@ -55,31 +66,32 @@ Do not redefine the product behavior from the prompt. Treat the approved Issue a
 
 ## Project constraints
 
-* The map is the primary MVP surface.
-* Use backend or seed-backed data, not unrelated mock data.
-* Keep UI components small and domain-named, such as:
+- The map is the primary MVP surface.
+- Use backend or seed-backed data, not unrelated mock data.
+- Keep UI components small and domain-named, such as:
 
-  * `MapView`
-  * `Timeline`
-  * `RouteFilter`
-  * `StoryPanel`
-* Ensure route colors, event time ranges, selected event state, and empty states are represented when required by the approved Issue.
-* Do not require real audio playback for MVP; use external media links only.
-* Avoid layout overlap and make the first viewport usable.
-* Keep the active route narrative and map visually dominant.
-* Route filters should not overpower the exploration workflow.
-* Do not commit changes unless explicitly requested.
-* Do not commit secrets, API keys, local paths, generated media files, audio, or video.
+  - `MapView`
+  - `Timeline`
+  - `RouteFilter`
+  - `StoryPanel`
+
+- Ensure route colors, event time ranges, selected event state, and empty states are represented when required by the approved Issue.
+- Do not require real audio playback for MVP; use external media links only.
+- Avoid layout overlap and make the first viewport usable.
+- Keep the active route narrative and map visually dominant.
+- Route filters should not overpower the exploration workflow.
+- Do not commit changes unless explicitly requested.
+- Do not commit secrets, API keys, local paths, generated media files, audio, or video.
 
 ## UX state rules
 
-* Identify the central state owner for selected route and selected event before editing components.
-* Keep map marker clicks, timeline interactions, route selection, and story navigation synchronized through the same selected event state.
-* Default to the MVP route and a meaningful first event when appropriate and seed data exists.
-* Make timeline controls interactive when the user is expected to explore event sequence, not only passive route ranges.
-* If UI includes review or curation controls, confirm whether the current surface is admin-only.
-* If review or curation controls stay visible on a public-facing surface, capture the public-gating follow-up in a GitHub Issue.
-* Track timeline density risk near the implementation when future routes with many events may require clustering or compact ticks.
+- Identify the central state owner for selected route and selected event before editing components.
+- Keep map marker clicks, timeline interactions, route selection, and story navigation synchronized through the same selected event state.
+- Default to the MVP route and a meaningful first event when appropriate and seed data exists.
+- Make timeline controls interactive when the user is expected to explore event sequence, not only passive route ranges.
+- If UI includes review or curation controls, confirm whether the current surface is admin-only.
+- If review or curation controls stay visible on a public-facing surface, capture the public-gating follow-up in a GitHub Issue.
+- Track timeline density risk near the implementation when future routes with many events may require clustering or compact ticks.
 
 ## Process
 

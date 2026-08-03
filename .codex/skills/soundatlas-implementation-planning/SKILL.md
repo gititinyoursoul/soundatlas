@@ -25,7 +25,13 @@ readiness review before Issue content is drafted.
    Resolve discoverable facts from docs, code, seed data, or existing Issues
    before blocking on user input.
 
-3. Draft or revise Issue content.
+3. Separate intake from planning.
+   When creating an Issue, use only the Intake shape: Task, Context, and
+   Acceptance Criteria. Do not add speculative implementation steps, technical
+   assumptions, or prematurely resolve open questions. State that the Intake
+   Issue is not implementation-ready.
+
+4. Draft or revise Issue planning content.
    Keep planning content in the GitHub Issue body or comments. Do not create
    local or repo-versioned implementation plan files.
 
@@ -34,19 +40,23 @@ readiness review before Issue content is drafted.
    urgency. Use `priority:p2` only as the neutral fallback when `p0`, `p1`, or
    `p3` are not clearly justified. Briefly state the priority rationale.
 
-4. Keep the Issue decision-complete for implementation.
+5. Keep the Issue decision-complete for implementation.
+   For security, credentials, infrastructure, networking, workflow, UX,
+   editorial, cross-cutting, user-visible, vague, or materially ambiguous work,
+   require a `## Grill-Me Review` comment before a Plan Update. Clearly
+   trivial, local, low-risk work may use the direct path.
    Make assumptions for low-risk implementation details. Stop for approval when
    uncertainty affects product intent, data shape, security, privacy, external
    API behavior, generated media review boundaries, historically sensitive
    claims, irreversible workflow behavior, or production stability.
 
-5. Preserve Acceptance Criteria history.
+6. Preserve Acceptance Criteria history.
    If the plan changes the original criteria, include an `Acceptance Criteria
-   Changes` section instead of silently rewriting the meaning of the Issue.
+Changes` section instead of silently rewriting the meaning of the Issue.
 
-6. Stop before implementation unless the user explicitly requests implementation
+7. Stop before implementation unless the user explicitly requests implementation
    with wording such as `implement issue #<number>` or the change is clearly
-   trivial.
+   trivial. Explicit wording does not bypass required review or planning gates.
 
 ## Issue Shapes
 
@@ -111,6 +121,12 @@ Use this shape after implementation:
   starts as a task, review, investigation, or decision.
 - Keep Plan Updates concise by default; use Detailed Plan Updates only when
   implementation would otherwise need to rediscover decisions.
+- Require user confirmation for material decisions about product behavior,
+  scope, security, privacy, external APIs, editorial/source quality,
+  irreversible workflow behavior, or production stability. Record low-risk
+  assumptions in the Plan Update instead.
+- Do not state `Open Questions: None` while a material decision remains
+  unresolved.
 - Do not define behavior outside the requested change.
 - Prefer small, reviewable revisions over broad rewrites.
 - For cross-cutting changes, plan in this order: data or schema impact, backend

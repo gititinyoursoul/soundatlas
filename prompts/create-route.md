@@ -3,6 +3,7 @@
 Use this prompt when creating a new curated SoundAtlas route from idea to route concept and seed data plan.
 
 Context to provide
+
 - Route topic, e.g. `Disco to Dance Music`, `Punk & New Wave`, or `Salsa & Migration`.
 - Intended geography and time range.
 - Why this route matters for the current SoundAtlas scope.
@@ -12,6 +13,7 @@ Context to provide
 - Whether the output should be concept-only or should also update seed files.
 
 Task
+
 - Create a researched route concept that can become SoundAtlas seed data.
 - For new route content, create or update a route folder under
   `docs/content/routes/<route-id>/`.
@@ -19,6 +21,7 @@ Task
 - If requested, add the route to `data/seed/` while preserving existing data contracts.
 
 Project constraints
+
 - Keep the MVP focused on `New York 1965-1985` unless explicitly requested.
 - Follow `AGENTS.md` and `docs/data/seed-data-validation.md`.
 - Preserve existing route, place, event, and connection IDs.
@@ -32,6 +35,7 @@ Project constraints
 - If the existing documentation for the route is in another language, translate the route-facing parts to English before creating seed data.
 
 Route concept requirements
+
 - Follow `docs/content/route-editorial-quality-standards.md`.
 - Follow `docs/content/event-editorial-quality-standards.md` before turning
   accepted events into seed-shaped records.
@@ -67,6 +71,7 @@ Route concept requirements
 - Identify likely sources for further editorial work.
 
 Seed data requirements
+
 - Add or update `data/seed/routes.json` for the route metadata.
 - Set route `creator` explicitly.
 - Add or reuse places in `data/seed/places.json`.
@@ -84,9 +89,11 @@ Seed data requirements
 - For event media, use structured entries with `provider`, `type`, `title`, `url`, `query`, `confidence`, and `review_status`.
 
 Recommended workflow
+
 - For non-trivial route creation or route reshaping, use
   `prompts/grill-me.md` first to critique scope, thesis, source risks, and
-  candidate-event boundaries, then use `soundatlas-implementation-planning` to
+  candidate-event boundaries. Record the confirmed review in a `## Grill-Me
+Review` Issue comment, then use `soundatlas-implementation-planning` to
   create or update a GitHub Issue Plan Update before broad seed edits.
 - For new route content, first create or update
   `docs/content/routes/<route-id>/brief.md`.
@@ -120,6 +127,7 @@ Recommended workflow
 - Capture new planned follow-up work in GitHub Issues. Leave legacy `TODO.md` entries alone unless the approved Issue or plan explicitly includes legacy backlog cleanup.
 
 Deliverables
+
 - Route content folder under `docs/content/routes/<route-id>/` for new route
   content.
 - `brief.md` for fresh route work, before dossier creation or seed transfer.
@@ -144,6 +152,7 @@ Deliverables
   - If implementing from an Issue, reference it in the commit body, for example `Issue: #123`
 
 Acceptance criteria
+
 - The route has a clear narrative thesis.
 - The route has a research dossier that explains the artists, groups, places,
   influences, circumstances, source directions, and risks behind the route.
