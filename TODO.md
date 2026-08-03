@@ -16,13 +16,23 @@ Completed work packages are archived in `docs/done.md`.
 - Current: improve enrichment quality and unify the shared upstream input for image and media queries.
 - Next up: rethink how media types and images are presented and explored in the app.
 
+## Session Queue (2026-08-03)
+
+> Session-only mirror of the recommended GitHub Issue sequence. The linked
+> Issues remain the source of truth for scope, review gates, and completion.
+
+- [ ] [#21 Define route publication warnings and draft visibility policy](https://github.com/gititinyoursoul/soundatlas/issues/21)
+- [ ] [#70 Define map presentation and data model for heterogeneous route entries](https://github.com/gititinyoursoul/soundatlas/issues/70)
+- [ ] [#74 Add pipeline run provenance and step transparency](https://github.com/gititinyoursoul/soundatlas/issues/74)
+- [ ] [#71 Implement two-gate editorial pipeline cascade](https://github.com/gititinyoursoul/soundatlas/issues/71)
+- [ ] [#76 Migrate the Bronx route to reviewed pipeline artifacts](https://github.com/gititinyoursoul/soundatlas/issues/76)
+- [ ] [#72 Implement navigable admin review and event decisions](https://github.com/gititinyoursoul/soundatlas/issues/72)
+- [ ] [#73 Implement route publication summary and approval](https://github.com/gititinyoursoul/soundatlas/issues/73)
+- [ ] [#34 Split private source repo from public static SoundAtlas repo](https://github.com/gititinyoursoul/soundatlas/issues/34)
+
 ## Open
 
 ### Enrichment
-
-#### Upstream Inputs
-
-- [ ] Add a route seed scaffold or preview command that reduces manual route updates by checking route, place, event, and connection changes before writing seed JSON
 
 #### Image Enrichment
 
@@ -30,18 +40,10 @@ Completed work packages are archived in `docs/done.md`.
 - [ ] Define and enforce the public-image visibility boundary so only reviewed image links render in public-facing UI
 - [ ] Implement the reviewed-image presentation behavior in the story panel, including first-image header, attribution, and visible rights notice
 
-### Repo And Agent Workflow
-
-- [ ] Turn backend and frontend implementation prompts into skills
-- [ ] Turn write-tests prompt into a skill
-- [ ] Turn update-docs prompt into a skill
-
 ### Repository Maintenance
 
-- [ ] Review and address 3 low severity frontend npm audit vulnerabilities
+- [ ] Review and address the current frontend npm audit findings: 1 low, 1 moderate, and 1 high as of 2026-08-03
 - [ ] Add frontend behavior tests for route selection, timeline selection, map/story synchronization, loading/error states, and admin media controls
-- [ ] Find a test coverage setup for `uv` and `npm`
-- [ ] Split environment dependency management into prod and dev
 
 ### UX and Design
 

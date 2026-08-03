@@ -61,6 +61,24 @@ Issues; `TODO.md` is a legacy backlog.
 - [x] Flag wrong-era YouTube playlist candidates before media review
 - [x] Prefer era- and context-specific artist image queries before broad artist-only queries
 - [x] Add borough/city place disambiguation to image query planning
+- [x] Add route seed preview and dry-run promotion commands that check route,
+      place, event, and connection changes before seed writes
+
+## Repo And Agent Workflow
+
+- [x] Turn backend and frontend implementation prompts into compatibility
+      wrappers for reusable implementation skills
+- [x] Turn the write-tests prompt into a compatibility wrapper for the testing
+      implementation skill
+- [x] Turn the update-docs prompt into a compatibility wrapper for the
+      documentation implementation skill
+
+## Repository Maintenance
+
+- [x] Add backend and frontend coverage reporting through `pytest-cov` and
+      Vitest coverage
+- [x] Separate runtime and development dependencies in backend and frontend
+      package configuration
 
 ## Frontend
 
