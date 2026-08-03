@@ -1,0 +1,4 @@
+interface:
+  display_name: "SoundAtlas Frontend Implementation"
+  short_description: "Implement SoundAtlas frontend changes safely"
+  default_prompt: "Use $soundatlas-frontend-implementation to implement the approved frontend Issue."

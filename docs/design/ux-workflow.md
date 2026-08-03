@@ -62,7 +62,7 @@ Use the existing prompts in this order:
 1. `prompts/design-ux.md` - UX audit, main screen design plan, screenshot critique
 2. `prompts/grill-me.md` - critique and narrow the selected UX idea before Issue planning when needed
 3. `soundatlas-implementation-planning` - turn the selected design idea into one Issue Plan Update when needed
-4. `prompts/implement-frontend-map.md` - implement frontend/map-related changes from an approved Issue with a Plan Update when needed
+4. `.codex/skills/soundatlas-frontend-implementation/SKILL.md` - implement frontend changes from an approved Issue; `prompts/implement-frontend-map.md` remains the compatibility wrapper
 5. `prompts/write-tests.md` - add or update focused tests
 6. `prompts/update-docs.md` - update durable docs that the UX change relies on or changes
 
@@ -224,7 +224,10 @@ Output:
 
 ### Step 6: Implement One Pass
 
-Use `prompts/implement-frontend-map.md` for frontend map or exploration-surface changes from an approved Issue with a Plan Update when needed, or the matching skill if that workflow has already been extracted.
+Use `.codex/skills/soundatlas-frontend-implementation/SKILL.md` for frontend
+map or exploration-surface changes from an approved Issue with the required
+Plan Update. Use `prompts/implement-frontend-map.md` only as the compatibility
+wrapper for older references.
 
 Rules:
 
