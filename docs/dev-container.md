@@ -307,7 +307,34 @@ while still allowing repeatable commits inside the dev container.
 
 ## Common Commands
 
-Run backend tests from the workspace container:
+### CI-parity validation
+
+After dependencies have been installed by `.devcontainer/post-create.sh`, run
+the complete baseline validation path from the workspace root:
+
+```sh
+cd /workspace
+bash scripts/validate-dev.sh
+```
+
+The helper runs the same checks as the `test` job in
+`.github/workflows/pages.yml`, from the directories expected by each tool:
+
+```text
+frontend/: npm run lint
+frontend/: npm run check
+frontend/: npm run test
+backend/:  uv run ruff check .
+backend/:  uv run pytest
+```
+
+It stops and exits non-zero when any check fails. It does not install
+dependencies or run automatically during container creation, so post-create
+setup remains fast and repeatable.
+
+Run the commands individually when a focused check is more useful.
+
+Run backend checks from the workspace container:
 
 ```sh
 cd /workspace/backend
@@ -324,6 +351,9 @@ npm run lint
 npm run check
 npm run test
 ```
+
+`uv run pyright` and the coverage commands below are useful additional local
+quality checks, but they are not part of the default CI-parity validation path.
 
 Generate optional coverage reports from the workspace container:
 
@@ -387,6 +417,10 @@ are read from `data/seed/routes.json`. Static choices such as `--kind`,
 definitions.
 
 ## Browser Screenshot Checks
+
+Browser and Playwright screenshot checks are optional and are not part of the
+baseline validation path above. Run them only when validating browser rendering
+or responsive UX.
 
 The workspace image includes the OS libraries required by Playwright-managed
 Chromium. The browser binary itself is intentionally kept out of the image and
