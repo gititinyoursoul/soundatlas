@@ -18,6 +18,21 @@ should lead with concrete recommendations, counts, merge targets, rationales,
 and review questions so a human can approve, reject, or correct decisions
 instead of reconstructing the decision from raw notes.
 
+## Interaction Contract
+
+`content-pipeline-interaction-contract.md` defines the normative target
+interaction for agent-assisted route generation and future admin review. It
+introduces a navigable review preview, event-level Yes/No selection, and one
+final route-level publication decision while keeping warnings visible without
+turning them into additional human gates.
+
+The workflow below remains the description of the currently implemented
+file-based pipeline. The target interaction does not replace current candidate
+decisions, accepted-event quality flags, or route artifacts until
+[Issue #71](https://github.com/gititinyoursoul/soundatlas/issues/71) is
+implemented. Map presentation and route-entry data modeling remain in
+[Issue #70](https://github.com/gititinyoursoul/soundatlas/issues/70).
+
 ## Workflow
 
 ```mermaid
@@ -187,6 +202,7 @@ into seed schema or enrichment execution docs.
 ## Related Docs
 
 - `docs/mvp-concept.md`
+- `docs/content/content-pipeline-interaction-contract.md`
 - `docs/content/routes/`
 - `docs/content/editorial-process-alignment.md`
 - `docs/content/accepted-event-dossier-template.md`
