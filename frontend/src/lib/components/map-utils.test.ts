@@ -137,4 +137,43 @@ describe('map utils', () => {
       getEventMarkerPlacements(events, places, routes)[0].position
     ).not.toEqual([40.82, -73.93]);
   });
+
+  it('builds one point marker per event place and leaves areas to polygons', () => {
+    const routes = [makeRoute({ id: 'birth-of-hip-hop' })];
+    const places = [
+      makePlace({ id: 'point-a' }),
+      makePlace({ id: 'point-b' }),
+      makePlace({
+        id: 'area',
+        geometry: {
+          type: 'Polygon',
+          coordinates: [
+            [
+              [-73.94, 40.81],
+              [-73.93, 40.81],
+              [-73.93, 40.82],
+              [-73.94, 40.81]
+            ]
+          ]
+        },
+        geometry_precision: 'interpretive',
+        geometry_source_type: 'curated',
+        geometry_source_note: 'Fixture'
+      })
+    ];
+    const events = [
+      makeEvent({
+        id: 'mixed',
+        place_id: 'point-a',
+        place_ids: ['point-a', 'area', 'point-b'],
+        default_place_id: 'point-a'
+      })
+    ];
+
+    expect(
+      getEventMarkerPlacements(events, places, routes).map(
+        (placement) => placement.place.id
+      )
+    ).toEqual(['point-a', 'point-b']);
+  });
 });

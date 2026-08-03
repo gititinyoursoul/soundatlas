@@ -21,6 +21,24 @@ export type ImageType =
   | 'press_scan';
 export type RightsStatus =
   'open_license' | 'public_domain' | 'provider_restricted' | 'unknown';
+export type GeometryPrecision = 'site' | 'interpretive';
+export type GeometrySourceType = 'external' | 'curated';
+export type PlaceRelationshipDirection =
+  | 'undirected'
+  | 'forward'
+  | 'reciprocal';
+
+export type PolygonGeometry = {
+  type: 'Polygon';
+  coordinates: [number, number][][];
+};
+
+export type MultiPolygonGeometry = {
+  type: 'MultiPolygon';
+  coordinates: [number, number][][][];
+};
+
+export type PlaceGeometry = PolygonGeometry | MultiPolygonGeometry;
 
 export type Route = {
   id: string;
@@ -46,6 +64,12 @@ export type Place = {
   summary: string;
   review_status: ReviewStatus;
   source_urls: string[];
+  geometry?: PlaceGeometry | null;
+  geometry_precision?: GeometryPrecision | null;
+  geometry_source_type?: GeometrySourceType | null;
+  geometry_source_url?: string | null;
+  geometry_source_note?: string | null;
+  geometry_license?: string | null;
 };
 
 export type MediaLink = {
@@ -81,10 +105,21 @@ export type ImageLink = {
   review_status: ReviewStatus;
 };
 
+export type PlaceRelationship = {
+  from_place_id: string;
+  to_place_id: string;
+  directionality: PlaceRelationshipDirection;
+  context_label: string;
+  source_urls: string[];
+};
+
 export type Event = {
   id: string;
   route_id: string;
   place_id: string;
+  place_ids: string[];
+  default_place_id: string;
+  place_relationships: PlaceRelationship[];
   title: string;
   year_start: number;
   year_end: number;
@@ -96,6 +131,14 @@ export type Event = {
   media_links: MediaLink[];
   image_links: ImageLink[];
 };
+
+export type EventInput = Omit<
+  Event,
+  'place_ids' | 'default_place_id' | 'place_relationships'
+> &
+  Partial<
+    Pick<Event, 'place_ids' | 'default_place_id' | 'place_relationships'>
+  >;
 
 export type Connection = {
   id: string;

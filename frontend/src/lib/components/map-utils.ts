@@ -19,10 +19,12 @@ export function groupEventsByPlaceId(
   const groupedEvents = new Map<string, Event[]>();
 
   for (const event of eventsToGroup) {
-    groupedEvents.set(event.place_id, [
-      ...(groupedEvents.get(event.place_id) ?? []),
-      event
-    ]);
+    for (const placeId of event.place_ids) {
+      groupedEvents.set(placeId, [
+        ...(groupedEvents.get(placeId) ?? []),
+        event
+      ]);
+    }
   }
 
   return groupedEvents;
@@ -50,29 +52,35 @@ export function getEventMarkerPlacements(
   const placements: EventMarkerPlacement[] = [];
 
   for (const event of eventsToPlace) {
-    const place = currentPlaceById.get(event.place_id);
     const route = currentRouteById.get(event.route_id);
 
-    if (!place || !route) {
+    if (!route) {
       continue;
     }
 
-    const colocatedEvents = eventsByPlaceId.get(event.place_id) ?? [event];
-    const eventIndex = colocatedEvents.findIndex(
-      (colocatedEvent) => colocatedEvent.id === event.id
-    );
-    const position = getMarkerPosition(
-      place,
-      eventIndex,
-      colocatedEvents.length
-    );
+    for (const placeId of event.place_ids) {
+      const place = currentPlaceById.get(placeId);
+      if (!place || place.geometry) {
+        continue;
+      }
 
-    placements.push({
-      event,
-      place,
-      route,
-      position
-    });
+      const colocatedEvents = eventsByPlaceId.get(placeId) ?? [event];
+      const eventIndex = colocatedEvents.findIndex(
+        (colocatedEvent) => colocatedEvent.id === event.id
+      );
+      const position = getMarkerPosition(
+        place,
+        eventIndex,
+        colocatedEvents.length
+      );
+
+      placements.push({
+        event,
+        place,
+        route,
+        position
+      });
+    }
   }
 
   return placements;

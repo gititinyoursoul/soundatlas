@@ -1,6 +1,7 @@
 import type {
   Connection,
   Event,
+  EventInput,
   Place,
   ReviewAction,
   ReviewLinkKind,
@@ -8,6 +9,7 @@ import type {
   SoundAtlasData
 } from '$lib/types/soundatlas';
 import { base } from '$app/paths';
+import { normalizeEvent } from '$lib/data/spatial';
 
 const DEFAULT_API_BASE_URL = 'http://127.0.0.1:8000';
 const STATIC_DATA_BASE_PATH = `${base}/soundatlas-data`;
@@ -36,14 +38,14 @@ export async function loadApiSoundAtlasData(
   const [routes, places, events, connections] = await Promise.all([
     requestJson<Route[]>('/routes', fetcher),
     requestJson<Place[]>('/places', fetcher),
-    requestJson<Event[]>('/events', fetcher),
+    requestJson<EventInput[]>('/events', fetcher),
     requestJson<Connection[]>('/connections', fetcher)
   ]);
 
   return {
     routes,
     places,
-    events,
+    events: events.map(normalizeEvent),
     connections
   };
 }
@@ -54,7 +56,7 @@ export async function loadStaticSoundAtlasData(
   const [routes, places, events, connections] = await Promise.all([
     requestStaticCollection<Route>('routes.json', 'routes', fetcher),
     requestStaticCollection<Place>('places.json', 'places', fetcher),
-    requestStaticCollection<Event>('events.json', 'events', fetcher),
+    requestStaticCollection<EventInput>('events.json', 'events', fetcher),
     requestStaticCollection<Connection>(
       'connections.json',
       'connections',
@@ -65,7 +67,7 @@ export async function loadStaticSoundAtlasData(
   return {
     routes,
     places,
-    events,
+    events: events.map(normalizeEvent),
     connections
   };
 }

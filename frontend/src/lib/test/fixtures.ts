@@ -43,11 +43,26 @@ export function makePlace(
 export function makeEvent(
   overrides: Partial<Event> & Pick<Event, 'id'>
 ): Event {
-  const { id, ...eventOverrides } = overrides;
+  const {
+    id,
+    place_id,
+    place_ids,
+    default_place_id,
+    place_relationships,
+    ...eventOverrides
+  } = overrides;
+  const resolvedPlaceIds = place_ids ?? [
+    place_id ?? '1520-sedgwick-avenue'
+  ];
+  const resolvedDefaultPlaceId =
+    default_place_id ?? place_id ?? resolvedPlaceIds[0];
 
   return {
     route_id: 'birth-of-hip-hop',
-    place_id: '1520-sedgwick-avenue',
+    place_id: place_id ?? resolvedDefaultPlaceId,
+    place_ids: resolvedPlaceIds,
+    default_place_id: resolvedDefaultPlaceId,
+    place_relationships: place_relationships ?? [],
     title: 'Event title',
     year_start: 1973,
     year_end: 1973,

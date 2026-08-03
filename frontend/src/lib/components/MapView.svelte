@@ -7,11 +7,7 @@
     nycBoroughs,
     type BoroughFeature
   } from '$lib/data/nyc-boroughs';
-  import {
-    getPlaceGeometriesForPlaceIds,
-    placeGeometryColors,
-    type PlaceGeometryFeature
-  } from '$lib/data/nyc-place-geometries';
+  import { resolvePlaceSelection } from '$lib/data/spatial';
   import type { Event, Place, Route } from '$lib/types/soundatlas';
   import {
     getEventMarkerPlacements,
@@ -24,10 +20,12 @@
   export let routes: Route[] = [];
   export let selectedRouteId: string | null = null;
   export let selectedEventId: string | null = null;
+  export let selectedPlaceId: string | null = null;
   export let selectedPlace: Place | null = null;
   export let selectedRoute: Route | null = null;
   export let selectedPlaceEventCount = 0;
-  export let onSelectEvent: (eventId: string) => void = () => {};
+  export let onSelectLocation: (eventId: string, placeId: string) => void =
+    () => {};
 
   const defaultMapCenter: [number, number] = [40.82, -73.93];
   const defaultMapZoom = 12;
@@ -41,19 +39,35 @@
   let boroughLabelLayer: import('leaflet').LayerGroup | null = null;
   let placeGeometryLayer: import('leaflet').LayerGroup | null = null;
   let placeGeometryLabelLayer: import('leaflet').LayerGroup | null = null;
+  let relationshipLayer: import('leaflet').LayerGroup | null = null;
   let leaflet: typeof import('leaflet') | null = null;
   let lastFramedRouteId: string | null = null;
+  let lastFramedEventId: string | null = null;
+  let placeChoice: { place: Place; events: Event[] } | null = null;
 
   $: if (leaflet && placeGeometryLayer && placeGeometryLabelLayer && map) {
     renderPlaceGeometries(
       events,
-      selectedPlace?.id ?? null,
+      places,
+      selectedEventId,
+      selectedPlaceId,
       selectedRoute?.color ?? null
     );
   }
 
+  $: if (leaflet && relationshipLayer && map) {
+    renderRelationships(events, places, selectedEventId);
+  }
+
   $: if (leaflet && markerLayer && map) {
-    syncMapState(selectedRouteId, selectedEventId, events, places, routes);
+    syncMapState(
+      selectedRouteId,
+      selectedEventId,
+      selectedPlaceId,
+      events,
+      places,
+      routes
+    );
   }
 
   onMount(() => {
@@ -82,10 +96,12 @@
 
     map.createPane('boroughs');
     map.createPane('place-geometries');
+    map.createPane('place-relationships');
     map.createPane('borough-labels');
     map.createPane('place-geometry-labels');
     const boroughPane = map.getPane('boroughs');
     const placeGeometryPane = map.getPane('place-geometries');
+    const relationshipPane = map.getPane('place-relationships');
     const boroughLabelPane = map.getPane('borough-labels');
     const placeGeometryLabelPane = map.getPane('place-geometry-labels');
 
@@ -96,7 +112,10 @@
 
     if (placeGeometryPane) {
       placeGeometryPane.style.zIndex = '355';
-      placeGeometryPane.style.pointerEvents = 'none';
+    }
+
+    if (relationshipPane) {
+      relationshipPane.style.zIndex = '365';
     }
 
     if (boroughLabelPane) {
@@ -106,7 +125,6 @@
 
     if (placeGeometryLabelPane) {
       placeGeometryLabelPane.style.zIndex = '370';
-      placeGeometryLabelPane.style.pointerEvents = 'none';
     }
 
     map.setView(defaultMapCenter, defaultMapZoom);
@@ -132,10 +150,18 @@
 
     placeGeometryLayer = leaflet.layerGroup().addTo(map);
     placeGeometryLabelLayer = leaflet.layerGroup().addTo(map);
+    relationshipLayer = leaflet.layerGroup().addTo(map);
 
     leaflet.control.zoom({ position: 'bottomright' }).addTo(map);
     markerLayer = leaflet.layerGroup().addTo(map);
-    syncMapState(selectedRouteId, selectedEventId, events, places, routes);
+    syncMapState(
+      selectedRouteId,
+      selectedEventId,
+      selectedPlaceId,
+      events,
+      places,
+      routes
+    );
   }
 
   function disposeMap(): void {
@@ -147,6 +173,8 @@
     placeGeometryLayer = null;
     placeGeometryLabelLayer?.remove();
     placeGeometryLabelLayer = null;
+    relationshipLayer?.remove();
+    relationshipLayer = null;
     markerLayer?.remove();
     markerLayer = null;
     map?.remove();
@@ -156,6 +184,7 @@
 
   function renderMarkers(
     activeEventId = selectedEventId,
+    focusedPlaceId = selectedPlaceId,
     currentEvents = events,
     currentPlaces = places,
     currentRoutes = routes,
@@ -181,12 +210,14 @@
         placement.route.color,
         placement.event
       );
+      const isFocused =
+        isSelected && focusedPlaceId === placement.place.id;
       const marker = leaflet
         .marker(placement.position, {
           riseOnHover: true,
           zIndexOffset: isSelected ? 1000 : 0,
           icon: leaflet.divIcon({
-            className: avatarOptions.className,
+            className: `${avatarOptions.className}${isFocused ? ' focused' : ''}`,
             html: avatarOptions.html,
             iconAnchor: avatarOptions.iconAnchor,
             iconSize: avatarOptions.iconSize
@@ -201,10 +232,12 @@
           }
         );
 
-      marker.on('click', () => onSelectEvent(placement.event.id));
+      marker.on('click', () =>
+        onSelectLocation(placement.event.id, placement.place.id)
+      );
       marker.addTo(markerLayer);
 
-      if (isSelected) {
+      if (isFocused || (isSelected && !selectedMarkerPosition)) {
         selectedMarkerPosition = placement.position;
       }
     }
@@ -222,6 +255,7 @@
   function syncMapState(
     currentSelectedRouteId: string | null,
     currentSelectedEventId: string | null,
+    currentSelectedPlaceId: string | null,
     currentEvents: Event[],
     currentPlaces: Place[],
     currentRoutes: Route[]
@@ -232,37 +266,53 @@
 
     try {
       const routeChanged = currentSelectedRouteId !== lastFramedRouteId;
-      const placements = renderMarkers(
+      const eventChanged = currentSelectedEventId !== lastFramedEventId;
+      renderMarkers(
         currentSelectedEventId,
+        currentSelectedPlaceId,
         currentEvents,
         currentPlaces,
         currentRoutes,
         {
-          panToSelectedEvent: !routeChanged
+          panToSelectedEvent: !routeChanged && !eventChanged
         }
       );
 
       if (routeChanged) {
-        frameRouteBounds(placements);
+        frameRouteBounds(currentEvents, currentPlaces);
         lastFramedRouteId = currentSelectedRouteId;
+      } else if (eventChanged) {
+        frameSelectedEvent(currentSelectedEventId, currentEvents, currentPlaces);
       }
+      lastFramedEventId = currentSelectedEventId;
     } catch (error) {
       console.error(error);
     }
   }
 
-  function frameRouteBounds(routePlacements: EventMarkerPlacement[]): void {
+  function frameRouteBounds(
+    currentEvents: Event[],
+    currentPlaces: Place[]
+  ): void {
     if (!leaflet || !map) {
       return;
     }
 
-    if (routePlacements.length === 0) {
+    const placeById = new Map(currentPlaces.map((place) => [place.id, place]));
+    const positions = currentEvents.flatMap((event) =>
+      event.place_ids.flatMap((placeId) => {
+        const place = placeById.get(placeId);
+        return place ? getPlaceBoundsPositions(place) : [];
+      })
+    );
+
+    if (positions.length === 0) {
       map.setView(defaultMapCenter, defaultMapZoom);
       return;
     }
 
     const bounds = leaflet.latLngBounds(
-      routePlacements.map((placement) => placement.position)
+      positions
     );
 
     if (!bounds.isValid()) {
@@ -276,6 +326,61 @@
       animate: true,
       duration: 0.35
     });
+  }
+
+  function frameSelectedEvent(
+    eventId: string | null,
+    currentEvents: Event[],
+    currentPlaces: Place[]
+  ): void {
+    if (!leaflet || !map || !eventId) {
+      return;
+    }
+
+    const event = currentEvents.find((item) => item.id === eventId);
+    const placeById = new Map(currentPlaces.map((place) => [place.id, place]));
+    const positions = event?.place_ids.flatMap((placeId) => {
+      const place = placeById.get(placeId);
+      return place ? getPlaceBoundsPositions(place) : [];
+    });
+
+    if (!positions || positions.length === 0) {
+      return;
+    }
+    if (positions.length === 1) {
+      map.panTo(positions[0], { animate: true, duration: 0.35 });
+      return;
+    }
+
+    map.fitBounds(leaflet.latLngBounds(positions), {
+      padding: routeFitPadding,
+      maxZoom: routeFitMaxZoom,
+      animate: true,
+      duration: 0.35
+    });
+  }
+
+  function getPlaceBoundsPositions(place: Place): [number, number][] {
+    const focus: [number, number] = [place.latitude, place.longitude];
+    if (!place.geometry) {
+      return [focus];
+    }
+
+    const polygons =
+      place.geometry.type === 'Polygon'
+        ? [place.geometry.coordinates]
+        : place.geometry.coordinates;
+    return [
+      focus,
+      ...polygons.flatMap((polygon) =>
+        polygon.flatMap((ring) =>
+          ring.map(
+            ([longitude, latitude]) =>
+              [latitude, longitude] as [number, number]
+          )
+        )
+      )
+    ];
   }
 
   function styleBoroughFeature(
@@ -296,7 +401,9 @@
 
   function renderPlaceGeometries(
     currentEvents: Event[],
-    selectedPlaceId: string | null,
+    currentPlaces: Place[],
+    activeEventId: string | null,
+    focusedPlaceId: string | null,
     selectedRouteColor: string | null
   ): void {
     if (!leaflet || !placeGeometryLayer || !placeGeometryLabelLayer) {
@@ -306,74 +413,192 @@
     placeGeometryLayer.clearLayers();
     placeGeometryLabelLayer.clearLayers();
 
-    const placeIds = currentEvents.map((event) => event.place_id);
+    const visiblePlaceIds = new Set(
+      currentEvents.flatMap((event) => event.place_ids)
+    );
+    const activeEvent = currentEvents.find(
+      (event) => event.id === activeEventId
+    );
 
-    if (selectedPlaceId) {
-      placeIds.push(selectedPlaceId);
-    }
+    for (const place of currentPlaces) {
+      if (!place.geometry || !visiblePlaceIds.has(place.id)) {
+        continue;
+      }
 
-    const visibleGeometries = getPlaceGeometriesForPlaceIds(placeIds);
+      const feature = {
+        type: 'Feature',
+        properties: { placeId: place.id },
+        geometry: place.geometry
+      } as GeoJsonObject;
 
-    for (const geometry of visibleGeometries) {
       leaflet
-        .geoJSON(geometry as GeoJsonObject, {
+        .geoJSON(feature, {
           pane: 'place-geometries',
-          interactive: false,
-          style: (feature) =>
-            stylePlaceGeometryFeature(
-              feature,
-              selectedPlaceId,
+          interactive: true,
+          style: () =>
+            stylePlaceGeometry(
+              place,
+              activeEvent?.place_ids.includes(place.id) ?? false,
+              focusedPlaceId === place.id,
               selectedRouteColor
-            )
+            ),
+          onEachFeature: (_feature, layer) => {
+            layer.on('click', () => handlePlaceClick(place));
+            layer.bindTooltip(place.name, {
+              className: 'event-tooltip',
+              direction: 'top'
+            });
+          }
         })
         .addTo(placeGeometryLayer);
 
-      const { label, name, placeId } = geometry.properties;
-      const isSelected = selectedPlaceId === placeId;
+      const isSelected = activeEvent?.place_ids.includes(place.id) ?? false;
+      const isFocused = focusedPlaceId === place.id;
 
-      leaflet
-        .marker([label.latitude, label.longitude], {
-          interactive: false,
-          keyboard: false,
+      const labelMarker = leaflet
+        .marker([place.latitude, place.longitude], {
+          interactive: true,
+          keyboard: true,
           pane: 'place-geometry-labels',
           icon: leaflet.divIcon({
-            className: `place-geometry-label${isSelected ? ' selected' : ''}`,
-            html: `<span>${name}</span>`,
+            className: `place-geometry-label${isSelected ? ' selected' : ''}${isFocused ? ' focused' : ''}`,
+            html: `<span>${place.name}</span>`,
             iconAnchor: [66, 12],
             iconSize: [132, 24]
           })
-        })
-        .addTo(placeGeometryLabelLayer);
+        });
+      labelMarker.on('click', () => handlePlaceClick(place));
+      labelMarker.addTo(placeGeometryLabelLayer);
     }
   }
 
-  function stylePlaceGeometryFeature(
-    feature: Feature | undefined,
-    selectedPlaceId: string | null,
+  function stylePlaceGeometry(
+    place: Place,
+    isSelected: boolean,
+    isFocused: boolean,
     selectedRouteColor: string | null
   ): import('leaflet').PathOptions {
-    const properties = (feature as PlaceGeometryFeature | undefined)
-      ?.properties;
-    const kind = properties?.kind ?? 'cultural_area';
-    const isSelected = properties?.placeId === selectedPlaceId;
-    const fillColor = placeGeometryColors[kind];
+    const isSite = place.geometry_precision === 'site';
+    const fillColor = isSite ? '#3b9468' : '#8f7353';
     const strokeColor =
       isSelected && selectedRouteColor ? selectedRouteColor : fillColor;
-    const isSite = kind === 'site';
 
     return {
       color: strokeColor,
       dashArray:
-        properties?.precision === 'interpretive'
-          ? isSelected
+        place.geometry_precision === 'interpretive'
+          ? isFocused
             ? '8 5'
             : '5 5'
           : undefined,
       fillColor,
       fillOpacity: isSelected ? (isSite ? 0.26 : 0.12) : isSite ? 0.2 : 0.07,
-      opacity: isSelected ? 0.95 : 0.58,
-      weight: isSelected ? 2.4 : 1.3
+      opacity: isFocused ? 1 : isSelected ? 0.92 : 0.58,
+      weight: isFocused ? 4 : isSelected ? 2.4 : 1.3
     };
+  }
+
+  function handlePlaceClick(place: Place): void {
+    const resolution = resolvePlaceSelection(events, selectedEventId, place.id);
+
+    if (resolution.eventId) {
+      placeChoice = null;
+      onSelectLocation(resolution.eventId, place.id);
+      return;
+    }
+
+    if (resolution.needsChoice) {
+      const matchingIds = new Set(resolution.eventIds);
+      placeChoice = {
+        place,
+        events: events.filter((event) => matchingIds.has(event.id))
+      };
+    }
+  }
+
+  function renderRelationships(
+    currentEvents: Event[],
+    currentPlaces: Place[],
+    activeEventId: string | null
+  ): void {
+    if (!leaflet || !relationshipLayer) {
+      return;
+    }
+
+    relationshipLayer.clearLayers();
+    const event = currentEvents.find((item) => item.id === activeEventId);
+    if (!event) {
+      return;
+    }
+
+    const placeById = new Map(currentPlaces.map((place) => [place.id, place]));
+    for (const relationship of event.place_relationships) {
+      const fromPlace = placeById.get(relationship.from_place_id);
+      const toPlace = placeById.get(relationship.to_place_id);
+      if (!fromPlace || !toPlace) {
+        continue;
+      }
+
+      const from: [number, number] = [
+        fromPlace.latitude,
+        fromPlace.longitude
+      ];
+      const to: [number, number] = [toPlace.latitude, toPlace.longitude];
+      const line = leaflet.polyline([from, to], {
+        pane: 'place-relationships',
+        color: selectedRoute?.color ?? '#314151',
+        dashArray:
+          relationship.directionality === 'undirected' ? '7 6' : undefined,
+        opacity: 0.88,
+        weight: relationship.directionality === 'reciprocal' ? 5 : 3
+      });
+      line.bindTooltip(relationship.context_label, {
+        className: 'event-tooltip',
+        direction: 'top'
+      });
+      line.addTo(relationshipLayer);
+
+      const midpoint: [number, number] = [
+        (from[0] + to[0]) / 2,
+        (from[1] + to[1]) / 2
+      ];
+      const symbol =
+        relationship.directionality === 'forward'
+          ? '→'
+          : relationship.directionality === 'reciprocal'
+            ? '↔'
+            : '—';
+      leaflet
+        .marker(midpoint, {
+          interactive: false,
+          keyboard: false,
+          pane: 'place-relationships',
+          icon: leaflet.divIcon({
+            className: 'relationship-direction',
+            html: `<span aria-hidden="true">${symbol}</span>`,
+            iconAnchor: [13, 13],
+            iconSize: [26, 26]
+          })
+        })
+        .addTo(relationshipLayer);
+
+      for (const place of [fromPlace, toPlace]) {
+        const endpoint = leaflet.circleMarker(
+          [place.latitude, place.longitude],
+          {
+            pane: 'place-relationships',
+            color: '#ffffff',
+            fillColor: selectedRoute?.color ?? '#314151',
+            fillOpacity: 1,
+            opacity: 1,
+            radius: 6,
+            weight: 2
+          }
+        );
+        endpoint.on('click', () => onSelectLocation(event.id, place.id));
+        endpoint.addTo(relationshipLayer);
+      }
+    }
   }
 
   function renderBoroughLabels(): void {
@@ -424,6 +649,43 @@
           {selectedPlaceEventCount === 1 ? 'route event' : 'route events'}
         {/if}
       </p>
+    </aside>
+  {/if}
+
+  {#if placeChoice}
+    <aside class="place-choice" aria-label={`Choose an event at ${placeChoice.place.name}`}>
+      <div>
+        <span>Events at</span>
+        <strong>{placeChoice.place.name}</strong>
+      </div>
+      <button
+        type="button"
+        class="choice-close"
+        aria-label="Close event chooser"
+        on:click={() => (placeChoice = null)}
+      >
+        ×
+      </button>
+      <ul>
+        {#each placeChoice.events as choiceEvent (choiceEvent.id)}
+          <li>
+            <button
+              type="button"
+              on:click={() => {
+                onSelectLocation(choiceEvent.id, placeChoice?.place.id ?? '');
+                placeChoice = null;
+              }}
+            >
+              <strong>{choiceEvent.title}</strong>
+              <span>
+                {choiceEvent.year_start === choiceEvent.year_end
+                  ? choiceEvent.year_start
+                  : `${choiceEvent.year_start}–${choiceEvent.year_end}`}
+              </span>
+            </button>
+          </li>
+        {/each}
+      </ul>
     </aside>
   {/if}
 </div>
@@ -499,6 +761,23 @@
     color: #101820;
   }
 
+  :global(.place-geometry-label.focused span) {
+    outline: 3px double #101820;
+    outline-offset: 2px;
+  }
+
+  :global(.relationship-direction) {
+    display: grid;
+    place-items: center;
+    border: 2px solid #ffffff;
+    border-radius: 999px;
+    background: #17202a;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 900;
+    box-shadow: 0 3px 8px rgba(23, 32, 42, 0.24);
+  }
+
   :global(.event-tooltip) {
     padding: 0.35rem 0.48rem;
     border: 1px solid rgba(23, 32, 42, 0.2);
@@ -542,6 +821,11 @@
       0 8px 16px rgba(23, 32, 42, 0.2);
   }
 
+  :global(.event-avatar-marker.focused .event-avatar) {
+    outline: 3px double #101820;
+    outline-offset: 2px;
+  }
+
   :global(.event-avatar-marker .event-avatar-image) {
     display: block;
     width: 100%;
@@ -564,6 +848,78 @@
     background: rgba(255, 255, 255, 0.9);
     box-shadow: 0 8px 20px rgba(23, 32, 42, 0.14);
     backdrop-filter: blur(3px);
+  }
+
+  .place-choice {
+    position: absolute;
+    z-index: 510;
+    top: 0.85rem;
+    left: 0.85rem;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.55rem;
+    width: min(22rem, calc(100% - 2rem));
+    max-height: min(24rem, calc(100% - 2rem));
+    padding: 0.7rem;
+    overflow: auto;
+    border: 1px solid #cfd7df;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 12px 28px rgba(23, 32, 42, 0.18);
+  }
+
+  .place-choice > div {
+    display: grid;
+    gap: 0.08rem;
+  }
+
+  .place-choice > div span {
+    color: #6b7785;
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .choice-close {
+    width: 2rem;
+    height: 2rem;
+    border: 1px solid #d9e0e7;
+    border-radius: 6px;
+    background: #f7f9fb;
+    color: #314151;
+    font: inherit;
+    font-size: 1.2rem;
+  }
+
+  .place-choice ul {
+    grid-column: 1 / -1;
+    display: grid;
+    gap: 0.35rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .place-choice li > button {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.7rem;
+    width: 100%;
+    min-height: 2.75rem;
+    padding: 0.55rem 0.65rem;
+    border: 1px solid #d9e0e7;
+    border-radius: 7px;
+    background: #ffffff;
+    color: #17202a;
+    font: inherit;
+    text-align: left;
+  }
+
+  .place-choice li > button span {
+    color: #6b7785;
+    font-size: 0.74rem;
+    white-space: nowrap;
   }
 
   .selected-place span {

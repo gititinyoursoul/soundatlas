@@ -2,6 +2,7 @@
   import Icon from '$lib/components/Icon.svelte';
   import MediaEmbed from '$lib/components/MediaEmbed.svelte';
   import { resolvePreviewItemId } from '$lib/components/story-preview';
+  import { formatRelationshipDirection } from '$lib/data/spatial';
   import { parseYouTubeEmbed, type YouTubeEmbed } from '$lib/media/youtube';
   import type {
     Event,
@@ -39,6 +40,8 @@
 
   export let event: Event | null = null;
   export let place: Place | null = null;
+  export let places: Place[] = [];
+  export let selectedPlaceId: string | null = null;
   export let route: Route | null = null;
   export let connections: StoryConnectionItem[] = [];
   export let previousEvent: Event | null = null;
@@ -49,6 +52,7 @@
     eventId: string,
     routeId?: string
   ) => void = () => {};
+  export let onFocusPlace: (placeId: string) => void = () => {};
   export let initialTab: InspectorTab = 'story';
   export let selectedPreviewUrl: string | null = null;
   export let showReviewActions = true;
@@ -126,6 +130,7 @@
   $: mediaCount = event?.media_links.length ?? 0;
   $: imageCount = event?.image_links.length ?? 0;
   $: connectionCount = connections.length;
+  $: placeById = new Map(places.map((item) => [item.id, item]));
 
   function buildPreviewItems(currentEvent: Event | null): PreviewItem[] {
     if (!currentEvent) {
@@ -261,6 +266,15 @@
 
     return parts.join(' • ');
   }
+
+  function formatGeometryPrecision(currentPlace: Place): string {
+    if (!currentPlace.geometry) {
+      return 'Point location';
+    }
+    return currentPlace.geometry_precision === 'site'
+      ? 'Sourced site boundary'
+      : 'Interpretive cultural area';
+  }
 </script>
 
 <aside class="story-panel" aria-label="Event inspector">
@@ -382,6 +396,62 @@
               <h3>Why it matters</h3>
               <p>{event.significance}</p>
             </aside>
+          </section>
+
+          <section class="event-places" aria-labelledby="event-places-title">
+            <h3 id="event-places-title">Places in this event</h3>
+            <ul class="event-place-list">
+              {#each places as eventPlace (eventPlace.id)}
+                <li>
+                  <button
+                    type="button"
+                    class:focused={eventPlace.id === selectedPlaceId}
+                    aria-current={eventPlace.id === selectedPlaceId
+                      ? 'location'
+                      : undefined}
+                    on:click={() => onFocusPlace(eventPlace.id)}
+                  >
+                    <span>
+                      <strong>{eventPlace.name}</strong>
+                      <small
+                        >{eventPlace.borough} ·
+                        {formatGeometryPrecision(eventPlace)}</small
+                      >
+                    </span>
+                    <span class="focus-label">
+                      {eventPlace.id === selectedPlaceId ? 'Focused' : 'Focus'}
+                    </span>
+                  </button>
+                </li>
+              {/each}
+            </ul>
+
+            {#if event.place_relationships.length > 0}
+              <div class="place-relationships">
+                <h4>Place relationships</h4>
+                <ul>
+                  {#each event.place_relationships as relationship (relationship.from_place_id + ':' + relationship.to_place_id + ':' + relationship.directionality)}
+                    <li>
+                      <strong
+                        >{formatRelationshipDirection(
+                          relationship,
+                          placeById
+                        )}</strong
+                      >
+                      <p>{relationship.context_label}</p>
+                      <div class="relationship-sources">
+                        {#each relationship.source_urls as sourceUrl (sourceUrl)}
+                          <!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
+                          <a href={sourceUrl} target="_blank" rel="noreferrer">
+                            {formatSourceLabel(sourceUrl)}
+                          </a>
+                        {/each}
+                      </div>
+                    </li>
+                  {/each}
+                </ul>
+              </div>
+            {/if}
           </section>
 
           <section class="story-sources">
@@ -787,7 +857,8 @@
 
   .detail-block,
   .preview-shell,
-  .story-reading {
+  .story-reading,
+  .event-places {
     display: grid;
     gap: 0.45rem;
     padding: 0.85rem;
@@ -819,10 +890,92 @@
     padding: 0 0.1rem;
   }
 
+  .event-places {
+    gap: 0.65rem;
+  }
+
+  .event-place-list,
+  .place-relationships ul {
+    display: grid;
+    gap: 0.4rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .event-place-list button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    width: 100%;
+    min-height: 2.9rem;
+    padding: 0.55rem 0.65rem;
+    border: 1px solid #dce3ea;
+    border-radius: 7px;
+    background: #f8fafb;
+    color: #314151;
+    font: inherit;
+    text-align: left;
+  }
+
+  .event-place-list button > span:first-child {
+    display: grid;
+    gap: 0.1rem;
+  }
+
+  .event-place-list button small {
+    color: #6b7785;
+    font-size: 0.72rem;
+  }
+
+  .event-place-list button.focused {
+    border: 2px solid #17202a;
+    background: #ffffff;
+  }
+
+  .focus-label {
+    color: #536170;
+    font-size: 0.72rem;
+    font-weight: 800;
+  }
+
+  .place-relationships {
+    display: grid;
+    gap: 0.45rem;
+    padding-top: 0.6rem;
+    border-top: 1px solid #e0e6ec;
+  }
+
+  .place-relationships h4 {
+    margin: 0;
+    color: #536170;
+    font-size: 0.76rem;
+  }
+
+  .place-relationships li {
+    display: grid;
+    gap: 0.25rem;
+    padding: 0.55rem;
+    border-left: 3px solid #6b7785;
+    background: #f7f9fb;
+  }
+
+  .relationship-sources {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .relationship-sources a {
+    font-size: 0.76rem;
+  }
+
   .detail-block h3,
   .story-copy h3,
   .significance-note h3,
-  .story-sources h3 {
+  .story-sources h3,
+  .event-places > h3 {
     margin: 0;
     color: #314151;
     font-size: 0.78rem;

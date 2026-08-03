@@ -16,6 +16,11 @@
     getFirstEventIdForRoute,
     getInitialRouteId
   } from '$lib/data/selection';
+  import {
+    getEventPlaces,
+    getEventsForPlace,
+    resolveFocusedPlaceId
+  } from '$lib/data/spatial';
   import type {
     Connection,
     Event,
@@ -32,6 +37,7 @@
   let connections: Connection[] = [];
   let selectedRouteId: string | null = null;
   let selectedEventId: string | null = null;
+  let selectedPlaceId: string | null = null;
   let isLoading = true;
   let errorMessage: string | null = null;
   let isNavigationOpen = false;
@@ -98,6 +104,10 @@
       : routeEvents[0].id;
   $: selectedEvent =
     routeEvents.find((event) => event.id === activeSelectedEventId) ?? null;
+  $: activeSelectedPlaceId = resolveFocusedPlaceId(
+    selectedEvent,
+    selectedPlaceId
+  );
   $: selectedEventIndex = selectedEvent
     ? routeEvents.findIndex((event) => event.id === selectedEvent.id)
     : -1;
@@ -107,11 +117,12 @@
     selectedEventIndex >= 0 && selectedEventIndex < routeEvents.length - 1
       ? routeEvents[selectedEventIndex + 1]
       : null;
-  $: selectedPlace = selectedEvent
-    ? (places.find((place) => place.id === selectedEvent?.place_id) ?? null)
-    : null;
+  $: selectedEventPlaces = getEventPlaces(selectedEvent, places);
+  $: selectedPlace =
+    selectedEventPlaces.find((place) => place.id === activeSelectedPlaceId) ??
+    null;
   $: selectedPlaceEventCount = selectedPlace
-    ? routeEvents.filter((event) => event.place_id === selectedPlace?.id).length
+    ? getEventsForPlace(routeEvents, selectedPlace.id).length
     : 0;
   $: activeRoute = routes.find((route) => route.id === selectedRouteId) ?? null;
   $: selectedRoute = activeRoute;
@@ -160,6 +171,9 @@
       ) {
         selectedEventId = getFirstEventIdForRoute(data.events, initialRouteId);
       }
+      const initialEvent =
+        data.events.find((event) => event.id === selectedEventId) ?? null;
+      selectedPlaceId = resolveFocusedPlaceId(initialEvent, selectedPlaceId);
     } catch (error) {
       errorMessage =
         error instanceof Error
@@ -175,14 +189,38 @@
       selectedRouteId = routeId;
     }
 
+    const nextEvent = events.find((event) => event.id === eventId) ?? null;
     selectedEventId = eventId;
+    selectedPlaceId = resolveFocusedPlaceId(nextEvent, selectedPlaceId);
     selectedInspectorTab = 'story';
     selectedPreviewUrl = null;
+  }
+
+  function selectLocation(eventId: string, placeId: string): void {
+    const event = events.find((item) => item.id === eventId);
+    if (!event || !event.place_ids.includes(placeId)) {
+      return;
+    }
+
+    selectedRouteId = event.route_id;
+    selectedEventId = event.id;
+    selectedPlaceId = placeId;
+    selectedInspectorTab = 'story';
+    selectedPreviewUrl = null;
+  }
+
+  function focusSelectedEventPlace(placeId: string): void {
+    if (selectedEvent) {
+      selectLocation(selectedEvent.id, placeId);
+    }
   }
 
   function selectRoute(routeId: string): void {
     selectedRouteId = routeId;
     selectedEventId = getFirstEventIdForRoute(events, routeId);
+    const firstEvent =
+      events.find((event) => event.id === selectedEventId) ?? null;
+    selectedPlaceId = resolveFocusedPlaceId(firstEvent, null);
     activeNavigationItemId = 'routes';
     selectedInspectorTab = 'story';
     selectedPreviewUrl = null;
@@ -226,8 +264,9 @@
               : 'Linked from',
           event: connectedEvent,
           place:
-            allPlaces.find((place) => place.id === connectedEvent.place_id) ??
-            null,
+            allPlaces.find(
+              (place) => place.id === connectedEvent.default_place_id
+            ) ?? null,
           route:
             allRoutes.find((route) => route.id === connectedEvent.route_id) ??
             null
@@ -239,6 +278,10 @@
   function selectReviewItem(item: ReviewQueueItem): void {
     selectedRouteId = item.routeId;
     selectedEventId = item.eventId;
+    selectedPlaceId = resolveFocusedPlaceId(
+      events.find((event) => event.id === item.eventId) ?? null,
+      selectedPlaceId
+    );
     selectedInspectorTab = 'media';
     selectedPreviewUrl = item.url;
     activeNavigationItemId = 'media-review';
@@ -256,6 +299,10 @@
     reviewErrorMessage = null;
     selectedRouteId = item.routeId;
     selectedEventId = item.eventId;
+    selectedPlaceId = resolveFocusedPlaceId(
+      events.find((event) => event.id === item.eventId) ?? null,
+      selectedPlaceId
+    );
     selectedInspectorTab = 'media';
     selectedPreviewUrl = item.url;
     activeNavigationItemId = 'media-review';
@@ -462,10 +509,11 @@
             {routes}
             {selectedRouteId}
             selectedEventId={activeSelectedEventId}
+            selectedPlaceId={activeSelectedPlaceId}
             {selectedPlace}
             {selectedRoute}
             {selectedPlaceEventCount}
-            onSelectEvent={selectEvent}
+            onSelectLocation={selectLocation}
           />
         </section>
       {/if}
@@ -493,11 +541,14 @@
       <StoryPanel
         event={selectedEvent}
         place={selectedPlace}
+        places={selectedEventPlaces}
+        selectedPlaceId={activeSelectedPlaceId}
         route={selectedRoute}
         connections={selectedConnections}
         {previousEvent}
         {nextEvent}
         onNavigateEvent={selectEvent}
+        onFocusPlace={focusSelectedEventPlace}
         {isLoading}
         {errorMessage}
         initialTab={selectedInspectorTab}
