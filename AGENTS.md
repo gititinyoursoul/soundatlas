@@ -85,6 +85,8 @@ Events should contain at least:
   may proceed directly.
 - Use standardized Issue comments: `## Grill-Me Review`, `## Plan Update` or
   `## Detailed Plan Update`, and `## Implementation Report`.
+- Before planning, record scope changes as an `## Intake Revision` comment and
+  rerun Grill-Me for material revisions; do not silently broaden an Intake.
 - Plan Updates, Detailed Plan Updates, and Implementation Reports should live in the GitHub Issue rather than local or repo-versioned plan files.
 - Use `docs/workflow-registry.md` as the routing guide for repeatable execution work that should live in skills or prompt wrappers.
 - Treat `docs/workflow-registry.md` as the authoritative policy for skill, prompt, compatibility-wrapper, and workflow-document boundaries; correct conflicts in the authoritative source rather than interpreting duplicated instructions.

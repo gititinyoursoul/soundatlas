@@ -114,6 +114,10 @@ For an approved prompt-to-skill extraction:
   GitHub Issue before implementation.
 - Capture new planned work with `Task`, `Context`, and `Acceptance Criteria`
   through `soundatlas-implementation-planning`.
+- Allow Intake Revisions with a visible `## Intake Revision` history comment;
+  material revisions require Grill-Me before planning, while material expansion
+  after implementation begins requires a linked Issue. See
+  `docs/implementation-plan-workflow.md` for the phase-specific rules.
 - Add a `## Grill-Me Review` comment before a `## Plan Update` or
   `## Detailed Plan Update` when risk flags are present.
 - Implement from a risk-flagged Issue only after the review and plan gates are

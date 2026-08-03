@@ -31,6 +31,12 @@ readiness review before Issue content is drafted.
    assumptions, or prematurely resolve open questions. State that the Intake
    Issue is not implementation-ready.
 
+   If discovery reveals missing scope before planning, update the Intake body
+   and add an `## Intake Revision` comment recording the date, previous scope,
+   revised scope, and reason. Wording-only clarifications may proceed without a
+   new review; material revisions require a fresh Grill-Me review before the
+   Plan Update.
+
 4. Draft or revise Issue planning content.
    Keep planning content in the GitHub Issue body or comments. Do not create
    local or repo-versioned implementation plan files.
@@ -146,6 +152,12 @@ The standard post-commit completion comment is:
   unresolved.
 - Do not define behavior outside the requested change.
 - Prefer small, reviewable revisions over broad rewrites.
+- Do not silently broaden an Intake. Split a separate deliverable, changed
+  primary outcome, materially different domain/owner, or independently
+  sequenced expansion into a linked Issue.
+- After a Plan Update exists, record material scope changes under `Acceptance
+  Criteria Changes` and rerun required review before implementation. After
+  implementation begins, use a linked Issue for material expansion.
 - Do not close an Issue for uncommitted, partial, WIP, incomplete, or
   ambiguously scoped work, or when the human explicitly asks to keep it open.
 - Unrelated uncommitted changes do not block closure; verify only the

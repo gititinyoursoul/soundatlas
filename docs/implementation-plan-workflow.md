@@ -66,6 +66,38 @@ investigation, or decision. An Intake Issue is not implementation-ready and
 must not include speculative implementation steps, technical assumptions, or
 prematurely resolved open questions.
 
+## Intake Revision
+
+An Intake may be revised before planning when discovery or user discussion
+reveals a missing requirement. Update the Issue body so it shows the current
+`Task`, `Context`, and `Acceptance Criteria`, and preserve the change history in
+an Issue comment:
+
+```md
+## Intake Revision
+
+- Date: YYYY-MM-DD
+- Previous scope: <what the Intake said before>
+- Revised scope: <what the Intake says now>
+- Reason: <why the revision is needed>
+```
+
+Do not silently broaden an Intake by editing its body without this record.
+Wording-only clarifications do not require a new Grill-Me review. A material
+revision becomes the new pre-planning artifact and must receive a fresh
+`## Grill-Me Review` before a `## Plan Update` or `## Detailed Plan Update` is
+added.
+
+Create a linked Issue instead of revising the current Intake when the expansion
+introduces a separate deliverable, changes the primary outcome, crosses a
+materially different domain or owner, or needs independent sequencing.
+
+After a Plan Update exists but before implementation begins, record material
+scope changes in an `Acceptance Criteria Changes` section, update the plan, and
+run the required review again. After implementation begins, track material
+scope expansion in a linked Issue rather than silently changing the approved
+implementation boundary.
+
 ## Grill-Me Review
 
 For any risk-flagged work, run `prompts/grill-me.md` after intake creation and
