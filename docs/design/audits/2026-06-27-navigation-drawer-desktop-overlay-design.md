@@ -4,9 +4,9 @@ This document applies `prompts/grill-me.md` to a planning-only UX concept for a 
 
 Related mockup screens:
 
-- `docs/design/navigation-drawer-expanded-overlay.svg`
-- `docs/design/navigation-drawer-collapsed-overlay.svg`
-- `docs/design/navigation-drawer-routes-subview-overlay.svg`
+- `docs/design/mockups/navigation-drawer-expanded-overlay.svg`
+- `docs/design/mockups/navigation-drawer-collapsed-overlay.svg`
+- `docs/design/mockups/navigation-drawer-routes-subview-overlay.svg`
 
 ## Change Classification
 
@@ -119,15 +119,15 @@ Future permission patterns:
 
 ## (b) State Gallery
 
-| State | Expanded Pattern | Collapsed Pattern |
-| --- | --- | --- |
-| Default | Neutral text, transparent or white background, icon at 20px | Icon-only button, tooltip available |
-| Hover | Light surface fill `#f3f6f8`, text remains high contrast | Same fill, tooltip opens after short delay |
-| Active | Left rail, tinted fill, bold label, `aria-current="page"` | Left rail, tinted icon button, tooltip still says label |
-| Disabled | `opacity: 0.48`, no route change, cursor default, reason in tooltip/subtext | Muted icon and tooltip with reason |
-| Loading | Skeleton section header and rows with fixed item height | Skeleton icon pills with fixed rail width |
-| Error | Inline error panel inside affected section with retry button | Error icon button opens tooltip/popover with retry |
-| Empty | Empty state row with icon and concise copy | Empty icon with tooltip: "No entries" |
+| State    | Expanded Pattern                                                            | Collapsed Pattern                                       |
+| -------- | --------------------------------------------------------------------------- | ------------------------------------------------------- |
+| Default  | Neutral text, transparent or white background, icon at 20px                 | Icon-only button, tooltip available                     |
+| Hover    | Light surface fill `#f3f6f8`, text remains high contrast                    | Same fill, tooltip opens after short delay              |
+| Active   | Left rail, tinted fill, bold label, `aria-current="page"`                   | Left rail, tinted icon button, tooltip still says label |
+| Disabled | `opacity: 0.48`, no route change, cursor default, reason in tooltip/subtext | Muted icon and tooltip with reason                      |
+| Loading  | Skeleton section header and rows with fixed item height                     | Skeleton icon pills with fixed rail width               |
+| Error    | Inline error panel inside affected section with retry button                | Error icon button opens tooltip/popover with retry      |
+| Empty    | Empty state row with icon and concise copy                                  | Empty icon with tooltip: "No entries"                   |
 
 No permission:
 
@@ -278,8 +278,8 @@ Alignment:
 
 ## Suggested File Groups for Review
 
-- Documentation: `docs/design/2026-06-27-navigation-drawer-desktop-overlay-design.md`.
-- Mockups: `docs/design/navigation-drawer-expanded-overlay.svg`, `docs/design/navigation-drawer-collapsed-overlay.svg`.
+- Documentation: `docs/design/audits/2026-06-27-navigation-drawer-desktop-overlay-design.md`.
+- Mockups: `docs/design/mockups/navigation-drawer-expanded-overlay.svg`, `docs/design/mockups/navigation-drawer-collapsed-overlay.svg`.
 - Future implementation: `frontend/src/lib/components/NavigationDrawer.svelte`, drawer child components, and `frontend/src/routes/+page.svelte`.
 
 ## Suggested Commit Grouping

@@ -10,7 +10,7 @@ with:
 
 - `AGENTS.md`
 - `docs/implementation-plan-workflow.md`
-- `docs/skills-workflow.md`
+- `docs/workflow-registry.md`
 
 Read `prompts/grill-me.md` when the request needs critique, simplification, or
 readiness review before Issue content is drafted.

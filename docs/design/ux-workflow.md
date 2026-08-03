@@ -2,7 +2,7 @@
 
 This document describes a repeatable GPT-assisted process for improving the SoundAtlas UX. Use it as a step-by-step workflow for audits, redesign passes, screenshot critique, and implementation planning.
 
-Use `docs/skills-workflow.md` as the routing guide for when UX work should stay in a prompt, move into a skill, or create a GitHub Issue Plan Update for later implementation.
+Use `docs/workflow-registry.md` as the routing guide for when UX work should stay in a prompt, move into a skill, or create a GitHub Issue Plan Update for later implementation.
 
 The goal is not to ask for a vague redesign. The goal is to run small, inspectable UX cycles that produce clear findings, one focused implementation pass, and validation before moving on.
 
