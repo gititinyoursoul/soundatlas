@@ -87,6 +87,7 @@ Events should contain at least:
   `## Detailed Plan Update`, and `## Implementation Report`.
 - Plan Updates, Detailed Plan Updates, and Implementation Reports should live in the GitHub Issue rather than local or repo-versioned plan files.
 - Use `docs/workflow-registry.md` as the routing guide for repeatable execution work that should live in skills or prompt wrappers.
+- Treat `docs/workflow-registry.md` as the authoritative policy for skill, prompt, compatibility-wrapper, and workflow-document boundaries; correct conflicts in the authoritative source rather than interpreting duplicated instructions.
 - Use the repo skill at `.codex/skills/soundatlas-implementation-planning` when an Issue needs an Intake structure, Plan Update, Detailed Plan Update, or Implementation Report.
 - `TODO.md` is a legacy backlog and should not receive new planned work unless the user explicitly asks for a legacy note.
 - If the scope changes, update `docs/mvp-concept.md` first and then create or update the relevant GitHub Issue.

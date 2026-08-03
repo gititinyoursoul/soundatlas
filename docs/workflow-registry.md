@@ -14,11 +14,95 @@ default human-facing planning and critique entrypoint. The
 `soundatlas-implementation-planning` skill is the durable Issue-writing
 mechanism after a grill-me pass identifies work that should proceed.
 
-`prompts/grill-me.md` is intentionally interactive: it should first give a
-short estimate of how many material findings it sees, then present one finding
-at a time, with a recommendation, and pause for user confirmation before
+`prompts/grill-me.md` is intentionally interactive: it may briefly indicate
+whether material findings are present and, when useful, give an approximate
+count. The count is optional and never a target. It should then present one
+finding at a time, with a recommendation, and pause for user confirmation before
 continuing to the next finding. When a finding requires a material decision, it
 should offer meaningful options and a recommended choice.
+
+## Skill, Prompt, and Source Boundary Policy
+
+This section is authoritative for repository-wide entrypoint selection and
+document ownership.
+
+### Use a skill for repeatable execution
+
+Use a reusable skill when work has a stable, repeatable implementation process,
+domain constraints, validation steps, and a report format that agents should
+apply consistently. A skill may cover a broad domain rather than one feature.
+The approved GitHub Issue remains the product and scope authority.
+
+Current examples include:
+
+- frontend implementation: `soundatlas-frontend-implementation`;
+- backend implementation: `soundatlas-backend-implementation`;
+- Issue intake, planning, and reports: `soundatlas-implementation-planning`.
+
+### Keep a prompt for interactive or human-review-bound work
+
+Keep work in a prompt when its value depends on conversational critique,
+stepwise human decisions, source or media review, editorial judgment, or a
+proposal that must be narrowed before implementation. Current examples include
+Grill-Me review, UX audit and critique, route editorial work, seed curation, and
+YouTube query planning.
+
+Documentation and testing prompts may remain the active entrypoint until their
+corresponding skill extraction is completed; their registry row must identify
+that transitional status.
+
+### Use a compatibility wrapper during migration
+
+When repeatable guidance is extracted from an existing prompt into a skill,
+keep the existing prompt as a thin compatibility wrapper by default. The wrapper
+may identify the skill, preserve the historical entrypoint, collect concise
+optional context, and state the output boundary. It must not duplicate or
+override the skill’s implementation rules.
+
+Remove or rename a legacy wrapper only through a separate approved Issue after
+repository references and compatibility needs have been reviewed.
+
+### Document ownership and precedence
+
+- `AGENTS.md` owns repository-wide constraints and working conventions.
+- `docs/workflow-registry.md` owns routing, entrypoint selection, document
+  ownership, and precedence explicitly stated here.
+- Domain source documents own product, data, editorial, UX, and other
+  domain-specific rules.
+- Skills own repeatable execution behavior, validation, and reporting guidance.
+- Prompts own interactive behavior or compatibility-entrypoint guidance.
+- GitHub Issues own planned scope, confirmed decisions, acceptance criteria,
+  and implementation reports.
+
+When execution documents conflict, the registry resolves the conflict only when
+it explicitly defines precedence. Otherwise, correct the conflict in the
+authoritative source rather than interpreting it on the agent's own authority.
+
+### Migration standard
+
+For an approved prompt-to-skill extraction:
+
+1. Create or update an Issue before changing workflow guidance.
+2. Preserve the existing behavior, gates, constraints, and output expectations
+   while separating reusable execution guidance from the prompt boundary.
+3. Make the new skill authoritative for repeatable execution.
+4. Reduce the existing prompt to a compatibility wrapper when compatibility
+   matters.
+5. Update the registry and active references in the same change.
+6. Validate references, skill structure, and scope; do not include application,
+   seed-data, or production behavior changes unless separately approved.
+
+### Boundary examples
+
+| Work category | Default boundary | Current guidance |
+| --- | --- | --- |
+| Frontend implementation | Skill, with legacy wrapper | `soundatlas-frontend-implementation` |
+| Backend implementation | Skill, with legacy wrapper | `soundatlas-backend-implementation` |
+| Documentation updates | Prompt until a docs skill exists | `prompts/update-docs.md` |
+| Test planning and implementation | Prompt until a testing skill exists | `prompts/write-tests.md` |
+| Editorial route and seed curation | Interactive prompt | `prompts/create-route.md`, `prompts/curate-seed-data.md` |
+| UX critique and review | Interactive prompt | `prompts/design-ux.md`, `prompts/grill-me.md` |
+| Enrichment query planning | Human-reviewed prompt | `prompts/generate-youtube-search-queries.md` |
 
 ## Workflow Rules
 

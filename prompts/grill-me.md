@@ -108,15 +108,11 @@ Use the smallest mode that fits the request:
 
 ## Output
 
-Start with a short overview of the expected number of material findings before
-the one-finding sequence begins. Keep it lightweight, for example:
-
-```md
-I see about 3 material findings. I will take them one at a time.
-```
-
-The count is an estimate, not a promise. If later inspection changes the count,
-say so briefly before continuing.
+Begin with a short, lightweight overview of whether material findings are
+present. An approximate count is optional and should be included only when it
+helps orient the user; it is never a target or quality measure. Do not invent
+findings to reach a count. If there are no material findings, say so clearly.
+If later inspection changes the estimate, say so briefly before continuing.
 
 Then run the critique as a sequence of one-finding turns.
 
