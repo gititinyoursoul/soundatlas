@@ -1,0 +1,4 @@
+interface:
+  display_name: "SoundAtlas Backend Implementation"
+  short_description: "Implement SoundAtlas backend changes safely"
+  default_prompt: "Use $soundatlas-backend-implementation to implement the approved backend Issue."
