@@ -17,6 +17,8 @@ covers five curated routes:
 
 The first vertical slice remains **Birth of Hip-Hop: Bronx 1970-1985**.
 
+Deployed page: [gititinyoursoul.github.io/soundatlas](https://gititinyoursoul.github.io/soundatlas/)
+
 ## Stack
 
 - Frontend: SvelteKit, TypeScript, Leaflet
