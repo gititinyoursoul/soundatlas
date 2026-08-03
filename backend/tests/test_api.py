@@ -45,6 +45,24 @@ def test_events_can_be_filtered_by_route_and_year_range() -> None:
     assert "wild-style-global-visibility" not in event_ids
 
 
+def test_api_delivers_canonical_event_places_and_shared_geometry() -> None:
+    event_response = client.get("/events/kool-herc-back-to-school-jam")
+    places_response = client.get("/places")
+
+    assert event_response.status_code == 200
+    event = event_response.json()
+    assert event["place_ids"] == ["1520-sedgwick-avenue"]
+    assert event["default_place_id"] == "1520-sedgwick-avenue"
+    assert event["place_id"] == event["default_place_id"]
+    assert event["place_relationships"] == []
+
+    assert places_response.status_code == 200
+    places = {place["id"]: place for place in places_response.json()}
+    assert places["cedar-park-bronx"]["geometry"]["type"] == "Polygon"
+    assert places["cedar-park-bronx"]["geometry_source_type"] == "external"
+    assert places["south-bronx"]["geometry_source_type"] == "curated"
+
+
 def test_unknown_event_returns_404() -> None:
     response = client.get("/events/unknown-event")
 

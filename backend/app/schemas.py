@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import Annotated, Any, Literal
 
 from pydantic import BaseModel, Field, field_validator, model_validator
 
@@ -30,6 +30,68 @@ RightsStatus = Literal[
     "public_domain",
     "provider_restricted",
     "unknown",
+]
+GeometryPrecision = Literal["site", "interpretive"]
+GeometrySourceType = Literal["external", "curated"]
+PlaceRelationshipDirection = Literal["undirected", "forward", "reciprocal"]
+
+Position = tuple[float, float]
+LinearRing = list[Position]
+PolygonCoordinates = list[LinearRing]
+MultiPolygonCoordinates = list[PolygonCoordinates]
+
+
+def _validate_polygon_coordinates(
+    coordinates: PolygonCoordinates,
+) -> PolygonCoordinates:
+    if not coordinates:
+        raise ValueError("Polygon coordinates must contain at least one ring")
+
+    for ring in coordinates:
+        if len(ring) < 4:
+            raise ValueError("Polygon rings must contain at least four positions")
+        if ring[0] != ring[-1]:
+            raise ValueError("Polygon rings must be closed")
+        for longitude, latitude in ring:
+            if longitude < -180 or longitude > 180:
+                raise ValueError("geometry longitude must be between -180 and 180")
+            if latitude < -90 or latitude > 90:
+                raise ValueError("geometry latitude must be between -90 and 90")
+
+    return coordinates
+
+
+class PolygonGeometry(BaseModel):
+    type: Literal["Polygon"]
+    coordinates: PolygonCoordinates
+
+    @field_validator("coordinates")
+    @classmethod
+    def validate_coordinates(
+        cls,
+        coordinates: PolygonCoordinates,
+    ) -> PolygonCoordinates:
+        return _validate_polygon_coordinates(coordinates)
+
+
+class MultiPolygonGeometry(BaseModel):
+    type: Literal["MultiPolygon"]
+    coordinates: MultiPolygonCoordinates
+
+    @field_validator("coordinates")
+    @classmethod
+    def validate_coordinates(
+        cls,
+        coordinates: MultiPolygonCoordinates,
+    ) -> MultiPolygonCoordinates:
+        if not coordinates:
+            raise ValueError("MultiPolygon coordinates must contain at least one polygon")
+        return [_validate_polygon_coordinates(polygon) for polygon in coordinates]
+
+
+PlaceGeometry = Annotated[
+    PolygonGeometry | MultiPolygonGeometry,
+    Field(discriminator="type"),
 ]
 
 
@@ -66,6 +128,12 @@ class Place(BaseModel):
     summary: str
     review_status: ReviewStatus
     source_urls: list[str]
+    geometry: PlaceGeometry | None = None
+    geometry_precision: GeometryPrecision | None = None
+    geometry_source_type: GeometrySourceType | None = None
+    geometry_source_url: str | None = None
+    geometry_source_note: str | None = None
+    geometry_license: str | None = None
 
     @field_validator("latitude")
     @classmethod
@@ -80,6 +148,34 @@ class Place(BaseModel):
         if value < -180 or value > 180:
             raise ValueError("longitude must be between -180 and 180")
         return value
+
+    @model_validator(mode="after")
+    def validate_geometry_provenance(self):
+        provenance_values = (
+            self.geometry_precision,
+            self.geometry_source_type,
+            self.geometry_source_url,
+            self.geometry_source_note,
+            self.geometry_license,
+        )
+        if self.geometry is None:
+            if any(value is not None for value in provenance_values):
+                raise ValueError("geometry provenance requires geometry")
+            return self
+
+        if self.geometry_precision is None:
+            raise ValueError("geometry_precision is required with geometry")
+        if self.geometry_source_type is None:
+            raise ValueError("geometry_source_type is required with geometry")
+        if not self.geometry_source_note or not self.geometry_source_note.strip():
+            raise ValueError("geometry_source_note is required with geometry")
+        if self.geometry_source_type == "external":
+            if not self.geometry_source_url or not self.geometry_source_url.strip():
+                raise ValueError("external geometry requires geometry_source_url")
+            if not self.geometry_license or not self.geometry_license.strip():
+                raise ValueError("external geometry requires geometry_license")
+
+        return self
 
 
 class MediaLink(BaseModel):
@@ -129,10 +225,41 @@ class ImageLink(BaseModel):
         return value
 
 
+class PlaceRelationship(BaseModel):
+    from_place_id: str
+    to_place_id: str
+    directionality: PlaceRelationshipDirection
+    context_label: str
+    source_urls: list[str]
+
+    @field_validator("context_label")
+    @classmethod
+    def validate_context_label(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("context_label must not be empty")
+        return value
+
+    @field_validator("source_urls")
+    @classmethod
+    def validate_source_urls(cls, value: list[str]) -> list[str]:
+        if not value or any(not source_url.strip() for source_url in value):
+            raise ValueError("place relationships require at least one source URL")
+        return value
+
+    @model_validator(mode="after")
+    def validate_distinct_places(self):
+        if self.from_place_id == self.to_place_id:
+            raise ValueError("place relationship endpoints must be distinct")
+        return self
+
+
 class Event(YearRangeMixin):
     id: str
     route_id: str
     place_id: str
+    place_ids: list[str]
+    default_place_id: str
+    place_relationships: list[PlaceRelationship] = Field(default_factory=list)
     title: str
     summary: str
     significance: str
@@ -141,6 +268,44 @@ class Event(YearRangeMixin):
     source_urls: list[str]
     media_links: list[MediaLink]
     image_links: list[ImageLink]
+
+    @model_validator(mode="before")
+    @classmethod
+    def normalize_legacy_place(cls, value: Any) -> Any:
+        if not isinstance(value, dict):
+            return value
+
+        normalized = dict(value)
+        legacy_place_id = normalized.get("place_id")
+        place_ids = normalized.get("place_ids")
+        default_place_id = normalized.get("default_place_id")
+
+        if place_ids is None and legacy_place_id is not None:
+            place_ids = [legacy_place_id]
+            normalized["place_ids"] = place_ids
+        if default_place_id is None:
+            if legacy_place_id is not None:
+                default_place_id = legacy_place_id
+            elif isinstance(place_ids, list) and place_ids:
+                default_place_id = place_ids[0]
+            if default_place_id is not None:
+                normalized["default_place_id"] = default_place_id
+        if legacy_place_id is None and default_place_id is not None:
+            normalized["place_id"] = default_place_id
+
+        return normalized
+
+    @model_validator(mode="after")
+    def validate_event_places(self):
+        if not self.place_ids:
+            raise ValueError("place_ids must contain at least one place")
+        if len(self.place_ids) != len(set(self.place_ids)):
+            raise ValueError("place_ids must contain unique place IDs")
+        if self.default_place_id not in self.place_ids:
+            raise ValueError("default_place_id must appear in place_ids")
+        if self.place_id != self.default_place_id:
+            raise ValueError("place_id must equal default_place_id during compatibility")
+        return self
 
 
 class Connection(BaseModel):

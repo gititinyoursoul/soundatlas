@@ -1961,16 +1961,32 @@ def build_merged_seed_payloads(
 ) -> dict[str, dict[str, Any]]:
     seed = load_seed_payloads(seed_dir)
     drafts = load_draft_payloads(route_dir, manifest)
+    draft_events = normalize_event_records(drafts["events"].get("events", []))
     return {
         "routes": seed["routes"],
         "places": upsert_records(seed["places"], "places", drafted_places(drafts)),
-        "events": upsert_records(seed["events"], "events", drafts["events"].get("events", [])),
+        "events": upsert_records(seed["events"], "events", draft_events),
         "connections": upsert_records(
             seed["connections"],
             "connections",
             drafts["connections"].get("connections", []),
         ),
     }
+
+
+def normalize_event_records(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    normalized = []
+    for record in records:
+        if not isinstance(record, dict):
+            normalized.append(record)
+            continue
+        try:
+            normalized.append(
+                Event.model_validate(record).model_dump(mode="json", exclude_none=True)
+            )
+        except Exception:
+            normalized.append(record)
+    return normalized
 
 
 def load_seed_payloads(seed_dir: Path) -> dict[str, dict[str, Any]]:
@@ -2043,8 +2059,24 @@ def validate_seed_payloads(payloads: dict[str, dict[str, Any]]) -> list[str]:
     for event in events:
         if event.route_id not in route_ids:
             errors.append(f"Event `{event.id}` references unknown route `{event.route_id}`.")
-        if event.place_id not in place_ids:
-            errors.append(f"Event `{event.id}` references unknown place `{event.place_id}`.")
+        for place_id in event.place_ids:
+            if place_id not in place_ids:
+                errors.append(f"Event `{event.id}` references unknown place `{place_id}`.")
+        for relationship in event.place_relationships:
+            for endpoint_name, place_id in (
+                ("from_place_id", relationship.from_place_id),
+                ("to_place_id", relationship.to_place_id),
+            ):
+                if place_id not in place_ids:
+                    errors.append(
+                        f"Event `{event.id}` relationship {endpoint_name} "
+                        f"references unknown place `{place_id}`.",
+                    )
+                if place_id not in event.place_ids:
+                    errors.append(
+                        f"Event `{event.id}` relationship {endpoint_name} "
+                        "must appear in event place_ids.",
+                    )
     for connection in connections:
         if connection.from_event_id not in event_ids:
             errors.append(

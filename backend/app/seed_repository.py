@@ -52,10 +52,26 @@ class SeedRepository:
                 raise SeedValidationError(
                     f"Event '{event.id}' references unknown route '{event.route_id}'",
                 )
-            if event.place_id not in self._place_ids:
-                raise SeedValidationError(
-                    f"Event '{event.id}' references unknown place '{event.place_id}'",
-                )
+            for place_id in event.place_ids:
+                if place_id not in self._place_ids:
+                    raise SeedValidationError(
+                        f"Event '{event.id}' references unknown place '{place_id}'",
+                    )
+            for relationship in event.place_relationships:
+                for endpoint_name, place_id in (
+                    ("from_place_id", relationship.from_place_id),
+                    ("to_place_id", relationship.to_place_id),
+                ):
+                    if place_id not in self._place_ids:
+                        raise SeedValidationError(
+                            f"Event '{event.id}' relationship {endpoint_name} "
+                            f"references unknown place '{place_id}'",
+                        )
+                    if place_id not in event.place_ids:
+                        raise SeedValidationError(
+                            f"Event '{event.id}' relationship {endpoint_name} "
+                            f"must appear in event place_ids",
+                        )
 
         for connection in self._connections:
             if connection.from_event_id not in self._event_ids:

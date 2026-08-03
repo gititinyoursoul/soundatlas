@@ -189,6 +189,9 @@ def test_promote_write_adds_draft_events_to_seed(
     assert exit_code == 0
     assert events_payload["events"][0]["id"] == "kool-herc-sedgwick-party"
     assert events_payload["events"][0]["place_id"] == "1520-sedgwick-avenue"
+    assert events_payload["events"][0]["place_ids"] == ["1520-sedgwick-avenue"]
+    assert events_payload["events"][0]["default_place_id"] == "1520-sedgwick-avenue"
+    assert events_payload["events"][0]["place_relationships"] == []
 
 
 def test_validation_report_flags_unknown_route_reference(tmp_path: Path) -> None:

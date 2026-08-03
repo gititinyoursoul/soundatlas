@@ -19,8 +19,24 @@ def test_seed_repository_loads_routes_places_events_and_connections() -> None:
     assert len(repository.list_connections()) == 57
     assert {route.creator for route in repository.list_routes()} == {"gpt-5.5"}
     for event in repository.list_events():
+        assert event.place_ids
+        assert event.default_place_id in event.place_ids
+        assert event.place_id == event.default_place_id
         assert all(isinstance(media_link, MediaLink) for media_link in event.media_links)
         assert all(isinstance(image_link, ImageLink) for image_link in event.image_links)
+
+    geometries = {
+        place.id: place
+        for place in repository.list_places()
+        if place.geometry is not None
+    }
+    assert set(geometries) == {
+        "south-bronx",
+        "cedar-park-bronx",
+        "east-harlem-el-barrio",
+    }
+    assert geometries["cedar-park-bronx"].geometry_source_type == "external"
+    assert geometries["south-bronx"].geometry_source_type == "curated"
 
 
 def test_seed_repository_filters_connections_by_route() -> None:

@@ -1,13 +1,18 @@
 {
   "_meta": {
     "description": "Chronological and geographic music history events.",
-    "schema_version": 1
+    "schema_version": 2
   },
   "events": [
     {
       "id": "caribbean-soundsystem-influences",
       "route_id": "birth-of-hip-hop",
       "place_id": "south-bronx",
+      "place_ids": [
+        "south-bronx"
+      ],
+      "default_place_id": "south-bronx",
+      "place_relationships": [],
       "title": "Caribbean Sound System Influences Reach the Bronx",
       "year_start": 1967,
       "year_end": 1972,
@@ -40,6 +45,11 @@
       "id": "funk-disco-breaks-as-raw-material",
       "route_id": "birth-of-hip-hop",
       "place_id": "new-york-city",
+      "place_ids": [
+        "new-york-city"
+      ],
+      "default_place_id": "new-york-city",
+      "place_relationships": [],
       "title": "Funk and Disco Breaks Become DJ Raw Material",
       "year_start": 1970,
       "year_end": 1973,
@@ -73,6 +83,11 @@
       "id": "kool-herc-back-to-school-jam",
       "route_id": "birth-of-hip-hop",
       "place_id": "1520-sedgwick-avenue",
+      "place_ids": [
+        "1520-sedgwick-avenue"
+      ],
+      "default_place_id": "1520-sedgwick-avenue",
+      "place_relationships": [],
       "title": "Kool Herc's Back-to-School Jam",
       "year_start": 1973,
       "year_end": 1973,
@@ -143,7 +158,7 @@
           "rights_status": "public_domain",
           "alt_text": "Photo of the front of 1520 Sedgwick Avenue in the Western Bronx.(американска панелка) Kool Herc, generally credited as the originator of hip-hop music, lived and threw his first p...",
           "query": "1520 Sedgwick Avenue",
-          "confidence": 1.0,
+          "confidence": 1,
           "review_status": "reviewed",
           "thumbnail_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/1520_Sedwick_Ave.%2C_Bronx%2C_New_York1.JPG/960px-1520_Sedwick_Ave.%2C_Bronx%2C_New_York1.JPG",
           "creator": "Bigtimepeace",
@@ -155,6 +170,11 @@
       "id": "breakbeat-dj-practice-spreads",
       "route_id": "birth-of-hip-hop",
       "place_id": "cedar-park-bronx",
+      "place_ids": [
+        "cedar-park-bronx"
+      ],
+      "default_place_id": "cedar-park-bronx",
+      "place_relationships": [],
       "title": "Breakbeat DJing Spreads Across Parties",
       "year_start": 1974,
       "year_end": 1976,
@@ -188,6 +208,11 @@
       "id": "grandmaster-flash-dj-techniques",
       "route_id": "birth-of-hip-hop",
       "place_id": "south-bronx",
+      "place_ids": [
+        "south-bronx"
+      ],
+      "default_place_id": "south-bronx",
+      "place_relationships": [],
       "title": "Grandmaster Flash Refines DJ Techniques",
       "year_start": 1975,
       "year_end": 1977,
@@ -254,6 +279,11 @@
       "id": "zulu-nation-scene-organization",
       "route_id": "birth-of-hip-hop",
       "place_id": "bronx-river-houses",
+      "place_ids": [
+        "bronx-river-houses"
+      ],
+      "default_place_id": "bronx-river-houses",
+      "place_relationships": [],
       "title": "Zulu Nation Organizes Scene Energy",
       "year_start": 1976,
       "year_end": 1977,
@@ -277,6 +307,11 @@
       "id": "nyc-blackout-1977",
       "route_id": "birth-of-hip-hop",
       "place_id": "new-york-city",
+      "place_ids": [
+        "new-york-city"
+      ],
+      "default_place_id": "new-york-city",
+      "place_relationships": [],
       "title": "The 1977 Blackout as an Urban Turning Point",
       "year_start": 1977,
       "year_end": 1977,
@@ -300,6 +335,11 @@
       "id": "rappers-delight-mainstream-breakthrough",
       "route_id": "birth-of-hip-hop",
       "place_id": "englewood-sugar-hill-records",
+      "place_ids": [
+        "englewood-sugar-hill-records"
+      ],
+      "default_place_id": "englewood-sugar-hill-records",
+      "place_relationships": [],
       "title": "Rapper's Delight Brings Rap into the Charts",
       "year_start": 1979,
       "year_end": 1979,
@@ -323,6 +363,11 @@
       "id": "hip-hop-enters-downtown-clubs",
       "route_id": "birth-of-hip-hop",
       "place_id": "the-roxy-nyc",
+      "place_ids": [
+        "the-roxy-nyc"
+      ],
+      "default_place_id": "the-roxy-nyc",
+      "place_relationships": [],
       "title": "Hip-Hop Reaches Downtown Clubs",
       "year_start": 1981,
       "year_end": 1982,
@@ -346,6 +391,11 @@
       "id": "the-message-social-commentary",
       "route_id": "birth-of-hip-hop",
       "place_id": "new-york-city",
+      "place_ids": [
+        "new-york-city"
+      ],
+      "default_place_id": "new-york-city",
+      "place_relationships": [],
       "title": "The Message Shows Rap as Social Commentary",
       "year_start": 1982,
       "year_end": 1982,
@@ -369,6 +419,11 @@
       "id": "planet-rock-electro-future",
       "route_id": "birth-of-hip-hop",
       "place_id": "bronx-river-houses",
+      "place_ids": [
+        "bronx-river-houses"
+      ],
+      "default_place_id": "bronx-river-houses",
+      "place_relationships": [],
       "title": "Planet Rock Connects Hip-Hop and Electro",
       "year_start": 1982,
       "year_end": 1982,
@@ -392,6 +447,11 @@
       "id": "wild-style-global-visibility",
       "route_id": "birth-of-hip-hop",
       "place_id": "south-bronx",
+      "place_ids": [
+        "south-bronx"
+      ],
+      "default_place_id": "south-bronx",
+      "place_relationships": [],
       "title": "Wild Style Documents the Four Elements",
       "year_start": 1983,
       "year_end": 1983,
@@ -415,6 +475,11 @@
       "id": "loft-love-saves-the-day",
       "route_id": "disco-to-dance-music",
       "place_id": "the-loft-broadway",
+      "place_ids": [
+        "the-loft-broadway"
+      ],
+      "default_place_id": "the-loft-broadway",
+      "place_relationships": [],
       "title": "Love Saves the Day Starts at the Loft",
       "year_start": 1970,
       "year_end": 1970,
@@ -437,6 +502,11 @@
       "id": "loft-sound-system-culture",
       "route_id": "disco-to-dance-music",
       "place_id": "the-loft-broadway",
+      "place_ids": [
+        "the-loft-broadway"
+      ],
+      "default_place_id": "the-loft-broadway",
+      "place_relationships": [],
       "title": "Sound System and Curation Become Club Infrastructure",
       "year_start": 1970,
       "year_end": 1974,
@@ -459,6 +529,11 @@
       "id": "gallery-dj-culture",
       "route_id": "disco-to-dance-music",
       "place_id": "the-gallery-nyc",
+      "place_ids": [
+        "the-gallery-nyc"
+      ],
+      "default_place_id": "the-gallery-nyc",
+      "place_relationships": [],
       "title": "The Gallery Professionalizes DJ and Club Dramaturgy",
       "year_start": 1973,
       "year_end": 1977,
@@ -479,6 +554,11 @@
       "id": "extended-mix-12-inch-culture",
       "route_id": "disco-to-dance-music",
       "place_id": "west-end-records",
+      "place_ids": [
+        "west-end-records"
+      ],
+      "default_place_id": "west-end-records",
+      "place_relationships": [],
       "title": "Extended Mixes and 12-Inch Singles Become DJ Tools",
       "year_start": 1974,
       "year_end": 1976,
@@ -501,6 +581,11 @@
       "id": "studio-54-opens",
       "route_id": "disco-to-dance-music",
       "place_id": "studio-54",
+      "place_ids": [
+        "studio-54"
+      ],
+      "default_place_id": "studio-54",
+      "place_relationships": [],
       "title": "Studio 54 Opens as Glamour Disco",
       "year_start": 1977,
       "year_end": 1977,
@@ -523,6 +608,11 @@
       "id": "saturday-night-fever-release",
       "route_id": "disco-to-dance-music",
       "place_id": "bay-ridge-brooklyn",
+      "place_ids": [
+        "bay-ridge-brooklyn"
+      ],
+      "default_place_id": "bay-ridge-brooklyn",
+      "place_relationships": [],
       "title": "Saturday Night Fever Makes Disco Globally Visible",
       "year_start": 1977,
       "year_end": 1977,
@@ -545,6 +635,11 @@
       "id": "paradise-garage-opens",
       "route_id": "disco-to-dance-music",
       "place_id": "paradise-garage",
+      "place_ids": [
+        "paradise-garage"
+      ],
+      "default_place_id": "paradise-garage",
+      "place_relationships": [],
       "title": "Paradise Garage Becomes a Central Club Space",
       "year_start": 1977,
       "year_end": 1978,
@@ -567,6 +662,11 @@
       "id": "larry-levan-residency",
       "route_id": "disco-to-dance-music",
       "place_id": "paradise-garage",
+      "place_ids": [
+        "paradise-garage"
+      ],
+      "default_place_id": "paradise-garage",
+      "place_relationships": [],
       "title": "Larry Levan Shapes Garage Sound and Club Dramaturgy",
       "year_start": 1978,
       "year_end": 1985,
@@ -589,6 +689,11 @@
       "id": "disco-backlash-and-reframing",
       "route_id": "disco-to-dance-music",
       "place_id": "new-york-city",
+      "place_ids": [
+        "new-york-city"
+      ],
+      "default_place_id": "new-york-city",
+      "place_relationships": [],
       "title": "Disco Backlash Shifts the Scene into New Forms",
       "year_start": 1979,
       "year_end": 1980,
@@ -611,6 +716,11 @@
       "id": "west-end-post-disco-label-culture",
       "route_id": "disco-to-dance-music",
       "place_id": "west-end-records",
+      "place_ids": [
+        "west-end-records"
+      ],
+      "default_place_id": "west-end-records",
+      "place_relationships": [],
       "title": "West End Records Connects Disco, Boogie, and Post-Disco",
       "year_start": 1979,
       "year_end": 1983,
@@ -633,6 +743,11 @@
       "id": "dub-mix-remix-culture",
       "route_id": "disco-to-dance-music",
       "place_id": "prelude-records",
+      "place_ids": [
+        "prelude-records"
+      ],
+      "default_place_id": "prelude-records",
+      "place_relationships": [],
       "title": "Dub and Remix Aesthetics Become the Language of Dance Music",
       "year_start": 1980,
       "year_end": 1984,
@@ -653,6 +768,11 @@
       "id": "garage-freestyle-electro-bridges",
       "route_id": "disco-to-dance-music",
       "place_id": "wbls-nyc-radio",
+      "place_ids": [
+        "wbls-nyc-radio"
+      ],
+      "default_place_id": "wbls-nyc-radio",
+      "place_relationships": [],
       "title": "Garage, Freestyle, and Electro Become Continuation Spaces",
       "year_start": 1982,
       "year_end": 1985,
@@ -675,6 +795,11 @@
       "id": "new-york-dolls-mercer-scene",
       "route_id": "punk-new-wave-downtown",
       "place_id": "mercer-arts-center",
+      "place_ids": [
+        "mercer-arts-center"
+      ],
+      "default_place_id": "mercer-arts-center",
+      "place_relationships": [],
       "title": "New York Dolls Turn Glam into Downtown Proto-Punk",
       "year_start": 1971,
       "year_end": 1973,
@@ -698,6 +823,11 @@
       "id": "maxs-kansas-city-punk-bridge",
       "route_id": "punk-new-wave-downtown",
       "place_id": "maxs-kansas-city",
+      "place_ids": [
+        "maxs-kansas-city"
+      ],
+      "default_place_id": "maxs-kansas-city",
+      "place_relationships": [],
       "title": "Max's Kansas City Bridges Art Rock and Punk",
       "year_start": 1972,
       "year_end": 1976,
@@ -720,6 +850,11 @@
       "id": "cbgb-opens-downtown-scene",
       "route_id": "punk-new-wave-downtown",
       "place_id": "cbgb",
+      "place_ids": [
+        "cbgb"
+      ],
+      "default_place_id": "cbgb",
+      "place_relationships": [],
       "title": "CBGB Opens as a Downtown Music Room",
       "year_start": 1973,
       "year_end": 1973,
@@ -742,6 +877,11 @@
       "id": "television-ramones-patti-smith-cbgb",
       "route_id": "punk-new-wave-downtown",
       "place_id": "cbgb",
+      "place_ids": [
+        "cbgb"
+      ],
+      "default_place_id": "cbgb",
+      "place_relationships": [],
       "title": "Television, Ramones, and Patti Smith Define CBGB's Range",
       "year_start": 1974,
       "year_end": 1976,
@@ -764,6 +904,11 @@
       "id": "punk-magazine-documents-scene",
       "route_id": "punk-new-wave-downtown",
       "place_id": "new-york-city",
+      "place_ids": [
+        "new-york-city"
+      ],
+      "default_place_id": "new-york-city",
+      "place_relationships": [],
       "title": "Punk Magazine Names and Circulates the Scene",
       "year_start": 1975,
       "year_end": 1976,
@@ -786,6 +931,11 @@
       "id": "blondie-talking-heads-new-wave-crossover",
       "route_id": "punk-new-wave-downtown",
       "place_id": "cbgb",
+      "place_ids": [
+        "cbgb"
+      ],
+      "default_place_id": "cbgb",
+      "place_relationships": [],
       "title": "Blondie and Talking Heads Widen Punk toward New Wave",
       "year_start": 1975,
       "year_end": 1978,
@@ -808,6 +958,11 @@
       "id": "no-new-york-artists-space",
       "route_id": "punk-new-wave-downtown",
       "place_id": "artists-space",
+      "place_ids": [
+        "artists-space"
+      ],
+      "default_place_id": "artists-space",
+      "place_relationships": [],
       "title": "Artists Space Festival Leads toward No New York",
       "year_start": 1978,
       "year_end": 1978,
@@ -831,6 +986,11 @@
       "id": "mudd-club-opens",
       "route_id": "punk-new-wave-downtown",
       "place_id": "mudd-club",
+      "place_ids": [
+        "mudd-club"
+      ],
+      "default_place_id": "mudd-club",
+      "place_relationships": [],
       "title": "Mudd Club Opens as a Downtown Art and Post-Punk Club",
       "year_start": 1978,
       "year_end": 1978,
@@ -853,6 +1013,11 @@
       "id": "tier-3-no-wave-experimental-scene",
       "route_id": "punk-new-wave-downtown",
       "place_id": "tier-3",
+      "place_ids": [
+        "tier-3"
+      ],
+      "default_place_id": "tier-3",
+      "place_relationships": [],
       "title": "Tier 3 Supports No Wave and Experimental Performance",
       "year_start": 1979,
       "year_end": 1980,
@@ -873,6 +1038,11 @@
       "id": "99-records-downtown-label-culture",
       "route_id": "punk-new-wave-downtown",
       "place_id": "99-records",
+      "place_ids": [
+        "99-records"
+      ],
+      "default_place_id": "99-records",
+      "place_relationships": [],
       "title": "99 Records Links No Wave, Post-Punk, and Dance Floors",
       "year_start": 1980,
       "year_end": 1984,
@@ -895,6 +1065,11 @@
       "id": "danceteria-new-wave-dance-crossover",
       "route_id": "punk-new-wave-downtown",
       "place_id": "danceteria",
+      "place_ids": [
+        "danceteria"
+      ],
+      "default_place_id": "danceteria",
+      "place_relationships": [],
       "title": "Danceteria Connects New Wave, DJs, Video, and Dance Culture",
       "year_start": 1980,
       "year_end": 1985,
@@ -917,6 +1092,11 @@
       "id": "downtown-scene-global-media-circulation",
       "route_id": "punk-new-wave-downtown",
       "place_id": "the-roxy-nyc",
+      "place_ids": [
+        "the-roxy-nyc"
+      ],
+      "default_place_id": "the-roxy-nyc",
+      "place_relationships": [],
       "title": "Downtown Scenes Circulate through Clubs, Film, Video, and Press",
       "year_start": 1981,
       "year_end": 1985,
@@ -939,6 +1119,11 @@
       "id": "palladium-afterlife-latin-dance-memory",
       "route_id": "salsa-latin-new-york",
       "place_id": "palladium-ballroom",
+      "place_ids": [
+        "palladium-ballroom"
+      ],
+      "default_place_id": "palladium-ballroom",
+      "place_relationships": [],
       "title": "Palladium Afterlife Shapes Latin Dance Memory",
       "year_start": 1965,
       "year_end": 1966,
@@ -961,6 +1146,11 @@
       "id": "boogaloo-latin-soul-east-harlem",
       "route_id": "salsa-latin-new-york",
       "place_id": "east-harlem-el-barrio",
+      "place_ids": [
+        "east-harlem-el-barrio"
+      ],
+      "default_place_id": "east-harlem-el-barrio",
+      "place_relationships": [],
       "title": "Boogaloo and Latin Soul Connect Barrio Youth Culture",
       "year_start": 1966,
       "year_end": 1968,
@@ -983,6 +1173,11 @@
       "id": "fania-records-label-infrastructure",
       "route_id": "salsa-latin-new-york",
       "place_id": "fania-records-nyc",
+      "place_ids": [
+        "fania-records-nyc"
+      ],
+      "default_place_id": "fania-records-nyc",
+      "place_relationships": [],
       "title": "Fania Turns Local Latin Music into Label Infrastructure",
       "year_start": 1965,
       "year_end": 1968,
@@ -1005,6 +1200,11 @@
       "id": "el-malo-bronx-barrio-sound",
       "route_id": "salsa-latin-new-york",
       "place_id": "south-bronx",
+      "place_ids": [
+        "south-bronx"
+      ],
+      "default_place_id": "south-bronx",
+      "place_relationships": [],
       "title": "Willie Colon and Hector Lavoe Sharpen Barrio Salsa",
       "year_start": 1967,
       "year_end": 1967,
@@ -1027,6 +1227,11 @@
       "id": "fania-all-stars-form",
       "route_id": "salsa-latin-new-york",
       "place_id": "fania-records-nyc",
+      "place_ids": [
+        "fania-records-nyc"
+      ],
+      "default_place_id": "fania-records-nyc",
+      "place_relationships": [],
       "title": "Fania All-Stars Create a Label Supergroup",
       "year_start": 1968,
       "year_end": 1968,
@@ -1049,6 +1254,11 @@
       "id": "el-museo-barrio-cultural-infrastructure",
       "route_id": "salsa-latin-new-york",
       "place_id": "el-museo-del-barrio",
+      "place_ids": [
+        "el-museo-del-barrio"
+      ],
+      "default_place_id": "el-museo-del-barrio",
+      "place_relationships": [],
       "title": "El Museo del Barrio Anchors Puerto Rican Cultural Visibility",
       "year_start": 1969,
       "year_end": 1969,
@@ -1071,6 +1281,11 @@
       "id": "cheetah-fania-all-stars-our-latin-thing",
       "route_id": "salsa-latin-new-york",
       "place_id": "cheetah-nightclub",
+      "place_ids": [
+        "cheetah-nightclub"
+      ],
+      "default_place_id": "cheetah-nightclub",
+      "place_relationships": [],
       "title": "Fania All-Stars at Cheetah Become Our Latin Thing",
       "year_start": 1971,
       "year_end": 1971,
@@ -1094,6 +1309,11 @@
       "id": "fania-all-stars-yankee-stadium",
       "route_id": "salsa-latin-new-york",
       "place_id": "yankee-stadium",
+      "place_ids": [
+        "yankee-stadium"
+      ],
+      "default_place_id": "yankee-stadium",
+      "place_relationships": [],
       "title": "Fania All-Stars Bring Salsa to Stadium Scale",
       "year_start": 1973,
       "year_end": 1973,
@@ -1116,6 +1336,11 @@
       "id": "nuyorican-poets-cafe-identity",
       "route_id": "salsa-latin-new-york",
       "place_id": "nuyorican-poets-cafe",
+      "place_ids": [
+        "nuyorican-poets-cafe"
+      ],
+      "default_place_id": "nuyorican-poets-cafe",
+      "place_relationships": [],
       "title": "Nuyorican Poets Cafe Gives Language to Urban Puerto Rican Identity",
       "year_start": 1973,
       "year_end": 1975,
@@ -1139,6 +1364,11 @@
       "id": "celia-cruz-fania-pan-latin-stage",
       "route_id": "salsa-latin-new-york",
       "place_id": "fania-records-nyc",
+      "place_ids": [
+        "fania-records-nyc"
+      ],
+      "default_place_id": "fania-records-nyc",
+      "place_relationships": [],
       "title": "Celia Cruz Joins Fania's Pan-Latin Salsa Stage",
       "year_start": 1974,
       "year_end": 1975,
@@ -1161,6 +1391,11 @@
       "id": "siembra-social-salsa",
       "route_id": "salsa-latin-new-york",
       "place_id": "fania-records-nyc",
+      "place_ids": [
+        "fania-records-nyc"
+      ],
+      "default_place_id": "fania-records-nyc",
+      "place_relationships": [],
       "title": "Siembra Makes Salsa a Vehicle for Urban Storytelling",
       "year_start": 1978,
       "year_end": 1978,
@@ -1183,6 +1418,11 @@
       "id": "salsa-globalized-nyc-media",
       "route_id": "salsa-latin-new-york",
       "place_id": "new-york-city",
+      "place_ids": [
+        "new-york-city"
+      ],
+      "default_place_id": "new-york-city",
+      "place_relationships": [],
       "title": "Salsa Circulates Globally from New York Media and Concert Networks",
       "year_start": 1980,
       "year_end": 1985,
@@ -1206,6 +1446,11 @@
       "id": "slugs-free-jazz-east-village",
       "route_id": "downtown-experiment-no-wave-loft-jazz",
       "place_id": "slugs-saloon",
+      "place_ids": [
+        "slugs-saloon"
+      ],
+      "default_place_id": "slugs-saloon",
+      "place_relationships": [],
       "title": "Slugs' Saloon Hosts Free Jazz in the East Village",
       "year_start": 1966,
       "year_end": 1972,
@@ -1228,6 +1473,11 @@
       "id": "experimental-intermedia-loft-practice",
       "route_id": "downtown-experiment-no-wave-loft-jazz",
       "place_id": "experimental-intermedia",
+      "place_ids": [
+        "experimental-intermedia"
+      ],
+      "default_place_id": "experimental-intermedia",
+      "place_relationships": [],
       "title": "Experimental Intermedia Links Loft Practice, Film, Drone, and Performance",
       "year_start": 1968,
       "year_end": 1973,
@@ -1250,6 +1500,11 @@
       "id": "kitchen-founded-video-music",
       "route_id": "downtown-experiment-no-wave-loft-jazz",
       "place_id": "the-kitchen",
+      "place_ids": [
+        "the-kitchen"
+      ],
+      "default_place_id": "the-kitchen",
+      "place_relationships": [],
       "title": "The Kitchen Turns Video Art into an Experimental Music Platform",
       "year_start": 1971,
       "year_end": 1974,
@@ -1272,6 +1527,11 @@
       "id": "ny-musicians-jazz-festival-loft-shift",
       "route_id": "downtown-experiment-no-wave-loft-jazz",
       "place_id": "studio-rivbea",
+      "place_ids": [
+        "studio-rivbea"
+      ],
+      "default_place_id": "studio-rivbea",
+      "place_relationships": [],
       "title": "New York Musicians' Jazz Festival Helps Shift Free Jazz into Lofts",
       "year_start": 1972,
       "year_end": 1972,
@@ -1294,6 +1554,11 @@
       "id": "studio-rivbea-loft-jazz-hub",
       "route_id": "downtown-experiment-no-wave-loft-jazz",
       "place_id": "studio-rivbea",
+      "place_ids": [
+        "studio-rivbea"
+      ],
+      "default_place_id": "studio-rivbea",
+      "place_relationships": [],
       "title": "Studio Rivbea Becomes a Central Loft-Jazz Hub",
       "year_start": 1972,
       "year_end": 1976,
@@ -1316,6 +1581,11 @@
       "id": "alis-alley-musician-run-space",
       "route_id": "downtown-experiment-no-wave-loft-jazz",
       "place_id": "alis-alley",
+      "place_ids": [
+        "alis-alley"
+      ],
+      "default_place_id": "alis-alley",
+      "place_relationships": [],
       "title": "Ali's Alley Extends Musician-Run Loft Infrastructure",
       "year_start": 1973,
       "year_end": 1979,
@@ -1338,6 +1608,11 @@
       "id": "wildflowers-loft-jazz-documented",
       "route_id": "downtown-experiment-no-wave-loft-jazz",
       "place_id": "studio-rivbea",
+      "place_ids": [
+        "studio-rivbea"
+      ],
+      "default_place_id": "studio-rivbea",
+      "place_relationships": [],
       "title": "Wildflowers Documents the New York Loft-Jazz Scene",
       "year_start": 1976,
       "year_end": 1977,
@@ -1360,6 +1635,11 @@
       "id": "artists-space-no-wave-experiment",
       "route_id": "downtown-experiment-no-wave-loft-jazz",
       "place_id": "artists-space",
+      "place_ids": [
+        "artists-space"
+      ],
+      "default_place_id": "artists-space",
+      "place_relationships": [],
       "title": "Artists Space Connects No Wave to Downtown Art Experiment",
       "year_start": 1978,
       "year_end": 1978,
@@ -1383,6 +1663,11 @@
       "id": "roulette-founded-downtown-music",
       "route_id": "downtown-experiment-no-wave-loft-jazz",
       "place_id": "roulette-intermedium",
+      "place_ids": [
+        "roulette-intermedium"
+      ],
+      "default_place_id": "roulette-intermedium",
+      "place_relationships": [],
       "title": "Roulette Builds an Artist-Run New Music Presenter Model",
       "year_start": 1978,
       "year_end": 1982,
@@ -1405,6 +1690,11 @@
       "id": "kitchen-new-music-new-york",
       "route_id": "downtown-experiment-no-wave-loft-jazz",
       "place_id": "the-kitchen",
+      "place_ids": [
+        "the-kitchen"
+      ],
+      "default_place_id": "the-kitchen",
+      "place_relationships": [],
       "title": "New Music New York Expands the Downtown Experiment Frame",
       "year_start": 1979,
       "year_end": 1979,
@@ -1427,6 +1717,11 @@
       "id": "tier-3-no-wave-improv-crossover",
       "route_id": "downtown-experiment-no-wave-loft-jazz",
       "place_id": "tier-3",
+      "place_ids": [
+        "tier-3"
+      ],
+      "default_place_id": "tier-3",
+      "place_relationships": [],
       "title": "Tier 3 Crosses No Wave, Post-Punk, and Improvisation",
       "year_start": 1979,
       "year_end": 1980,
@@ -1447,6 +1742,11 @@
       "id": "zorn-game-pieces-downtown-language",
       "route_id": "downtown-experiment-no-wave-loft-jazz",
       "place_id": "new-york-city",
+      "place_ids": [
+        "new-york-city"
+      ],
+      "default_place_id": "new-york-city",
+      "place_relationships": [],
       "title": "John Zorn's Game Pieces Turn Improvisation into Rule-Based Downtown Language",
       "year_start": 1978,
       "year_end": 1985,
