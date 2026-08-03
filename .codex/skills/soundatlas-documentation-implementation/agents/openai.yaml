@@ -1,0 +1,4 @@
+interface:
+  display_name: "SoundAtlas Documentation Implementation"
+  short_description: "Update SoundAtlas documentation safely"
+  default_prompt: "Use $soundatlas-documentation-implementation to update the approved documentation Issue."
