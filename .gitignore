@@ -57,6 +57,8 @@ pnpm-debug.log*
 # Legacy local planning records
 plans/records/
 specs/
+TODO.md
+docs/done.md
 
 # Local route editorial agent drafts
 docs/content/routes/*/*.ai-draft.*
