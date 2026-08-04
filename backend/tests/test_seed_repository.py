@@ -32,10 +32,10 @@ def test_seed_repository_loads_routes_places_events_and_connections() -> None:
     }
     assert set(geometries) == {
         "south-bronx",
-        "cedar-park-bronx",
+        "cedar-playground-bronx",
         "east-harlem-el-barrio",
     }
-    assert geometries["cedar-park-bronx"].geometry_source_type == "external"
+    assert geometries["cedar-playground-bronx"].geometry_source_type == "external"
     assert geometries["south-bronx"].geometry_source_type == "curated"
 
 

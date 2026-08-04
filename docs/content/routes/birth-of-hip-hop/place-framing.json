@@ -45,8 +45,8 @@
     },
     {
       "decision": "reuse",
-      "source_place_text": "Cedar Park",
-      "place_id": "cedar-park-bronx"
+      "source_place_text": "Cedar Playground",
+      "place_id": "cedar-playground-bronx"
     },
     {
       "decision": "new",

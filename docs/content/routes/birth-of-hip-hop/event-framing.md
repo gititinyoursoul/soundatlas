@@ -12,7 +12,7 @@ drafts before seed promotion.
 | `kool-herc-cindy-campbell-sedgwick-party` | 1973-1973 | `1520-sedgwick-avenue` | Kool Herc, Cindy Campbell, and the Sedgwick party |
 | `mobile-sound-and-breakbeat-practice` | 1970-1970 | `bronx` | Mobile sound and breakbeat practice develop |
 | `bronx-schools-parks-community-centers-parties` | 1970-1970 | `bronx` | Schools, parks, and community centers host party culture |
-| `cedar-park-outdoor-party-culture` | 1970-1970 | `cedar-park-bronx` | Cedar Park and outdoor party culture |
+| `cedar-park-outdoor-party-culture` | 1970-1970 | `cedar-playground-bronx` | Cedar Playground and outdoor party culture |
 | `grandmaster-flash-turntable-technique` | 1970-1970 | `bronx` | Grandmaster Flash and turntable technique |
 | `scratching-and-dj-technique-attribution` | 1970-1970 | `bronx` | Scratching and DJ technique attribution |
 | `mc-crew-and-party-hosting-practices` | 1970-1970 | `bronx` | MCs, crews, and party hosting practices |
@@ -38,7 +38,7 @@ drafts before seed promotion.
 | `bronx-new-york-city` | new | Bronx / New York City |
 | `bronx` | new | Bronx |
 | `1520-sedgwick-avenue` | reuse | 1520 Sedgwick Avenue |
-| `cedar-park-bronx` | reuse | Cedar Park |
+| `cedar-playground-bronx` | reuse | Cedar Playground |
 | `bronx-nyc` | new | Bronx / NYC |
 | `bronx-nyc-subway-network` | new | Bronx / NYC subway network |
 | `bronx-river-houses` | reuse | Bronx River Houses |

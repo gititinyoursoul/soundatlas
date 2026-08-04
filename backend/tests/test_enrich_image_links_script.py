@@ -127,8 +127,8 @@ def test_confidence_scoring_and_image_type_fallback() -> None:
         title="Breakbeat DJing Spreads Across Parties",
     )
     route = build_route()
-    place = build_place({"name": "Cedar Park", "place_type": "park"})
-    text_blob = "Bronx hip hop block party crowd in Cedar Park 1974"
+    place = build_place({"name": "Cedar Playground", "place_type": "park"})
+    text_blob = "Bronx hip hop block party crowd in Cedar Playground 1974"
 
     assert score_image_candidate(text_blob, event=event, route=route, place=place) == 0.8
     assert infer_image_type(text_blob=text_blob, event=event, place=place) == "venue_photo"

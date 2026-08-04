@@ -116,7 +116,7 @@ when the event does not already have a valid focused place.
 {
   "place_ids": [
     "1520-sedgwick-avenue",
-    "cedar-park-bronx",
+    "cedar-playground-bronx",
     "bronx-river-houses"
   ],
   "default_place_id": "1520-sedgwick-avenue",

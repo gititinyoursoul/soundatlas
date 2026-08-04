@@ -58,8 +58,8 @@ def test_api_delivers_canonical_event_places_and_shared_geometry() -> None:
 
     assert places_response.status_code == 200
     places = {place["id"]: place for place in places_response.json()}
-    assert places["cedar-park-bronx"]["geometry"]["type"] == "Polygon"
-    assert places["cedar-park-bronx"]["geometry_source_type"] == "external"
+    assert places["cedar-playground-bronx"]["geometry"]["type"] == "Polygon"
+    assert places["cedar-playground-bronx"]["geometry_source_type"] == "external"
     assert places["south-bronx"]["geometry_source_type"] == "curated"
 
 

@@ -50,15 +50,15 @@ def test_plan_image_queries_uses_place_borough_for_concrete_place_disambiguation
             route={"id": "birth-of-hip-hop", "title": "Birth of Hip-Hop"},
             place={
                 "id": "cedar-park",
-                "name": "Cedar Park",
+                "name": "Cedar Playground",
                 "borough": "Bronx",
                 "place_type": "park",
             },
         ),
     )
 
-    assert ("venue_photo", "Cedar Park Bronx 1974") in plan_pairs(plans)
-    assert ("venue_photo", "Cedar Park New York 1974") not in plan_pairs(plans)
+    assert ("venue_photo", "Cedar Playground Bronx 1974") in plan_pairs(plans)
+    assert ("venue_photo", "Cedar Playground New York 1974") not in plan_pairs(plans)
 
 
 def test_plan_image_queries_for_artist_event_avoids_broad_place_query() -> None:

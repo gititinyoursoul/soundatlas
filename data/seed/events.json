@@ -169,11 +169,11 @@
     {
       "id": "breakbeat-dj-practice-spreads",
       "route_id": "birth-of-hip-hop",
-      "place_id": "cedar-park-bronx",
+      "place_id": "cedar-playground-bronx",
       "place_ids": [
-        "cedar-park-bronx"
+        "cedar-playground-bronx"
       ],
-      "default_place_id": "cedar-park-bronx",
+      "default_place_id": "cedar-playground-bronx",
       "place_relationships": [],
       "title": "Breakbeat DJing Spreads Across Parties",
       "year_start": 1974,

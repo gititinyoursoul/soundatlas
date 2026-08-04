@@ -56,7 +56,7 @@ Narrative function:
 | Place | Role in the Route | Map Logic |
 | --- | --- | --- |
 | 1520 Sedgwick Avenue, Bronx | Symbolic origin point for Kool Herc's Back-to-School Jam | Start marker |
-| Cedar Park, Bronx | Park parties and public DJ culture | Community space |
+| Cedar Playground, Bronx | Park parties and public DJ culture | Community space |
 | Bronx River Houses, Bronx | Afrika Bambaataa, Zulu Nation, scene organization | Scene node |
 | Harlem World, Manhattan | Club and battle context for early rap performances | Club node |
 | Disco Fever, Bronx | Transition from local scene to club and media presence | Club node |

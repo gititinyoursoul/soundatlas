@@ -60,7 +60,7 @@
       "media_goal": "Find context about a relevant venue, club, block, park, neighborhood, or performance space.",
       "priority": 2,
       "youtube_type": "video",
-      "q": "Cedar Park Bronx block parties early hip hop 1974 1976",
+      "q": "Cedar Playground Bronx block parties early hip hop 1974 1976",
       "get_request": "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&order=relevance&safeSearch=moderate&relevanceLanguage=en&regionCode=US&q=Cedar+Park+Bronx+block+parties+early+hip+hop+1974+1976&key=YOUTUBE_API_KEY",
       "request_params": {
         "part": "snippet",
@@ -70,14 +70,14 @@
         "safeSearch": "moderate",
         "relevanceLanguage": "en",
         "regionCode": "US",
-        "q": "Cedar Park Bronx block parties early hip hop 1974 1976",
+        "q": "Cedar Playground Bronx block parties early hip hop 1974 1976",
         "key": "YOUTUBE_API_KEY"
       },
       "confidence_hint": "medium",
       "review_priority": 2,
-      "reason": "The event references parks and community spaces, with Cedar Park as the associated place.",
+      "reason": "The event references parks and community spaces, with Cedar Playground as the associated place.",
       "review_risks": [
-        "Verify that Cedar Park or Bronx park context is connected to early hip-hop culture."
+        "Verify that Cedar Playground or Bronx park context is connected to early hip-hop culture."
       ]
     },
     {

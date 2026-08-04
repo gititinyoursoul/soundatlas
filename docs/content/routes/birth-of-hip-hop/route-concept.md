@@ -106,7 +106,7 @@ The route should move from neighborhood conditions to anchored memory to repeate
 Primary place argument:
 - 1520 Sedgwick Avenue is a symbolic and interpretable anchor, not the whole route.
 - Bronx parks, schools, community centers, clubs, and housing/community spaces show hip-hop as a repeated local practice.
-- Cedar Park and Bronx River Houses may offer strong place-specific anchors if source review confirms dateable, route-relevant claims.
+- Cedar Playground and Bronx River Houses may offer strong place-specific anchors if source review confirms dateable, route-relevant claims.
 - New Jersey, downtown Manhattan, broadcast sites, and wider media nodes should be included only if they serve a bounded circulation argument.
 
 Mapping challenge:
@@ -134,7 +134,7 @@ Some important practices may not map cleanly as single events. The route may nee
    Function: Show repeated neighborhood infrastructure.  
    Review need: Specific sites and dates.
 
-6. Cedar Park and outdoor party culture  
+6. Cedar Playground and outdoor party culture\
    Function: Public-space anchor for outdoor sound and audience gathering.  
    Review need: Verify dateable activity and route-specific significance.
 
@@ -194,7 +194,7 @@ Rights risks:
 Weak source areas:
 - Pre-1973 Bronx party culture
 - Direct Caribbean-to-Bronx influence claims
-- Exact outdoor party dates at Cedar Park
+- Exact outdoor party dates at Cedar Playground
 - Specific school/community-center events
 - Technique attribution, especially “first” or invention claims
 - Broadcast/radio circulation
@@ -219,7 +219,7 @@ Potential later additions may be justified only if source review identifies:
 
 3. Can schools, parks, and community centers be represented as a network event, or does the seed model require selecting one or two specific sites?
 
-4. Does Cedar Park have enough source-backed, dateable evidence to carry event weight?
+4. Does Cedar Playground have enough source-backed, dateable evidence to carry event weight?
 
 5. How should the route handle contested DJ technique attribution without flattening multiple accounts into a single claim?
 
