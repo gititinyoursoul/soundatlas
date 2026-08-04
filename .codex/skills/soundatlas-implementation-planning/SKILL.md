@@ -9,7 +9,7 @@ Read the repo context before drafting or revising Issue planning content. Start
 with:
 
 - `AGENTS.md`
-- `docs/implementation-plan-workflow.md`
+- `docs/github-issue-workflow.md`
 - `docs/workflow-registry.md`
 - the accepted `## Concept` Issue comment or authoritative concept document,
   when concept work was required

@@ -78,14 +78,14 @@ This is agent routing, not independently executing automation.
 
 This overview does not redefine ownership. `AGENTS.md` owns repository-wide
 constraints, this registry owns routing and entrypoint selection,
-`docs/implementation-plan-workflow.md` owns the detailed Issue lifecycle, and
+`docs/github-issue-workflow.md` owns the detailed Issue lifecycle, and
 GitHub Issues hold the durable work record. The canonical table below maps each
 work type to its prompt or skill.
 
 Implementation review is read-only and produces a Review Result inside the
 single Implementation Report comment. Human diff review, commit authorization,
 and post-commit closure remain separate lifecycle concerns in
-`docs/implementation-plan-workflow.md`.
+`docs/github-issue-workflow.md`.
 
 ## Skill, Prompt, and Source Boundary Policy
 
@@ -209,7 +209,7 @@ For an approved prompt-to-skill extraction:
 - Allow Intake Revisions with a visible `## Intake Revision` history comment;
   material revisions require Grill-Me before planning, while material expansion
   after implementation begins requires a linked Issue. See
-  `docs/implementation-plan-workflow.md` for the phase-specific rules.
+  `docs/github-issue-workflow.md` for the phase-specific rules.
 - Add a `## Grill-Me Review` comment before a `## Plan Update` or
   `## Detailed Plan Update` when risk flags are present.
 - Implement from a risk-flagged Issue only after the review and plan gates are
@@ -231,7 +231,7 @@ For an approved prompt-to-skill extraction:
 - After a successful commit for completed Issue work, capture the hash, verify
   Issue-relevant completeness, post the standard completion comment, and close
   the Issue. Preserve the documented exceptions in
-  `docs/implementation-plan-workflow.md`.
+  `docs/github-issue-workflow.md`.
 - End every workflow result with a short `Next step` handoff when useful.
 
 ## Canonical Workflow Registry
@@ -250,7 +250,7 @@ by the agent.
 | Intake critique and planning front door | Interactive prompt                     | Intake Issue when non-trivial                                                | `prompts/grill-me.md` for review format; GitHub Issue for decisions                | `prompts/grill-me.md`                                                                                           | `## Grill-Me Review` comment                                        |
 | Concept synthesis                       | Skill                                  | Confirmed material decisions; only when concept work is needed               | `## Concept` Issue comment or one human-confirmed authoritative document under `docs/` | `.codex/skills/soundatlas-concept-work/SKILL.md`                                                            | Five-part concept or link to its authoritative document             |
 | Implementation review                   | Skill                                  | Completed non-trivial Issue work, or drift/risk during implementation        | Approved Issue, concept when present, plan, actual diff, evidence, and current-state docs | `.codex/skills/soundatlas-implementation-review/SKILL.md`                                               | Review Result inside the single Implementation Report               |
-| Issue intake, planning, and reports     | Skill                                  | Intake or Grill-Me as required by risk                                       | GitHub Issue body/comments; lifecycle in `docs/implementation-plan-workflow.md`    | `.codex/skills/soundatlas-implementation-planning/SKILL.md`                                                     | Intake, Plan Update, Detailed Plan Update, or Implementation Report |
+| Issue intake, planning, and reports     | Skill                                  | Intake or Grill-Me as required by risk                                       | GitHub Issue body/comments; lifecycle in `docs/github-issue-workflow.md`            | `.codex/skills/soundatlas-implementation-planning/SKILL.md`                                                     | Intake, Plan Update, Detailed Plan Update, or Implementation Report |
 | Frontend implementation                 | Skill plus compatibility wrapper       | Approved Issue; Grill-Me and Plan Update when risk-flagged                   | Approved GitHub Issue; `.codex/skills/soundatlas-frontend-implementation/SKILL.md` | `.codex/skills/soundatlas-frontend-implementation/SKILL.md` with `prompts/implement-frontend-map.md` as wrapper | Frontend changes and implementation report                          |
 | Backend implementation                  | Skill plus compatibility wrapper       | Approved Issue; Grill-Me and Plan Update when risk-flagged                   | Approved GitHub Issue; `.codex/skills/soundatlas-backend-implementation/SKILL.md` | `.codex/skills/soundatlas-backend-implementation/SKILL.md` with `prompts/implement-backend-api.md` as wrapper | Backend changes and implementation report                           |
 | Documentation and workflow changes      | Skill plus compatibility wrapper       | Approved Issue; Grill-Me for workflow or other risk-flagged changes          | Approved GitHub Issue; `.codex/skills/soundatlas-documentation-implementation/SKILL.md` | `.codex/skills/soundatlas-documentation-implementation/SKILL.md` with `prompts/update-docs.md` as wrapper        | Documentation changes and implementation report                     |

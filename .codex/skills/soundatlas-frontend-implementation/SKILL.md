@@ -13,7 +13,7 @@ GitHub Issue. The approved Issue is the primary product and scope authority.
 Read these before editing:
 
 - `AGENTS.md`
-- `docs/implementation-plan-workflow.md`
+- `docs/github-issue-workflow.md`
 - `docs/workflow-registry.md`
 - the approved GitHub Issue, including its `## Grill-Me Review` and `## Plan
 Update` or `## Detailed Plan Update` comments when risk flags are present

@@ -17,7 +17,7 @@ implementation.
 Read these before editing:
 
 - `AGENTS.md`
-- `docs/implementation-plan-workflow.md`
+- `docs/github-issue-workflow.md`
 - `docs/workflow-registry.md`
 - the approved GitHub Issue and its `## Grill-Me Review` and `## Plan Update`
   or `## Detailed Plan Update` comments when risk flags are present

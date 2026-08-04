@@ -18,7 +18,7 @@ editorial, enrichment, or development-environment documentation.
 - Seed structure and validation: [`../data/seed-data-structure.md`](../data/seed-data-structure.md), [`../data/seed-data-validation.md`](../data/seed-data-validation.md)
 - Development environment: [`../dev-container.md`](../dev-container.md)
 - Current frontend design: [`../design/current-frontend-design.md`](../design/current-frontend-design.md)
-- Workflow and Issue planning: [`../workflow-registry.md`](../workflow-registry.md), [`../implementation-plan-workflow.md`](../implementation-plan-workflow.md)
+- Workflow and Issue planning: [`../workflow-registry.md`](../workflow-registry.md), [`../github-issue-workflow.md`](../github-issue-workflow.md)
 
 Architecture documents describe existing system behavior. Product or contract
 changes must update their authoritative product or data documents first.

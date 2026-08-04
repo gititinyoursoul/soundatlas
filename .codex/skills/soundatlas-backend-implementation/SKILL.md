@@ -13,7 +13,7 @@ GitHub Issue. The approved Issue is the primary product and scope authority.
 Read these before editing:
 
 - `AGENTS.md`
-- `docs/implementation-plan-workflow.md`
+- `docs/github-issue-workflow.md`
 - `docs/workflow-registry.md`
 - `docs/data/seed-data-validation.md` when seed-backed behavior is involved
 - the approved GitHub Issue, including its `## Grill-Me Review` and `## Plan

@@ -103,7 +103,7 @@ Events should contain at least:
 - Document product and architecture decisions in `docs/`.
 - GitHub Issues are the source of truth for planned agent work.
 - New planned work should be captured in an Intake Issue with `Task`, `Context`, and `Acceptance Criteria`.
-- For feature work, follow the implementation-plan workflow in `docs/implementation-plan-workflow.md`.
+- For feature work, follow the GitHub Issue workflow in `docs/github-issue-workflow.md`.
 - At Intake, before accepting a consequential concept or Plan Update, when
   implementation reveals drift or new constraints, and before accepting
   completed implementation, perform a lightweight Grill-Me check. Continue
