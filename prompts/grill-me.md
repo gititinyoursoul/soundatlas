@@ -9,7 +9,8 @@ which artifact is being challenged.
 
 This prompt is the human-facing critique entrypoint. It does not replace the
 GitHub Issue workflow, `soundatlas-concept-work`,
-`soundatlas-implementation-planning`, implementation, or implementation review.
+`soundatlas-implementation-review`, `soundatlas-implementation-planning`, or
+implementation.
 
 Core rule:
 
@@ -86,6 +87,12 @@ session or asking for approval. Mention the clean check only when it helps the
 handoff. If a material finding needs human confirmation, enter the interactive
 one-finding flow below.
 
+Before accepting completed non-trivial Issue work, use
+`soundatlas-implementation-review` for the routine target, implementation, and
+evidence comparison. A clean result continues to the combined Implementation
+Report. If the skill returns a material decision, use the interactive
+one-finding flow here. Do not create a separate routine review comment.
+
 If the check finds that planning would otherwise invent material target
 behavior, runtime responsibilities, boundaries, or ownership, use Grill Me to
 resolve the material decisions, then use `soundatlas-concept-work` to synthesize
@@ -100,7 +107,8 @@ Grill Me challenges the active artifact but does not own it.
 * Implementation planning defines how the target will be built.
 * Implementation contains the actual changes.
 * Current-state documentation describes how the system works now.
-* Review determines whether the implementation matches the accepted target.
+* `soundatlas-implementation-review` determines whether the implementation
+  matches the accepted target with proportionate evidence.
 
 Grill Me findings may inform these artifacts, but must not silently modify them.
 Material decisions remain open until the user confirms them.
@@ -116,7 +124,7 @@ Use Grill Me:
 * before approving a broad or risky implementation plan
 * when implementation reveals unexpected constraints
 * when concept or scope drift is suspected
-* before accepting completed implementation
+* when implementation review returns a material human decision
 * whenever the user requests it
 
 ## Review Modes
@@ -136,8 +144,8 @@ Use the smallest mode that fits the active artifact:
   implement.
 * `implementation grill`: challenge work in progress, complexity, shortcuts,
   newly discovered constraints, and concept or plan drift.
-* `implementation review grill`: compare the accepted target, approved plan,
-  actual implementation, validation evidence, and documentation.
+* `implementation review grill`: challenge a material decision or ambiguity
+  returned by `soundatlas-implementation-review`.
 
 ## Mode-Specific Focus
 
@@ -176,35 +184,15 @@ Check:
 
 ### Implementation Review Grill
 
-Compare:
+Use `soundatlas-implementation-review` for the repeatable comparison, evidence
+assessment, finding classification, and routing. Use this Grill mode only when
+the review exposes a material decision, conflicting intent, or ambiguity that
+requires human confirmation. Challenge that finding without repeating the
+entire implementation review.
 
-* accepted concept or target behavior
-* approved Issue and plan
-* actual implementation
-* tests and runtime evidence
-* current-state documentation
-
-Check for:
-
-* missing target behavior
-* incomplete runtime responsibilities
-* insufficient evidence
-* implementation or plan defects
-* unapproved scope
-* violated non-goals
-* stale documentation
-* unrelated changes
-* follow-up work that should not expand the current scope
-
-Route findings appropriately:
-
-* implementation defect → implementation
-* incomplete plan → implementation planning
-* incomplete or incorrect concept → concept work
-* unresolved decision → Grill Me
-* stale documentation → documentation update
-* optional enhancement → follow-up Issue
-* aligned implementation → accept and close
+After confirmation, return the decision to the workflow destination named by
+the review skill. Grill Me does not fix the implementation, rewrite the plan or
+concept, finalize the Implementation Report, commit, or close the Issue.
 
 ## Project Constraints
 

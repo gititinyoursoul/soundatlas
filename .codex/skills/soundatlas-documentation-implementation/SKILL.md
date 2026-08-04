@@ -101,6 +101,11 @@ changed.
 
 ## Documentation Report
 
+Before finalizing the report for completed non-trivial Issue work, use
+`soundatlas-implementation-review`. Resolve or route required findings, then
+include its Review Result in this same report. Do not post a separate routine
+review comment.
+
 Report in the Issue and final response:
 
 ```md
@@ -126,6 +131,15 @@ Report in the Issue and final response:
 ## Files Changed
 
 - `<path>`: `<reason>`
+
+## Review Result
+
+- Verdict:
+- Reviewer mode:
+- Compared artifacts:
+- Evidence coverage:
+- Findings and routing:
+- Documentation impact:
 
 ## Remaining Risks
 

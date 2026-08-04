@@ -13,6 +13,8 @@ with:
 - `docs/workflow-registry.md`
 - the accepted `## Concept` Issue comment or authoritative concept document,
   when concept work was required
+- the `soundatlas-implementation-review` result, when finalizing an
+  Implementation Report for non-trivial Issue work
 
 Read `prompts/grill-me.md` when the request needs critique, simplification, or
 readiness review before Issue content is drafted.
@@ -85,7 +87,15 @@ Changes` section instead of silently rewriting the meaning of the Issue.
    with wording such as `implement issue #<number>` or the change is clearly
    trivial. Explicit wording does not bypass required review or planning gates.
 
-8. After a completed Issue-based implementation is committed, complete the
+8. Finalize one combined Implementation Report after review.
+   For completed non-trivial Issue work, require
+   `soundatlas-implementation-review` before the report is final. Include its
+   Review Result in the same comment; do not create a separate routine review
+   comment. If the review routes a required correction or material decision,
+   keep the report unaccepted until the finding is resolved or explicitly
+   reported as blocking.
+
+9. After a completed Issue-based implementation is committed, complete the
    post-commit lifecycle: capture the hash, verify acceptance criteria, confirm
    no Issue-relevant changes remain uncommitted, post the standard completion
    comment, and close the Issue. Leave the Issue open and report the failure if
@@ -143,6 +153,8 @@ Use this shape after implementation:
 
 ## Acceptance Criteria Result
 
+## Review Result
+
 ## Remaining Risks
 ```
 
@@ -172,6 +184,10 @@ The standard post-commit completion comment is:
 - Do not state `Open Questions: None` while a material decision remains
   unresolved.
 - Do not define behavior outside the requested change.
+- Do not describe completed non-trivial Issue work as accepted without a
+  `soundatlas-implementation-review` result supported by proportionate evidence.
+- Keep the Review Result inside the single Implementation Report comment. The
+  review skill performs the comparison; this skill records the result.
 - Do not fill a missing or contradictory material concept decision inside a
   Plan Update. Return it to Grill Me and concept work.
 - Reference an accepted concept instead of duplicating it across implementation

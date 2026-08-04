@@ -12,8 +12,10 @@ Prompts are compatibility entrypoints into those workflows. They should stay
 thin and should not redefine product behavior. `prompts/grill-me.md` is the
 default human-facing critique entrypoint. The
 `soundatlas-concept-work` skill synthesizes confirmed decisions when concept
-work is needed. The `soundatlas-implementation-planning` skill is the durable
-Issue-writing mechanism for implementation plans and reports.
+work is needed. The `soundatlas-implementation-review` skill performs the
+repeatable completion comparison and evidence assessment. The
+`soundatlas-implementation-planning` skill is the durable Issue-writing
+mechanism for implementation plans and the combined Implementation Report.
 
 `prompts/grill-me.md` is intentionally interactive: it may briefly indicate
 whether material findings are present and, when useful, give an approximate
@@ -27,6 +29,9 @@ Continue without an interactive session when there is no material finding. If
 planning would otherwise invent material target behavior, runtime
 responsibilities, boundaries, or ownership, resolve material decisions through
 Grill Me and then use `soundatlas-concept-work` to record the concept.
+Before accepting completed non-trivial Issue work, use
+`soundatlas-implementation-review`; return only material human decisions to
+Grill Me.
 
 ## Orchestration At A Glance
 
@@ -53,8 +58,10 @@ Request
         -> Plan Update as required
         -> Explicit implementation request
         -> Relevant execution skill
-        -> Validation + Implementation Report
-        -> Lightweight completion check + human diff review
+        -> Validation
+        -> soundatlas-implementation-review
+        -> Combined Implementation Report
+        -> Human diff review
         -> Human commit request
         -> Commit + completion comment + Issue closure
 ```
@@ -66,8 +73,8 @@ references an accepted concept rather than copying it.
 
 "Automatic" means the agent is instructed to perform the lightweight checks
 and may select a skill implicitly. For example,
-`.codex/skills/soundatlas-concept-work/agents/openai.yaml` permits implicit
-selection. This is agent routing, not independently executing automation.
+the concept-work and implementation-review metadata permit implicit selection.
+This is agent routing, not independently executing automation.
 
 This overview does not redefine ownership. `AGENTS.md` owns repository-wide
 constraints, this registry owns routing and entrypoint selection,
@@ -75,9 +82,10 @@ constraints, this registry owns routing and entrypoint selection,
 GitHub Issues hold the durable work record. The canonical table below maps each
 work type to its prompt or skill.
 
-Implementation acceptance and post-commit closure remain lifecycle concerns in
-`docs/implementation-plan-workflow.md`. A separate review mechanism would need
-its own approved registry entry before becoming part of this workflow.
+Implementation review is read-only and produces a Review Result inside the
+single Implementation Report comment. Human diff review, commit authorization,
+and post-commit closure remain separate lifecycle concerns in
+`docs/implementation-plan-workflow.md`.
 
 ## Skill, Prompt, and Source Boundary Policy
 
@@ -94,6 +102,8 @@ The approved GitHub Issue remains the product and scope authority.
 Current examples include:
 
 - concept synthesis and recording: `soundatlas-concept-work`;
+- implementation comparison and evidence assessment:
+  `soundatlas-implementation-review`;
 - frontend implementation: `soundatlas-frontend-implementation`;
 - backend implementation: `soundatlas-backend-implementation`;
 - Issue intake, planning, and reports: `soundatlas-implementation-planning`.
@@ -135,6 +145,13 @@ repository references and compatibility needs have been reviewed.
   selects an authoritative concept document under `docs/`, that document owns
   the concept and the Issue links to it without duplication.
 
+For completion review, `soundatlas-implementation-review` owns comparison,
+proportional evidence assessment, finding classification, and routing. Grill Me
+owns material human decisions; implementation owns fixes;
+`soundatlas-implementation-planning` owns the combined Implementation Report;
+and the human owns commit authorization. The review skill does not manage Issue
+state labels.
+
 When execution documents conflict, the registry resolves the conflict only when
 it explicitly defines precedence. Otherwise, correct the conflict in the
 authoritative source rather than interpreting it on the agent's own authority.
@@ -160,6 +177,7 @@ For an approved prompt-to-skill extraction:
 | Frontend implementation | Skill, with legacy wrapper | `soundatlas-frontend-implementation` |
 | Backend implementation | Skill, with legacy wrapper | `soundatlas-backend-implementation` |
 | Concept synthesis | Skill | `soundatlas-concept-work` |
+| Implementation review | Skill | `soundatlas-implementation-review` |
 | Documentation updates | Skill, with legacy wrapper | `soundatlas-documentation-implementation` |
 | Test planning and implementation | Skill, with legacy wrapper | `soundatlas-testing-implementation` |
 | Editorial route and seed curation | Interactive prompt | `prompts/create-route.md`, `prompts/curate-seed-data.md` |
@@ -179,6 +197,10 @@ For an approved prompt-to-skill extraction:
   check finds that implementation planning would otherwise invent material
   target behavior, runtime responsibilities, boundaries, or ownership. Skip it
   for clear, local, low-risk work.
+- Use `soundatlas-implementation-review` before accepting completed non-trivial
+  Issue work. Skip clearly trivial, local, low-risk changes. During
+  implementation, use it only for drift, risk, or a new material constraint.
+  Keep it read-only and return material human decisions to Grill Me.
 - Treat prompt, skill, workflow-doc, `AGENTS.md`, planning-rule, and
   implementation-gate changes as non-trivial by default. Create or update a
   GitHub Issue before implementation.
@@ -204,7 +226,8 @@ For an approved prompt-to-skill extraction:
   leave partial, indirect, multiple, or ambiguous matches unassigned. Report
   the milestone decision and rationale alongside the priority rationale, and do
   not create or broaden milestones without explicit human approval.
-- Post an Implementation Report after non-trivial implementation.
+- After required findings are resolved, post one Implementation Report
+  containing the Review Result. Do not post a separate routine review comment.
 - After a successful commit for completed Issue work, capture the hash, verify
   Issue-relevant completeness, post the standard completion comment, and close
   the Issue. Preserve the documented exceptions in
@@ -226,6 +249,7 @@ by the agent.
 | --------------------------------------- | -------------------------------------- | ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
 | Intake critique and planning front door | Interactive prompt                     | Intake Issue when non-trivial                                                | `prompts/grill-me.md` for review format; GitHub Issue for decisions                | `prompts/grill-me.md`                                                                                           | `## Grill-Me Review` comment                                        |
 | Concept synthesis                       | Skill                                  | Confirmed material decisions; only when concept work is needed               | `## Concept` Issue comment or one human-confirmed authoritative document under `docs/` | `.codex/skills/soundatlas-concept-work/SKILL.md`                                                            | Five-part concept or link to its authoritative document             |
+| Implementation review                   | Skill                                  | Completed non-trivial Issue work, or drift/risk during implementation        | Approved Issue, concept when present, plan, actual diff, evidence, and current-state docs | `.codex/skills/soundatlas-implementation-review/SKILL.md`                                               | Review Result inside the single Implementation Report               |
 | Issue intake, planning, and reports     | Skill                                  | Intake or Grill-Me as required by risk                                       | GitHub Issue body/comments; lifecycle in `docs/implementation-plan-workflow.md`    | `.codex/skills/soundatlas-implementation-planning/SKILL.md`                                                     | Intake, Plan Update, Detailed Plan Update, or Implementation Report |
 | Frontend implementation                 | Skill plus compatibility wrapper       | Approved Issue; Grill-Me and Plan Update when risk-flagged                   | Approved GitHub Issue; `.codex/skills/soundatlas-frontend-implementation/SKILL.md` | `.codex/skills/soundatlas-frontend-implementation/SKILL.md` with `prompts/implement-frontend-map.md` as wrapper | Frontend changes and implementation report                          |
 | Backend implementation                  | Skill plus compatibility wrapper       | Approved Issue; Grill-Me and Plan Update when risk-flagged                   | Approved GitHub Issue; `.codex/skills/soundatlas-backend-implementation/SKILL.md` | `.codex/skills/soundatlas-backend-implementation/SKILL.md` with `prompts/implement-backend-api.md` as wrapper | Backend changes and implementation report                           |
@@ -251,14 +275,16 @@ specialized output boundaries are intentional.
    risky, cross-cutting, or editorially sensitive work.
 2. Use `soundatlas-concept-work` after confirmed Grill-Me decisions when an
    implementation plan would otherwise have to invent the target.
-3. Use GitHub Issues as the durable planning, implementation, and verification
+3. Use `soundatlas-implementation-review` for the repeatable implementation and
+   evidence comparison; return material decisions to Grill Me.
+4. Use GitHub Issues as the durable planning, implementation, and verification
    record for non-trivial work.
-4. Use `soundatlas-implementation-planning` to create Issue bodies, plans, and
-   reports that reference an accepted concept without copying it.
-5. Prefer skills for repeatable execution steps.
-6. Keep prompts as short, stable wrappers while the repo transitions toward
+5. Use `soundatlas-implementation-planning` to create Issue bodies, plans, and
+   the combined Implementation Report without copying accepted concepts.
+6. Prefer skills for repeatable execution steps.
+7. Keep prompts as short, stable wrappers while the repo transitions toward
    skills.
-7. Update workflow docs together when a skill or prompt boundary changes.
+8. Update workflow docs together when a skill or prompt boundary changes.
 
 Run the manual reference check from the repository root with:
 
@@ -280,7 +306,9 @@ Use standardized Issue comments as the canonical workflow record:
   the Issue links to one authoritative concept document under `docs/`.
 - `## Plan Update` or `## Detailed Plan Update` records implementation-ready
   scope after required decisions are confirmed.
-- `## Implementation Report` records completed work and verification.
+- `## Implementation Report` records completed work, verification, the Review
+  Result, and remaining risks. Routine implementation review does not create a
+  separate Issue comment.
 
 Material decisions about product behavior, scope, security, privacy, external
 APIs, editorial/source quality, irreversible workflow behavior, or production

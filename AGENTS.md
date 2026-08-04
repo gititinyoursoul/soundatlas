@@ -113,6 +113,14 @@ Events should contain at least:
   work or a Grill-Me check finds that planning would otherwise have to invent
   material target behavior, runtime responsibilities, boundaries, or ownership.
   Skip concept work for clear, local, low-risk changes.
+- Use `.codex/skills/soundatlas-implementation-review` before accepting
+  completed non-trivial Issue work, or during implementation when drift, risk,
+  or a new material constraint requires review. Skip it for clearly trivial,
+  local, low-risk changes. The skill is read-only and returns material human
+  decisions to Grill Me.
+- Record the implementation-review result inside the single
+  `## Implementation Report` comment. Do not add a separate routine review
+  comment or treat review as human commit approval.
 - New Issues are intake records, not implementation-ready plans. For risky,
   vague, or cross-cutting work, Grill-Me review and a confirmed Plan Update are
   required before implementation; explicit wording such as `implement issue

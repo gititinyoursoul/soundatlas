@@ -1,0 +1,7 @@
+interface:
+  display_name: "SoundAtlas Implementation Review"
+  short_description: "Review implementations against accepted work"
+  default_prompt: "Use $soundatlas-implementation-review to compare the implementation with its accepted target and evidence."
+
+policy:
+  allow_implicit_invocation: true

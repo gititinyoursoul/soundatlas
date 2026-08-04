@@ -26,13 +26,14 @@ explicitly asks for a legacy note.
 7. Human starts implementation with explicit wording such as "implement issue #<number>".
 8. Agent implements from the approved Issue content.
 9. Agent validates the change with the relevant checks.
-10. Agent posts an `## Implementation Report` in the Issue or final response.
-11. Human reviews the local diff and explicitly requests a commit when the work
+10. For completed non-trivial Issue work, agent uses `soundatlas-implementation-review` to compare the accepted target, implementation, evidence, and documentation.
+11. Agent posts one combined `## Implementation Report` containing the review result.
+12. Human reviews the local diff and explicitly requests a commit when the work
     is ready.
-12. After a successful commit, agent captures the commit hash, verifies the
+13. After a successful commit, agent captures the commit hash, verifies the
     acceptance criteria, confirms that no Issue-relevant changes remain
     uncommitted, posts the standard completion comment, and closes the Issue.
-13. If any post-commit verification or GitHub operation fails, agent reports
+14. If any post-commit verification or GitHub operation fails, agent reports
     the failure and leaves the Issue open when possible.
 ```
 
@@ -114,6 +115,10 @@ Perform a lightweight Grill-Me check:
 If no material finding exists, continue without starting an interactive review
 or adding an approval step. If a material finding needs human confirmation, use
 the one-finding flow in `prompts/grill-me.md`.
+
+At the completed-implementation transition, the lightweight check selects
+`soundatlas-implementation-review` for non-trivial Issue work. Grill Me becomes
+interactive only when the review returns a material human decision.
 
 For any risk-flagged work, run `prompts/grill-me.md` after intake creation and
 before planning or implementation. Record the review in an Issue comment with
@@ -290,10 +295,38 @@ implementation reveals missing behavior, the agent should:
 - Stop for approval when the decision changes product behavior or another
   high-risk boundary.
 
+## Implementation Review
+
+Use `.codex/skills/soundatlas-implementation-review` once before accepting
+completed non-trivial Issue work. Skip it for clearly trivial, local, low-risk
+changes. During implementation, use it only when drift, risk, or a new material
+constraint requires comparison before work continues.
+
+The skill compares the authoritative artifacts that exist: approved Issue
+scope and criteria, concept when present, Plan Update when required, actual
+diff, validation and runtime evidence, and affected current-state
+documentation. Do not require retroactive concept work for an Issue that did
+not need it.
+
+Use proportional, claim-based evidence. Ordinary checks are sufficient when
+they establish the material behavior. Require focused runtime, integration,
+visual, or manual evidence only when ordinary checks leave a material gap.
+
+The skill is read-only. It classifies and routes findings but does not fix them,
+revise artifacts, resolve material decisions, create follow-up Issues, commit,
+close the Issue, manage Issue-state labels, or claim human approval. Return
+material decisions to Grill Me. The implementing agent may review its own work;
+independent review is optional when requested or materially justified.
+
+Resolve required findings in the destination named by the review. Then rerun
+the review before finalizing the Implementation Report. Do not create a
+separate routine implementation-review comment.
+
 ## Implementation Report
 
-After implementation, report in the final response and, when useful, as an Issue
-comment:
+After review, post one combined `## Implementation Report` comment for completed
+non-trivial Issue work and summarize it in the final response. The review result
+is a section of this report, not a second comment.
 
 ```md
 ## Summary
@@ -309,13 +342,24 @@ comment:
 - [x] `<criterion>` - evidence
 - [ ] `<criterion>` - blocker or remaining work
 
+## Review Result
+
+- Verdict: Accepted | Correction required | Return to planning | Return to concept | Needs decision
+- Reviewer mode: Implementing agent | Independent review
+- Compared artifacts: `<artifacts actually reviewed>`
+- Evidence coverage: `<material claims and evidence or gaps>`
+- Findings and routing: None | `<finding and destination>`
+- Documentation impact: Current | Corrected within scope | Routed
+
 ## Remaining Risks
 
 - None, or:
 - `<risk and follow-up>`
 ```
 
-Do not close the Issue just because implementation has started or the report was
+Use `Accepted` only when no material review finding remains. If work is blocked,
+record the finding without describing the implementation as accepted. Do not
+close the Issue just because implementation has started or the report was
 posted.
 
 ## Post-Commit Completion and Issue Closure
