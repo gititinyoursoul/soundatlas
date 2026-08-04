@@ -129,6 +129,11 @@ For an approved prompt-to-skill extraction:
 - When creating an Issue, choose exactly one approved `priority:p*` label with
   explicit rationale. Use `priority:p2` only as the neutral fallback when no
   stronger priority signal applies.
+- Inspect existing open milestones when creating an Issue. Assign one only when
+  the Issue's primary deliverable directly advances the milestone outcome;
+  leave partial, indirect, multiple, or ambiguous matches unassigned. Report
+  the milestone decision and rationale alongside the priority rationale, and do
+  not create or broaden milestones without explicit human approval.
 - Post an Implementation Report after non-trivial implementation.
 - After a successful commit for completed Issue work, capture the hash, verify
   Issue-relevant completeness, post the standard completion comment, and close

@@ -112,6 +112,13 @@ Events should contain at least:
 - If the scope changes, update `docs/mvp-concept.md` first and then create or update the relevant GitHub Issue.
 - Codex may set existing approved GitHub labels on Issues. New labels must be proposed and explicitly approved before Codex creates or uses them.
 - When creating a GitHub Issue, Codex should choose exactly one approved `priority:p*` label by reasoning from blocking level, MVP/release impact, risk reduction, and urgency. Use `priority:p2` only as the neutral fallback when `p0`, `p1`, or `p3` are not clearly justified, and briefly state the priority rationale.
+- When creating a GitHub Issue, Codex should inspect existing open milestones and
+  assign one only when completing the Issue directly advances the outcome stated
+  by that milestone. Shared labels, a related product area, or an indirect
+  benefit are not sufficient. Partial, indirect, multiple, or ambiguous matches
+  should remain unassigned. Do not create or broaden milestones without explicit
+  human approval. Report the milestone decision and rationale alongside the
+  priority rationale.
 - For editorial workflow changes, preserve the minimal-input review principle:
   agents should surface counts, recommendations, explicit options, and defaults
   before asking for human decisions.

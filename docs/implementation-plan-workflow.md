@@ -135,6 +135,18 @@ from blocking level, MVP or release impact, risk reduction, and urgency. Use
 `priority:p2` only as the neutral fallback when `p0`, `p1`, or `p3` are not
 clearly justified. Briefly state the priority rationale when creating the Issue.
 
+At Issue-creation time, inspect the existing open milestones. Assign the Issue
+to one milestone only when completing the Issue directly advances the outcome
+stated by that milestone's title and description. Shared labels, a related
+product area, or an indirect benefit do not establish a direct match. Treat
+partial, indirect, multiple, or otherwise ambiguous matches as no clear match:
+leave the Issue unassigned and state why.
+
+Do not create, rename, or broaden a milestone without explicit human approval.
+The Issue-creation handoff must report both the selected priority and its
+rationale and the milestone decision and its rationale. When no existing open
+milestone fits, explicitly report that the Issue was left unassigned.
+
 Priority meanings:
 
 - `priority:p0`: urgent or blocking; release or development work cannot

@@ -46,6 +46,15 @@ readiness review before Issue content is drafted.
    urgency. Use `priority:p2` only as the neutral fallback when `p0`, `p1`, or
    `p3` are not clearly justified. Briefly state the priority rationale.
 
+   Inspect existing open milestones at Issue-creation time. Assign one only
+   when completing the Issue directly advances the outcome stated by the
+   milestone title and description. Shared labels, a related product area, or
+   an indirect benefit are not sufficient. Leave partial, indirect, multiple,
+   or ambiguous matches unassigned and explain why. Do not create, rename, or
+   broaden milestones without explicit human approval. In the Issue-creation
+   handoff, report the milestone decision and rationale alongside the priority
+   rationale.
+
 5. Keep the Issue decision-complete for implementation.
    For security, credentials, infrastructure, networking, workflow, UX,
    editorial, cross-cutting, user-visible, vague, or materially ambiguous work,
