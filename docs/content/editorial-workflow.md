@@ -21,17 +21,19 @@ instead of reconstructing the decision from raw notes.
 ## Interaction Contract
 
 `content-pipeline-interaction-contract.md` defines the normative target
-interaction for agent-assisted route generation and future admin review. It
-introduces a navigable review preview, event-level Yes/No selection, and one
-final route-level publication decision while keeping warnings visible without
-turning them into additional human gates.
+interaction for a thin editorial mode in the existing explorer. It lets the
+human inspect a generated route through the map, timeline, and StoryPanel; set
+private route-scoped Draft, Approved, or Don’t use states; inspect warnings and
+technical readiness; and publish one exact reviewed result.
 
 The workflow below remains the description of the currently implemented
 file-based pipeline. The target interaction does not replace current candidate
-decisions, accepted-event quality flags, or route artifacts until
-[Issue #71](https://github.com/gititinyoursoul/soundatlas/issues/71) is
-implemented. Map presentation and route-entry data modeling remain in
-[Issue #70](https://github.com/gititinyoursoul/soundatlas/issues/70).
+recommendations, review states, accepted-event quality flags, or route artifacts
+until Issues [#71](https://github.com/gititinyoursoul/soundatlas/issues/71),
+[#72](https://github.com/gititinyoursoul/soundatlas/issues/72), and
+[#73](https://github.com/gititinyoursoul/soundatlas/issues/73) implement its
+review-data, explorer-surface, and publication slices. Completed Issues #70 and
+#81 define and implement the current compositional geography behavior.
 
 ## Workflow
 
@@ -185,6 +187,10 @@ uv run --project backend python backend/scripts/route_content_pipeline.py promot
 - Keep candidate decisions separate from seed `review_status`. `review_status`
   describes a structured seed/runtime record; it does not decide whether a
   candidate belongs in the route.
+- Keep the target Draft, Approved, and Don’t use route-review states separate
+  from both candidate recommendations and seed `review_status`. Until #71 is
+  implemented, the current file-based candidate and accepted-event gates remain
+  in force.
 - Use source status values only as source/claim quality signals:
   `strong`, `medium`, `weak`, `mythologized`, and `needs_review`. AI-suggested
   source statuses remain unconfirmed until human review.

@@ -73,7 +73,8 @@ not replace the human editor or authorize publication.
 | Generate a theme brief | `brief.md` in a route folder | Aligned | Keep calling this a route brief for now. |
 | Generate candidate events | Dossier candidate table and `event-list.json` | Aligned | Candidate events are visible before seed promotion. |
 | Review candidates manually | Docs require artifact inspection | Partial | The review point exists, but it is not strongly modeled. |
-| Mark Keep / Maybe / Merge / Reject | `event-list.json` candidate decisions | Aligned | The route pipeline uses the editor-facing vocabulary. |
+| Suggest Keep / Maybe / Merge / Reject | `event-list.json` candidate recommendations | Aligned | The current pipeline records the agent proposal separately from human review state. |
+| Set private Draft / Approved / Don’t use state | Target explorer editorial mode | Future | Draft and Approved remain in the route; Don’t use is excluded without deletion. |
 | Create handoff only for accepted events | `accepted-events.json` gate and `accepted-events.md` companion view | Aligned | The JSON file is the source of truth; Markdown is not a separate approval gate. |
 | Enrich accepted events with sources and media | Enrichment can use accepted-event handoff files as the editorial boundary | Partial | Current scripts still run from seed data; docs now define the accepted-event boundary. |
 | Human reviews final output | Seed preview, validation report, and link review exist | Partial | There is no single final event-card approval gate. |
@@ -88,14 +89,14 @@ lists, and review actions. These are useful, but they should not get ahead of
 the basic editorial decision about which events belong in a route.
 
 The route pipeline now blocks seed-shaped drafts behind the accepted-events
-gate. The main remaining risk is editorial friction: editors need a clear way
-to confirm `accepted-events.json` quality flags without treating the companion
-Markdown file as a second approval layer.
+gate. That remains the implemented behavior. The target interaction reduces the
+remaining editorial friction by letting the editor inspect the route visually
+and set private route state without reviewing raw structured files.
 
-The current `review_status` values, `draft` and `reviewed`, are too broad for
-the full editorial lifecycle. They are useful for runtime data and link review,
-but they do not distinguish candidate events, accepted events, enriched events,
-final-reviewed event cards, and published event cards.
+The current seed `review_status` values, `draft` and `reviewed`, are too broad
+for the full editorial lifecycle. They remain compatibility data and link-review
+state, not the target route-scoped Draft, Approved, and Don’t use controls and
+not a public-page badge.
 
 Numeric `confidence` is also a weak editorial signal. It is acceptable as an
 internal sorting or compatibility field for generated links, but it should not
@@ -108,7 +109,8 @@ be treated as historical or curatorial truth.
 | Theme | Partial | Covered by route topic and route concept. No separate object needed now. |
 | Theme brief | Exists | Implemented as route `brief.md`. |
 | Candidate event | Exists | Dossier tables and `event-list.json`. |
-| Candidate review status | Exists | Uses `keep`, `maybe`, `merge`, and `reject`. |
+| Candidate recommendation | Exists | Uses `keep`, `maybe`, `merge`, and `reject`. |
+| Private route-review state | Future | Uses Draft, Approved, and Don’t use in the target explorer review surface. |
 | Accepted event | Exists | Represented by `accepted-events.json`. |
 | Event dossier | Exists | Implemented as `accepted-events.md`, a readable companion view for the JSON handoff. |
 | Source status | Exists | Source status vocabulary is documented for accepted-event handoff notes. |
@@ -120,15 +122,17 @@ be treated as historical or curatorial truth.
 Keep `route` as the central editorial object. Do not add a separate `Theme`
 entity yet.
 
-Use a simpler candidate review vocabulary:
+Use a simple candidate recommendation vocabulary in the current pipeline:
 
 - `keep`: develop into an accepted event.
 - `maybe`: preserve as a research lead, but do not enrich yet.
 - `merge`: combine into another accepted event or route context.
 - `reject`: do not continue for this route.
 
-Only `keep` candidates and resolved `merge` outcomes should move into
-`accepted-events.json`.
+Only human-confirmed `keep` candidates and resolved `merge` outcomes move into
+the current `accepted-events.json` handoff. In the target explorer review,
+these recommendations remain advisory while Draft, Approved, and Don’t use
+become the human controls.
 
 Do not create seed-shaped event, place, and connection drafts for every
 candidate. Create seed-shaped records only after the accepted-events gate
@@ -159,18 +163,18 @@ before the status is treated as editorially approved.
 
 ## Smallest Useful MVP Workflow
 
-The smallest useful editorial MVP is:
+The smallest useful target editorial MVP is:
 
 ```text
 route input
 -> AI route brief
 -> AI candidate event longlist
--> human selection: keep / maybe / merge / reject
--> accepted-events handoff
--> media search queries
--> source and media enrichment
--> human final review
--> publishable event cards
+-> CLI-generated route result
+-> visual review in the existing explorer
+-> human state: Draft / Approved / Don’t use
+-> warnings and technical readiness
+-> publish the exact Draft-plus-Approved result
+-> canonical runtime data
 ```
 
 Include:
@@ -178,12 +182,12 @@ Include:
 - Route brief with question, thesis hypothesis, geography, time range, source
   leads, and risks.
 - Candidate event longlist with rationale, source leads, and risk notes.
-- Human candidate decision field.
-- Route-level `accepted-events.json` covering each kept candidate and resolved
-  merge outcome, with `accepted-events.md` as the readable companion view.
+- Agent recommendations and merge targets that remain visibly advisory.
+- Private route-scoped Draft, Approved, and Don’t use controls.
+- Coordinated review through the existing map, timeline, and StoryPanel.
 - Media search query planning for accepted events only.
 - Draft source, media, and image enrichment.
-- Final human review before seed promotion.
+- One explicit human publication decision over the exact reviewed result.
 - Publishable event-card text: title, years, place, summary, significance,
   source URLs, media links, image links, and connection notes.
 
@@ -192,7 +196,7 @@ Postpone:
 - Separate `Theme` schema.
 - Automatic event acceptance.
 - AI source-quality final judgment.
-- Public admin/editor UI beyond lightweight review needs.
+- Admin/editor UI beyond the thin explorer review surface.
 - Canonical media-item modeling across providers.
 - Database-backed editorial workflow.
 - Fully automated source, media, or publication approval.
@@ -203,7 +207,8 @@ Postpone:
 - Resolving contested origin stories or first/invented claims.
 - Marking sources or media as publication-ready.
 - Merging weak candidates into canonical events without editor approval.
-- Publishing draft events to the public experience.
+- Publishing or replacing route content without the explicit route-level human
+  publication decision.
 
 ## Recommended Workflow Diagram
 
@@ -214,20 +219,19 @@ Route idea
 Route brief
   |
   v
-Candidate event longlist
+Generated route result
   |
   v
-Human candidate review
-  |-- keep  --> accepted-events handoff
-  |-- merge --> accepted-events handoff or route context
-  |-- maybe --> research backlog
-  |-- reject -> stop
+Explorer editorial review
+  |-- Draft     --> include
+  |-- Approved  --> include
+  |-- Don’t use --> exclude without deletion
   |
   v
-Source and media enrichment for accepted events
+Warnings and technical readiness
   |
   v
-Human final review
+Publish exact reviewed result
   |
   v
 Publishable event cards

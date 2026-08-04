@@ -14,8 +14,8 @@ define runtime presentation, or add publication gates.
 
 `content-pipeline-interaction-contract.md` owns the target human-review
 interaction. Editorial checks in this document produce revisions or visible
-warnings; they do not add approvals beyond event-level selection and the final
-route-level publication decision.
+warnings; they do not set the private Draft, Approved, or Don’t use route state
+and do not authorize route publication.
 
 ## The Event As A Self-Contained Chapter
 
@@ -113,6 +113,11 @@ final-reviewed event records.
 - any transition associated with publication belongs to the applicable
   human-controlled route review flow, not to this quality checklist
 
+This seed compatibility field is not the private route-scoped Draft, Approved,
+or Don’t use state defined by the interaction contract. It does not determine
+whether an event is included in a published route and is not a public-facing
+editorial badge.
+
 If no explicit human-controlled review decision applies, leave the event as
 `draft`.
 
@@ -202,16 +207,23 @@ Significance: Why this chapter changes or clarifies the route's story, rendered
 in one or two sentences without repeating the summary.
 ```
 
-## Candidate Decisions And Seed Review Status
+## Candidate Recommendations, Route State, And Seed Review Status
 
-Candidate decisions and seed `review_status` are separate layers.
+Candidate recommendations, the target private route-review state, and seed
+`review_status` are separate layers.
 
-Candidate decisions:
+Current candidate recommendations:
 
 - `keep`: may move into the accepted-event dossier and seed authoring
 - `maybe`: research lead only; do not seed yet
 - `merge`: may move forward only after a human resolves the merge target
 - `reject`: stop for this route
+
+The current pipeline pairs those recommendations with its implemented review
+and accepted-event handoff. The target review surface instead gives the human
+Draft, Approved, and Don’t use controls. Draft and Approved events may be
+published; Don’t use events remain in editorial history but are excluded. The
+target state does not make an agent recommendation authoritative.
 
 Seed `review_status` describes the review state of a structured seed or runtime
 record. It does not decide whether a candidate belongs in the route and does
