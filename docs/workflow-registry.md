@@ -28,6 +28,57 @@ planning would otherwise invent material target behavior, runtime
 responsibilities, boundaries, or ownership, resolve material decisions through
 Grill Me and then use `soundatlas-concept-work` to record the concept.
 
+## Orchestration At A Glance
+
+SoundAtlas uses instruction-driven orchestration. There is no workflow service,
+state machine, Git hook, or GitHub Action that advances work automatically.
+Agents follow the repository guidance, while GitHub Issues preserve the durable
+scope, decisions, plans, and completion evidence.
+
+```text
+Request
+  |
+  +-- Clearly trivial, local, and low-risk
+  |     -> Direct implementation
+  |     -> Relevant validation
+  |     -> Human commit request
+  |     -> Commit
+  |
+  +-- Non-trivial work
+        -> Intake Issue
+        -> Lightweight Grill-Me check
+             no material finding -> continue
+             material finding    -> Interactive Grill Me -> confirmed decisions
+        -> Optional concept work when requested or needed
+        -> Plan Update as required
+        -> Explicit implementation request
+        -> Relevant execution skill
+        -> Validation + Implementation Report
+        -> Lightweight completion check + human diff review
+        -> Human commit request
+        -> Commit + completion comment + Issue closure
+```
+
+Concept work is conditional. Use it when explicitly requested or when planning
+would otherwise have to invent material target behavior, runtime
+responsibilities, boundaries, or ownership; otherwise skip it. The plan
+references an accepted concept rather than copying it.
+
+"Automatic" means the agent is instructed to perform the lightweight checks
+and may select a skill implicitly. For example,
+`.codex/skills/soundatlas-concept-work/agents/openai.yaml` permits implicit
+selection. This is agent routing, not independently executing automation.
+
+This overview does not redefine ownership. `AGENTS.md` owns repository-wide
+constraints, this registry owns routing and entrypoint selection,
+`docs/implementation-plan-workflow.md` owns the detailed Issue lifecycle, and
+GitHub Issues hold the durable work record. The canonical table below maps each
+work type to its prompt or skill.
+
+Implementation acceptance and post-commit closure remain lifecycle concerns in
+`docs/implementation-plan-workflow.md`. A separate review mechanism would need
+its own approved registry entry before becoming part of this workflow.
+
 ## Skill, Prompt, and Source Boundary Policy
 
 This section is authoritative for repository-wide entrypoint selection and
@@ -109,7 +160,7 @@ For an approved prompt-to-skill extraction:
 | Frontend implementation | Skill, with legacy wrapper | `soundatlas-frontend-implementation` |
 | Backend implementation | Skill, with legacy wrapper | `soundatlas-backend-implementation` |
 | Concept synthesis | Skill | `soundatlas-concept-work` |
-| Documentation updates | Prompt until a docs skill exists | `prompts/update-docs.md` |
+| Documentation updates | Skill, with legacy wrapper | `soundatlas-documentation-implementation` |
 | Test planning and implementation | Skill, with legacy wrapper | `soundatlas-testing-implementation` |
 | Editorial route and seed curation | Interactive prompt | `prompts/create-route.md`, `prompts/curate-seed-data.md` |
 | UX critique and review | Interactive prompt | `prompts/design-ux.md`, `prompts/grill-me.md` |
