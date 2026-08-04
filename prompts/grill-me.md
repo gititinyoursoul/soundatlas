@@ -1,130 +1,218 @@
 # Grill Me
 
-Use this prompt as the default SoundAtlas planning and critique entrypoint
-before non-trivial feature, route, seed, enrichment, documentation, UX, or
-workflow work.
+Use this prompt as the default SoundAtlas critique mechanism for non-trivial
+feature, route, seed, enrichment, documentation, UX, editorial, concept,
+planning, implementation, or workflow work.
 
-This prompt is the human-facing planning and critique entrypoint. It does not
-replace the GitHub Issue workflow or the `soundatlas-implementation-planning`
-skill.
+Grill Me may be used at any stage of the workflow. The active stage determines
+which artifact is being challenged.
+
+This prompt is the human-facing critique entrypoint. It does not replace the
+GitHub Issue workflow, concept work, `soundatlas-implementation-planning`,
+implementation, or implementation review.
 
 Core rule:
 
-> Critique first. Do not edit files, implement changes, publish content, or
-> mark work as approved from this prompt alone.
+> Critique first. Do not edit files, implement changes, publish content, modify
+> normative artifacts, or mark work as approved from this prompt alone.
 
-For risk-flagged work, run this review after the Intake Issue is created and
-before adding a Plan Update or implementing. Risk flags include security,
-credentials, infrastructure, networking, workflow, UX, editorial,
-cross-cutting scope, user-visible behavior, and material ambiguity. Clearly
-trivial, local, low-risk work may use the direct path.
+Use Grill Me whenever material ambiguity, risk, conflicting assumptions, scope
+growth, or new evidence appears. Clearly trivial, local, low-risk work may use
+the direct path.
 
 ## Context To Provide
 
-- Idea, feature, route, data change, UX change, workflow change, or artifact to
-  review.
-- Target area:
-  - `frontend`
-  - `backend`
-  - `data/seed`
-  - `data/enrichment`
-  - `docs`
-  - `content/editorial`
-  - cross-cutting
-- Related GitHub Issue, route, event, place, media item, prompt, skill, or
-  workflow document.
-- Desired outcome, if known.
-- Constraints, non-goals, and anything that should stay human-reviewed.
+Provide the relevant artifact and the smallest useful context:
+
+* Idea, Issue, concept, plan, implementation, UX proposal, editorial artifact,
+  or workflow change.
+* Target area:
+
+  * `frontend`
+  * `backend`
+  * `data/seed`
+  * `data/enrichment`
+  * `docs`
+  * `content/editorial`
+  * workflow
+  * cross-cutting
+* Related GitHub Issue, route, event, place, media item, prompt, skill,
+  specification, or workflow document.
+* Desired outcome, if known.
+* Constraints, non-goals, and anything that must remain human-reviewed.
+* For implementation review: relevant diff, tests, validation evidence, and
+  current-state documentation.
 
 ## Task
 
-Inspect the relevant repo context, then challenge the request or artifact before
-it becomes implementation work.
+Inspect the relevant repository context, then challenge the current request or
+artifact before the workflow proceeds.
 
 Focus on:
 
-- missing product or editorial decisions
-- unclear scope
-- weak or untestable acceptance criteria
-- overcomplicated implementation paths
-- premature automation
-- candidate, draft, accepted, reviewed, and published boundary confusion
-- source, media, rights, and historical-claim risks
-- whether GitHub Issue planning is needed before implementation
+* missing product, architectural, or editorial decisions
+* unclear goals, scope, or non-goals
+* hidden assumptions and contradictions
+* weak or untestable acceptance criteria
+* missing runtime responsibilities
+* overcomplicated implementation paths
+* premature automation
+* speculative future scope
+* concept, plan, or implementation drift
+* candidate, draft, accepted, reviewed, and published boundary confusion
+* source, media, rights, and historical-claim risks
+* unapproved or unrelated changes
+* missing validation evidence
+* stale documentation
+* whether GitHub Issue planning or follow-up work is needed
 
-For discoverable facts, inspect the repo before asking questions. Ask only when
-the answer affects product intent, data shape, source quality, implementation
-risk, or publication boundaries.
+For discoverable facts, inspect the repository before asking questions. Ask only
+when the answer materially affects product intent, target behavior, data shape,
+source quality, implementation risk, validation, or publication boundaries.
 
-## Relationship To Issue Planning
+## Relationship To The Workflow
 
-Use this prompt before `soundatlas-implementation-planning` when the request is
-vague, risky, editorially sensitive, cross-cutting, or likely to create a broad
-plan.
+Grill Me challenges the active artifact but does not own it.
 
-After grill-me review:
+* The Issue defines why the work is needed.
+* The concept defines what the system should do.
+* Implementation planning defines how the target will be built.
+* Implementation contains the actual changes.
+* Current-state documentation describes how the system works now.
+* Review determines whether the implementation matches the accepted target.
 
-- If the work is not worth doing, stop with the critique.
-- If the work is worth doing but not decision-complete, list the missing
-  decisions.
-- If the recommended next step changes prompts, skills, workflow docs,
-  `AGENTS.md`, planning rules, or implementation gates, create or update a
-  GitHub Issue before implementation.
-- If the work should proceed, recommend using
-  `soundatlas-implementation-planning` to create or update the GitHub Issue,
-  Plan Update, Detailed Plan Update, or Implementation Report.
+Grill Me findings may inform these artifacts, but must not silently modify them.
+Material decisions remain open until the user confirms them.
 
-Do not create local or repo-versioned implementation plan files.
+Use Grill Me:
 
-## Project Constraints
-
-- Keep changes small, reviewable, and MVP-oriented.
-- Treat SoundAtlas as an editorial-cultural product, not only a data pipeline.
-- Current product scope is New York 1965-1985 with curated routes, events,
-  places, connections, and external media links.
-- Preserve seed file shapes documented in `docs/data/seed-data-validation.md`.
-- Keep generated media links as `review_status: "draft"` until manually
-  reviewed.
-- Do not store audio or video files in the repository.
-- Do not automate final editorial judgment, source approval, media approval, or
-  publication approval.
-- Do not commit secrets, API keys, local paths, generated media files, audio, or
-  video.
-- Do not commit changes unless explicitly requested.
+* during problem discovery
+* before accepting a consequential concept
+* before approving a broad or risky implementation plan
+* when implementation reveals unexpected constraints
+* when concept or scope drift is suspected
+* before accepting completed implementation
+* whenever the user requests it
 
 ## Review Modes
 
-Use the smallest mode that fits the request:
+Use the smallest mode that fits the active artifact:
 
-- `idea grill`: test whether an idea is worth planning.
-- `issue grill`: stress-test an Intake Issue, Plan Update, or Detailed Plan
-  Update before implementation.
-- `editorial grill`: review route briefs, dossiers, candidate events, accepted
-  event dossiers, source notes, media plans, and seed-promotion readiness.
-- `ux grill`: review UX audit findings or a proposed UX slice before Issue
-  planning.
-- `implementation readiness grill`: check whether an approved Issue is ready
-  for an implementation prompt.
+* `idea grill`: test whether an idea is worth pursuing.
+* `issue grill`: stress-test an Intake Issue or problem statement.
+* `concept grill`: challenge scope, non-goals, target behavior, boundaries, and
+  runtime responsibilities.
+* `plan grill`: challenge coverage, sequencing, dependencies, validation, and
+  hidden scope.
+* `editorial grill`: review route briefs, dossiers, candidate events, sources,
+  media plans, seed-promotion readiness, and publication boundaries.
+* `ux grill`: review UX findings, flows, accessibility, and proposed UX slices.
+* `implementation readiness grill`: check whether approved work is ready to
+  implement.
+* `implementation grill`: challenge work in progress, complexity, shortcuts,
+  newly discovered constraints, and concept or plan drift.
+* `implementation review grill`: compare the accepted target, approved plan,
+  actual implementation, validation evidence, and documentation.
+
+## Mode-Specific Focus
+
+### Concept Grill
+
+Check:
+
+* whether the target behavior is explicit
+* whether scope and non-goals constrain the design
+* whether runtime responsibilities are complete
+* whether ownership and boundaries are clear
+* whether the concept conflicts with existing normative artifacts
+* whether the concept remains lean and MVP-oriented
+* whether implementation work can be derived without inventing decisions
+
+### Plan Grill
+
+Check:
+
+* whether the plan covers the accepted concept or Issue
+* whether runtime responsibilities map to implementation tasks
+* whether sequencing and dependencies are sound
+* whether tests and validation prove the intended behavior
+* whether the plan adds unapproved scope
+* whether implementation tasks are small and reviewable
+
+### Implementation Grill
+
+Check:
+
+* whether implementation still follows the accepted concept and plan
+* whether technical constraints created an unrecorded design change
+* whether complexity or workarounds are hiding a conceptual problem
+* whether unrelated files or responsibilities were added
+* whether work should continue or return to concept or planning
+
+### Implementation Review Grill
+
+Compare:
+
+* accepted concept or target behavior
+* approved Issue and plan
+* actual implementation
+* tests and runtime evidence
+* current-state documentation
+
+Check for:
+
+* missing target behavior
+* incomplete runtime responsibilities
+* insufficient evidence
+* implementation or plan defects
+* unapproved scope
+* violated non-goals
+* stale documentation
+* unrelated changes
+* follow-up work that should not expand the current scope
+
+Route findings appropriately:
+
+* implementation defect → implementation
+* incomplete plan → implementation planning
+* incomplete or incorrect concept → concept work
+* unresolved decision → Grill Me
+* stale documentation → documentation update
+* optional enhancement → follow-up Issue
+* aligned implementation → accept and close
+
+## Project Constraints
+
+* Keep changes small, reviewable, and MVP-oriented.
+* Treat SoundAtlas as an editorial-cultural product, not only a data pipeline.
+* Current product scope is New York 1965–1985 with curated routes, events,
+  places, connections, and external media links.
+* Preserve seed file shapes documented in `docs/data/seed-data-validation.md`.
+* Keep generated media links as `review_status: "draft"` until manually
+  reviewed.
+* Do not store audio or video files in the repository.
+* Do not automate final editorial judgment, source approval, media approval, or
+  publication approval.
+* Do not commit secrets, API keys, local paths, generated media files, audio, or
+  video.
+* Do not commit changes unless explicitly requested.
+* Do not overwrite unrelated user changes.
+* Do not treat speculative future behavior as an MVP requirement.
+* Do not expand SoundAtlas into an admin platform unless explicitly approved.
 
 ## Output
 
-Begin with a short, lightweight overview of whether material findings are
-present. An approximate count is optional and should be included only when it
-helps orient the user; it is never a target or quality measure. Do not invent
-findings to reach a count. If there are no material findings, say so clearly.
-If later inspection changes the estimate, say so briefly before continuing.
+Begin with a short overview of whether material findings are present.
 
-Then run the critique as a sequence of one-finding turns.
+Use one-finding turns when a finding requires a material user decision. Batch
+independent factual findings when they do not require separate confirmation.
 
-For each finding, return only the next finding that has not yet been discussed.
-Do not batch multiple findings into a single response.
-
-Each finding should use this shape:
+For an interactive finding, use:
 
 ```md
-## Verdict
+## Current Assessment
 
-Ready / Needs revision / Blocked
+Proceeding / Needs revision / Blocked
 
 ## Finding <n>
 
@@ -144,22 +232,59 @@ Recommendation: <recommended option and short reason>
 
 ## Recommended Next Step
 
-- Continue with the next finding, revise the artifact, run another grill-me
-  pass, create/update a GitHub Issue with `soundatlas-implementation-planning`,
-  or proceed to the relevant implementation prompt after approval.
+- Continue with the next finding, revise the artifact, create or update a
+  GitHub Issue, return to concept or planning, proceed with implementation, or
+  begin implementation review.
 ```
 
-Include `Options` only when `What to confirm next` asks the user to choose
-between materially different decisions. Do not add filler options. When options
-are presented, always include a recommendation.
+Include `Options` only when the user must choose between materially different
+decisions. Always include a recommendation when options are shown.
 
-If the user asks a short follow-up about an option before choosing, answer that
-question directly and then restate the recommendation if useful. After the user
-chooses, continue to the next finding or recommend Issue planning.
+After an interactive finding, pause and wait for confirmation before continuing
+to dependent findings.
 
-After presenting one finding, pause and wait for the user to confirm before
-moving on to the next finding. When there are no material issues, say so
-clearly and identify any remaining review or test risk. When the review is
-complete, record the findings and confirmed decisions in an Issue comment under
-the heading `## Grill-Me Review`. Do not describe a material decision as closed
-until the user has confirmed it.
+When the review is complete, give one final verdict:
+
+* Ready
+* Ready with follow-up
+* Needs revision
+* Blocked
+* Return to concept
+* Return to planning
+
+Do not describe a material decision as closed until the user confirms it.
+
+## GitHub Issue Recording
+
+When a related GitHub Issue exists and GitHub write access is available, record
+the completed and confirmed findings in an Issue comment under:
+
+```md
+## Grill-Me Review
+```
+
+Include:
+
+* review mode
+* artifacts reviewed
+* final verdict
+* confirmed findings and decisions
+* unresolved items
+* required next actions
+
+Do not record unresolved assumptions as confirmed decisions. Do not add partial
+findings during an active session unless explicitly requested.
+
+## Relationship To Implementation Planning
+
+Use `soundatlas-implementation-planning` when accepted work must be converted
+into or reflected in a GitHub Issue, Plan Update, Detailed Plan Update,
+implementation tasks, validation steps, or Implementation Report.
+
+When an accepted concept exists, treat its goal, scope, non-goals, target
+behavior, and runtime responsibilities as normative.
+
+If planning or implementation reveals a missing or contradictory concept
+decision, return it to Concept Grill instead of silently resolving it.
+
+Do not create local or repository-versioned implementation plan files.
