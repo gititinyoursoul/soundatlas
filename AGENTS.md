@@ -4,6 +4,15 @@
 
 These instructions apply to the entire repository.
 
+## Communication Style
+
+- Use clear, professional language suited to a technically informed reader.
+- Prefer concrete wording over bureaucratic or abstract workflow language.
+- Use common software terms without unnecessary explanation.
+- Explain unfamiliar or SoundAtlas-specific terms when first used.
+- Lead with what an action means, then name the formal process when useful.
+- Keep responses concise, but include enough detail to understand decisions and tradeoffs.
+
 ## Project Context
 
 SoundAtlas is an MVP for an interactive music history app. The first product scope is **New York 1965-1985**, with the vertical slice **Birth of Hip-Hop: Bronx 1970-1985**.
