@@ -20,23 +20,39 @@
         "type": "Polygon",
         "coordinates": [
           [
-            [-73.9339, 40.7857],
-            [-73.9306, 40.8045],
-            [-73.9251, 40.826],
-            [-73.9134, 40.846],
-            [-73.8935, 40.8532],
-            [-73.8664, 40.8484],
-            [-73.8468, 40.829],
-            [-73.8504, 40.8004],
-            [-73.8736, 40.786],
-            [-73.9008, 40.7902],
-            [-73.9339, 40.7857]
+            [-73.9195, 40.8564],
+            [-73.9, 40.852],
+            [-73.88, 40.849],
+            [-73.868, 40.847],
+            [-73.874, 40.838],
+            [-73.8785, 40.8255],
+            [-73.878, 40.815],
+            [-73.871, 40.8065],
+            [-73.8585, 40.802],
+            [-73.852751919912, 40.799825050778],
+            [-73.862928, 40.797265],
+            [-73.868350426088, 40.792342147554],
+            [-73.890459134842, 40.790269456109],
+            [-73.912528, 40.796118],
+            [-73.919896, 40.799392],
+            [-73.922663, 40.802119],
+            [-73.927663, 40.802399],
+            [-73.932364, 40.808519],
+            [-73.932857, 40.810327],
+            [-73.932828, 40.823366],
+            [-73.933763, 40.831686],
+            [-73.933247, 40.835632],
+            [-73.927091, 40.847353],
+            [-73.920137719979, 40.856507739027],
+            [-73.9195, 40.8564]
           ]
         ]
       },
       "geometry_precision": "interpretive",
       "geometry_source_type": "curated",
-      "geometry_source_note": "SoundAtlas-curated cultural-area outline, not an administrative boundary."
+      "geometry_source_url": "https://commons.wikimedia.org/wiki/File:Southbronx.png",
+      "geometry_source_note": "SoundAtlas-curated cultural-area outline, clipped to the frontend's simplified Bronx boundary; northern and eastern limits use Southbronx.png as an illustrative, unreviewed visual reference. Not an administrative boundary.",
+      "geometry_license": "CC BY-SA 2.5"
     },
     {
       "id": "new-york-city",
