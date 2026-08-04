@@ -1,0 +1,7 @@
+interface:
+  display_name: "SoundAtlas Concept Work"
+  short_description: "Turn confirmed decisions into a clear concept"
+  default_prompt: "Use $soundatlas-concept-work to synthesize the confirmed decisions into a concise concept."
+
+policy:
+  allow_implicit_invocation: true

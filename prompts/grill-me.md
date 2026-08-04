@@ -8,8 +8,8 @@ Grill Me may be used at any stage of the workflow. The active stage determines
 which artifact is being challenged.
 
 This prompt is the human-facing critique entrypoint. It does not replace the
-GitHub Issue workflow, concept work, `soundatlas-implementation-planning`,
-implementation, or implementation review.
+GitHub Issue workflow, `soundatlas-concept-work`,
+`soundatlas-implementation-planning`, implementation, or implementation review.
 
 Core rule:
 
@@ -70,12 +70,33 @@ For discoverable facts, inspect the repository before asking questions. Ask only
 when the answer materially affects product intent, target behavior, data shape,
 source quality, implementation risk, validation, or publication boundaries.
 
+## Lightweight Check
+
+Apply a lightweight Grill-Me check automatically:
+
+* at Intake
+* before accepting a consequential concept
+* before approving a broad or risky implementation plan
+* when implementation reveals drift, conflicting assumptions, or new
+  constraints
+* before accepting completed implementation
+
+If there is no material finding, continue without starting an interactive
+session or asking for approval. Mention the clean check only when it helps the
+handoff. If a material finding needs human confirmation, enter the interactive
+one-finding flow below.
+
+If the check finds that planning would otherwise invent material target
+behavior, runtime responsibilities, boundaries, or ownership, use Grill Me to
+resolve the material decisions, then use `soundatlas-concept-work` to synthesize
+and record the confirmed concept.
+
 ## Relationship To The Workflow
 
 Grill Me challenges the active artifact but does not own it.
 
 * The Issue defines why the work is needed.
-* The concept defines what the system should do.
+* `soundatlas-concept-work` records what the system should do.
 * Implementation planning defines how the target will be built.
 * Implementation contains the actual changes.
 * Current-state documentation describes how the system works now.
@@ -83,6 +104,10 @@ Grill Me challenges the active artifact but does not own it.
 
 Grill Me findings may inform these artifacts, but must not silently modify them.
 Material decisions remain open until the user confirms them.
+
+Grill Me owns critique, not concept synthesis. After the human confirms the
+material decisions, use `soundatlas-concept-work` to produce or update the
+five-part concept when concept work is needed.
 
 Use Grill Me:
 
@@ -204,6 +229,9 @@ Route findings appropriately:
 
 Begin with a short overview of whether material findings are present.
 
+For a lightweight check with no material finding, do not manufacture an
+interactive finding. Continue the active workflow.
+
 Use one-finding turns when a finding requires a material user decision. Batch
 independent factual findings when they do not require separate confirmation.
 
@@ -281,10 +309,12 @@ Use `soundatlas-implementation-planning` when accepted work must be converted
 into or reflected in a GitHub Issue, Plan Update, Detailed Plan Update,
 implementation tasks, validation steps, or Implementation Report.
 
-When an accepted concept exists, treat its goal, scope, non-goals, target
-behavior, and runtime responsibilities as normative.
+When an accepted concept exists, treat its target behavior, scope and non-goals,
+runtime responsibilities, boundaries and ownership, and resolved decisions as
+the target for later planning and review.
 
 If planning or implementation reveals a missing or contradictory concept
-decision, return it to Concept Grill instead of silently resolving it.
+decision, return it to Concept Grill and then update the concept through
+`soundatlas-concept-work` instead of silently resolving it.
 
 Do not create local or repository-versioned implementation plan files.

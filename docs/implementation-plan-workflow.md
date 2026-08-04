@@ -6,8 +6,9 @@ work.
 The default workflow is Issue-led:
 
 > Create an Intake Issue first. For risky, vague, or cross-cutting work, run
-> Grill-Me and record confirmed decisions before adding a Plan Update or
-> implementing. Explicit implementation wording does not bypass those gates.
+> Grill-Me and record confirmed decisions. Use concept work only when planning
+> would otherwise have to invent the target, then add a Plan Update. Explicit
+> implementation wording does not bypass those gates.
 
 GitHub Issues are the source of truth for planned agent work. `TODO.md` is a
 legacy backlog and should not receive new planned work unless the human
@@ -19,18 +20,19 @@ explicitly asks for a legacy note.
 1. Human gives a feature/change request.
 2. Agent inspects the repo before asking questions when local context can answer them.
 3. Agent creates an Intake Issue containing only Task, Context, and Acceptance Criteria.
-4. If risk flags are present, agent runs Grill-Me and records a `## Grill-Me Review` comment with findings and confirmed decisions.
-5. Agent adds a `## Plan Update` or `## Detailed Plan Update` after required decisions are confirmed.
-6. Human starts implementation with explicit wording such as "implement issue #<number>".
-7. Agent implements from the approved Issue content.
-8. Agent validates the change with the relevant checks.
-9. Agent posts an `## Implementation Report` in the Issue or final response.
-10. Human reviews the local diff and explicitly requests a commit when the work
+4. Agent performs a lightweight Grill-Me check and runs the interactive review when a material finding needs human confirmation.
+5. If planning would otherwise invent material target behavior, runtime responsibilities, boundaries, or ownership, the agent uses `soundatlas-concept-work` and records an `## Concept` comment or linked authoritative document.
+6. Agent adds a `## Plan Update` or `## Detailed Plan Update` after required decisions are confirmed.
+7. Human starts implementation with explicit wording such as "implement issue #<number>".
+8. Agent implements from the approved Issue content.
+9. Agent validates the change with the relevant checks.
+10. Agent posts an `## Implementation Report` in the Issue or final response.
+11. Human reviews the local diff and explicitly requests a commit when the work
     is ready.
-11. After a successful commit, agent captures the commit hash, verifies the
+12. After a successful commit, agent captures the commit hash, verifies the
     acceptance criteria, confirms that no Issue-relevant changes remain
     uncommitted, posts the standard completion comment, and closes the Issue.
-12. If any post-commit verification or GitHub operation fails, agent reports
+13. If any post-commit verification or GitHub operation fails, agent reports
     the failure and leaves the Issue open when possible.
 ```
 
@@ -100,6 +102,19 @@ implementation boundary.
 
 ## Grill-Me Review
 
+Perform a lightweight Grill-Me check:
+
+- at Intake;
+- before accepting a consequential concept;
+- before approving a broad or risky Plan Update;
+- when implementation reveals drift, conflicting assumptions, or new
+  constraints; and
+- before accepting completed implementation.
+
+If no material finding exists, continue without starting an interactive review
+or adding an approval step. If a material finding needs human confirmation, use
+the one-finding flow in `prompts/grill-me.md`.
+
 For any risk-flagged work, run `prompts/grill-me.md` after intake creation and
 before planning or implementation. Record the review in an Issue comment with
 the heading `## Grill-Me Review`.
@@ -155,6 +170,50 @@ Priority meanings:
 - `priority:p2`: important later; valuable but not blocking current work.
 - `priority:p3`: backlog or nice-to-have; no near-term commitment.
 
+## Concept Work
+
+Use `.codex/skills/soundatlas-concept-work` when the human requests concept work
+or a Grill-Me check finds that implementation planning would otherwise have to
+invent material target behavior, runtime responsibilities, boundaries, or
+ownership. Concept work is optional and repeatable, not a mandatory stage. Skip
+it for clear, local, low-risk work.
+
+Grill Me challenges assumptions and obtains human confirmation. Concept work
+synthesizes the confirmed target. Implementation planning turns that target
+into tasks, sequencing, and validation.
+
+Use this minimum concept shape:
+
+```md
+## Concept
+
+### Target behavior
+
+### Scope and non-goals
+
+### Runtime responsibilities
+
+### Boundaries and ownership
+
+### Unresolved decisions
+```
+
+Runtime responsibilities describe what the running system must do. Boundaries
+and ownership describe responsibility, authority, and where each responsibility
+stops. Do not choose components, files, schemas, or services unless an accepted
+constraint requires the choice.
+
+Record the concept as an `## Concept` comment on the originating Issue by
+default. Use one authoritative document under `docs/` instead when the concept
+spans several Issues or system areas, defines durable behavior or terminology,
+guides future work, or changes a product or architecture source of truth. Get
+human confirmation before creating or changing that document. Link it from the
+Issue rather than duplicating it.
+
+Concept work is ready for planning when material decisions are confirmed and
+no unresolved decision would force planning to invent target behavior. It does
+not add a separate approval status.
+
 ## Plan Update
 
 Add a Plan Update in the Issue before non-trivial implementation when the Intake
@@ -192,6 +251,10 @@ detail that future implementation should not rediscover decisions:
 Rules:
 
 - Keep the plan in the GitHub Issue, not in a local or repo-versioned plan file.
+- Reference an accepted `## Concept` comment or authoritative concept document
+  when one exists; do not copy it into the Plan Update.
+- If planning exposes a missing or contradictory material target decision,
+  return to Grill Me and concept work instead of resolving it in the plan.
 - For risk-flagged work, add the Plan Update only after the Issue contains a
   `## Grill-Me Review` comment with required decisions confirmed.
 - Use `Acceptance Criteria Changes` whenever the original criteria are changed.

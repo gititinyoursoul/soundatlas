@@ -11,6 +11,8 @@ with:
 - `AGENTS.md`
 - `docs/implementation-plan-workflow.md`
 - `docs/workflow-registry.md`
+- the accepted `## Concept` Issue comment or authoritative concept document,
+  when concept work was required
 
 Read `prompts/grill-me.md` when the request needs critique, simplification, or
 readiness review before Issue content is drafted.
@@ -24,6 +26,11 @@ readiness review before Issue content is drafted.
 2. Inspect the repo before asking questions.
    Resolve discoverable facts from docs, code, seed data, or existing Issues
    before blocking on user input.
+
+   Perform the lightweight Grill-Me check defined by repository guidance. If
+   planning would otherwise have to invent material target behavior, runtime
+   responsibilities, boundaries, or ownership, return to Grill Me and
+   `soundatlas-concept-work` before drafting a plan.
 
 3. Separate intake from planning.
    When creating an Issue, use only the Intake shape: Task, Context, and
@@ -40,6 +47,11 @@ readiness review before Issue content is drafted.
 4. Draft or revise Issue planning content.
    Keep planning content in the GitHub Issue body or comments. Do not create
    local or repo-versioned implementation plan files.
+
+   When an accepted concept exists, link to it and derive the plan from its
+   target behavior, scope and non-goals, runtime responsibilities, boundaries
+   and ownership, and resolved decisions. Do not copy the concept into the
+   Plan Update.
 
    When creating an Issue, choose exactly one approved `priority:p*` label by
    reasoning from blocking level, MVP/release impact, risk reduction, and
@@ -160,6 +172,10 @@ The standard post-commit completion comment is:
 - Do not state `Open Questions: None` while a material decision remains
   unresolved.
 - Do not define behavior outside the requested change.
+- Do not fill a missing or contradictory material concept decision inside a
+  Plan Update. Return it to Grill Me and concept work.
+- Reference an accepted concept instead of duplicating it across implementation
+  Issues or plans.
 - Prefer small, reviewable revisions over broad rewrites.
 - Do not silently broaden an Intake. Split a separate deliverable, changed
   primary outcome, materially different domain/owner, or independently

@@ -104,13 +104,23 @@ Events should contain at least:
 - GitHub Issues are the source of truth for planned agent work.
 - New planned work should be captured in an Intake Issue with `Task`, `Context`, and `Acceptance Criteria`.
 - For feature work, follow the implementation-plan workflow in `docs/implementation-plan-workflow.md`.
+- At Intake, before accepting a consequential concept or Plan Update, when
+  implementation reveals drift or new constraints, and before accepting
+  completed implementation, perform a lightweight Grill-Me check. Continue
+  without pausing when there is no material finding; use the interactive
+  one-finding flow when human confirmation is needed.
+- Use `.codex/skills/soundatlas-concept-work` when the human requests concept
+  work or a Grill-Me check finds that planning would otherwise have to invent
+  material target behavior, runtime responsibilities, boundaries, or ownership.
+  Skip concept work for clear, local, low-risk changes.
 - New Issues are intake records, not implementation-ready plans. For risky,
   vague, or cross-cutting work, Grill-Me review and a confirmed Plan Update are
   required before implementation; explicit wording such as `implement issue
 #<number>` does not bypass those gates. Clearly trivial, local, low-risk work
   may proceed directly.
-- Use standardized Issue comments: `## Grill-Me Review`, `## Plan Update` or
-  `## Detailed Plan Update`, and `## Implementation Report`.
+- Use standardized Issue comments: `## Grill-Me Review`, `## Concept` when
+  concept work is needed, `## Plan Update` or `## Detailed Plan Update`, and
+  `## Implementation Report`.
 - Before planning, record scope changes as an `## Intake Revision` comment and
   rerun Grill-Me for material revisions; do not silently broaden an Intake.
 - Plan Updates, Detailed Plan Updates, and Implementation Reports should live in the GitHub Issue rather than local or repo-versioned plan files.
