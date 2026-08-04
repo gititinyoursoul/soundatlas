@@ -30,7 +30,7 @@ Process
 - If the seed work is non-trivial, use `prompts/grill-me.md` first to check
   draft/publish boundaries, source risk, route fit, and data-shape risk, then
   record the confirmed review in a `## Grill-Me Review` Issue comment. Then use
-  `soundatlas-implementation-planning` to create or update a GitHub Issue Plan
+  `soundatlas-issue-planning` to create or update a GitHub Issue Plan
   Update before multi-file data changes.
 - Check the route content in `docs/content/routes/<route-id>/` for new route
   work, or the existing legacy concept in `docs/content/route-concepts/`, plus

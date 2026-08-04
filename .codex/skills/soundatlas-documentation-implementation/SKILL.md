@@ -7,7 +7,7 @@ description: Plan and implement approved SoundAtlas documentation changes by cla
 
 Use this skill for repeatable SoundAtlas documentation and workflow-document
 work from an approved GitHub Issue. The approved Issue is the scope authority;
-`soundatlas-implementation-planning` remains authoritative for Issue intake,
+`soundatlas-issue-planning` remains authoritative for Issue intake,
 Plan Updates, Detailed Plan Updates, and Issue-level reports.
 
 ## Required context
@@ -77,7 +77,7 @@ approved Issue explicitly includes that scope.
    and any compatibility-wrapper or registry entries that must stay aligned.
 4. Decide whether the request is planning-only, an approved documentation edit,
    an audit, or an archive update. Keep GitHub Issue planning with
-   `soundatlas-implementation-planning`.
+   `soundatlas-issue-planning`.
 5. Make the smallest approved documentation change. Preserve source ownership,
    existing terminology, and related workflow gates.
 6. Check for stale, duplicated, or contradictory active references without

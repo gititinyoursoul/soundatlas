@@ -9,7 +9,7 @@ which artifact is being challenged.
 
 This prompt is the human-facing critique entrypoint. It does not replace the
 GitHub Issue workflow, `soundatlas-concept-work`,
-`soundatlas-implementation-review`, `soundatlas-implementation-planning`, or
+`soundatlas-implementation-review`, `soundatlas-issue-planning`, or
 implementation.
 
 Core rule:
@@ -293,7 +293,7 @@ findings during an active session unless explicitly requested.
 
 ## Relationship To Implementation Planning
 
-Use `soundatlas-implementation-planning` when accepted work must be converted
+Use `soundatlas-issue-planning` when accepted work must be converted
 into or reflected in a GitHub Issue, Plan Update, Detailed Plan Update,
 implementation tasks, validation steps, or Implementation Report.
 

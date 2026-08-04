@@ -108,7 +108,7 @@ Do not use this skill to:
 - claim human approval.
 
 The surrounding workflow performs authorized corrections. Grill Me handles
-material human decisions. `soundatlas-implementation-planning` records the
+material human decisions. `soundatlas-issue-planning` records the
 review result in the final Implementation Report. Human diff review and an
 explicit commit request remain separate.
 

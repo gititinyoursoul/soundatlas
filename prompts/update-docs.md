@@ -17,6 +17,6 @@ Provide the approved Issue number or URL and, when useful, optional context:
 - formatting or validation commands
 
 The approved GitHub Issue remains the scope authority. This wrapper does not
-replace `soundatlas-implementation-planning` for Issue intake or Plan Updates,
+replace `soundatlas-issue-planning` for Issue intake or Plan Updates,
 does not authorize implementation by itself, and does not replace the required
 Grill-Me/Plan Update gates for risk-flagged work.

@@ -14,7 +14,7 @@ default human-facing critique entrypoint. The
 `soundatlas-concept-work` skill synthesizes confirmed decisions when concept
 work is needed. The `soundatlas-implementation-review` skill performs the
 repeatable completion comparison and evidence assessment. The
-`soundatlas-implementation-planning` skill is the durable Issue-writing
+`soundatlas-issue-planning` skill is the durable Issue-writing
 mechanism for implementation plans and the combined Implementation Report.
 
 `prompts/grill-me.md` is intentionally interactive: it may briefly indicate
@@ -106,7 +106,7 @@ Current examples include:
   `soundatlas-implementation-review`;
 - frontend implementation: `soundatlas-frontend-implementation`;
 - backend implementation: `soundatlas-backend-implementation`;
-- Issue intake, planning, and reports: `soundatlas-implementation-planning`.
+- Issue intake, planning, and reports: `soundatlas-issue-planning`.
 
 ### Keep a prompt for interactive or human-review-bound work
 
@@ -148,7 +148,7 @@ repository references and compatibility needs have been reviewed.
 For completion review, `soundatlas-implementation-review` owns comparison,
 proportional evidence assessment, finding classification, and routing. Grill Me
 owns material human decisions; implementation owns fixes;
-`soundatlas-implementation-planning` owns the combined Implementation Report;
+`soundatlas-issue-planning` owns the combined Implementation Report;
 and the human owns commit authorization. The review skill does not manage Issue
 state labels.
 
@@ -205,7 +205,7 @@ For an approved prompt-to-skill extraction:
   implementation-gate changes as non-trivial by default. Create or update a
   GitHub Issue before implementation.
 - Capture new planned work with `Task`, `Context`, and `Acceptance Criteria`
-  through `soundatlas-implementation-planning`.
+  through `soundatlas-issue-planning`.
 - Allow Intake Revisions with a visible `## Intake Revision` history comment;
   material revisions require Grill-Me before planning, while material expansion
   after implementation begins requires a linked Issue. See
@@ -250,7 +250,7 @@ by the agent.
 | Intake critique and planning front door | Interactive prompt                     | Intake Issue when non-trivial                                                | `prompts/grill-me.md` for review format; GitHub Issue for decisions                | `prompts/grill-me.md`                                                                                           | `## Grill-Me Review` comment                                        |
 | Concept synthesis                       | Skill                                  | Confirmed material decisions; only when concept work is needed               | `## Concept` Issue comment or one human-confirmed authoritative document under `docs/` | `.codex/skills/soundatlas-concept-work/SKILL.md`                                                            | Five-part concept or link to its authoritative document             |
 | Implementation review                   | Skill                                  | Completed non-trivial Issue work, or drift/risk during implementation        | Approved Issue, concept when present, plan, actual diff, evidence, and current-state docs | `.codex/skills/soundatlas-implementation-review/SKILL.md`                                               | Review Result inside the single Implementation Report               |
-| Issue intake, planning, and reports     | Skill                                  | Intake or Grill-Me as required by risk                                       | GitHub Issue body/comments; lifecycle in `docs/github-issue-workflow.md`            | `.codex/skills/soundatlas-implementation-planning/SKILL.md`                                                     | Intake, Plan Update, Detailed Plan Update, or Implementation Report |
+| Issue intake, planning, and reports     | Skill                                  | Intake or Grill-Me as required by risk                                       | GitHub Issue body/comments; lifecycle in `docs/github-issue-workflow.md`            | `.codex/skills/soundatlas-issue-planning/SKILL.md`                                                     | Intake, Plan Update, Detailed Plan Update, or Implementation Report |
 | Frontend implementation                 | Skill plus compatibility wrapper       | Approved Issue; Grill-Me and Plan Update when risk-flagged                   | Approved GitHub Issue; `.codex/skills/soundatlas-frontend-implementation/SKILL.md` | `.codex/skills/soundatlas-frontend-implementation/SKILL.md` with `prompts/implement-frontend-map.md` as wrapper | Frontend changes and implementation report                          |
 | Backend implementation                  | Skill plus compatibility wrapper       | Approved Issue; Grill-Me and Plan Update when risk-flagged                   | Approved GitHub Issue; `.codex/skills/soundatlas-backend-implementation/SKILL.md` | `.codex/skills/soundatlas-backend-implementation/SKILL.md` with `prompts/implement-backend-api.md` as wrapper | Backend changes and implementation report                           |
 | Documentation and workflow changes      | Skill plus compatibility wrapper       | Approved Issue; Grill-Me for workflow or other risk-flagged changes          | Approved GitHub Issue; `.codex/skills/soundatlas-documentation-implementation/SKILL.md` | `.codex/skills/soundatlas-documentation-implementation/SKILL.md` with `prompts/update-docs.md` as wrapper        | Documentation changes and implementation report                     |
@@ -279,7 +279,7 @@ specialized output boundaries are intentional.
    evidence comparison; return material decisions to Grill Me.
 4. Use GitHub Issues as the durable planning, implementation, and verification
    record for non-trivial work.
-5. Use `soundatlas-implementation-planning` to create Issue bodies, plans, and
+5. Use `soundatlas-issue-planning` to create Issue bodies, plans, and
    the combined Implementation Report without copying accepted concepts.
 6. Prefer skills for repeatable execution steps.
 7. Keep prompts as short, stable wrappers while the repo transitions toward

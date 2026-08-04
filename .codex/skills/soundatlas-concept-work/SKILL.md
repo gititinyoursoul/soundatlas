@@ -94,7 +94,7 @@ A concept is ready for planning when its material decisions are confirmed and
 its unresolved section contains no decision that would force planning to invent
 target behavior.
 
-Use `soundatlas-implementation-planning` for implementation slices, sequencing,
+Use `soundatlas-issue-planning` for implementation slices, sequencing,
 validation, and Plan Updates. Require the plan to reference the accepted concept
 instead of repeating it. Return to concept work if planning exposes a missing or
 contradictory target decision.

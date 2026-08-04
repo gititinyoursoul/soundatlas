@@ -93,7 +93,7 @@ Recommended workflow
 - For non-trivial route creation or route reshaping, use
   `prompts/grill-me.md` first to critique scope, thesis, source risks, and
   candidate-event boundaries. Record the confirmed review in a `## Grill-Me
-Review` Issue comment, then use `soundatlas-implementation-planning` to
+Review` Issue comment, then use `soundatlas-issue-planning` to
   create or update a GitHub Issue Plan Update before broad seed edits.
 - For new route content, first create or update
   `docs/content/routes/<route-id>/brief.md`.

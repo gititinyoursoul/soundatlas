@@ -1,9 +1,9 @@
 ---
-name: soundatlas-implementation-planning
+name: soundatlas-issue-planning
 description: Draft or revise SoundAtlas GitHub Issue intake, Plan Updates, Detailed Plan Updates, and Implementation Reports for frontend, backend, data, documentation, UX, or cross-cutting changes. Use when a SoundAtlas Issue needs to be created, refined for implementation, checked for open questions, or reported after implementation.
 ---
 
-# SoundAtlas Implementation Planning
+# SoundAtlas Issue Planning
 
 Read the repo context before drafting or revising Issue planning content. Start
 with:

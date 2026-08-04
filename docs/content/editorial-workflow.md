@@ -54,7 +54,7 @@ flowchart TD
 
 1. For non-trivial route or content changes, start with
    `prompts/grill-me.md` to critique scope, source risk, editorial boundaries,
-   and publication readiness. Use `soundatlas-implementation-planning` to
+   and publication readiness. Use `soundatlas-issue-planning` to
    create or update a GitHub Issue Plan Update before broad multi-file edits.
 2. Start from the MVP concept in `docs/mvp-concept.md`.
 3. For new route content, create a route folder under

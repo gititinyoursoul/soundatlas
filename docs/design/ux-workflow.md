@@ -61,7 +61,7 @@ Use the existing prompts in this order:
 
 1. `prompts/design-ux.md` - UX audit, main screen design plan, screenshot critique
 2. `prompts/grill-me.md` - critique and narrow the selected UX idea before Issue planning when needed
-3. `soundatlas-implementation-planning` - turn the selected design idea into one Issue Plan Update when needed
+3. `soundatlas-issue-planning` - turn the selected design idea into one Issue Plan Update when needed
 4. `.codex/skills/soundatlas-frontend-implementation/SKILL.md` - implement frontend changes from an approved Issue; `prompts/implement-frontend-map.md` remains the compatibility wrapper
 5. `prompts/write-tests.md` - add or update focused tests
 6. `prompts/update-docs.md` - update durable docs that the UX change relies on or changes
@@ -195,7 +195,7 @@ Example detailed workflow slice:
 Use the **UX Pass Plan** template in `prompts/design-ux.md` to narrow the
 selected workflow slice before implementation planning. Then use
 `prompts/grill-me.md` or direct conversation to critique the UX slice, and use
-`soundatlas-implementation-planning` to turn it into one GitHub Issue Plan
+`soundatlas-issue-planning` to turn it into one GitHub Issue Plan
 Update before implementing non-trivial approved work.
 
 Plan only one pass at a time.
