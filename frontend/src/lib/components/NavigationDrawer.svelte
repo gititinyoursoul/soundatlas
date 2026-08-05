@@ -1,6 +1,7 @@
 <script lang="ts">
   import { tick } from 'svelte';
   import type {
+    RouteReviewProposal,
     ReviewAction,
     ReviewQueueItem,
     Route
@@ -8,7 +9,7 @@
   import Icon from './Icon.svelte';
 
   type DrawerVariant = 'expanded' | 'collapsed';
-  type DrawerPanel = 'main' | 'routes' | 'media-review';
+  type DrawerPanel = 'main' | 'routes' | 'media-review' | 'editorial-review';
   type NavIcon =
     | 'book'
     | 'circle'
@@ -46,6 +47,10 @@
   export let reviewSavingItemId: string | null = null;
   export let reviewErrorMessage: string | null = null;
   export let showAdminReview = true;
+  export let showEditorialReview = false;
+  export let editorialProposalCount = 0;
+  export let editorialProposals: RouteReviewProposal[] = [];
+  export let editorialErrorMessage: string | null = null;
   export let isLoading = false;
   export let errorMessage: string | null = null;
   export let onClose: () => void = () => {};
@@ -57,6 +62,9 @@
     item: ReviewQueueItem,
     action: ReviewAction
   ) => Promise<void> = async () => {};
+  export let onSelectEditorialProposal: (
+    proposal: RouteReviewProposal
+  ) => void = () => {};
 
   let drawerElement: HTMLDivElement;
   let panelHeadingElement: HTMLHeadingElement;
@@ -67,7 +75,9 @@
     routes.length,
     reviewQueueItems.length,
     errorMessage,
-    showAdminReview
+    showAdminReview,
+    showEditorialReview,
+    editorialProposalCount
   );
   $: if (open !== lastHandledOpen) {
     lastHandledOpen = open;
@@ -82,7 +92,9 @@
     routes: number,
     reviewItems: number,
     error: string | null,
-    includeAdminReview: boolean
+    includeAdminReview: boolean,
+    includeEditorialReview: boolean,
+    proposalCount: number
   ): NavSection[] {
     const baseSections: NavSection[] = [
       {
@@ -102,13 +114,23 @@
       }
     ];
 
-    if (!includeAdminReview) {
-      return baseSections;
+    const sections = [...baseSections];
+    if (includeEditorialReview) {
+      sections.push({
+        id: 'editorial',
+        title: 'Editorial',
+        items: [
+          {
+            id: 'editorial-review',
+            label: 'Route Review',
+            icon: 'sparkles',
+            badge: proposalCount > 0 ? String(proposalCount) : undefined
+          }
+        ]
+      });
     }
-
-    return [
-      ...baseSections,
-      {
+    if (includeAdminReview) {
+      sections.push({
         id: 'admin',
         title: 'Admin',
         items: [
@@ -119,8 +141,9 @@
             badge: reviewItems > 0 ? String(reviewItems) : undefined
           }
         ]
-      }
-    ];
+      });
+    }
+    return sections;
   }
 
   async function focusDrawer(): Promise<void> {
@@ -148,6 +171,11 @@
       }
 
       openMediaReviewPanel();
+      return;
+    }
+
+    if (item.id === 'editorial-review') {
+      openEditorialReviewPanel();
       return;
     }
 
@@ -184,6 +212,15 @@
       onToggleVariant();
     }
 
+    await tick();
+    panelHeadingElement?.focus();
+  }
+
+  async function openEditorialReviewPanel(): Promise<void> {
+    if (!showEditorialReview) return;
+    activePanel = 'editorial-review';
+    onSelectItem('editorial-review');
+    if (variant === 'collapsed') onToggleVariant();
     await tick();
     panelHeadingElement?.focus();
   }
@@ -360,6 +397,64 @@
                     {#if selectedRouteId === route.id}
                       <span class="route-active-label">Active</span>
                     {/if}
+                  </button>
+                {/each}
+              </div>
+            {/if}
+          </section>
+        {:else if activePanel === 'editorial-review' && showEditorialReview}
+          <section
+            class="review-panel"
+            aria-labelledby="drawer-editorial-heading"
+          >
+            <button
+              type="button"
+              class="back-button"
+              on:click={returnToMainPanel}
+            >
+              <Icon name="collapse" />
+              <span>Back to navigation</span>
+            </button>
+            <div class="panel-heading">
+              <span>Editorial</span>
+              <h2
+                id="drawer-editorial-heading"
+                bind:this={panelHeadingElement}
+                tabindex="-1"
+              >
+                Route Review
+              </h2>
+              <p>
+                {editorialProposalCount} candidate{editorialProposalCount === 1
+                  ? ''
+                  : 's'}
+              </p>
+            </div>
+            {#if editorialErrorMessage}
+              <div class="section-error">
+                <Icon name="warning" />
+                <p>{editorialErrorMessage}</p>
+              </div>
+            {:else if editorialProposals.length === 0}
+              <div class="section-empty">
+                <Icon name="circle" /><span>No review candidates loaded.</span>
+              </div>
+            {:else}
+              <div class="review-list" aria-label="Editorial route candidates">
+                {#each editorialProposals as proposal (proposal.candidate_id)}
+                  <button
+                    type="button"
+                    class="review-summary"
+                    on:click={() => onSelectEditorialProposal(proposal)}
+                  >
+                    <strong
+                      >{String(
+                        proposal.proposal.working_title ??
+                          proposal.proposal.title ??
+                          proposal.candidate_id
+                      )}</strong
+                    >
+                    <span>{proposal.editorial_state.replace('_', ' ')}</span>
                   </button>
                 {/each}
               </div>

@@ -6,12 +6,14 @@
   import { parseYouTubeEmbed, type YouTubeEmbed } from '$lib/media/youtube';
   import type {
     Event,
+    EditorialState,
     ImageLink,
     MediaLink,
     MediaProvider,
     MediaType,
     Place,
     Route,
+    RouteReviewProposal,
     StoryConnectionItem
   } from '$lib/types/soundatlas';
 
@@ -56,6 +58,11 @@
   export let initialTab: InspectorTab = 'story';
   export let selectedPreviewUrl: string | null = null;
   export let showReviewActions = true;
+  export let editorialMode = false;
+  export let editorialProposal: RouteReviewProposal | null = null;
+  export let editorialSaving = false;
+  export let editorialErrorMessage: string | null = null;
+  export let onSetEditorialState: (state: EditorialState) => void = () => {};
 
   const mediaProviderLabels: Record<MediaProvider, string> = {
     youtube: 'YouTube',
@@ -306,6 +313,50 @@
           </p>
         </div>
       </div>
+
+      {#if editorialMode && editorialProposal}
+        <section class="editorial-review-card" aria-label="Editorial review">
+          <div>
+            <span class="review-kicker">Editorial review</span>
+            <strong
+              >State: {editorialProposal.editorial_state.replace(
+                '_',
+                ' '
+              )}</strong
+            >
+          </div>
+          <div class="editorial-actions" aria-label="Editorial state actions">
+            {#each ['draft', 'approved', 'dont_use'] as state (state)}
+              <button
+                type="button"
+                class:active={editorialProposal.editorial_state === state}
+                disabled={editorialSaving}
+                aria-pressed={editorialProposal.editorial_state === state}
+                on:click={() => onSetEditorialState(state as EditorialState)}
+                >{state === 'dont_use'
+                  ? 'Don’t use'
+                  : state.charAt(0).toUpperCase() + state.slice(1)}</button
+              >
+            {/each}
+          </div>
+          {#if editorialProposal.agent_recommendation}
+            <p class="review-note">
+              <strong>Agent recommendation:</strong>
+              {editorialProposal.agent_recommendation}
+            </p>
+          {/if}
+          {#if editorialProposal.warnings.length > 0 || editorialProposal.technical_errors.length > 0}
+            <ul class="review-warnings" aria-label="Review warnings">
+              {#each [...editorialProposal.warnings, ...editorialProposal.technical_errors] as warning (warning)}
+                <li>{warning}</li>
+              {/each}
+            </ul>
+          {/if}
+          {#if editorialErrorMessage}<p class="review-error" role="alert">
+              {editorialErrorMessage}
+            </p>{/if}
+        </section>
+      {/if}
 
       <div class="header-controls">
         <div
@@ -686,6 +737,69 @@
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
     gap: 0.65rem;
+  }
+
+  .editorial-review-card {
+    display: grid;
+    gap: 0.55rem;
+    padding: 0.65rem;
+    border: 1px solid #c9d8f2;
+    border-radius: 8px;
+    background: #f3f7ff;
+    color: #263b5c;
+    font-size: 0.78rem;
+  }
+
+  .editorial-review-card > div:first-child {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .review-kicker {
+    color: #2454d6;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .editorial-actions {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.3rem;
+  }
+
+  .editorial-actions button {
+    padding: 0.35rem 0.25rem;
+    border: 1px solid #b8c8e4;
+    border-radius: 6px;
+    background: #fff;
+    color: #263b5c;
+    font: inherit;
+    font-weight: 700;
+  }
+
+  .editorial-actions button.active,
+  .editorial-actions button[aria-pressed='true'] {
+    border-color: #2454d6;
+    background: #2454d6;
+    color: #fff;
+  }
+
+  .review-note,
+  .review-error {
+    margin: 0;
+  }
+
+  .review-warnings {
+    margin: 0;
+    padding-left: 1rem;
+    color: #78510c;
+  }
+
+  .review-error {
+    color: #a32626;
+    font-weight: 700;
   }
 
   .inspector-body {

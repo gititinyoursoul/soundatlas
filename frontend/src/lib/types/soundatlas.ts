@@ -24,9 +24,7 @@ export type RightsStatus =
 export type GeometryPrecision = 'site' | 'interpretive';
 export type GeometrySourceType = 'external' | 'curated';
 export type PlaceRelationshipDirection =
-  | 'undirected'
-  | 'forward'
-  | 'reciprocal';
+  'undirected' | 'forward' | 'reciprocal';
 
 export type PolygonGeometry = {
   type: 'Polygon';
@@ -182,4 +180,29 @@ export type ReviewQueueItem = {
   type: MediaType | ImageType;
   url: string;
   previewUrl?: string | null;
+};
+
+export type EditorialState = 'draft' | 'approved' | 'dont_use';
+
+export type RouteReviewProposal = {
+  candidate_id: string;
+  editorial_state: EditorialState;
+  active: boolean;
+  included: boolean;
+  renderable: boolean;
+  agent_recommendation: string | null;
+  warnings: string[];
+  technical_errors: string[];
+  material_signature: string;
+  proposal: Record<string, unknown>;
+};
+
+export type RouteReviewResult = {
+  route_id: string;
+  revision_id: string;
+  source: string;
+  proposals: RouteReviewProposal[];
+  dormant_proposals: RouteReviewProposal[];
+  warnings: string[];
+  technical_ready: boolean;
 };

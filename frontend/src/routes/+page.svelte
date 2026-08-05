@@ -1,9 +1,12 @@
 <script lang="ts">
   import { onMount, tick } from 'svelte';
   import {
+    IS_EDITORIAL_MODE,
     IS_PUBLIC_STATIC_MODE,
+    loadRouteReview,
     loadSoundAtlasData,
-    reviewEventLink
+    reviewEventLink,
+    updateRouteReviewState
   } from '$lib/api/soundatlas';
   import Icon from '$lib/components/Icon.svelte';
   import MapView from '$lib/components/MapView.svelte';
@@ -11,6 +14,10 @@
   import StoryPanel from '$lib/components/StoryPanel.svelte';
   import Timeline from '$lib/components/Timeline.svelte';
   import { filterEvents } from '$lib/data/filters';
+  import {
+    projectRouteReview,
+    type EditorialProjection
+  } from '$lib/data/editorial-review';
   import {
     compareEvents,
     getFirstEventIdForRoute,
@@ -23,10 +30,13 @@
   } from '$lib/data/spatial';
   import type {
     Connection,
+    EditorialState,
     Event,
     Place,
     ReviewAction,
     ReviewQueueItem,
+    RouteReviewProposal,
+    RouteReviewResult,
     Route,
     StoryConnectionItem
   } from '$lib/types/soundatlas';
@@ -51,10 +61,30 @@
   let reviewErrorMessage: string | null = null;
   let selectedInspectorTab: 'story' | 'media' | 'related' = 'story';
   let selectedPreviewUrl: string | null = null;
+  let routeReview: RouteReviewResult | null = null;
+  let editorialProjections: EditorialProjection[] = [];
+  let editorialErrorMessage: string | null = null;
+  let editorialSavingCandidateId: string | null = null;
+  let editorialActionError: string | null = null;
 
-  $: routeEvents = [...filterEvents(events, selectedRouteId)].sort(
+  $: publicRouteEvents = [...filterEvents(events, selectedRouteId)].sort(
     compareEvents
   );
+  $: routeEvents = IS_EDITORIAL_MODE
+    ? editorialProjections
+        .filter((item) => item.renderOnTimeline)
+        .map((item) => item.event)
+    : publicRouteEvents;
+  $: mapEvents = IS_EDITORIAL_MODE
+    ? editorialProjections
+        .filter((item) => item.renderOnMap)
+        .map((item) => item.event)
+    : publicRouteEvents;
+  $: reviewProposals = routeReview?.proposals ?? [];
+  $: selectedProjection =
+    editorialProjections.find(
+      (item) => item.proposal.candidate_id === selectedEventId
+    ) ?? null;
   $: routeEventCounts = routes.reduce<Record<string, number>>(
     (counts, route) => {
       counts[route.id] = events.filter(
@@ -95,15 +125,19 @@
             previewUrl: imageLink.thumbnail_url ?? imageLink.image_url
           }))
       ]);
-  $: selectedEventIsVisible = routeEvents.some(
-    (event) => event.id === selectedEventId
-  );
+  $: selectedEventIsVisible = IS_EDITORIAL_MODE
+    ? reviewProposals.some(
+        (proposal) => proposal.candidate_id === selectedEventId
+      )
+    : routeEvents.some((event) => event.id === selectedEventId);
   $: activeSelectedEventId =
     selectedEventIsVisible || routeEvents.length === 0
       ? selectedEventId
       : routeEvents[0].id;
-  $: selectedEvent =
-    routeEvents.find((event) => event.id === activeSelectedEventId) ?? null;
+  $: selectedEvent = IS_EDITORIAL_MODE
+    ? (selectedProjection?.event ?? null)
+    : (routeEvents.find((event) => event.id === activeSelectedEventId) ?? null);
+  $: selectedReviewProposal = selectedProjection?.proposal ?? null;
   $: activeSelectedPlaceId = resolveFocusedPlaceId(
     selectedEvent,
     selectedPlaceId
@@ -162,23 +196,44 @@
       const initialRouteId = selectedRouteId ?? getInitialRouteId(data.routes);
       selectedRouteId = initialRouteId;
 
-      if (
-        !selectedEventId ||
-        !data.events.some(
-          (event) =>
-            event.id === selectedEventId && event.route_id === initialRouteId
-        )
-      ) {
-        selectedEventId = getFirstEventIdForRoute(data.events, initialRouteId);
+      if (IS_EDITORIAL_MODE && initialRouteId) {
+        routeReview = await loadRouteReview(initialRouteId);
+        editorialProjections = projectRouteReview(
+          routeReview,
+          data.places,
+          initialRouteId
+        );
+      }
+
+      if (!IS_EDITORIAL_MODE) {
+        if (
+          !selectedEventId ||
+          !data.events.some(
+            (event) =>
+              event.id === selectedEventId && event.route_id === initialRouteId
+          )
+        ) {
+          selectedEventId = getFirstEventIdForRoute(
+            data.events,
+            initialRouteId
+          );
+        }
+      } else {
+        selectedEventId = routeReview?.proposals[0]?.candidate_id ?? null;
       }
       const initialEvent =
         data.events.find((event) => event.id === selectedEventId) ?? null;
       selectedPlaceId = resolveFocusedPlaceId(initialEvent, selectedPlaceId);
     } catch (error) {
-      errorMessage =
+      const message =
         error instanceof Error
           ? error.message
           : 'Frontend konnte API-Daten nicht laden.';
+      if (IS_EDITORIAL_MODE && routes.length > 0) {
+        editorialErrorMessage = `Editorial review unavailable: ${message}`;
+      } else {
+        errorMessage = message;
+      }
     } finally {
       isLoading = false;
     }
@@ -189,7 +244,10 @@
       selectedRouteId = routeId;
     }
 
-    const nextEvent = events.find((event) => event.id === eventId) ?? null;
+    const nextEvent = IS_EDITORIAL_MODE
+      ? (editorialProjections.find((item) => item.event.id === eventId)
+          ?.event ?? null)
+      : (events.find((event) => event.id === eventId) ?? null);
     selectedEventId = eventId;
     selectedPlaceId = resolveFocusedPlaceId(nextEvent, selectedPlaceId);
     selectedInspectorTab = 'story';
@@ -197,7 +255,9 @@
   }
 
   function selectLocation(eventId: string, placeId: string): void {
-    const event = events.find((item) => item.id === eventId);
+    const event = IS_EDITORIAL_MODE
+      ? editorialProjections.find((item) => item.event.id === eventId)?.event
+      : events.find((item) => item.id === eventId);
     if (!event || !event.place_ids.includes(placeId)) {
       return;
     }
@@ -217,13 +277,69 @@
 
   function selectRoute(routeId: string): void {
     selectedRouteId = routeId;
-    selectedEventId = getFirstEventIdForRoute(events, routeId);
+    selectedEventId = IS_EDITORIAL_MODE
+      ? null
+      : getFirstEventIdForRoute(events, routeId);
     const firstEvent =
       events.find((event) => event.id === selectedEventId) ?? null;
     selectedPlaceId = resolveFocusedPlaceId(firstEvent, null);
     activeNavigationItemId = 'routes';
     selectedInspectorTab = 'story';
     selectedPreviewUrl = null;
+    if (IS_EDITORIAL_MODE) {
+      routeReview = null;
+      editorialProjections = [];
+      editorialErrorMessage = null;
+      void loadEditorialRoute(routeId);
+    }
+  }
+
+  async function loadEditorialRoute(routeId: string): Promise<void> {
+    try {
+      const review = await loadRouteReview(routeId);
+      if (selectedRouteId !== routeId) return;
+      routeReview = review;
+      editorialProjections = projectRouteReview(review, places, routeId);
+      selectedEventId = review.proposals[0]?.candidate_id ?? null;
+    } catch (error) {
+      if (selectedRouteId !== routeId) return;
+      routeReview = null;
+      editorialProjections = [];
+      editorialErrorMessage =
+        error instanceof Error
+          ? `Editorial review unavailable: ${error.message}`
+          : 'Editorial review unavailable.';
+    }
+  }
+
+  async function setEditorialState(
+    proposal: RouteReviewProposal,
+    editorialState: EditorialState
+  ): Promise<void> {
+    if (!routeReview || !selectedRouteId) return;
+    editorialSavingCandidateId = proposal.candidate_id;
+    editorialActionError = null;
+    try {
+      const updated = await updateRouteReviewState(
+        selectedRouteId,
+        proposal.candidate_id,
+        routeReview.revision_id,
+        editorialState
+      );
+      routeReview = updated;
+      editorialProjections = projectRouteReview(
+        updated,
+        places,
+        selectedRouteId
+      );
+    } catch (error) {
+      editorialActionError =
+        error instanceof Error
+          ? error.message
+          : 'Editorial state update failed.';
+    } finally {
+      editorialSavingCandidateId = null;
+    }
   }
 
   function buildStoryConnectionItems(
@@ -343,7 +459,7 @@
   async function selectNavigationItem(itemId: string): Promise<void> {
     activeNavigationItemId = itemId;
 
-    if (itemId === 'routes') {
+    if (itemId === 'routes' || itemId === 'editorial-review') {
       return;
     }
 
@@ -371,7 +487,9 @@
   }
 
   function markStoryNavigationActive(): void {
-    if (!['media-review'].includes(activeNavigationItemId)) {
+    if (
+      !['media-review', 'editorial-review'].includes(activeNavigationItemId)
+    ) {
       activeNavigationItemId = 'routes';
     }
   }
@@ -429,6 +547,10 @@
     {reviewSavingItemId}
     {reviewErrorMessage}
     showAdminReview={!IS_PUBLIC_STATIC_MODE}
+    showEditorialReview={IS_EDITORIAL_MODE}
+    editorialProposalCount={reviewProposals.length}
+    editorialProposals={reviewProposals}
+    {editorialErrorMessage}
     {isLoading}
     {errorMessage}
     onClose={closeNavigation}
@@ -436,6 +558,7 @@
     onSelectItem={selectNavigationItem}
     onSelectRoute={selectRoute}
     onSelectReviewItem={selectReviewItem}
+    onSelectEditorialProposal={(proposal) => selectEvent(proposal.candidate_id)}
     onReviewQueueItem={reviewQueueItem}
   />
 
@@ -501,10 +624,16 @@
             >
           {/if}
         </div>
+      {:else if editorialErrorMessage}
+        <div class="notice error">
+          <strong>Editorial review unavailable</strong>
+          <span>{editorialErrorMessage}</span>
+          <small>Public explorer data is not used as a review fallback.</small>
+        </div>
       {:else}
         <section class="map-region" tabindex="-1" aria-label="Map exploration">
           <MapView
-            events={routeEvents}
+            events={mapEvents}
             {places}
             {routes}
             {selectedRouteId}
@@ -522,8 +651,16 @@
         <Timeline
           routeStartYear={timelineStartYear}
           routeEndYear={timelineEndYear}
-          eventStartYear={selectedEvent?.year_start ?? null}
-          eventEndYear={selectedEvent?.year_end ?? null}
+          eventStartYear={IS_EDITORIAL_MODE
+            ? selectedProjection?.renderOnTimeline
+              ? (selectedEvent?.year_start ?? null)
+              : null
+            : (selectedEvent?.year_start ?? null)}
+          eventEndYear={IS_EDITORIAL_MODE
+            ? selectedProjection?.renderOnTimeline
+              ? (selectedEvent?.year_end ?? null)
+              : null
+            : (selectedEvent?.year_end ?? null)}
           events={routeEvents}
           selectedEventId={activeSelectedEventId}
           onSelectEvent={selectEvent}
@@ -554,6 +691,14 @@
         initialTab={selectedInspectorTab}
         {selectedPreviewUrl}
         showReviewActions={!IS_PUBLIC_STATIC_MODE}
+        editorialMode={IS_EDITORIAL_MODE}
+        editorialProposal={selectedReviewProposal}
+        editorialSaving={editorialSavingCandidateId ===
+          selectedReviewProposal?.candidate_id}
+        editorialErrorMessage={editorialActionError}
+        onSetEditorialState={(state) =>
+          selectedReviewProposal &&
+          setEditorialState(selectedReviewProposal, state)}
       />
     </section>
   </section>

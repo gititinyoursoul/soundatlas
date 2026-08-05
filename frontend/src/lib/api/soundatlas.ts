@@ -1,11 +1,13 @@
 import type {
   Connection,
+  EditorialState,
   Event,
   EventInput,
   Place,
   ReviewAction,
   ReviewLinkKind,
   Route,
+  RouteReviewResult,
   SoundAtlasData
 } from '$lib/types/soundatlas';
 import { base } from '$app/paths';
@@ -21,6 +23,8 @@ export const DATA_MODE =
   import.meta.env.VITE_DATA_MODE === 'static' ? 'static' : 'api';
 
 export const IS_PUBLIC_STATIC_MODE = DATA_MODE === 'static';
+export const IS_EDITORIAL_MODE =
+  import.meta.env.VITE_EDITORIAL_MODE === 'true' && !IS_PUBLIC_STATIC_MODE;
 
 export async function loadSoundAtlasData(
   fetcher: typeof fetch = fetch
@@ -103,6 +107,44 @@ export async function reviewEventLink(
   }
 
   return (await response.json()) as Event;
+}
+
+export async function loadRouteReview(
+  routeId: string,
+  fetcher: typeof fetch = fetch
+): Promise<RouteReviewResult> {
+  return requestJson<RouteReviewResult>(
+    `/editorial/routes/${encodeURIComponent(routeId)}/review`,
+    fetcher
+  );
+}
+
+export async function updateRouteReviewState(
+  routeId: string,
+  candidateId: string,
+  revisionId: string,
+  editorialState: EditorialState,
+  fetcher: typeof fetch = fetch
+): Promise<RouteReviewResult> {
+  const response = await fetcher(
+    `${API_BASE_URL}/editorial/routes/${encodeURIComponent(routeId)}/review/events/${encodeURIComponent(candidateId)}`,
+    {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        revision_id: revisionId,
+        editorial_state: editorialState
+      })
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      `API request failed: ${response.status} ${response.statusText}`
+    );
+  }
+
+  return (await response.json()) as RouteReviewResult;
 }
 
 async function requestJson<T>(path: string, fetcher: typeof fetch): Promise<T> {

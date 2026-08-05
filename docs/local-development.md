@@ -57,6 +57,15 @@ Default URLs:
 The Bash start script accepts `--backend-port` and `--frontend-port` when the
 default ports are already in use.
 
+## Editorial review mode
+
+The normal development server is the public explorer. To inspect a generated
+route review through the existing map, timeline, navigation drawer, and
+StoryPanel, start the frontend with `VITE_EDITORIAL_MODE=true` while using the
+API data path. The flag is opt-in and defaults to public mode; static data mode
+does not expose editorial controls. Review state changes are sent to the
+backend review API and require its current revision.
+
 ## Checks
 
 Run backend checks from `backend/`:
