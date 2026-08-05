@@ -270,6 +270,12 @@ decisions. Always include a recommendation when options are shown.
 After an interactive finding, pause and wait for confirmation before continuing
 to dependent findings.
 
+Do not publish a standalone `## Grill-Me Review` while a material finding is
+still awaiting confirmation. After all material findings in the session have a
+decision, record one consolidated Issue comment containing the stage, each
+finding with its decision, and the next step. For multiple findings, keep the
+findings numbered in that single comment.
+
 When the review is complete, give one final verdict:
 
 * Ready
@@ -291,14 +297,25 @@ standalone sessions in an Issue comment under:
 ## Grill-Me Review
 ```
 
-Include:
+Use this minimal completed-record shape:
 
-* review mode
-* artifacts reviewed
-* final verdict
-* confirmed findings and decisions
-* unresolved items
-* required next actions
+```md
+## Grill-Me Review
+
+**Stage:** Intake | Plan | Implementation | Implementation Review
+
+### Findings and decisions
+
+1. **Finding:** <material finding>
+   **Decision:** Confirmed by human — <decision>
+
+**Next step:** <Plan Update | Concept Work | Blocked>
+```
+
+For multiple findings, add one numbered `Finding`/`Decision` pair per finding.
+Do not publish a pending finding as a completed record, and do not leave a
+material finding without an explicit decision. Decisions may confirm, defer,
+reject, or block the finding.
 
 For a clean lightweight check, record the result inline in the next action
 comment when useful instead of creating a separate review comment. Omit it when

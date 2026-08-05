@@ -138,9 +138,10 @@ At the completed-implementation transition, the lightweight check selects
 interactive only when the review returns a material human decision.
 
 For any risk-flagged work, run `prompts/grill-me.md` after intake creation and
-before planning or implementation. Record a standalone `## Grill-Me Review`
-when the check produces a material finding, confirmed decision, blocker, or is
-an explicitly requested standalone session. For a clean check, use a concise
+before planning or implementation. Keep a material finding that is awaiting
+human confirmation in the interactive conversation; do not publish it as a
+completed Issue comment. After all material findings have decisions, record one
+consolidated standalone `## Grill-Me Review`. For a clean check, use a concise
 inline note in the next action comment when useful, or omit the note when no
 durable record is needed.
 
@@ -152,6 +153,26 @@ assumed when recorded in the later Plan Update.
 
 Do not mark open questions as resolved while a material decision remains
 unconfirmed.
+
+A completed `## Grill-Me Review` uses this minimal shape:
+
+```md
+## Grill-Me Review
+
+**Stage:** Intake | Plan | Implementation | Implementation Review
+
+### Findings and decisions
+
+1. **Finding:** <material finding>
+   **Decision:** Confirmed by human — <decision>
+
+**Next step:** <Plan Update | Concept Work | Blocked>
+```
+
+For multiple findings, number each `Finding`/`Decision` pair in the same
+comment. Every material finding must have an explicit decision, including a
+decision to defer, reject, or remain blocked. A `## Plan Update` must not rely
+on the plan itself to claim that a missing Grill-Me decision was confirmed.
 
 Codex may set existing approved GitHub labels on Issues. New labels must be
 proposed and explicitly approved before Codex creates or uses them.

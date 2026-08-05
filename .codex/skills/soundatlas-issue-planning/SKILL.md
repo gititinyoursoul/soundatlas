@@ -83,6 +83,13 @@ readiness review before Issue content is drafted.
    API behavior, generated media review boundaries, historically sensitive
    claims, irreversible workflow behavior, or production stability.
 
+   Treat a material Grill-Me record as complete only when it contains a
+   `Stage`, an explicit `Decision` for every material `Finding`, and a `Next
+   step`. Keep pending findings in the interactive conversation until the
+   human confirms, defers, rejects, or blocks them. For multiple findings,
+   require one numbered finding/decision pair per finding in the same
+   consolidated `## Grill-Me Review` comment.
+
 6. Preserve Acceptance Criteria history.
    If the plan changes the original criteria, include an `Acceptance Criteria
 Changes` section instead of silently rewriting the meaning of the Issue.
@@ -132,6 +139,11 @@ rules would otherwise be unclear.
   review skill performs the comparison; this skill records the result.
 - Do not fill a missing or contradictory material concept decision inside a
   Plan Update. Return it to Grill Me and concept work.
+- Before producing a Plan Update for risk-flagged work, verify that the
+  completed Grill-Me comment itself contains `Stage`, every material `Finding`
+  with its `Decision`, and `Next step`. Do not treat a statement inside the
+  Plan Update as a substitute for a missing human decision in the Grill-Me
+  record.
 - Reference an accepted concept instead of duplicating it across implementation
   Issues or plans.
 - Prefer small, reviewable revisions over broad rewrites.
