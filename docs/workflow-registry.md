@@ -215,8 +215,10 @@ For an approved prompt-to-skill extraction:
   material revisions require Grill-Me before planning, while material expansion
   after implementation begins requires a linked Issue. See
   `docs/github-issue-workflow.md` for the phase-specific rules.
-- Add a `## Grill-Me Review` comment before a `## Plan Update` or
-  `## Detailed Plan Update` when risk flags are present.
+- Record the Grill-Me result before a `## Plan Update` or `## Detailed Plan
+  Update` when risk flags are present. Use a standalone `## Grill-Me Review`
+  for material findings, decisions, blockers, or explicit standalone sessions;
+  record clean checks inline in the action comment when useful.
 - Implement from a risk-flagged Issue only after the review and plan gates are
   complete plus explicit wording such as `implement issue #<number>`. Clearly
   trivial, local, low-risk work may proceed directly.
@@ -252,7 +254,7 @@ by the agent.
 
 | Work type                               | Kind                                   | Required gate                                                                | Authoritative source                                                               | Entrypoint                                                                                                      | Output                                                              |
 | --------------------------------------- | -------------------------------------- | ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
-| Intake critique and planning front door | Interactive prompt                     | Intake Issue when non-trivial                                                | `prompts/grill-me.md` for review format; GitHub Issue for decisions                | `prompts/grill-me.md`                                                                                           | `## Grill-Me Review` comment                                        |
+| Intake critique and planning front door | Interactive prompt                     | Intake Issue when non-trivial                                                | `prompts/grill-me.md` for review format; GitHub Issue for decisions                | `prompts/grill-me.md`                                                                                           | Standalone decision record or inline action note                    |
 | Concept synthesis                       | Skill                                  | Confirmed material decisions; only when concept work is needed               | `## Concept` Issue comment or one human-confirmed authoritative document under `docs/` | `.codex/skills/soundatlas-concept-work/SKILL.md`                                                            | Five-part concept or link to its authoritative document             |
 | Implementation review                   | Skill                                  | Completed non-trivial Issue work, or drift/risk during implementation        | Approved Issue, concept when present, plan, actual diff, evidence, and current-state docs | `.codex/skills/soundatlas-implementation-review/SKILL.md`                                               | Review Result inside the single Implementation Report               |
 | Issue intake, planning, and reports     | Skill                                  | Intake or Grill-Me as required by risk                                       | GitHub Issue body/comments; lifecycle in `docs/github-issue-workflow.md`            | `.codex/skills/soundatlas-issue-planning/SKILL.md`                                                     | Intake, Plan Update, Detailed Plan Update, or Implementation Report |

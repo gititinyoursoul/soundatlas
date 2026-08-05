@@ -126,9 +126,12 @@ Events should contain at least:
   required before implementation; explicit wording such as `implement issue
 #<number>` does not bypass those gates. Clearly trivial, local, low-risk work
   may proceed directly.
-- Use standardized Issue comments: `## Grill-Me Review`, `## Concept` when
-  concept work is needed, `## Plan Update` or `## Detailed Plan Update`, and
-  `## Implementation Report`.
+- Use standardized Issue records: a standalone `## Grill-Me Review` for
+  material findings, confirmed decisions, blockers, or explicit standalone
+  sessions; `## Concept` when concept work is needed; `## Plan Update` or
+  `## Detailed Plan Update`; and `## Implementation Report`. Clean lightweight
+  checks may be recorded inline in the next action comment or omitted when no
+  durable record is useful.
 - Before planning, record scope changes as an `## Intake Revision` comment and
   rerun Grill-Me for material revisions; do not silently broaden an Intake.
 - Plan Updates, Detailed Plan Updates, and Implementation Reports should live in the GitHub Issue rather than local or repo-versioned plan files.

@@ -72,9 +72,12 @@ readiness review before Issue content is drafted.
 5. Keep the Issue decision-complete for implementation.
    For security, credentials, infrastructure, networking, workflow, UX,
    editorial, cross-cutting, user-visible, vague, or materially ambiguous work,
-   require a `## Grill-Me Review` comment before a Plan Update. Clearly trivial,
-   local, low-risk work may use the direct path only when the lifecycle document
-   permits that exception; workflow changes remain gated there.
+   require a recorded Grill-Me result before a Plan Update. Use a standalone
+   `## Grill-Me Review` for material findings, decisions, blockers, or explicit
+   standalone sessions. A clean check may be recorded inline in the Plan Update.
+   Clearly trivial, local, low-risk work may use the direct path only when the
+   lifecycle document permits that exception; workflow changes remain gated
+   there.
    Make assumptions for low-risk implementation details. Stop for approval when
    uncertainty affects product intent, data shape, security, privacy, external
    API behavior, generated media review boundaries, historically sensitive

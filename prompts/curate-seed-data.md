@@ -28,10 +28,11 @@ Project constraints
 Process
 
 - If the seed work is non-trivial, use `prompts/grill-me.md` first to check
-  draft/publish boundaries, source risk, route fit, and data-shape risk, then
-  record the confirmed review in a `## Grill-Me Review` Issue comment. Then use
-  `soundatlas-issue-planning` to create or update a GitHub Issue Plan
-  Update before multi-file data changes.
+  draft/publish boundaries, source risk, route fit, and data-shape risk. Record
+  material findings or decisions in a standalone `## Grill-Me Review`; a clean
+  check may be noted inline in the next action comment. Then use
+  `soundatlas-issue-planning` to create or update a GitHub Issue Plan Update
+  before multi-file data changes.
 - Check the route content in `docs/content/routes/<route-id>/` for new route
   work, or the existing legacy concept in `docs/content/route-concepts/`, plus
   MVP scope in `docs/mvp-concept.md`.

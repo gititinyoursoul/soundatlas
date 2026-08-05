@@ -103,8 +103,10 @@ an Issue comment:
 Do not silently broaden an Intake by editing its body without this record.
 Wording-only clarifications do not require a new Grill-Me review. A material
 revision becomes the new pre-planning artifact and must receive a fresh
-`## Grill-Me Review` before a `## Plan Update` or `## Detailed Plan Update` is
-added.
+Grill-Me result before a `## Plan Update` or `## Detailed Plan Update` is added.
+Use a standalone `## Grill-Me Review` when that result contains a material
+finding, decision, blocker, or explicit standalone session; a clean result may
+be recorded inline in the next action comment.
 
 Create a linked Issue instead of revising the current Intake when the expansion
 introduces a separate deliverable, changes the primary outcome, crosses a
@@ -136,8 +138,11 @@ At the completed-implementation transition, the lightweight check selects
 interactive only when the review returns a material human decision.
 
 For any risk-flagged work, run `prompts/grill-me.md` after intake creation and
-before planning or implementation. Record the review in an Issue comment with
-the heading `## Grill-Me Review`.
+before planning or implementation. Record a standalone `## Grill-Me Review`
+when the check produces a material finding, confirmed decision, blocker, or is
+an explicitly requested standalone session. For a clean check, use a concise
+inline note in the next action comment when useful, or omit the note when no
+durable record is needed.
 
 Each material finding must state whether user confirmation is required. User
 confirmation is required for product behavior, scope, security, privacy,
@@ -276,7 +281,10 @@ Rules:
 - If planning exposes a missing or contradictory material target decision,
   return to Grill Me and concept work instead of resolving it in the plan.
 - For risk-flagged work, add the Plan Update only after the Issue contains a
-  `## Grill-Me Review` comment with required decisions confirmed.
+  recorded Grill-Me result with required decisions confirmed. Use a standalone
+  `## Grill-Me Review` when the result contains a material finding, decision,
+  blocker, or explicit standalone session; a clean check may be recorded inline
+  in the Plan Update.
 - Use `Acceptance Criteria Changes` whenever the original criteria are changed.
   Do not silently rewrite the meaning of the Issue.
 - Use `Requirements` only when complex product, API, data, security, or workflow
@@ -295,8 +303,10 @@ Implementation may proceed when:
 - The Issue contains enough Task, Plan, and Acceptance Criteria detail to
   implement safely.
 - Blocking questions are resolved or intentionally deferred.
-- For risk-flagged work, the Issue contains a `## Grill-Me Review` comment and a
-  confirmed `## Plan Update` or `## Detailed Plan Update`.
+- For risk-flagged work, the Issue contains a recorded Grill-Me result and a
+  confirmed `## Plan Update` or `## Detailed Plan Update`. The result may be
+  inline in that action comment when clean; material findings, decisions,
+  blockers, and standalone sessions use `## Grill-Me Review`.
 
 Explicit implementation wording does not bypass a required Grill-Me review or
 Plan Update. A low-risk assumption may be recorded and carried forward; a

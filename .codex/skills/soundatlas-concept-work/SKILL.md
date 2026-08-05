@@ -13,7 +13,9 @@ use without inventing product behavior.
 Read before producing a concept:
 
 - `AGENTS.md`;
-- the originating GitHub Issue and its confirmed `## Grill-Me Review` comments;
+- the originating GitHub Issue and its confirmed Grill-Me findings or
+  decisions, using a standalone `## Grill-Me Review` when required or an inline
+  action comment when the result is clean;
 - relevant current-state, product, architecture, workflow, data, or editorial
   sources; and
 - an existing concept when the request revises one.

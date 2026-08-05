@@ -19,8 +19,11 @@ Read these before editing:
 - `AGENTS.md`
 - `docs/github-issue-workflow.md`
 - `docs/workflow-registry.md`
-- the approved GitHub Issue and its `## Grill-Me Review` and `## Plan Update`
-  or `## Detailed Plan Update` comments when risk flags are present
+- the approved GitHub Issue, including any recorded Grill-Me findings or
+  decisions and its `## Plan Update` or `## Detailed Plan Update` when risk
+  flags are present. A standalone `## Grill-Me Review` is used when the result
+  is material or explicitly standalone; a clean check may be inline in the
+  relevant action comment.
 - existing tests and the target code or data workflow
 
 Optional context may clarify the test slice without overriding its scope:

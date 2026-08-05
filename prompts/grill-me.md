@@ -87,6 +87,17 @@ session or asking for approval. Mention the clean check only when it helps the
 handoff. If a material finding needs human confirmation, enter the interactive
 one-finding flow below.
 
+For a clean check, do not create a standalone `## Grill-Me Review` comment. If
+the check enables a next action, add a concise inline note such as:
+
+```md
+- Grill-Me check: clean — no material findings; proceeding.
+```
+
+If no durable action follows, the clean check may be omitted. Use a standalone
+`## Grill-Me Review` for material findings, confirmed decisions, blockers, or
+an explicitly requested standalone session.
+
 Before accepting completed non-trivial Issue work, use
 `soundatlas-implementation-review` for the routine target, implementation, and
 evidence comparison. A clean result continues to the combined Implementation
@@ -273,7 +284,8 @@ Do not describe a material decision as closed until the user confirms it.
 ## GitHub Issue Recording
 
 When a related GitHub Issue exists and GitHub write access is available, record
-the completed and confirmed findings in an Issue comment under:
+material findings, confirmed decisions, blockers, or explicitly requested
+standalone sessions in an Issue comment under:
 
 ```md
 ## Grill-Me Review
@@ -287,6 +299,10 @@ Include:
 * confirmed findings and decisions
 * unresolved items
 * required next actions
+
+For a clean lightweight check, record the result inline in the next action
+comment when useful instead of creating a separate review comment. Omit it when
+no durable record is needed.
 
 Do not record unresolved assumptions as confirmed decisions. Do not add partial
 findings during an active session unless explicitly requested.

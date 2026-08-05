@@ -18,8 +18,11 @@ Read these before editing:
 - `AGENTS.md`
 - `docs/github-issue-workflow.md`
 - `docs/workflow-registry.md`
-- the approved GitHub Issue, including its `## Grill-Me Review` and `## Plan
-  Update` or `## Detailed Plan Update` comments when risk flags are present
+- the approved GitHub Issue, including any recorded Grill-Me findings or
+  decisions and its `## Plan Update` or `## Detailed Plan Update` when risk
+  flags are present. A standalone `## Grill-Me Review` is used when the result
+  is material or explicitly standalone; a clean check may be inline in the
+  relevant action comment.
 - the target document and directly related references
 
 Optional context may clarify the Issue without overriding it:
@@ -39,8 +42,12 @@ For Issue-based work with security, credentials, infrastructure, networking,
 workflow, UX, editorial, cross-cutting, user-visible, vague, or materially
 ambiguous risk flags, require both:
 
-- a `## Grill-Me Review` comment with required material decisions confirmed;
+- a recorded Grill-Me result with required material decisions confirmed;
 - a `## Plan Update` or `## Detailed Plan Update` that incorporates them.
+
+Use a standalone `## Grill-Me Review` for material findings, decisions,
+blockers, or explicitly standalone sessions. Record a clean check inline in the
+action comment when useful.
 
 Explicit implementation wording does not bypass these gates. Stop for approval
 if the requested change affects product intent, source quality, editorial
