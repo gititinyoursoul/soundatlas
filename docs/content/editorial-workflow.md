@@ -80,30 +80,35 @@ flowchart TD
     merge targets, overlap-cluster recommendations, rationales, and review
     questions; the human should normally only approve, reject, or correct those
     proposals.
-12. After human candidate review, complete one accepted-events review:
+12. Create or refresh `route-review.json` to keep the private Draft, Approved,
+    and Don’t use state separate from agent recommendations. Existing routes
+    require the explicit one-time legacy migration described in
+    `docs/content/workflow-commands.md`.
+13. Until Issues #72 and #73 replace the remaining compatibility path, complete
+    one accepted-events review after human candidate review:
     confirm `accepted-events.json` includes only approved `keep` candidates and
     human-resolved `merge` outcomes, then set its required quality flags.
-13. Use `accepted-events.md` only as the human-readable companion view for that
+14. Use `accepted-events.md` only as the human-readable companion view for that
     same review. The pipeline generates it only when missing by default, or
     refreshes it with `--renew`; it is not a separate approval gate.
-14. Treat accepted-event handoff files as enrichment-ready, not
+15. Treat accepted-event handoff files as enrichment-ready, not
     publication-ready. AI may draft dossier content and suggest source
     statuses, but human editors confirm source status and source/media
     readiness.
-15. Run the event editorial quality pass from
+16. Run the event editorial quality pass from
     `docs/content/event-editorial-quality-standards.md` before translating
     accepted events into `data/seed/`.
-16. Define event titles, summaries, and significance text in editorial form
+17. Define event titles, summaries, and significance text in editorial form
     before translating them into `data/seed/`.
-17. Use the generated seed preview and validation report to inspect draft seed
+18. Use the generated seed preview and validation report to inspect draft seed
     shape before any write into `data/seed/`.
-18. Promote route drafts to seed only after event framing has been manually
+19. Promote route drafts to seed only after event framing has been manually
     inspected.
-19. Keep contested or incomplete claims traceable through `source_urls`.
-20. Mark uncertain seed records as `review_status: "draft"`.
-21. Use `prompts/create-route.md` when route concept work needs agent-written
+20. Keep contested or incomplete claims traceable through `source_urls`.
+21. Mark uncertain seed records as `review_status: "draft"`.
+22. Use `prompts/create-route.md` when route concept work needs agent-written
     editorial content beyond deterministic pipeline artifacts.
-22. Use `prompts/curate-seed-data.md` when the main task is to add or revise
+23. Use `prompts/curate-seed-data.md` when the main task is to add or revise
     JSON seed records directly.
 
 ## Route Folder Artifacts
@@ -126,29 +131,34 @@ For new route work, keep route-specific editorial artifacts under
    active dossier for editorial review. `event-list.md` should minimize human
    effort by showing overview counts, overlap-cluster recommendations, merge
    targets, `maybe` items, and then the full candidate appendix.
-7. `accepted-events.json`: structured accepted-event handoff created after
+7. `route-review.json`: authoritative private review result for the target
+   workflow. It identifies one exact active revision, keeps agent recommendation
+   separate from Draft, Approved, and Don’t use state, retains identifiable
+   invalid proposals, and preserves minimal dormant decisions across refreshes.
+8. `accepted-events.json`: legacy structured accepted-event handoff created after
    human candidate review. Include only approved `keep` candidates and resolved
    `merge` outcomes. Required quality flags must pass before downstream route
    concept, event framing, seed preview, promotion, or post-review agent steps
    proceed.
-8. `accepted-events.md`: optional human-readable companion view for the same
+9. `accepted-events.md`: optional human-readable companion view for the same
    accepted-events review. This artifact is generated from
    `accepted-events.json` when missing by default and is enrichment-ready, not
    publication-ready. It is not a separate approval gate.
-9. `route-concept.md`: route argument and phase draft based on the accepted
+10. `route-concept.md`: route argument and phase draft based on the accepted
    event set and candidate-review decisions.
-10. `event-framing.md`, `event-framing.json`, `place-framing.json`, and
+11. `event-framing.md`, `event-framing.json`, `place-framing.json`, and
    `connection-framing.json`: draft seed-shaped records for review.
-11. `seed-transfer-report.md`: preview of what would be merged into seed files.
-12. `validation-report.md`: structural, reference, and accepted-events gate
+12. `seed-transfer-report.md`: preview of what would be merged into seed files.
+13. `validation-report.md`: structural, reference, and accepted-events gate
     findings.
 
 The generated files are working drafts. They should not be treated as final
 historical claims or publication-ready seed data without review.
 
-The route content pipeline uses `accepted-events.json` as the enforcement
-contract. `accepted-events.md` remains the readable editorial view and is not
-parsed as the source of truth or approved separately.
+The route content pipeline still uses `accepted-events.json` as its legacy
+enforcement contract. `route-review.json` is authoritative for the new private
+human state and is consumed by Issues #72 and #73. The two paths are not
+silently synchronized.
 
 ## Pipeline Commands
 
@@ -162,6 +172,7 @@ uv run --project backend python backend/scripts/route_content_pipeline.py init -
 uv run --project backend python backend/scripts/route_content_pipeline.py agent --route-id birth-of-hip-hop --step brief_to_dossier --dry-run
 uv run --project backend python backend/scripts/route_content_pipeline.py run --route-id birth-of-hip-hop --missing
 uv run --project backend python backend/scripts/route_content_pipeline.py run --route-id birth-of-hip-hop --renew
+uv run --project backend python backend/scripts/route_content_pipeline.py review --route-id birth-of-hip-hop
 uv run --project backend python backend/scripts/route_content_pipeline.py status --route-id birth-of-hip-hop
 uv run --project backend python backend/scripts/route_content_pipeline.py promote --route-id birth-of-hip-hop --to-seed
 ```
@@ -188,9 +199,10 @@ uv run --project backend python backend/scripts/route_content_pipeline.py promot
   describes a structured seed/runtime record; it does not decide whether a
   candidate belongs in the route.
 - Keep the target Draft, Approved, and Don’t use route-review states separate
-  from both candidate recommendations and seed `review_status`. Until #71 is
-  implemented, the current file-based candidate and accepted-event gates remain
-  in force.
+  from both candidate recommendations and seed `review_status`.
+- Treat `route-review.json` as the authority for private route state. Treat the
+  accepted-events gate as a temporary legacy pipeline boundary until Issues #72
+  and #73 complete visual review and exact-result publication.
 - Use source status values only as source/claim quality signals:
   `strong`, `medium`, `weak`, `mythologized`, and `needs_review`. AI-suggested
   source statuses remain unconfirmed until human review.

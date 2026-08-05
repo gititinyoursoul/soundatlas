@@ -37,22 +37,25 @@ SoundAtlas currently uses a route-first workflow:
    events, candidate connections, source leads, media leads, image leads, and
    editorial risks.
 4. `event-list.md` and `event-list.json` hold candidate events for review.
-5. `accepted-events.json` is the structured route-level handoff after human
-   candidate review. It includes only `keep` candidates and human-resolved
-   `merge` outcomes, and its quality flags gate downstream work.
-6. `accepted-events.md` is the readable companion view for the same review, not
+5. `route-review.json` holds one exact private review result with Draft,
+   Approved, and Don’t use state, technical readiness, and minimal dormant
+   decisions across regeneration.
+6. `accepted-events.json` remains the legacy structured route-level handoff
+   after human candidate review. It includes only `keep` candidates and
+   human-resolved `merge` outcomes, and its quality flags gate downstream work.
+7. `accepted-events.md` is the readable companion view for the same review, not
    a separate approval gate.
-7. `route-concept.md` turns accepted events into a route argument and phase
+8. `route-concept.md` turns accepted events into a route argument and phase
    draft.
-8. `event-framing.*`, `place-framing.json`, and `connection-framing.json`
+9. `event-framing.*`, `place-framing.json`, and `connection-framing.json`
    create seed-shaped drafts.
-9. `seed-transfer-report.md` and `validation-report.md` preview structural
+10. `seed-transfer-report.md` and `validation-report.md` preview structural
    seed changes before promotion.
-10. `data/seed/` is the runtime source for the map, timeline, route switching,
+11. `data/seed/` is the runtime source for the map, timeline, route switching,
    event inspector, sources, connections, media links, and image links.
-11. Enrichment scripts can create event-search components, media query plans,
+12. Enrichment scripts can create event-search components, media query plans,
    YouTube result files, draft `media_links`, and draft `image_links`.
-12. The app has an internal media/image review queue for marking draft links as
+13. The app has an internal media/image review queue for marking draft links as
     reviewed or rejecting them.
 
 The documentation consistently says generated route artifacts are drafts and
@@ -74,7 +77,7 @@ not replace the human editor or authorize publication.
 | Generate candidate events | Dossier candidate table and `event-list.json` | Aligned | Candidate events are visible before seed promotion. |
 | Review candidates manually | Docs require artifact inspection | Partial | The review point exists, but it is not strongly modeled. |
 | Suggest Keep / Maybe / Merge / Reject | `event-list.json` candidate recommendations | Aligned | The current pipeline records the agent proposal separately from human review state. |
-| Set private Draft / Approved / Don’t use state | Target explorer editorial mode | Future | Draft and Approved remain in the route; Don’t use is excluded without deletion. |
+| Set private Draft / Approved / Don’t use state | `route-review.json` and private backend API | Partial | State persistence is implemented; explorer controls remain in #72. |
 | Create handoff only for accepted events | `accepted-events.json` gate and `accepted-events.md` companion view | Aligned | The JSON file is the source of truth; Markdown is not a separate approval gate. |
 | Enrich accepted events with sources and media | Enrichment can use accepted-event handoff files as the editorial boundary | Partial | Current scripts still run from seed data; docs now define the accepted-event boundary. |
 | Human reviews final output | Seed preview, validation report, and link review exist | Partial | There is no single final event-card approval gate. |
@@ -110,7 +113,7 @@ be treated as historical or curatorial truth.
 | Theme brief | Exists | Implemented as route `brief.md`. |
 | Candidate event | Exists | Dossier tables and `event-list.json`. |
 | Candidate recommendation | Exists | Uses `keep`, `maybe`, `merge`, and `reject`. |
-| Private route-review state | Future | Uses Draft, Approved, and Don’t use in the target explorer review surface. |
+| Private route-review state | Partial | Typed route-folder persistence and private API exist; #72 owns the explorer surface. |
 | Accepted event | Exists | Represented by `accepted-events.json`. |
 | Event dossier | Exists | Implemented as `accepted-events.md`, a readable companion view for the JSON handoff. |
 | Source status | Exists | Source status vocabulary is documented for accepted-event handoff notes. |

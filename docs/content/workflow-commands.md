@@ -160,6 +160,11 @@ post-review agent steps are blocked until every accepted event confirms:
 `validation-report.md` records accepted-events gate errors instead of reporting
 the route as seed-ready.
 
+The accepted-events gate is the legacy compatibility path. It remains available
+while Issues #72 and #73 complete the explorer review and exact publication
+flow, but it is not the authority for the private Draft, Approved, and Don’t
+use state described below.
+
 Run one step:
 
 ```bash
@@ -179,6 +184,42 @@ Create a deterministic variant:
 uv run --project backend python backend/scripts/route_content_pipeline.py run --route-id birth-of-hip-hop --step event_list --variant alternate-draft
 ```
 
+## Private Route Review
+
+Create the first private review result from an existing event list by explicitly
+migrating its legacy human states:
+
+```bash
+uv run --project backend python backend/scripts/route_content_pipeline.py review --route-id birth-of-hip-hop --migrate-legacy
+```
+
+The migration reports counts and maps only `pending` to Draft, `approved` to
+Approved, and `rejected` to Don’t use. Agent recommendations and membership in
+`accepted-events.json` never determine the private state.
+
+After generating or regenerating `event-list.json`, refresh the active review
+result:
+
+```bash
+uv run --project backend python backend/scripts/route_content_pipeline.py review --route-id birth-of-hip-hop
+```
+
+The command writes `route-review.json` atomically in the route folder. It keeps
+one active result and a minimal dormant record for removed proposals. New
+proposals start as Draft; unchanged proposals retain state; materially changed
+Approved proposals return to Draft; and Don’t use remains excluded until a
+human changes it.
+
+The private backend boundary for the later explorer review surface is:
+
+- `GET /editorial/routes/<route-id>/review`
+- `PATCH /editorial/routes/<route-id>/review/events/<candidate-id>` with the
+  current `revision_id` and `editorial_state`
+
+State updates create a new exact revision. A stale revision is rejected so a
+review action cannot overwrite a newer regeneration or decision. These private
+fields do not appear in the public route or event responses.
+
 ## Status
 
 Inspect route pipeline state:
@@ -189,7 +230,9 @@ uv run --project backend python backend/scripts/route_content_pipeline.py status
 
 Use status before continuing work to confirm the active dossier, configured
 inputs, which outputs are present or missing, and whether existing downstream
-artifacts are stale because the accepted-events gate is missing or blocked.
+artifacts are stale because the legacy accepted-events gate is missing or
+blocked. Status separately reports the private route-review revision, state and
+inclusion counts, dormant decisions, warnings, technical errors, and readiness.
 
 ## Seed Preview And Write
 
@@ -238,17 +281,18 @@ Before seed writing, inspect:
 Generated text should stay cautious. Do not use the pipeline to turn weakly
 sourced or contested claims into settled statements.
 
-The pipeline uses `accepted-events.json` as the enforcement contract.
-`accepted-events.md` is the companion view and is not parsed as the source of
-truth or approved separately. Treat both files as enrichment-ready handoff
-material only; publication readiness is handled by a later final-review step.
+The legacy downstream pipeline uses `accepted-events.json` as its enforcement
+contract. `accepted-events.md` is the companion view and is not parsed as the
+source of truth or approved separately. Treat both files as enrichment-ready
+compatibility handoff material only; `route-review.json` owns the private human
+state, and Issue #73 owns exact-result publication.
 
 ## Verification
 
 After changing the pipeline or route artifacts, run:
 
 ```bash
-uv run --project backend pytest backend/tests/test_route_content_pipeline.py
+uv run --project backend pytest backend/tests/test_route_content_pipeline.py backend/tests/test_route_review_repository.py
 ```
 
 For broader backend confidence:

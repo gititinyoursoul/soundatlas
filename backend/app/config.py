@@ -2,6 +2,7 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_SEED_DIR = PROJECT_ROOT / "data" / "seed"
+DEFAULT_CONTENT_ROOT = PROJECT_ROOT / "docs" / "content" / "routes"
 DEFAULT_CODEX_ENV_FILE = PROJECT_ROOT / ".env.codex"
 
 LOCAL_CORS_ORIGINS = [

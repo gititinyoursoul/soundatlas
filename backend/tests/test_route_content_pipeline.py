@@ -907,6 +907,66 @@ def test_status_marks_existing_downstream_artifacts_stale_when_gate_is_missing(
     assert "stale downstream artifacts: route-concept.md" in output
 
 
+def test_review_command_migrates_legacy_state_and_status_separates_paths(
+    tmp_path: Path,
+    capsys,
+) -> None:
+    content_root, seed_dir = write_pipeline_fixture(tmp_path)
+    assert (
+        main(
+            [
+                "--content-root",
+                str(content_root),
+                "--seed-dir",
+                str(seed_dir),
+                "run",
+                "--route-id",
+                ROUTE_ID,
+                "--step",
+                "event_list",
+            ]
+        )
+        == 0
+    )
+    capsys.readouterr()
+
+    assert (
+        main(
+            [
+                "--content-root",
+                str(content_root),
+                "review",
+                "--route-id",
+                ROUTE_ID,
+                "--migrate-legacy",
+            ]
+        )
+        == 0
+    )
+    migration_output = capsys.readouterr().out
+    assert "Legacy route-review states migrated" in migration_output
+    assert "pending=1, approved=0, rejected=0" in migration_output
+
+    assert (
+        main(
+            [
+                "--content-root",
+                str(content_root),
+                "--seed-dir",
+                str(seed_dir),
+                "status",
+                "--route-id",
+                ROUTE_ID,
+            ]
+        )
+        == 0
+    )
+    status_output = capsys.readouterr().out
+    assert "Accepted-events gate (legacy compatibility)" in status_output
+    assert "Private route review" in status_output
+    assert "states: draft=1, approved=0, dont_use=0" in status_output
+
+
 def prepare_reviewed_accepted_events(content_root: Path, seed_dir: Path) -> None:
     route_dir = content_root / ROUTE_ID
     write_event_list_decisions(

@@ -2,6 +2,15 @@ from fastapi import Depends, FastAPI, HTTPException, Query, status
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import LOCAL_CORS_ORIGIN_REGEX, LOCAL_CORS_ORIGINS
+from app.route_review import (
+    RouteReviewConflictError,
+    RouteReviewError,
+    RouteReviewNotFoundError,
+    RouteReviewRepository,
+    RouteReviewResult,
+    RouteReviewStateUpdate,
+    RouteReviewValidationError,
+)
 from app.schemas import (
     Connection,
     Event,
@@ -14,13 +23,17 @@ from app.schemas import (
 from app.seed_repository import SeedRepository
 
 
-def create_app(repository: SeedRepository | None = None) -> FastAPI:
+def create_app(
+    repository: SeedRepository | None = None,
+    route_review_repository: RouteReviewRepository | None = None,
+) -> FastAPI:
     active_repository = repository or SeedRepository.from_seed_dir()
+    active_route_review_repository = route_review_repository or RouteReviewRepository()
 
     api = FastAPI(
         title="SoundAtlas API",
         version="0.1.0",
-        description="Seed-backed API for the SoundAtlas MVP.",
+        description="Seed-backed public data and private route review for the SoundAtlas MVP.",
     )
 
     api.add_middleware(
@@ -34,6 +47,9 @@ def create_app(repository: SeedRepository | None = None) -> FastAPI:
 
     def get_repository() -> SeedRepository:
         return active_repository
+
+    def get_route_review_repository() -> RouteReviewRepository:
+        return active_route_review_repository
 
     @api.get("/health", response_model=HealthResponse)
     def health() -> HealthResponse:
@@ -156,6 +172,50 @@ def create_app(repository: SeedRepository | None = None) -> FastAPI:
                 detail=f"Route '{route_id}' not found",
             )
         return seed_repository.list_connections(route_id=route_id)
+
+    @api.get(
+        "/editorial/routes/{route_id}/review",
+        response_model=RouteReviewResult,
+    )
+    def get_route_review(
+        route_id: str,
+        review_repository: RouteReviewRepository = Depends(get_route_review_repository),
+    ) -> RouteReviewResult:
+        try:
+            return review_repository.get(route_id)
+        except RouteReviewNotFoundError as exc:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+        except RouteReviewValidationError as exc:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
+        except RouteReviewError as exc:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=str(exc),
+            ) from exc
+
+    @api.patch(
+        "/editorial/routes/{route_id}/review/events/{candidate_id}",
+        response_model=RouteReviewResult,
+    )
+    def update_route_review_state(
+        route_id: str,
+        candidate_id: str,
+        request: RouteReviewStateUpdate,
+        review_repository: RouteReviewRepository = Depends(get_route_review_repository),
+    ) -> RouteReviewResult:
+        try:
+            return review_repository.update_state(route_id, candidate_id, request)
+        except RouteReviewNotFoundError as exc:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+        except RouteReviewConflictError as exc:
+            raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc)) from exc
+        except RouteReviewValidationError as exc:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
+        except RouteReviewError as exc:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=str(exc),
+            ) from exc
 
     return api
 

@@ -12,6 +12,7 @@ BACKEND_ROOT = Path(__file__).resolve().parents[1]
 if str(BACKEND_ROOT) not in sys.path:
     sys.path.insert(0, str(BACKEND_ROOT))
 
+from app.route_review import RouteReviewRepository
 from app.schemas import Connection, Event, Place, Route
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -86,7 +87,21 @@ def main(argv: list[str] | None = None) -> int:
         elif args.command == "status":
             route_dir = route_dir_for(args.content_root, args.route_id)
             manifest = load_or_create_manifest(route_dir, args.route_id)
-            print(format_status(route_dir, manifest))
+            print(
+                format_status(
+                    route_dir,
+                    manifest,
+                    review_repository=RouteReviewRepository(args.content_root),
+                )
+            )
+        elif args.command == "review":
+            review_repository = RouteReviewRepository(args.content_root)
+            if args.migrate_legacy:
+                report = review_repository.migrate_legacy(args.route_id)
+                print(format_review_migration_summary(report.model_dump()))
+            else:
+                result = review_repository.refresh(args.route_id)
+                print(format_review_summary(result.model_dump()))
         elif args.command == "promote":
             if not args.to_seed:
                 raise ValueError("promote currently requires --to-seed.")
@@ -198,6 +213,17 @@ def build_parser() -> argparse.ArgumentParser:
     )
     status_parser = subparsers.add_parser("status", help="Report route pipeline state.")
     status_parser.add_argument("--route-id", required=True)
+
+    review_parser = subparsers.add_parser(
+        "review",
+        help="Create or refresh the private active route-review result.",
+    )
+    review_parser.add_argument("--route-id", required=True)
+    review_parser.add_argument(
+        "--migrate-legacy",
+        action="store_true",
+        help="Create the first route review from legacy event-list review_state values.",
+    )
 
     promote_parser = subparsers.add_parser(
         "promote",
@@ -2157,7 +2183,11 @@ def format_agent_summary(results: list[dict[str, Any]]) -> str:
     return "\n".join(lines)
 
 
-def format_status(route_dir: Path, manifest: dict[str, Any]) -> str:
+def format_status(
+    route_dir: Path,
+    manifest: dict[str, Any],
+    review_repository: RouteReviewRepository | None = None,
+) -> str:
     lines = [
         "Route content pipeline status",
         f"Route: {manifest['route_id']}",
@@ -2176,7 +2206,7 @@ def format_status(route_dir: Path, manifest: dict[str, Any]) -> str:
         input_detail = f" input={input_name}" if input_name else ""
         lines.append(f"- {step_name}:{input_detail} outputs={output_status or 'none'}")
     gate_errors = accepted_events_gate_errors(route_dir, manifest)
-    lines.extend(["", "Accepted-events gate"])
+    lines.extend(["", "Accepted-events gate (legacy compatibility)"])
     if gate_errors:
         lines.append("- blocked")
         for error in gate_errors:
@@ -2186,6 +2216,36 @@ def format_status(route_dir: Path, manifest: dict[str, Any]) -> str:
             lines.append("- stale downstream artifacts: " + ", ".join(stale_outputs))
     else:
         lines.append("- passed")
+    lines.extend(["", "Private route review"])
+    if review_repository is None:
+        review_repository = RouteReviewRepository(route_dir.parent)
+    try:
+        review = review_repository.get(manifest["route_id"])
+    except ValueError as exc:
+        lines.append(f"- unavailable: {exc}")
+    else:
+        counts = {state: 0 for state in ("draft", "approved", "dont_use")}
+        for proposal in review.proposals:
+            counts[proposal.editorial_state] += 1
+        included = sum(proposal.included for proposal in review.proposals)
+        warnings = len(review.warnings) + sum(
+            len(proposal.warnings) for proposal in review.proposals
+        )
+        errors = sum(len(proposal.technical_errors) for proposal in review.proposals)
+        lines.extend(
+            [
+                f"- revision: {review.revision_id}",
+                f"- generated proposals: {len(review.proposals)}",
+                f"- states: draft={counts['draft']}, approved={counts['approved']}, "
+                f"dont_use={counts['dont_use']}",
+                f"- reviewed content: included={included}, "
+                f"excluded={len(review.proposals) - included}",
+                f"- dormant decisions: {len(review.dormant_proposals)}",
+                f"- editorial warnings: {warnings}",
+                f"- technical errors: {errors}",
+                f"- technical readiness: {'ready' if review.technical_ready else 'blocked'}",
+            ]
+        )
     lines.extend(["", "Agent steps"])
     for step_name, step in manifest.get("agent_steps", {}).items():
         outputs = step_outputs(route_dir, step)
@@ -2196,6 +2256,44 @@ def format_status(route_dir: Path, manifest: dict[str, Any]) -> str:
         inputs = ", ".join(step.get("inputs", [])) or "none"
         lines.append(f"- {step_name}: inputs={inputs} outputs={output_status or 'none'}")
     return "\n".join(lines)
+
+
+def format_review_summary(result: dict[str, Any]) -> str:
+    proposals = result["proposals"]
+    included = sum(proposal["included"] for proposal in proposals)
+    errors = sum(len(proposal["technical_errors"]) for proposal in proposals)
+    warnings = len(result["warnings"]) + sum(
+        len(proposal["warnings"]) for proposal in proposals
+    )
+    return "\n".join(
+        [
+            "Private route review refreshed",
+            f"Route: {result['route_id']}",
+            f"Revision: {result['revision_id']}",
+            f"Generated proposals: {len(proposals)}",
+            f"Reviewed content: {included} included, {len(proposals) - included} excluded",
+            f"Dormant decisions: {len(result['dormant_proposals'])}",
+            f"Editorial warnings: {warnings}",
+            f"Technical errors: {errors}",
+            f"Technical readiness: {'ready' if result['technical_ready'] else 'blocked'}",
+        ]
+    )
+
+
+def format_review_migration_summary(report: dict[str, Any]) -> str:
+    migrated = report["migrated"]
+    return "\n".join(
+        [
+            "Legacy route-review states migrated",
+            f"Route: {report['route_id']}",
+            f"Revision: {report['revision_id']}",
+            f"Proposals: {report['proposals']}",
+            "Mapped states: "
+            f"pending={migrated['pending']}, approved={migrated['approved']}, "
+            f"rejected={migrated['rejected']}",
+            "Agent recommendations and accepted-events membership were not migrated.",
+        ]
+    )
 
 
 def downstream_outputs_present(route_dir: Path, manifest: dict[str, Any]) -> list[str]:

@@ -93,8 +93,10 @@ This file includes only human-selected `keep` candidates and resolved `merge`
 outcomes. It excludes unresolved `maybe`, unresolved `merge`, and `reject`
 candidates.
 
-`accepted-events.json` is the enforcement contract for this review. This
-Markdown file is a readable companion view and is not approved separately.
+`accepted-events.json` is the enforcement contract for this legacy review
+handoff. This Markdown file is a readable companion view and is not approved
+separately. It does not own the private Draft, Approved, or Don’t use state in
+`route-review.json`.
 
 AI may draft event notes and suggest source statuses, but source and media
 approval remain human-reviewed.
