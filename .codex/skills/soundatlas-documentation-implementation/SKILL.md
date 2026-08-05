@@ -7,8 +7,9 @@ description: Plan and implement approved SoundAtlas documentation changes by cla
 
 Use this skill for repeatable SoundAtlas documentation and workflow-document
 work from an approved GitHub Issue. The approved Issue is the scope authority;
-`soundatlas-issue-planning` remains authoritative for Issue intake,
-Plan Updates, Detailed Plan Updates, and Issue-level reports.
+`soundatlas-issue-planning` is the entrypoint for drafting and revising Issue
+intake, Plan Updates, Detailed Plan Updates, and Issue-level reports under the
+lifecycle contract in `docs/github-issue-workflow.md`.
 
 ## Required context
 

@@ -72,8 +72,9 @@ readiness review before Issue content is drafted.
 5. Keep the Issue decision-complete for implementation.
    For security, credentials, infrastructure, networking, workflow, UX,
    editorial, cross-cutting, user-visible, vague, or materially ambiguous work,
-   require a `## Grill-Me Review` comment before a Plan Update. Clearly
-   trivial, local, low-risk work may use the direct path.
+   require a `## Grill-Me Review` comment before a Plan Update. Clearly trivial,
+   local, low-risk work may use the direct path only when the lifecycle document
+   permits that exception; workflow changes remain gated there.
    Make assumptions for low-risk implementation details. Stop for approval when
    uncertainty affects product intent, data shape, security, privacy, external
    API behavior, generated media review boundaries, historically sensitive
@@ -84,8 +85,9 @@ readiness review before Issue content is drafted.
 Changes` section instead of silently rewriting the meaning of the Issue.
 
 7. Stop before implementation unless the user explicitly requests implementation
-   with wording such as `implement issue #<number>` or the change is clearly
-   trivial. Explicit wording does not bypass required review or planning gates.
+   with wording such as `implement issue #<number>` or the change qualifies for
+   the direct path in `docs/github-issue-workflow.md`. Explicit wording does not
+   bypass required review or planning gates.
 
 8. Finalize one combined Implementation Report after review.
    For completed non-trivial Issue work, require
@@ -95,79 +97,16 @@ Changes` section instead of silently rewriting the meaning of the Issue.
    keep the report unaccepted until the finding is resolved or explicitly
    reported as blocking.
 
-9. After a completed Issue-based implementation is committed, complete the
-   post-commit lifecycle: capture the hash, verify acceptance criteria, confirm
-   no Issue-relevant changes remain uncommitted, post the standard completion
-   comment, and close the Issue. Leave the Issue open and report the failure if
-   verification, commenting, or closing cannot be completed.
+9. After implementation reporting, follow the post-commit lifecycle defined in
+   `docs/github-issue-workflow.md`. This skill does not own commit
+   authorization, completion comments, or Issue closure.
 
-## Issue Shapes
+## Issue Artifact Contracts
 
-Use this shape for a new Intake Issue:
-
-```md
-## Task
-
-## Context
-
-## Acceptance Criteria
-```
-
-Use this shape for normal planning:
-
-```md
-## Plan
-
-## Non-Goals
-
-## Open Questions
-```
-
-Use this shape when planning is complex enough to need implementation detail:
-
-```md
-## Plan
-
-## Assumptions
-
-## Non-Goals
-
-## Acceptance Criteria Changes
-
-## Implementation Steps
-
-## Validation
-
-## Open Questions
-```
-
-Use `Requirements` only when complex product, API, data, security, or workflow
+Use the canonical Intake, Plan Update, Detailed Plan Update, and
+Implementation Report shapes in `docs/github-issue-workflow.md`. Use
+`Requirements` only when complex product, API, data, security, or workflow
 rules would otherwise be unclear.
-
-Use this shape after implementation:
-
-```md
-## Summary
-
-## Verification
-
-## Acceptance Criteria Result
-
-## Review Result
-
-## Remaining Risks
-```
-
-The standard post-commit completion comment is:
-
-```md
-## Completed
-
-- Commit: `<commit hash>`
-- Issue: #<number>
-- Acceptance criteria: complete
-- Verification: `<checks or report reference>`
-```
 
 ## Planning Rules
 
@@ -199,10 +138,6 @@ The standard post-commit completion comment is:
 - After a Plan Update exists, record material scope changes under `Acceptance
   Criteria Changes` and rerun required review before implementation. After
   implementation begins, use a linked Issue for material expansion.
-- Do not close an Issue for uncommitted, partial, WIP, incomplete, or
-  ambiguously scoped work, or when the human explicitly asks to keep it open.
-- Unrelated uncommitted changes do not block closure; verify only the
-  Issue-relevant working-tree state.
 - For cross-cutting changes, plan in this order: data or schema impact, backend
   impact, frontend state impact, UX impact, tests or checks, docs or Issue
   updates.

@@ -14,6 +14,21 @@ GitHub Issues are the source of truth for planned agent work. `TODO.md` is a
 legacy backlog and should not receive new planned work unless the human
 explicitly asks for a legacy note.
 
+## Authority and Skill Boundaries
+
+This document is the normative contract for the GitHub Issue lifecycle: its
+sequence, gates, required Issue comment shapes, implementation-review
+transition, and post-commit completion. The workflow registry selects the
+entrypoint for each kind of work. Skills and prompts provide the procedures for
+producing their assigned artifacts and must follow this lifecycle contract.
+
+In particular, `soundatlas-issue-planning` drafts and revises Intake Issues,
+Plan Updates, Detailed Plan Updates, and Implementation Reports. It does not
+own lifecycle ordering, post-commit closure, or Issue-state management.
+`soundatlas-implementation-review` owns implementation comparison, evidence
+assessment, finding classification, and routing. This document owns when that
+review occurs and how its result enters the Issue lifecycle.
+
 ## Workflow
 
 ```text
@@ -302,25 +317,13 @@ completed non-trivial Issue work. Skip it for clearly trivial, local, low-risk
 changes. During implementation, use it only when drift, risk, or a new material
 constraint requires comparison before work continues.
 
-The skill compares the authoritative artifacts that exist: approved Issue
-scope and criteria, concept when present, Plan Update when required, actual
-diff, validation and runtime evidence, and affected current-state
-documentation. Do not require retroactive concept work for an Issue that did
-not need it.
-
-Use proportional, claim-based evidence. Ordinary checks are sufficient when
-they establish the material behavior. Require focused runtime, integration,
-visual, or manual evidence only when ordinary checks leave a material gap.
-
-The skill is read-only. It classifies and routes findings but does not fix them,
-revise artifacts, resolve material decisions, create follow-up Issues, commit,
-close the Issue, manage Issue-state labels, or claim human approval. Return
-material decisions to Grill Me. The implementing agent may review its own work;
-independent review is optional when requested or materially justified.
-
-Resolve required findings in the destination named by the review. Then rerun
-the review before finalizing the Implementation Report. Do not create a
-separate routine implementation-review comment.
+At this transition, select the review skill for the comparison, evidence
+assessment, finding classification, and routing defined by that skill. It is
+read-only and returns material human decisions to Grill Me. Do not require
+retroactive concept work for an Issue that did not need it. Resolve required
+findings and rerun the review before finalizing the Implementation Report.
+Routine review remains part of that single report rather than a separate Issue
+comment.
 
 ## Implementation Report
 

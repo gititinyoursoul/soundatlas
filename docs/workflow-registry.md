@@ -145,6 +145,11 @@ repository references and compatibility needs have been reviewed.
   selects an authoritative concept document under `docs/`, that document owns
   the concept and the Issue links to it without duplication.
 
+The detailed lifecycle and canonical Issue artifact shapes live in
+`docs/github-issue-workflow.md`. `soundatlas-issue-planning` owns the procedure
+for drafting and revising those artifacts, but not lifecycle ordering,
+post-commit closure, or Issue-state management.
+
 For completion review, `soundatlas-implementation-review` owns comparison,
 proportional evidence assessment, finding classification, and routing. Grill Me
 owns material human decisions; implementation owns fixes;
