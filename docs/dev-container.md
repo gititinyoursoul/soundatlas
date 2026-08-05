@@ -344,7 +344,7 @@ bash scripts/validate-dev.sh
 ```
 
 The helper runs the same checks as the `test` job in
-`.github/workflows/pages.yml`, from the directories expected by each tool:
+`.github/workflows/pages-deploy.yml`, from the directories expected by each tool:
 
 ```text
 frontend/: npm run lint
