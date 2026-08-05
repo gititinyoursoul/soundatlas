@@ -10,7 +10,9 @@ import {
   loadApiSoundAtlasData,
   loadStaticSoundAtlasData,
   reviewEventLink,
+  loadRoutePublication,
   loadRouteReview,
+  publishRoute,
   updateRouteReviewState
 } from './soundatlas';
 
@@ -196,6 +198,40 @@ describe('SoundAtlas API client', () => {
           editorial_state: 'approved'
         })
       })
+    );
+  });
+
+  it('loads a publication summary and publishes the exact revision', async () => {
+    const summary = {
+      route_id: 'birth-of-hip-hop',
+      revision_id: 'revision-1',
+      source: 'event-list.json',
+      included_events: [],
+      excluded_event_ids: [],
+      warnings: ['Source review remains open.'],
+      technical_errors: [],
+      technical_ready: true,
+      published_revision_id: null
+    };
+    const result = { ...summary, published: true };
+    const fetcher = vi
+      .fn<typeof fetch>()
+      .mockResolvedValueOnce(jsonResponse(summary))
+      .mockResolvedValueOnce(jsonResponse(result));
+
+    await expect(
+      loadRoutePublication('birth-of-hip-hop', fetcher)
+    ).resolves.toEqual(summary);
+    await expect(
+      publishRoute('birth-of-hip-hop', 'revision-1', fetcher)
+    ).resolves.toEqual(result);
+    expect(fetcher).toHaveBeenLastCalledWith(
+      `${API_BASE_URL}/editorial/routes/birth-of-hip-hop/publication`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ revision_id: 'revision-1' })
+      }
     );
   });
 });

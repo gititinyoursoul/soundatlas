@@ -135,21 +135,25 @@ For new route work, keep route-specific editorial artifacts under
    workflow. It identifies one exact active revision, keeps agent recommendation
    separate from Draft, Approved, and Don’t use state, retains identifiable
    invalid proposals, and preserves minimal dormant decisions across refreshes.
-8. `accepted-events.json`: legacy structured accepted-event handoff created after
+8. `route-publication.json`: minimal private record of the exact revision and
+   event/connection membership most recently promoted to canonical runtime data.
+   It protects the published result from later route-review refreshes; it is not
+   a run archive or publication history.
+9. `accepted-events.json`: legacy structured accepted-event handoff created after
    human candidate review. Include only approved `keep` candidates and resolved
    `merge` outcomes. Required quality flags must pass before downstream route
    concept, event framing, seed preview, promotion, or post-review agent steps
    proceed.
-9. `accepted-events.md`: optional human-readable companion view for the same
+10. `accepted-events.md`: optional human-readable companion view for the same
    accepted-events review. This artifact is generated from
    `accepted-events.json` when missing by default and is enrichment-ready, not
    publication-ready. It is not a separate approval gate.
-10. `route-concept.md`: route argument and phase draft based on the accepted
+11. `route-concept.md`: route argument and phase draft based on the accepted
    event set and candidate-review decisions.
-11. `event-framing.md`, `event-framing.json`, `place-framing.json`, and
+12. `event-framing.md`, `event-framing.json`, `place-framing.json`, and
    `connection-framing.json`: draft seed-shaped records for review.
-12. `seed-transfer-report.md`: preview of what would be merged into seed files.
-13. `validation-report.md`: structural, reference, and accepted-events gate
+13. `seed-transfer-report.md`: preview of what would be merged into seed files.
+14. `validation-report.md`: structural, reference, and accepted-events gate
     findings.
 
 The generated files are working drafts. They should not be treated as final
@@ -159,6 +163,19 @@ The route content pipeline still uses `accepted-events.json` as its legacy
 enforcement contract. `route-review.json` is authoritative for the new private
 human state and is consumed by Issues #72 and #73. The two paths are not
 silently synchronized.
+
+The publication API is available only through API-backed editorial mode:
+
+- `GET /editorial/routes/<route-id>/publication` returns the exact revision
+  summary, Draft-plus-Approved inclusion, Don’t use exclusions, warnings, and
+  technical readiness.
+- `POST /editorial/routes/<route-id>/publication` accepts the active review
+  revision and promotes the validated result to canonical seed data. It does
+  not commit, push, deploy, resolve warnings, or alter private editorial state.
+
+This remains a focused publication boundary while #72 completes its review
+surface evidence and the legacy accepted-events path is retired through the
+approved workflow.
 
 ## Pipeline Commands
 

@@ -1,7 +1,17 @@
 from fastapi import Depends, FastAPI, HTTPException, Query, status
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.config import LOCAL_CORS_ORIGIN_REGEX, LOCAL_CORS_ORIGINS
+from app.config import DEFAULT_SEED_DIR, LOCAL_CORS_ORIGIN_REGEX, LOCAL_CORS_ORIGINS
+from app.route_publication import (
+    RoutePublicationConflictError,
+    RoutePublicationError,
+    RoutePublicationNotFoundError,
+    RoutePublicationRepository,
+    RoutePublicationRequest,
+    RoutePublicationResult,
+    RoutePublicationSummary,
+    RoutePublicationValidationError,
+)
 from app.route_review import (
     RouteReviewConflictError,
     RouteReviewError,
@@ -26,9 +36,14 @@ from app.seed_repository import SeedRepository
 def create_app(
     repository: SeedRepository | None = None,
     route_review_repository: RouteReviewRepository | None = None,
+    route_publication_repository: RoutePublicationRepository | None = None,
 ) -> FastAPI:
     active_repository = repository or SeedRepository.from_seed_dir()
     active_route_review_repository = route_review_repository or RouteReviewRepository()
+    active_route_publication_repository = route_publication_repository or RoutePublicationRepository(
+        active_route_review_repository,
+        seed_dir=active_repository._seed_dir or DEFAULT_SEED_DIR,
+    )
 
     api = FastAPI(
         title="SoundAtlas API",
@@ -50,6 +65,9 @@ def create_app(
 
     def get_route_review_repository() -> RouteReviewRepository:
         return active_route_review_repository
+
+    def get_route_publication_repository() -> RoutePublicationRepository:
+        return active_route_publication_repository
 
     @api.get("/health", response_model=HealthResponse)
     def health() -> HealthResponse:
@@ -216,6 +234,49 @@ def create_app(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=str(exc),
             ) from exc
+
+    @api.get(
+        "/editorial/routes/{route_id}/publication",
+        response_model=RoutePublicationSummary,
+    )
+    def get_route_publication_summary(
+        route_id: str,
+        publication_repository: RoutePublicationRepository = Depends(
+            get_route_publication_repository
+        ),
+    ) -> RoutePublicationSummary:
+        try:
+            return publication_repository.summary(route_id)
+        except RoutePublicationNotFoundError as exc:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+        except RoutePublicationValidationError as exc:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
+        except RoutePublicationError as exc:
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(exc)) from exc
+
+    @api.post(
+        "/editorial/routes/{route_id}/publication",
+        response_model=RoutePublicationResult,
+    )
+    def publish_route(
+        route_id: str,
+        request: RoutePublicationRequest,
+        publication_repository: RoutePublicationRepository = Depends(
+            get_route_publication_repository
+        ),
+    ) -> RoutePublicationResult:
+        try:
+            result = publication_repository.publish(route_id, request.revision_id)
+            active_repository.reload()
+            return result
+        except RoutePublicationNotFoundError as exc:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+        except RoutePublicationConflictError as exc:
+            raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc)) from exc
+        except RoutePublicationValidationError as exc:
+            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc)) from exc
+        except RoutePublicationError as exc:
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(exc)) from exc
 
     return api
 

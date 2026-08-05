@@ -206,3 +206,26 @@ export type RouteReviewResult = {
   warnings: string[];
   technical_ready: boolean;
 };
+
+export type PublicationEventSummary = {
+  candidate_id: string;
+  title: string;
+  editorial_state: EditorialState;
+  included: boolean;
+};
+
+export type RoutePublicationSummary = {
+  route_id: string;
+  revision_id: string;
+  source: string;
+  included_events: PublicationEventSummary[];
+  excluded_event_ids: string[];
+  warnings: string[];
+  technical_errors: string[];
+  technical_ready: boolean;
+  published_revision_id: string | null;
+};
+
+export type RoutePublicationResult = RoutePublicationSummary & {
+  published: boolean;
+};

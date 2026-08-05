@@ -7,6 +7,8 @@ import type {
   ReviewAction,
   ReviewLinkKind,
   Route,
+  RoutePublicationResult,
+  RoutePublicationSummary,
   RouteReviewResult,
   SoundAtlasData
 } from '$lib/types/soundatlas';
@@ -145,6 +147,39 @@ export async function updateRouteReviewState(
   }
 
   return (await response.json()) as RouteReviewResult;
+}
+
+export async function loadRoutePublication(
+  routeId: string,
+  fetcher: typeof fetch = fetch
+): Promise<RoutePublicationSummary> {
+  return requestJson<RoutePublicationSummary>(
+    `/editorial/routes/${encodeURIComponent(routeId)}/publication`,
+    fetcher
+  );
+}
+
+export async function publishRoute(
+  routeId: string,
+  revisionId: string,
+  fetcher: typeof fetch = fetch
+): Promise<RoutePublicationResult> {
+  const response = await fetcher(
+    `${API_BASE_URL}/editorial/routes/${encodeURIComponent(routeId)}/publication`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ revision_id: revisionId })
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      `API request failed: ${response.status} ${response.statusText}`
+    );
+  }
+
+  return (await response.json()) as RoutePublicationResult;
 }
 
 async function requestJson<T>(path: string, fetcher: typeof fetch): Promise<T> {

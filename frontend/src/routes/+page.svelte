@@ -3,8 +3,10 @@
   import {
     IS_EDITORIAL_MODE,
     IS_PUBLIC_STATIC_MODE,
+    loadRoutePublication,
     loadRouteReview,
     loadSoundAtlasData,
+    publishRoute,
     reviewEventLink,
     updateRouteReviewState
   } from '$lib/api/soundatlas';
@@ -37,6 +39,8 @@
     ReviewQueueItem,
     RouteReviewProposal,
     RouteReviewResult,
+    RoutePublicationResult,
+    RoutePublicationSummary,
     Route,
     StoryConnectionItem
   } from '$lib/types/soundatlas';
@@ -66,6 +70,10 @@
   let editorialErrorMessage: string | null = null;
   let editorialSavingCandidateId: string | null = null;
   let editorialActionError: string | null = null;
+  let publicationSummary: RoutePublicationSummary | null = null;
+  let publicationSaving = false;
+  let publicationError: string | null = null;
+  let publicationSuccess = false;
 
   $: publicRouteEvents = [...filterEvents(events, selectedRouteId)].sort(
     compareEvents
@@ -197,7 +205,12 @@
       selectedRouteId = initialRouteId;
 
       if (IS_EDITORIAL_MODE && initialRouteId) {
-        routeReview = await loadRouteReview(initialRouteId);
+        const [review, publication] = await Promise.all([
+          loadRouteReview(initialRouteId),
+          loadRoutePublication(initialRouteId)
+        ]);
+        routeReview = review;
+        publicationSummary = publication;
         editorialProjections = projectRouteReview(
           routeReview,
           data.places,
@@ -290,6 +303,9 @@
       routeReview = null;
       editorialProjections = [];
       editorialErrorMessage = null;
+      publicationSummary = null;
+      publicationError = null;
+      publicationSuccess = false;
       void loadEditorialRoute(routeId);
     }
   }
@@ -299,11 +315,13 @@
       const review = await loadRouteReview(routeId);
       if (selectedRouteId !== routeId) return;
       routeReview = review;
+      publicationSummary = await loadRoutePublication(routeId);
       editorialProjections = projectRouteReview(review, places, routeId);
       selectedEventId = review.proposals[0]?.candidate_id ?? null;
     } catch (error) {
       if (selectedRouteId !== routeId) return;
       routeReview = null;
+      publicationSummary = null;
       editorialProjections = [];
       editorialErrorMessage =
         error instanceof Error
@@ -332,6 +350,7 @@
         places,
         selectedRouteId
       );
+      publicationSummary = await loadRoutePublication(selectedRouteId);
     } catch (error) {
       editorialActionError =
         error instanceof Error
@@ -339,6 +358,26 @@
           : 'Editorial state update failed.';
     } finally {
       editorialSavingCandidateId = null;
+    }
+  }
+
+  async function publishSelectedRoute(): Promise<void> {
+    if (!publicationSummary || !selectedRouteId || !routeReview) return;
+    publicationSaving = true;
+    publicationError = null;
+    publicationSuccess = false;
+    try {
+      const result: RoutePublicationResult = await publishRoute(
+        selectedRouteId,
+        routeReview.revision_id
+      );
+      publicationSummary = result;
+      publicationSuccess = result.published;
+    } catch (error) {
+      publicationError =
+        error instanceof Error ? error.message : 'Publication failed.';
+    } finally {
+      publicationSaving = false;
     }
   }
 
@@ -695,7 +734,12 @@
         editorialProposal={selectedReviewProposal}
         editorialSaving={editorialSavingCandidateId ===
           selectedReviewProposal?.candidate_id}
-        editorialErrorMessage={editorialActionError}
+    editorialErrorMessage={editorialActionError}
+    {publicationSummary}
+    {publicationSaving}
+    {publicationError}
+    {publicationSuccess}
+    onPublishRoute={publishSelectedRoute}
         onSetEditorialState={(state) =>
           selectedReviewProposal &&
           setEditorialState(selectedReviewProposal, state)}

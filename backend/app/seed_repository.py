@@ -90,6 +90,19 @@ class SeedRepository:
     def list_routes(self) -> list[Route]:
         return self._routes
 
+    def reload(self) -> None:
+        if self._seed_dir is None:
+            return
+        refreshed = self.from_seed_dir(self._seed_dir)
+        self._routes = refreshed._routes
+        self._places = refreshed._places
+        self._events = refreshed._events
+        self._connections = refreshed._connections
+        self._route_ids = refreshed._route_ids
+        self._place_ids = refreshed._place_ids
+        self._event_ids = refreshed._event_ids
+        self._events_by_id = refreshed._events_by_id
+
     def has_route(self, route_id: str) -> bool:
         return route_id in self._route_ids
 

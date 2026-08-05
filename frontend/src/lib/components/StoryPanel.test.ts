@@ -58,4 +58,51 @@ describe('StoryPanel spatial access', () => {
     expect(body).toContain('From Point Place toward Area Place');
     expect(body).toContain('Practice circulates toward the area.');
   });
+
+  it('renders the exact-route publication summary in editorial mode', () => {
+    const { body } = render(StoryPanel, {
+      props: {
+        event: makeEvent({ id: 'review-event' }),
+        place: makePlace({ id: 'review-place' }),
+        route: makeRoute({ id: 'birth-of-hip-hop' }),
+        editorialMode: true,
+        editorialProposal: {
+          candidate_id: 'review-event',
+          editorial_state: 'draft',
+          active: true,
+          included: true,
+          renderable: true,
+          agent_recommendation: 'keep',
+          warnings: ['Review the source.'],
+          technical_errors: [],
+          material_signature: 'signature',
+          proposal: { working_title: 'Review event' }
+        },
+        publicationSummary: {
+          route_id: 'birth-of-hip-hop',
+          revision_id: 'revision-1',
+          source: 'event-list.json',
+          included_events: [
+            {
+              candidate_id: 'review-event',
+              title: 'Review event',
+              editorial_state: 'draft',
+              included: true
+            }
+          ],
+          excluded_event_ids: ['excluded-event'],
+          warnings: ['Route warning.'],
+          technical_errors: [],
+          technical_ready: true,
+          published_revision_id: null
+        }
+      }
+    });
+
+    expect(body).toContain('Route publication');
+    expect(body).toContain('1 included');
+    expect(body).toContain('1 excluded');
+    expect(body).toContain('Publish exact reviewed route');
+    expect(body).toContain('Route warning.');
+  });
 });
