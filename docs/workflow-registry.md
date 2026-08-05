@@ -235,9 +235,10 @@ For an approved prompt-to-skill extraction:
   not create or broaden milestones without explicit human approval.
 - After required findings are resolved, post one Implementation Report
   containing the Review Result. Do not post a separate routine review comment.
-- After a successful commit for completed Issue work, capture the hash, verify
-  Issue-relevant completeness, post the standard completion comment, and close
-  the Issue. Preserve the documented exceptions in
+- After a successful commit for completed Issue work, run the local completion
+  gate, capture the hash, verify Issue-relevant completeness, post the single
+  standard completion comment, and close the Issue only after that comment
+  succeeds. Preserve the documented exceptions in
   `docs/github-issue-workflow.md`.
 - End every workflow result with a short `Next step` handoff when useful.
 

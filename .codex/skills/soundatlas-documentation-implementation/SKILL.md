@@ -157,9 +157,10 @@ Report in the Issue and final response:
 Do not commit unless the user explicitly requests it. If committed, use a
 Conventional Commit and include `Issue: #<number>` in the commit body.
 
-After a successful commit for completed Issue work, capture the commit hash,
-verify the acceptance criteria and Issue-relevant working-tree state, post the
-standard completion comment, and close the Issue. Do not close for uncommitted,
+After a successful commit for completed Issue work, run the local completion
+gate, capture the commit hash, verify the acceptance criteria and Issue-relevant
+working-tree state, post the single standard completion comment, and close the
+Issue only after that comment succeeds. Do not close for uncommitted,
 partial, WIP, incomplete, or ambiguously scoped work, or when the human asks to
 keep the Issue open. If commenting or closing fails, report the failure and
 leave the Issue open when possible.

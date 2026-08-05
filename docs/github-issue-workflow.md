@@ -45,10 +45,13 @@ review occurs and how its result enters the Issue lifecycle.
 11. Agent posts one combined `## Implementation Report` containing the review result.
 12. Human reviews the local diff and explicitly requests a commit when the work
     is ready.
-13. After a successful commit, agent captures the commit hash, verifies the
-    acceptance criteria, confirms that no Issue-relevant changes remain
-    uncommitted, posts the standard completion comment, and closes the Issue.
-14. If any post-commit verification or GitHub operation fails, agent reports
+13. After a successful commit, agent captures the commit hash and runs the
+    local completion gate. The gate must confirm the canonical report shape,
+    checked acceptance criteria, an `Accepted` implementation review, exactly
+    one completion comment plan, and Issue-relevant working-tree verification.
+14. Agent posts the standard completion comment only after the gate passes and
+    closes the Issue only after that comment succeeds.
+15. If any post-commit verification or GitHub operation fails, agent reports
     the failure and leaves the Issue open when possible.
 ```
 
@@ -396,18 +399,42 @@ record the finding without describing the implementation as accepted. Do not
 close the Issue just because implementation has started or the report was
 posted.
 
+Before a report can support completion, run the local validation gate:
+
+```sh
+python scripts/check_issue_completion.py report --file implementation-report.md
+```
+
+The report must contain all canonical sections, at least one acceptance
+checklist item, no unchecked acceptance item, and `- Verdict: Accepted` in its
+Review Result. A report with open criteria or a non-`Accepted` verdict remains
+an implementation status record, not a completion record.
+
 ## Post-Commit Completion and Issue Closure
 
 For completed Issue-based work, a request to commit counts as authorization to
 close the associated Issue unless the human explicitly asks to keep it open.
+The commit is only one lifecycle step; it does not by itself establish
+acceptance or authorize closure.
 Issue closure is a mandatory, ordered post-commit step:
 
 1. Capture the successful commit hash.
-2. Verify every acceptance criterion against the committed change and checks.
-3. Confirm that no Issue-relevant files remain modified or uncommitted. Unrelated
+2. Run the completion gate with the report, commit hash, one planned completion
+   comment, and Issue-relevant working-tree verification:
+
+   ```sh
+   python scripts/check_issue_completion.py completion \
+     --report implementation-report.md \
+     --commit <commit-hash> \
+     --completion-comments 1 \
+     --working-tree-verified
+   ```
+
+3. Verify every acceptance criterion against the committed change and checks.
+4. Confirm that no Issue-relevant files remain modified or uncommitted. Unrelated
    user-owned changes do not block closure and must not be included merely to
    make the tree clean.
-4. Post the completion comment using this format:
+5. Post the single completion comment using this format:
 
    ```md
    ## Completed
@@ -418,7 +445,7 @@ Issue closure is a mandatory, ordered post-commit step:
    - Verification: `<checks or report reference>`
    ```
 
-5. Close the Issue only after the completion comment succeeds.
+6. Close the Issue only after the completion comment succeeds.
 
 Do not close the Issue when the work is uncommitted, the commit is partial or
 WIP, an acceptance criterion is incomplete, the commit covers multiple Issues
@@ -431,6 +458,18 @@ Implementation Report describes the result, the commit records the change, the
 working-tree check verifies relevant completeness, the completion comment
 provides Issue evidence, and closing the Issue records the final lifecycle
 state.
+
+Do not interpolate Markdown directly into a shell command. Encode comment
+content as JSON through stdin so backticks, substitutions, quotes, and newlines
+remain data:
+
+```sh
+python scripts/check_issue_completion.py payload --file completion.md \
+  | gh api --method POST repos/<owner>/<repo>/issues/<number>/comments --input -
+```
+
+The payload helper only emits JSON and never calls GitHub. It does not replace
+the required human review or closure sequence.
 
 Do not add a separate `done` label for completion.
 

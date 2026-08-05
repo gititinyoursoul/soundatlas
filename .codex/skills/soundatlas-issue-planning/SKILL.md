@@ -107,9 +107,17 @@ Changes` section instead of silently rewriting the meaning of the Issue.
    keep the report unaccepted until the finding is resolved or explicitly
    reported as blocking.
 
+   Run `python scripts/check_issue_completion.py report --file <report>` before
+   treating the report as a completion candidate. A commit alone is not an
+   Accepted report or a closure decision.
+
 9. After implementation reporting, follow the post-commit lifecycle defined in
    `docs/github-issue-workflow.md`. This skill does not own commit
    authorization, completion comments, or Issue closure.
+
+   Post-commit completion requires the local completion gate, one standard
+   completion comment, and successful comment posting before closure. Keep an
+   incomplete report or non-`Accepted` review open for correction.
 
 ## Issue Artifact Contracts
 

@@ -131,3 +131,9 @@ Use `Accepted` only when no material finding remains. If correction or a
 decision is required, return the result to the named workflow destination and
 do not describe the implementation as accepted. Finalize the Implementation
 Report after required findings are resolved or explicitly reported as blocking.
+
+An `Accepted` result is necessary but not sufficient for Issue closure. The
+completion lifecycle must also verify the committed change, Issue-relevant
+working-tree state, and the single standard completion comment through the
+workflow gate in `docs/github-issue-workflow.md`. A commit or a posted report
+must never be treated as acceptance by itself.
