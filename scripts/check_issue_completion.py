@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import argparse
-import json
 import re
 import sys
 from pathlib import Path
@@ -86,21 +85,12 @@ def validate_completion(
         raise ValidationError("Issue-relevant working-tree verification is required")
 
 
-def emit_payload(path: Path) -> None:
-    print(json.dumps({"body": read_text(path)}, ensure_ascii=False))
-
-
 def parser() -> argparse.ArgumentParser:
     command_parser = argparse.ArgumentParser(description=__doc__)
     subparsers = command_parser.add_subparsers(dest="command", required=True)
 
     report_parser = subparsers.add_parser("report", help="validate a report")
     report_parser.add_argument("--file", type=Path, required=True)
-
-    payload_parser = subparsers.add_parser(
-        "payload", help="encode Markdown as a gh API JSON body"
-    )
-    payload_parser.add_argument("--file", type=Path, required=True)
 
     completion_parser = subparsers.add_parser(
         "completion", help="validate all local completion prerequisites"
@@ -118,8 +108,6 @@ def main(argv: list[str] | None = None) -> int:
     try:
         if args.command == "report":
             validate_report(read_text(args.file))
-        elif args.command == "payload":
-            emit_payload(args.file)
         else:
             validate_completion(
                 args.report,
@@ -131,8 +119,7 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Validation failed: {exc}", file=sys.stderr)
         return 1
 
-    if args.command != "payload":
-        print("Validation passed")
+    print("Validation passed")
     return 0
 
 

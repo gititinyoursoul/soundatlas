@@ -7,8 +7,6 @@ from pathlib import Path
 
 
 SCRIPT = Path(__file__).with_name("check_issue_completion.py")
-
-
 VALID_REPORT = """## Summary
 
 Completed.
@@ -77,12 +75,18 @@ class CheckIssueCompletionTests(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("exactly one", result.stderr)
 
-    def test_encodes_shell_sensitive_markdown_as_json(self) -> None:
-        directory, path = self.report_path('Text with `backticks`, $(substitution), and "quotes".')
+    def test_generic_payload_preserves_newlines_and_shell_sensitive_markdown(self) -> None:
+        body = "Header\n\nLiteral \\n text, `backticks`, $(substitution), $value, \"quotes\", and café 🎵.\n"
+        directory, path = self.report_path(body)
         self.addCleanup(directory.cleanup)
-        result = self.run_cli("payload", "--file", str(path))
+        result = subprocess.run(
+            [sys.executable, str(Path(__file__).with_name("gh_markdown_payload.py")), "--file", str(path)],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertEqual(json.loads(result.stdout)["body"], path.read_text(encoding="utf-8"))
+        self.assertEqual(json.loads(result.stdout)["body"], body)
 
 
 if __name__ == "__main__":

@@ -17,6 +17,10 @@ repeatable completion comparison and evidence assessment. The
 `soundatlas-issue-planning` skill is the durable Issue-writing
 mechanism for implementation plans and the combined Implementation Report.
 
+All multiline GitHub Markdown body transport follows the safe file/stdin rule
+in `docs/github-issue-workflow.md`; the generic helper is
+`scripts/gh_markdown_payload.py`.
+
 `prompts/grill-me.md` is intentionally interactive: it may briefly indicate
 whether material findings are present and, when useful, give an approximate
 count. The count is optional and never a target. It should then present one

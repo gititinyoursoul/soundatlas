@@ -130,6 +130,10 @@ rules would otherwise be unclear.
 
 - Keep GitHub Issues as the default source of truth for planning,
   implementation, and verification.
+- When creating or editing multiline Issue, pull-request, or comment bodies
+  through `gh`, use a UTF-8 `--body-file` or structured JSON from a body file
+  through stdin. Do not interpolate Markdown or JSON-escaped newlines into
+  shell arguments; read the resulting body back when practical.
 - Prefer `Task` over `Goal` for intake because SoundAtlas follow-up work often
   starts as a task, review, investigation, or decision.
 - Keep Plan Updates concise by default; use Detailed Plan Updates only when

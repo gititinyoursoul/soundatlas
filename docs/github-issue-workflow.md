@@ -29,6 +29,42 @@ own lifecycle ordering, post-commit closure, or Issue-state management.
 assessment, finding classification, and routing. This document owns when that
 review occurs and how its result enters the Issue lifecycle.
 
+## Safe GitHub Markdown Transport
+
+Every multiline Markdown body created or edited through `gh` must come from a
+UTF-8 body file or structured JSON sent through standard input. Do not pass
+multiline Markdown through `--body`, interpolate it into a shell command, or
+embed JSON-escaped newlines in a shell argument.
+
+Use `--body-file` when the command supports it:
+
+```sh
+gh issue create --title "Title" --body-file issue.md
+gh issue edit <number> --body-file issue.md
+gh issue comment <number> --body-file comment.md
+gh pr create --title "Title" --body-file pull-request.md
+gh pr edit <number> --body-file pull-request.md
+gh pr comment <number> --body-file comment.md
+```
+
+For API-only operations, encode the body from the file and send the JSON
+through stdin:
+
+```sh
+python scripts/gh_markdown_payload.py --file comment.md \
+  | gh api --method POST repos/<owner>/<repo>/issues/<number>/comments --input -
+```
+
+Read the created or edited body back when practical:
+
+```sh
+gh issue view <number> --json body --jq .body
+```
+
+The payload helper is local and non-mutating; it only emits JSON. Titles,
+labels, milestone names, and other short scalar arguments are not Markdown
+bodies and may remain command arguments.
+
 ## Workflow
 
 ```text
@@ -459,17 +495,9 @@ working-tree check verifies relevant completeness, the completion comment
 provides Issue evidence, and closing the Issue records the final lifecycle
 state.
 
-Do not interpolate Markdown directly into a shell command. Encode comment
-content as JSON through stdin so backticks, substitutions, quotes, and newlines
-remain data:
-
-```sh
-python scripts/check_issue_completion.py payload --file completion.md \
-  | gh api --method POST repos/<owner>/<repo>/issues/<number>/comments --input -
-```
-
-The payload helper only emits JSON and never calls GitHub. It does not replace
-the required human review or closure sequence.
+The safe transport rule above also applies to the standard completion comment.
+Use the generic `scripts/gh_markdown_payload.py` helper for API-only Markdown
+payloads.
 
 Do not add a separate `done` label for completion.
 
