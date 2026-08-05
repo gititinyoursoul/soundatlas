@@ -47,9 +47,10 @@ jobs:
         working-directory: frontend
 
       - name: Set up uv
-        uses: astral-sh/setup-uv@v6
+        uses: astral-sh/setup-uv@v9.0.0
         with:
           version: latest
+          prune-cache: true
 
       - name: Lint backend
         run: uv run ruff check .
