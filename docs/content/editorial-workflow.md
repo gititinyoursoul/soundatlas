@@ -42,9 +42,9 @@ flowchart TD
   A["MVP concept<br/>docs/mvp-concept.md"] --> B["Route brief<br/>docs/content/routes/&lt;route-id&gt;/brief.md"]
   B --> I["Optional Codex agent prompt/run files<br/>*.ai-draft.*"]
   I --> C["Research dossier<br/>research-dossier.md"]
-  C --> D["Candidate event review<br/>event-list.json"]
-  D --> J["Accepted event handoff<br/>accepted-events.json + accepted-events.md"]
-  J --> E["Event framing<br/>title, summary, significance, sources"]
+  C --> D["Candidate outline<br/>candidate-outline.json"]
+  D --> K["Complete draft<br/>complete-draft.json + route-review.json"]
+  K --> E["Event framing<br/>title, summary, significance, sources"]
   E --> H["Seed preview and validation<br/>route folder reports"]
   H --> F["Seed promotion<br/>data/seed/"]
   F --> G["Enrichment upstream prep<br/>docs/enrichment/upstream/"]
@@ -80,21 +80,22 @@ flowchart TD
     merge targets, overlap-cluster recommendations, rationales, and review
     questions; the human should normally only approve, reject, or correct those
     proposals.
-12. Create or refresh `route-review.json` to keep the private Draft, Approved,
-    and Don’t use state separate from agent recommendations. Existing routes
-    require the explicit one-time legacy migration described in
+12. Run the complete-draft agent step after candidate outline generation. It may
+    add, omit, merge, split, or reorder proposals and materializes one coherent
+    active result before human editorial decisions.
+13. Create or refresh `route-review.json` to keep the private Draft, Approved,
+    and Don’t use state separate from agent recommendations. The complete-draft
+    step refreshes it after successful activation; existing routes may use the
+    explicit one-time legacy migration described in
     `docs/content/workflow-commands.md`.
-13. Until Issues #72 and #73 replace the remaining compatibility path, complete
-    one accepted-events review after human candidate review:
-    confirm `accepted-events.json` includes only approved `keep` candidates and
-    human-resolved `merge` outcomes, then set its required quality flags.
-14. Use `accepted-events.md` only as the human-readable companion view for that
-    same review. The pipeline generates it only when missing by default, or
-    refreshes it with `--renew`; it is not a separate approval gate.
-15. Treat accepted-event handoff files as enrichment-ready, not
-    publication-ready. AI may draft dossier content and suggest source
-    statuses, but human editors confirm source status and source/media
-    readiness.
+14. Keep `accepted-events.json` and `accepted-events.md` as legacy compatibility
+    artifacts for the deterministic path. They are not required before complete
+    drafting and do not determine private route state.
+15. Treat the complete draft and route-review result as reviewable drafts, not
+    publication-ready data. The legacy accepted-event handoff remains
+    enrichment-ready compatibility material. AI may draft dossier content and
+    suggest source statuses, but human editors confirm source status and
+    source/media readiness.
 16. Run the event editorial quality pass from
     `docs/content/event-editorial-quality-standards.md` before translating
     accepted events into `data/seed/`.
@@ -127,42 +128,48 @@ For new route work, keep route-specific editorial artifacts under
 5. Named variants such as `event-list.alternate-draft.json` or
    `route-concept.alternate-draft.md` when alternate editorial drafts are
    useful.
-6. `event-list.md` and `event-list.json`: candidate events extracted from the
-   active dossier for editorial review. `event-list.md` should minimize human
-   effort by showing overview counts, overlap-cluster recommendations, merge
-   targets, `maybe` items, and then the full candidate appendix.
-7. `route-review.json`: authoritative private review result for the target
+6. `candidate-outline.json`: preserved agent-generated candidate outline used
+   as input to complete drafting.
+7. `complete-draft.json` and `complete-draft.md`: one validated active route
+   draft with event, place, connection, warning, technical-readiness, and
+   source-outline information.
+8. `event-list.md` and `event-list.json`: active candidate proposals
+   materialized from the complete draft for route review. `event-list.md`
+   should minimize human effort by showing overview counts, overlap-cluster
+   recommendations, merge targets, `maybe` items, and then the full candidate
+   appendix.
+9. `route-review.json`: authoritative private review result for the target
    workflow. It identifies one exact active revision, keeps agent recommendation
    separate from Draft, Approved, and Don’t use state, retains identifiable
    invalid proposals, and preserves minimal dormant decisions across refreshes.
-8. `route-publication.json`: minimal private record of the exact revision and
+10. `route-publication.json`: minimal private record of the exact revision and
    event/connection membership most recently promoted to canonical runtime data.
    It protects the published result from later route-review refreshes; it is not
    a run archive or publication history.
-9. `accepted-events.json`: legacy structured accepted-event handoff created after
-   human candidate review. Include only approved `keep` candidates and resolved
-   `merge` outcomes. Required quality flags must pass before downstream route
-   concept, event framing, seed preview, promotion, or post-review agent steps
-   proceed.
-10. `accepted-events.md`: optional human-readable companion view for the same
+11. `accepted-events.json`: legacy structured accepted-event handoff for the
+   deterministic compatibility path. Include only approved `keep` candidates
+   and resolved `merge` outcomes when using that path; it does not gate the
+   active complete-draft result.
+12. `accepted-events.md`: optional human-readable companion view for the same
    accepted-events review. This artifact is generated from
    `accepted-events.json` when missing by default and is enrichment-ready, not
    publication-ready. It is not a separate approval gate.
-11. `route-concept.md`: route argument and phase draft based on the accepted
-   event set and candidate-review decisions.
-12. `event-framing.md`, `event-framing.json`, `place-framing.json`, and
+13. `route-concept.md`: route argument and phase draft based on the complete
+   draft result.
+14. `event-framing.md`, `event-framing.json`, `place-framing.json`, and
    `connection-framing.json`: draft seed-shaped records for review.
-13. `seed-transfer-report.md`: preview of what would be merged into seed files.
-14. `validation-report.md`: structural, reference, and accepted-events gate
+15. `seed-transfer-report.md`: preview of what would be merged into seed files.
+16. `validation-report.md`: structural, reference, and compatibility-gate
     findings.
 
 The generated files are working drafts. They should not be treated as final
 historical claims or publication-ready seed data without review.
 
-The route content pipeline still uses `accepted-events.json` as its legacy
-enforcement contract. `route-review.json` is authoritative for the new private
-human state and is consumed by Issues #72 and #73. The two paths are not
-silently synchronized.
+The route content pipeline keeps `accepted-events.json` as a legacy
+compatibility contract for deterministic commands. The active complete-draft
+result feeds `route-review.json`, which is authoritative for private human
+state and is consumed by Issues #72 and #73. The two paths are not silently
+synchronized.
 
 The publication API is available only through API-backed editorial mode:
 
@@ -206,9 +213,9 @@ uv run --project backend python backend/scripts/route_content_pipeline.py promot
 - Minimize human input during review. Agent outputs should propose decisions,
   defaults, merge targets, overlap handling, rationales, and next questions
   before asking for human confirmation.
-- Complete the accepted-events handoff only after human candidate selection.
-  Do not move unapproved `keep`, unresolved `maybe`, unresolved `merge`, or
-  `reject` candidates into enrichment or seed framing.
+- Keep generated proposals pending for private route review. Do not treat agent
+  `keep`, `maybe`, `merge`, or `reject` recommendations as human decisions or
+  publication authorization.
 - Treat older `develop`, `context`, and `defer` candidate labels as draft
   labels only. Convert them to `keep`, `maybe`, `merge`, or `reject` only after
   human review.
@@ -218,8 +225,8 @@ uv run --project backend python backend/scripts/route_content_pipeline.py promot
 - Keep the target Draft, Approved, and Don’t use route-review states separate
   from both candidate recommendations and seed `review_status`.
 - Treat `route-review.json` as the authority for private route state. Treat the
-  accepted-events gate as a temporary legacy pipeline boundary until Issues #72
-  and #73 complete visual review and exact-result publication.
+  accepted-events gate as a legacy compatibility boundary; the complete-draft
+  path does not require it.
 - Use source status values only as source/claim quality signals:
   `strong`, `medium`, `weak`, `mythologized`, and `needs_review`. AI-suggested
   source statuses remain unconfirmed until human review.

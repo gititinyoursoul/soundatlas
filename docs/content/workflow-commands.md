@@ -78,12 +78,19 @@ the step output:
 | --- | --- |
 | `brief_to_dossier` | `research-dossier.md` |
 | `dossier_to_event_review` | `event-list.json`, refreshed `event-list.md` |
+| `complete_draft` | `complete-draft.json`, `complete-draft.md`, refreshed active route artifacts and `route-review.json` |
 | `event_review_to_concept` | `route-concept.md` |
 | `concept_to_event_framing` | `event-framing.md` |
 | `validation_to_revision_plan` | `revision-plan.md` |
 
-Agent steps after candidate review read `accepted-events.json` and are blocked
-until the accepted-events quality gate passes.
+`dossier_to_event_review` preserves its generated candidate outline as
+`candidate-outline.json`. `complete_draft` reads that outline and the active
+dossier, then may add, omit, merge, split, or reorder proposals before
+materializing one validated active result. Every generated proposal remains
+pending for private Draft, Approved, or Don’t use review.
+
+The complete-draft step does not require `accepted-events.json`. It refreshes
+`route-review.json` only after the complete result validates and activates.
 
 Prompt and run metadata stay in ignored local files:
 
@@ -148,8 +155,8 @@ Overlap clusters are optional, but when present they should recommend one of
 `keep_separate`, `merge`, or `use_as_context` so review can confirm an agent
 proposal rather than synthesize a decision from scratch.
 
-Downstream `route_concept`, `event_framing`, `seed_preview`, `promote`, and
-post-review agent steps are blocked until every accepted event confirms:
+The legacy deterministic `route_concept`, `event_framing`, `seed_preview`, and
+`promote` steps are blocked until every accepted event confirms:
 
 - `route_fit_confirmed`
 - `place_and_year_specificity_confirmed`
@@ -160,10 +167,10 @@ post-review agent steps are blocked until every accepted event confirms:
 `validation-report.md` records accepted-events gate errors instead of reporting
 the route as seed-ready.
 
-The accepted-events gate is the legacy compatibility path. It remains available
-while Issues #72 and #73 complete the explorer review and exact publication
-flow, but it is not the authority for the private Draft, Approved, and Don’t
-use state described below.
+The accepted-events gate is a legacy compatibility path for the deterministic
+`run` and `promote` commands. It is not required by the active `complete_draft`
+path and is not the authority for the private Draft, Approved, and Don’t use
+state described below.
 
 Run one step:
 
@@ -198,7 +205,9 @@ Approved, and `rejected` to Don’t use. Agent recommendations and membership in
 `accepted-events.json` never determine the private state.
 
 After generating or regenerating `event-list.json`, refresh the active review
-result:
+result. The `complete_draft` agent step performs this refresh automatically after
+successful activation; the command remains useful for compatibility and manual
+refreshes:
 
 ```bash
 uv run --project backend python backend/scripts/route_content_pipeline.py review --route-id birth-of-hip-hop
@@ -228,11 +237,12 @@ Inspect route pipeline state:
 uv run --project backend python backend/scripts/route_content_pipeline.py status --route-id birth-of-hip-hop
 ```
 
-Use status before continuing work to confirm the active dossier, configured
-inputs, which outputs are present or missing, and whether existing downstream
-artifacts are stale because the legacy accepted-events gate is missing or
-blocked. Status separately reports the private route-review revision, state and
-inclusion counts, dormant decisions, warnings, technical errors, and readiness.
+Use status before continuing work to confirm the active dossier, candidate
+outline, complete-draft output, configured inputs, and whether the legacy path is
+present only for compatibility. Status separately reports the private
+route-review revision, state and inclusion counts, dormant decisions, warnings,
+technical errors, and readiness. A present complete draft is not reported as
+stale merely because `accepted-events.json` is absent.
 
 ## Seed Preview And Write
 
@@ -281,10 +291,11 @@ Before seed writing, inspect:
 Generated text should stay cautious. Do not use the pipeline to turn weakly
 sourced or contested claims into settled statements.
 
-The legacy downstream pipeline uses `accepted-events.json` as its enforcement
-contract. `accepted-events.md` is the companion view and is not parsed as the
-source of truth or approved separately. Treat both files as enrichment-ready
-compatibility handoff material only; `route-review.json` owns the private human
+The legacy deterministic downstream pipeline uses `accepted-events.json` as its
+enforcement contract. `accepted-events.md` is the companion view and is not
+parsed as the source of truth or approved separately. Treat both files as
+enrichment-ready compatibility handoff material only; `complete-draft.json`
+feeds the active route-review path, `route-review.json` owns private human
 state, and Issue #73 owns exact-result publication.
 
 ## Verification

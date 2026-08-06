@@ -1,9 +1,11 @@
 import argparse
 import json
+import os
 import re
 import shutil
 import subprocess
 import sys
+import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -12,7 +14,7 @@ BACKEND_ROOT = Path(__file__).resolve().parents[1]
 if str(BACKEND_ROOT) not in sys.path:
     sys.path.insert(0, str(BACKEND_ROOT))
 
-from app.route_review import RouteReviewRepository
+from app.route_review import ROUTE_REVIEW_FILENAME, RouteReviewRepository
 from app.schemas import Connection, Event, Place, Route
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -38,10 +40,10 @@ QUALITY_GATE_FIELDS = (
     "source_risks_visible",
     "seed_draft_ready",
 )
-DOWNSTREAM_AGENT_STEPS = {"event_review_to_concept", "concept_to_event_framing"}
 AGENT_STEPS = (
     "brief_to_dossier",
     "dossier_to_event_review",
+    "complete_draft",
     "event_review_to_concept",
     "concept_to_event_framing",
     "validation_to_revision_plan",
@@ -75,6 +77,7 @@ def main(argv: list[str] | None = None) -> int:
         elif args.command == "agent":
             result = run_agent_pipeline(
                 content_root=args.content_root,
+                seed_dir=args.seed_dir,
                 route_id=args.route_id,
                 step=args.step,
                 renew=args.renew,
@@ -296,6 +299,11 @@ def default_manifest(
                 "json": "accepted-events.json",
                 "markdown": "accepted-events.md",
             },
+            "complete_draft": {
+                "input": "candidate-outline.json",
+                "json": "complete-draft.json",
+                "markdown": "complete-draft.md",
+            },
             "route_concept": {
                 "input": "accepted-events.json",
                 "markdown": "route-concept.md",
@@ -335,16 +343,28 @@ def default_agent_steps(active_dossier: str) -> dict[str, dict[str, Any]]:
             "inputs": [active_dossier],
             "prompt": "dossier_to_event_review-prompt.ai-draft.md",
             "output": "event-list.json",
+            "outline": "candidate-outline.json",
             "run": "dossier_to_event_review-run.ai-draft.json",
         },
+        "complete_draft": {
+            "inputs": [
+                "candidate-outline.json",
+                active_dossier,
+                "../../route-editorial-quality-standards.md",
+            ],
+            "prompt": "complete_draft-prompt.ai-draft.md",
+            "output": "complete-draft-output.ai-draft.json",
+            "active_output": "complete-draft.json",
+            "run": "complete_draft-run.ai-draft.json",
+        },
         "event_review_to_concept": {
-            "inputs": ["accepted-events.json"],
+            "inputs": ["event-list.json"],
             "prompt": "event_review_to_concept-prompt.ai-draft.md",
             "output": "route-concept.md",
             "run": "event_review_to_concept-run.ai-draft.json",
         },
         "concept_to_event_framing": {
-            "inputs": ["route-concept.md", "accepted-events.json"],
+            "inputs": ["route-concept.md", "event-list.json"],
             "prompt": "concept_to_event_framing-prompt.ai-draft.md",
             "output": "event-framing.md",
             "run": "concept_to_event_framing-run.ai-draft.json",
@@ -371,24 +391,42 @@ def merge_manifest_defaults(
     merged = {**defaults, **manifest}
     merged["steps"] = {
         step: {**defaults["steps"][step], **manifest.get("steps", {}).get(step, {})}
-        for step in PIPELINE_STEPS
+        for step in defaults["steps"]
     }
     merged["agent_steps"] = {
         step: {**defaults["agent_steps"][step], **manifest.get("agent_steps", {}).get(step, {})}
         for step in AGENT_STEPS
     }
-    normalize_accepted_events_manifest(merged)
+    normalize_manifest_inputs(merged)
     return merged
 
 
-def normalize_accepted_events_manifest(manifest: dict[str, Any]) -> None:
-    accepted_json = manifest["steps"]["accepted_events"]["json"]
-    manifest["steps"]["route_concept"]["input"] = accepted_json
-    manifest["steps"]["event_framing"]["input"] = accepted_json
-    manifest["agent_steps"]["event_review_to_concept"]["inputs"] = [accepted_json]
+def normalize_manifest_inputs(manifest: dict[str, Any]) -> None:
+    # Existing manifests retain their accepted-events configuration as a
+    # compatibility path. The active complete-draft step uses the candidate
+    # outline and does not inherit the legacy gate.
+    if "complete_draft" not in manifest["steps"]:
+        manifest["steps"]["complete_draft"] = {
+            "input": "candidate-outline.json",
+            "json": "complete-draft.json",
+            "markdown": "complete-draft.md",
+        }
+    manifest["agent_steps"]["complete_draft"]["inputs"] = [
+        manifest["agent_steps"]["dossier_to_event_review"].get(
+            "outline", "candidate-outline.json"
+        ),
+        manifest["active_dossier"],
+        "../../route-editorial-quality-standards.md",
+    ]
+    manifest["steps"]["complete_draft"]["input"] = manifest["agent_steps"][
+        "complete_draft"
+    ]["inputs"][0]
+    manifest["agent_steps"]["event_review_to_concept"]["inputs"] = [
+        manifest["steps"]["event_list"]["json"]
+    ]
     manifest["agent_steps"]["concept_to_event_framing"]["inputs"] = [
         manifest["steps"]["route_concept"]["markdown"],
-        accepted_json,
+        manifest["steps"]["event_list"]["json"],
     ]
 
 
@@ -418,6 +456,15 @@ def manifest_for_variant(
     variant_manifest["steps"]["event_list"]["input"] = variant_dossier
     variant_manifest["steps"]["event_list"]["markdown"] = variant_filename("event-list.md", variant)
     variant_manifest["steps"]["event_list"]["json"] = variant_filename("event-list.json", variant)
+    variant_manifest["steps"]["complete_draft"]["input"] = variant_filename(
+        "candidate-outline.json", variant
+    )
+    variant_manifest["steps"]["complete_draft"]["json"] = variant_filename(
+        "complete-draft.json", variant
+    )
+    variant_manifest["steps"]["complete_draft"]["markdown"] = variant_filename(
+        "complete-draft.md", variant
+    )
     variant_manifest["steps"]["accepted_events"]["input"] = variant_manifest["steps"]["event_list"][
         "json"
     ]
@@ -462,15 +509,29 @@ def manifest_for_variant(
     variant_manifest["agent_steps"]["dossier_to_event_review"]["output"] = variant_manifest[
         "steps"
     ]["event_list"]["json"]
+    variant_manifest["agent_steps"]["dossier_to_event_review"]["outline"] = variant_filename(
+        "candidate-outline.json", variant
+    )
+    variant_manifest["agent_steps"]["complete_draft"]["inputs"] = [
+        variant_filename("candidate-outline.json", variant),
+        variant_dossier,
+        "../../route-editorial-quality-standards.md",
+    ]
+    variant_manifest["agent_steps"]["complete_draft"]["output"] = variant_filename(
+        "complete-draft-output.ai-draft.json", variant
+    )
+    variant_manifest["agent_steps"]["complete_draft"]["active_output"] = variant_manifest[
+        "steps"
+    ]["complete_draft"]["json"]
     variant_manifest["agent_steps"]["event_review_to_concept"]["inputs"] = [
-        variant_manifest["steps"]["accepted_events"]["json"]
+        variant_manifest["steps"]["event_list"]["json"]
     ]
     variant_manifest["agent_steps"]["event_review_to_concept"]["output"] = variant_manifest[
         "steps"
     ]["route_concept"]["markdown"]
     variant_manifest["agent_steps"]["concept_to_event_framing"]["inputs"] = [
         variant_manifest["steps"]["route_concept"]["markdown"],
-        variant_manifest["steps"]["accepted_events"]["json"],
+        variant_manifest["steps"]["event_list"]["json"],
     ]
     variant_manifest["agent_steps"]["concept_to_event_framing"]["output"] = variant_manifest[
         "steps"
@@ -565,6 +626,7 @@ def run_step(
 def run_agent_pipeline(
     *,
     content_root: Path,
+    seed_dir: Path,
     route_id: str,
     step: str | None,
     renew: bool,
@@ -583,6 +645,7 @@ def run_agent_pipeline(
         results.append(
             run_agent_step(
                 route_dir=route_dir,
+                seed_dir=seed_dir,
                 manifest=manifest,
                 step=selected_step,
                 renew=renew,
@@ -599,6 +662,7 @@ def run_agent_pipeline(
 def run_agent_step(
     *,
     route_dir: Path,
+    seed_dir: Path,
     manifest: dict[str, Any],
     step: str,
     renew: bool,
@@ -606,15 +670,6 @@ def run_agent_step(
     codex_command: str,
     model: str | None,
 ) -> dict[str, Any]:
-    if step in DOWNSTREAM_AGENT_STEPS:
-        gate_errors = accepted_events_gate_errors(route_dir, manifest)
-        if gate_errors:
-            return {
-                "step": step,
-                "status": "blocked",
-                "outputs": [],
-                "errors": gate_errors,
-            }
     agent_step = manifest["agent_steps"][step]
     prompt_path = route_dir / agent_step["prompt"]
     output_path = route_dir / agent_step["output"]
@@ -674,6 +729,7 @@ def run_agent_step(
         write_text(output_path, completed.stdout, renew=False)
     extra_outputs = sync_agent_sidecar_outputs(
         route_dir=route_dir,
+        seed_dir=seed_dir,
         manifest=manifest,
         step=step,
         output_path=output_path,
@@ -689,17 +745,287 @@ def run_agent_step(
 def sync_agent_sidecar_outputs(
     *,
     route_dir: Path,
+    seed_dir: Path,
     manifest: dict[str, Any],
     step: str,
     output_path: Path,
     renew: bool,
 ) -> list[str]:
+    if step == "complete_draft":
+        return activate_complete_draft(
+            route_dir=route_dir,
+            seed_dir=seed_dir,
+            manifest=manifest,
+            output_path=output_path,
+            renew=renew,
+        )
     if step != "dossier_to_event_review":
         return []
     event_list = read_json(output_path)
     markdown_path = route_dir / manifest["steps"]["event_list"]["markdown"]
     write_text(markdown_path, format_event_list_markdown(event_list), renew=renew)
-    return [markdown_path.name]
+    outline_path = route_dir / manifest["agent_steps"][step].get(
+        "outline", "candidate-outline.json"
+    )
+    write_json(outline_path, event_list, renew=renew)
+    return [markdown_path.name, outline_path.name]
+
+
+def activate_complete_draft(
+    *,
+    route_dir: Path,
+    seed_dir: Path,
+    manifest: dict[str, Any],
+    output_path: Path,
+    renew: bool,
+) -> list[str]:
+    payload = read_json(output_path)
+    errors = validate_complete_draft(
+        payload=payload,
+        route_id=manifest["route_id"],
+        seed_dir=seed_dir,
+        source_outline=manifest["agent_steps"]["complete_draft"]["inputs"][0],
+    )
+    if errors:
+        raise ValueError("Complete draft validation failed:\n" + "\n".join(errors))
+
+    active_step = manifest["steps"]["complete_draft"]
+    event_step = manifest["steps"]["event_framing"]
+    candidates = order_complete_draft_candidates(payload)
+    source = active_step["json"]
+    event_list = {
+        "_meta": {
+            "route_id": manifest["route_id"],
+            "target_output": manifest["steps"]["event_list"]["json"],
+            "review_status": "draft",
+            "source_basis": [payload["_meta"]["source_outline"], source],
+            "generated_by": SCRIPT_NAME,
+        },
+        "candidates": candidates,
+        "warnings": payload["warnings"],
+    }
+    event_framing = {
+        "_meta": {
+            "route_id": manifest["route_id"],
+            "source": source,
+            "generated_by": SCRIPT_NAME,
+            "review_status": "draft",
+        },
+        "events": payload["events"],
+    }
+    place_framing = {
+        "_meta": {
+            "route_id": manifest["route_id"],
+            "source": source,
+            "generated_by": SCRIPT_NAME,
+            "review_status": "draft",
+        },
+        "places": payload["places"],
+    }
+    connection_framing = {
+        "_meta": {
+            "route_id": manifest["route_id"],
+            "source": source,
+            "generated_by": SCRIPT_NAME,
+            "review_status": "draft",
+        },
+        "connections": payload["connections"],
+    }
+    complete_draft = dict(payload)
+    complete_draft["_meta"] = {
+        **payload["_meta"],
+        "generated_by": SCRIPT_NAME,
+        "active_output": source,
+        "review_status": "draft",
+    }
+    files: dict[str, str] = {
+        active_step["json"]: json.dumps(complete_draft, indent=2, ensure_ascii=False) + "\n",
+        active_step["markdown"]: format_complete_draft_markdown(complete_draft),
+        manifest["steps"]["event_list"]["json"]: json.dumps(
+            event_list, indent=2, ensure_ascii=False
+        )
+        + "\n",
+        manifest["steps"]["event_list"]["markdown"]: format_event_list_markdown(event_list),
+        manifest["steps"]["route_concept"]["markdown"]: payload["route_concept"],
+        event_step["markdown"]: format_event_framing_markdown(
+            payload["events"], payload["places"], payload["connections"]
+        ),
+        event_step["events"]: json.dumps(event_framing, indent=2, ensure_ascii=False) + "\n",
+        event_step["places"]: json.dumps(place_framing, indent=2, ensure_ascii=False) + "\n",
+        event_step["connections"]: json.dumps(
+            connection_framing, indent=2, ensure_ascii=False
+        )
+        + "\n",
+    }
+    staged_paths: list[Path] = []
+    with tempfile.TemporaryDirectory(prefix=".complete-draft-", dir=route_dir) as stage_name:
+        stage_dir = Path(stage_name)
+        for filename, content in files.items():
+            staged_path = stage_dir / filename
+            staged_path.parent.mkdir(parents=True, exist_ok=True)
+            staged_path.write_text(content, encoding="utf-8")
+            staged_paths.append(route_dir / filename)
+        for target in staged_paths:
+            if renew and target.exists():
+                backup_file(target)
+            os.replace(stage_dir / target.relative_to(route_dir), target)
+
+    review = RouteReviewRepository(route_dir.parent).refresh(manifest["route_id"])
+    return [
+        active_step["json"],
+        active_step["markdown"],
+        manifest["steps"]["event_list"]["json"],
+        manifest["steps"]["event_list"]["markdown"],
+        manifest["steps"]["route_concept"]["markdown"],
+        event_step["markdown"],
+        event_step["events"],
+        event_step["places"],
+        event_step["connections"],
+        ROUTE_REVIEW_FILENAME,
+        f"review:{review.revision_id}",
+    ]
+
+
+def validate_complete_draft(
+    *,
+    payload: dict[str, Any],
+    route_id: str,
+    seed_dir: Path,
+    source_outline: str,
+) -> list[str]:
+    errors: list[str] = []
+    metadata = payload.get("_meta")
+    if not isinstance(metadata, dict):
+        errors.append("Complete draft is missing `_meta`.")
+        metadata = {}
+    if metadata.get("route_id") != route_id:
+        errors.append(f"Complete draft route_id must be `{route_id}`.")
+    if metadata.get("source_outline") != source_outline:
+        errors.append(f"Complete draft source_outline must be `{source_outline}`.")
+    if metadata.get("review_status") != "draft":
+        errors.append("Complete draft `_meta.review_status` must be `draft`.")
+    for field in ("route_concept", "candidates", "sequence", "events", "places", "connections", "warnings", "technical_errors"):
+        if field not in payload:
+            errors.append(f"Complete draft is missing `{field}`.")
+    if not isinstance(payload.get("route_concept"), str) or not payload.get("route_concept", "").strip():
+        errors.append("Complete draft route_concept must be non-empty Markdown.")
+    warnings = payload.get("warnings", [])
+    technical_errors = payload.get("technical_errors", [])
+    if not isinstance(warnings, list) or any(not isinstance(item, str) for item in warnings):
+        errors.append("Complete draft warnings must be a list of strings.")
+    if not isinstance(technical_errors, list) or any(not isinstance(item, str) for item in technical_errors):
+        errors.append("Complete draft technical_errors must be a list of strings.")
+    if technical_errors:
+        errors.extend(f"Complete draft technical error: {item}" for item in technical_errors)
+
+    candidates = payload.get("candidates", [])
+    sequence = payload.get("sequence", [])
+    events = payload.get("events", [])
+    places = payload.get("places", [])
+    connections = payload.get("connections", [])
+    if not isinstance(candidates, list) or not candidates:
+        errors.append("Complete draft candidates must be a non-empty list.")
+        candidates = []
+    if not isinstance(sequence, list):
+        errors.append("Complete draft sequence must be a list.")
+        sequence = []
+    if not isinstance(events, list):
+        errors.append("Complete draft events must be a list.")
+        events = []
+    if not isinstance(places, list):
+        errors.append("Complete draft places must be a list.")
+        places = []
+    if not isinstance(connections, list):
+        errors.append("Complete draft connections must be a list.")
+        connections = []
+
+    candidate_ids: list[str] = []
+    for candidate in candidates:
+        if not isinstance(candidate, dict):
+            errors.append("Complete draft contains a non-object candidate.")
+            continue
+        candidate_id = candidate.get("candidate_id")
+        if not isinstance(candidate_id, str) or not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", candidate_id):
+            errors.append(f"Complete draft candidate has invalid candidate_id `{candidate_id}`.")
+            continue
+        if candidate_id in candidate_ids:
+            errors.append(f"Complete draft contains duplicate candidate `{candidate_id}`.")
+        candidate_ids.append(candidate_id)
+        if candidate.get("status") not in CANDIDATE_DECISIONS:
+            errors.append(f"Complete draft candidate `{candidate_id}` has unsupported status.")
+        if candidate.get("review_state") != "pending":
+            errors.append(f"Complete draft candidate `{candidate_id}` must remain pending.")
+        for field in ("years", "place", "working_title", "route_function"):
+            if not isinstance(candidate.get(field), str) or not candidate[field].strip():
+                errors.append(f"Complete draft candidate `{candidate_id}` is missing `{field}`.")
+        if candidate.get("status") == "merge":
+            target = candidate.get("merge_target_id")
+            if not isinstance(target, str) or not target:
+                errors.append(f"Complete draft candidate `{candidate_id}` merge has no target.")
+            if not isinstance(candidate.get("merge_rationale"), str) or not candidate["merge_rationale"].strip():
+                errors.append(f"Complete draft candidate `{candidate_id}` merge has no rationale.")
+    if sequence != candidate_ids:
+        errors.append("Complete draft sequence must contain each candidate exactly once in route order.")
+
+    event_ids = [event.get("id") for event in events if isinstance(event, dict)]
+    if len(event_ids) != len(events) or len(set(event_ids)) != len(event_ids):
+        errors.append("Complete draft events must have unique IDs.")
+    if set(event_ids) != set(candidate_ids):
+        errors.append("Complete draft event IDs must match candidate IDs.")
+
+    seed = load_seed_payloads(seed_dir)
+    new_places = drafted_places({"places": {"places": places}})
+    merged = {
+        "routes": seed["routes"],
+        "places": upsert_records(seed["places"], "places", new_places),
+        "events": upsert_records(seed["events"], "events", events),
+        "connections": upsert_records(seed["connections"], "connections", connections),
+    }
+    errors.extend(validate_seed_payloads(merged))
+    place_ids = {place.get("id") for place in merged["places"].get("places", [])}
+    for place in places:
+        if not isinstance(place, dict) or place.get("decision") not in {"reuse", "new"}:
+            errors.append("Complete draft places must use reuse or new decisions.")
+            continue
+        if place.get("place_id") not in place_ids:
+            errors.append(f"Complete draft place `{place.get('place_id')}` is unresolved.")
+        if place.get("decision") == "new" and not isinstance(place.get("place"), dict):
+            errors.append(f"Complete draft new place `{place.get('place_id')}` has no place record.")
+    connection_ids = [item.get("id") for item in connections if isinstance(item, dict)]
+    if len(connection_ids) != len(set(connection_ids)):
+        errors.append("Complete draft connections must have unique IDs.")
+    return errors
+
+
+def order_complete_draft_candidates(payload: dict[str, Any]) -> list[dict[str, Any]]:
+    candidates_by_id = {
+        candidate["candidate_id"]: candidate for candidate in payload["candidates"]
+    }
+    return [candidates_by_id[candidate_id] for candidate_id in payload["sequence"]]
+
+
+def format_complete_draft_markdown(payload: dict[str, Any]) -> str:
+    lines = [
+        "# Complete Route Draft",
+        "",
+        f"Source outline: `{payload['_meta']['source_outline']}`",
+        "",
+        "This complete draft is generated content for private editorial review. It is not approved or publication-ready.",
+        "",
+        "## Sequence",
+        "",
+    ]
+    lines.extend(f"{index}. `{candidate_id}`" for index, candidate_id in enumerate(payload["sequence"], 1))
+    lines.extend(["", "## Warnings", ""])
+    lines.extend(f"- {warning}" for warning in payload.get("warnings", []))
+    if not payload.get("warnings"):
+        lines.append("- None")
+    lines.extend(["", "## Technical Errors", ""])
+    lines.extend(f"- {error}" for error in payload.get("technical_errors", []))
+    if not payload.get("technical_errors"):
+        lines.append("- None")
+    lines.append("")
+    return "\n".join(lines)
 
 
 def build_agent_prompt(
@@ -731,7 +1057,7 @@ def build_agent_prompt(
             "Preserve useful detail, sharpen route logic, and mark unresolved review needs.",
             "",
             f"Route ID: `{manifest['route_id']}`",
-            f"Target output: `{agent_step['output']}`",
+            f"Target output: `{agent_step.get('active_output', agent_step['output'])}`",
             "",
             "## Task",
             "",
@@ -770,10 +1096,25 @@ def agent_step_instructions(step: str) -> str:
                 "Do not call candidates final seed events.",
             ],
         ),
+        "complete_draft": "\n".join(
+            [
+                "Create one complete route draft from the candidate outline and active dossier.",
+                "The candidate outline is agent planning input, not a frozen human-approved roster.",
+                "You may add, omit, merge, split, or reorder candidates when the route argument and evidence support it.",
+                "Return only JSON with `_meta`, `route_concept`, `candidates`, `events`, `places`, `connections`, `warnings`, and `technical_errors`.",
+                "Set `_meta.review_status` to `draft`, `_meta.source_outline` to the candidate-outline input filename, and `_meta.route_id` to the route ID.",
+                "Every candidate must include `candidate_id`, `status`, `review_state`, `years`, `place`, `working_title`, `route_function`, `decision_rationale`, `review_question`, `source_leads`, `risk_notes`, and `next_action`.",
+                "Use `keep`, `maybe`, `merge`, or `reject` only for agent recommendations; every generated candidate must use `review_state: pending`.",
+                "Every event must be a complete current-schema framing draft with seed-shaped fields and source and media arrays, and its `id` must match a candidate ID.",
+                "Every place and connection must use the current route pipeline framing shape and reference the generated event IDs.",
+                "Keep unresolved source, historical, place, media, and wording risks in `warnings`; keep structural or reference failures in `technical_errors`.",
+                "Do not approve events, publish seed data, or claim the route is publication-ready.",
+            ],
+        ),
         "event_review_to_concept": "\n".join(
             [
-                "Improve the route argument quality from the accepted-events handoff artifact.",
-                "Use the accepted-events input as the boundary. Do not add new events unless they are clearly marked as proposed additions requiring review.",
+                "Improve the route argument quality from the generated event-list draft.",
+                "Use the event-list input as the boundary and keep additions clearly marked as proposed additions requiring review.",
                 "Return only a route concept Markdown draft.",
                 "The concept must include story-serving headings, a central question, a route thesis, narrative phases, place logic, candidate sequence, source-risk notes, and open editorial questions.",
                 "Turn event candidates into a coherent editorial argument, not a chronology or checklist.",
@@ -784,7 +1125,7 @@ def agent_step_instructions(step: str) -> str:
         ),
         "concept_to_event_framing": "\n".join(
             [
-                "Improve event-level story quality from the route concept and accepted-events handoff.",
+                "Improve event-level story quality from the route concept and generated event-list draft.",
                 "Return only event framing Markdown; do not return seed JSON.",
                 "Use story-serving event headings. Do not use `summary` or `significance` as editorial Markdown headers.",
                 "For each event, include a product-facing event title, one-sentence what-happens prose for later seed `summary`, and one-sentence why-this-matters-here prose for later seed `significance`.",
@@ -2205,15 +2546,26 @@ def format_status(
         input_name = step.get("input")
         input_detail = f" input={input_name}" if input_name else ""
         lines.append(f"- {step_name}:{input_detail} outputs={output_status or 'none'}")
+    complete_step = manifest.get("agent_steps", {}).get("complete_draft", {})
+    active_complete_output = complete_step.get("active_output", "complete-draft.json")
+    lines.extend(["", "Active complete draft"])
+    if (route_dir / active_complete_output).exists():
+        lines.append(f"- present: {active_complete_output}")
+        lines.append(
+            "- accepted-events gate does not block the active complete-draft path"
+        )
+    else:
+        lines.append(f"- missing: {active_complete_output}")
     gate_errors = accepted_events_gate_errors(route_dir, manifest)
     lines.extend(["", "Accepted-events gate (legacy compatibility)"])
     if gate_errors:
         lines.append("- blocked")
         for error in gate_errors:
             lines.append(f"  - {error}")
-        stale_outputs = downstream_outputs_present(route_dir, manifest)
-        if stale_outputs:
-            lines.append("- stale downstream artifacts: " + ", ".join(stale_outputs))
+        if not (route_dir / active_complete_output).exists():
+            stale_outputs = downstream_outputs_present(route_dir, manifest)
+            if stale_outputs:
+                lines.append("- stale downstream artifacts: " + ", ".join(stale_outputs))
     else:
         lines.append("- passed")
     lines.extend(["", "Private route review"])
@@ -2307,7 +2659,17 @@ def downstream_outputs_present(route_dir: Path, manifest: dict[str, Any]) -> lis
 
 def step_outputs(route_dir: Path, step: dict[str, Any]) -> list[Path]:
     outputs = []
-    for key in ("markdown", "json", "events", "places", "connections", "prompt", "output", "run"):
+    for key in (
+        "markdown",
+        "json",
+        "events",
+        "places",
+        "connections",
+        "prompt",
+        "output",
+        "active_output",
+        "run",
+    ):
         if isinstance(step.get(key), str):
             outputs.append(route_dir / step[key])
     return outputs

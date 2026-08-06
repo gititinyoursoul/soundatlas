@@ -2,6 +2,7 @@ import json
 import stat
 from pathlib import Path
 
+from app.route_review import RouteReviewRepository, RouteReviewStateUpdate
 from scripts import route_content_pipeline
 from scripts.route_content_pipeline import main
 
@@ -331,6 +332,220 @@ def test_agent_invokes_codex_cli_and_writes_direct_output(tmp_path: Path, capsys
     assert manifest["agent_steps"]["brief_to_dossier"]["output"] == "research-dossier.md"
 
 
+def test_complete_draft_materializes_active_outputs_and_refreshes_review(
+    tmp_path: Path, capsys
+) -> None:
+    content_root, seed_dir = write_pipeline_fixture(tmp_path)
+    route_dir = content_root / ROUTE_ID
+    (route_dir / "candidate-outline.json").write_text(
+        build_agent_event_list_json(), encoding="utf-8"
+    )
+    fake_codex = write_fake_codex(tmp_path, output=build_complete_draft_json())
+
+    assert (
+        main(
+            [
+                "--content-root",
+                str(content_root),
+                "--seed-dir",
+                str(seed_dir),
+                "agent",
+                "--route-id",
+                ROUTE_ID,
+                "--step",
+                "complete_draft",
+                "--codex-command",
+                str(fake_codex),
+            ]
+        )
+        == 0
+    )
+    output = capsys.readouterr().out
+    assert "complete_draft: written" in output
+    complete_draft = json.loads((route_dir / "complete-draft.json").read_text(encoding="utf-8"))
+    assert complete_draft["_meta"]["source_outline"] == "candidate-outline.json"
+    assert complete_draft["sequence"] == ["kool-herc-sedgwick-party", "added-route-event"]
+    event_list = json.loads((route_dir / "event-list.json").read_text(encoding="utf-8"))
+    assert [candidate["candidate_id"] for candidate in event_list["candidates"]] == complete_draft[
+        "sequence"
+    ]
+    assert (route_dir / "event-framing.json").exists()
+    review = json.loads((route_dir / "route-review.json").read_text(encoding="utf-8"))
+    assert len(review["proposals"]) == 2
+    assert {proposal["editorial_state"] for proposal in review["proposals"]} == {"draft"}
+    assert review["warnings"] == ["Source comparison remains required."]
+
+
+def test_complete_draft_refresh_preserves_route_review_state(
+    tmp_path: Path,
+) -> None:
+    content_root, seed_dir = write_pipeline_fixture(tmp_path)
+    route_dir = content_root / ROUTE_ID
+    (route_dir / "candidate-outline.json").write_text(
+        build_agent_event_list_json(), encoding="utf-8"
+    )
+    fake_codex = write_fake_codex(tmp_path, output=build_complete_draft_json())
+    assert (
+        main(
+            [
+                "--content-root",
+                str(content_root),
+                "--seed-dir",
+                str(seed_dir),
+                "agent",
+                "--route-id",
+                ROUTE_ID,
+                "--step",
+                "complete_draft",
+                "--codex-command",
+                str(fake_codex),
+            ]
+        )
+        == 0
+    )
+
+    repository = RouteReviewRepository(content_root)
+    first = repository.get(ROUTE_ID)
+    approved = repository.update_state(
+        ROUTE_ID,
+        "kool-herc-sedgwick-party",
+        RouteReviewStateUpdate(
+            revision_id=first.revision_id,
+            editorial_state="approved",
+        ),
+    )
+
+    assert (
+        main(
+            [
+                "--content-root",
+                str(content_root),
+                "--seed-dir",
+                str(seed_dir),
+                "agent",
+                "--route-id",
+                ROUTE_ID,
+                "--step",
+                "complete_draft",
+                "--codex-command",
+                str(fake_codex),
+                "--renew",
+            ]
+        )
+        == 0
+    )
+
+    refreshed = repository.get(ROUTE_ID)
+    states = {
+        proposal.candidate_id: proposal.editorial_state
+        for proposal in refreshed.proposals
+    }
+    assert states["kool-herc-sedgwick-party"] == "approved"
+    assert refreshed.revision_id == approved.revision_id
+
+
+def test_invalid_complete_draft_preserves_active_outputs(tmp_path: Path) -> None:
+    content_root, seed_dir = write_pipeline_fixture(tmp_path)
+    route_dir = content_root / ROUTE_ID
+    (route_dir / "candidate-outline.json").write_text(
+        build_agent_event_list_json(), encoding="utf-8"
+    )
+    valid_codex = write_fake_codex(tmp_path / "valid", output=build_complete_draft_json())
+    assert (
+        main(
+            [
+                "--content-root",
+                str(content_root),
+                "--seed-dir",
+                str(seed_dir),
+                "agent",
+                "--route-id",
+                ROUTE_ID,
+                "--step",
+                "complete_draft",
+                "--codex-command",
+                str(valid_codex),
+            ]
+        )
+        == 0
+    )
+    active_before = (route_dir / "complete-draft.json").read_text(encoding="utf-8")
+    review_before = (route_dir / "route-review.json").read_text(encoding="utf-8")
+
+    invalid = json.loads(build_complete_draft_json())
+    invalid["technical_errors"] = ["missing source-backed event framing"]
+    invalid_codex = write_fake_codex(tmp_path / "invalid", output=json.dumps(invalid))
+    assert (
+        main(
+            [
+                "--content-root",
+                str(content_root),
+                "--seed-dir",
+                str(seed_dir),
+                "agent",
+                "--route-id",
+                ROUTE_ID,
+                "--step",
+                "complete_draft",
+                "--codex-command",
+                str(invalid_codex),
+                "--renew",
+            ]
+        )
+        == 2
+    )
+    assert (route_dir / "complete-draft.json").read_text(encoding="utf-8") == active_before
+    assert (route_dir / "route-review.json").read_text(encoding="utf-8") == review_before
+
+
+def test_status_does_not_mark_legacy_outputs_stale_when_complete_draft_is_active(
+    tmp_path: Path, capsys
+) -> None:
+    content_root, seed_dir = write_pipeline_fixture(tmp_path)
+    route_dir = content_root / ROUTE_ID
+    (route_dir / "candidate-outline.json").write_text(
+        build_agent_event_list_json(), encoding="utf-8"
+    )
+    fake_codex = write_fake_codex(tmp_path, output=build_complete_draft_json())
+    assert (
+        main(
+            [
+                "--content-root",
+                str(content_root),
+                "--seed-dir",
+                str(seed_dir),
+                "agent",
+                "--route-id",
+                ROUTE_ID,
+                "--step",
+                "complete_draft",
+                "--codex-command",
+                str(fake_codex),
+            ]
+        )
+        == 0
+    )
+    capsys.readouterr()
+    assert (
+        main(
+            [
+                "--content-root",
+                str(content_root),
+                "--seed-dir",
+                str(seed_dir),
+                "status",
+                "--route-id",
+                ROUTE_ID,
+            ]
+        )
+        == 0
+    )
+    output = capsys.readouterr().out
+    assert "Active complete draft" in output
+    assert "accepted-events gate does not block the active complete-draft path" in output
+    assert "stale downstream artifacts" not in output
+
+
 def test_agent_variant_writes_named_output_without_changing_manifest(
     tmp_path: Path, capsys
 ) -> None:
@@ -433,9 +648,13 @@ def test_agent_prompts_include_editorial_quality_contracts(tmp_path: Path) -> No
     content_root, seed_dir = write_pipeline_fixture(tmp_path)
     route_dir = content_root / ROUTE_ID
     prepare_reviewed_accepted_events(content_root, seed_dir)
+    (route_dir / "candidate-outline.json").write_text(
+        build_agent_event_list_json(), encoding="utf-8"
+    )
 
     for step in [
         "dossier_to_event_review",
+        "complete_draft",
         "event_review_to_concept",
         "concept_to_event_framing",
         "validation_to_revision_plan",
@@ -462,6 +681,9 @@ def test_agent_prompts_include_editorial_quality_contracts(tmp_path: Path) -> No
     dossier_prompt = (route_dir / "dossier_to_event_review-prompt.ai-draft.md").read_text(
         encoding="utf-8"
     )
+    complete_prompt = (route_dir / "complete_draft-prompt.ai-draft.md").read_text(
+        encoding="utf-8"
+    )
     concept_prompt = (route_dir / "event_review_to_concept-prompt.ai-draft.md").read_text(
         encoding="utf-8"
     )
@@ -472,7 +694,13 @@ def test_agent_prompts_include_editorial_quality_contracts(tmp_path: Path) -> No
         encoding="utf-8"
     )
 
-    for prompt in [dossier_prompt, concept_prompt, framing_prompt, revision_prompt]:
+    for prompt in [
+        dossier_prompt,
+        complete_prompt,
+        concept_prompt,
+        framing_prompt,
+        revision_prompt,
+    ]:
         assert "improve editorial quality, not merely reformat the input" in prompt
         assert "mark unresolved review needs" in prompt
 
@@ -483,6 +711,10 @@ def test_agent_prompts_include_editorial_quality_contracts(tmp_path: Path) -> No
     assert "top-level `review_clusters`" in dossier_prompt
     assert "Do not call candidates final seed events" in dossier_prompt
     assert "Use only `keep`, `maybe`, `merge`, or `reject` as candidate statuses." in dossier_prompt
+
+    assert "candidate outline is agent planning input" in complete_prompt
+    assert "add, omit, merge, split, or reorder candidates" in complete_prompt
+    assert "complete current-schema framing" in complete_prompt
 
     assert "coherent editorial argument, not a chronology or checklist" in concept_prompt
     assert "story-serving headings" in concept_prompt
@@ -1064,6 +1296,7 @@ def write_pipeline_fixture(tmp_path: Path) -> tuple[Path, Path]:
 
 
 def write_fake_codex(tmp_path: Path, output: str = "agent output\n") -> Path:
+    tmp_path.mkdir(parents=True, exist_ok=True)
     fake_codex = tmp_path / "fake-codex"
     fake_codex.write_text(
         f"""#!/bin/sh
@@ -1084,6 +1317,88 @@ FAKE_CODEX_OUTPUT
     )
     fake_codex.chmod(fake_codex.stat().st_mode | stat.S_IEXEC)
     return fake_codex
+
+
+def build_complete_draft_json() -> str:
+    def candidate(candidate_id: str, title: str, route_function: str) -> dict[str, object]:
+        return {
+            "candidate_id": candidate_id,
+            "status": "keep",
+            "review_state": "pending",
+            "years": "1973",
+            "place": "1520 Sedgwick Avenue",
+            "working_title": title,
+            "route_function": route_function,
+            "decision_rationale": "Complete-draft route fit.",
+            "review_question": "Review this proposal.",
+            "source_leads": ["Interviews"],
+            "risk_notes": ["Needs source comparison."],
+            "next_action": "Review in editorial mode.",
+        }
+
+    events = []
+    for event_id, title in [
+        ("kool-herc-sedgwick-party", "Kool Herc and Cindy Campbell's Sedgwick party"),
+        ("added-route-event", "A newly discovered route event"),
+    ]:
+        events.append(
+            {
+                "id": event_id,
+                "route_id": ROUTE_ID,
+                "place_id": "1520-sedgwick-avenue",
+                "place_ids": ["1520-sedgwick-avenue"],
+                "default_place_id": "1520-sedgwick-avenue",
+                "place_relationships": [],
+                "title": title,
+                "year_start": 1973,
+                "year_end": 1973,
+                "summary": "A complete draft event summary.",
+                "significance": "A complete draft route significance.",
+                "tags": [],
+                "review_status": "draft",
+                "source_urls": [],
+                "media_links": [],
+                "image_links": [],
+            }
+        )
+    payload = {
+        "_meta": {
+            "route_id": ROUTE_ID,
+            "source_outline": "candidate-outline.json",
+            "review_status": "draft",
+        },
+        "route_concept": "# Complete route concept\n\nA complete draft route argument.\n",
+        "sequence": ["kool-herc-sedgwick-party", "added-route-event"],
+        "candidates": [
+            candidate(
+                "kool-herc-sedgwick-party",
+                "Kool Herc and Cindy Campbell's Sedgwick party",
+                "Route anchor.",
+            ),
+            candidate("added-route-event", "A newly discovered route event", "Adds a later link."),
+        ],
+        "events": events,
+        "places": [
+            {
+                "decision": "reuse",
+                "source_place_text": "1520 Sedgwick Avenue",
+                "place_id": "1520-sedgwick-avenue",
+            }
+        ],
+        "connections": [
+            {
+                "id": "kool-herc-sedgwick-party-to-added-route-event-context",
+                "from_event_id": "kool-herc-sedgwick-party",
+                "to_event_id": "added-route-event",
+                "type": "context",
+                "summary": "The complete draft connects the route events.",
+                "review_status": "draft",
+            }
+        ],
+        "warnings": ["Source comparison remains required."],
+        "technical_errors": [],
+    }
+    return json.dumps(payload, indent=2) + "\n"
 
 
 def build_agent_event_list_json() -> str:

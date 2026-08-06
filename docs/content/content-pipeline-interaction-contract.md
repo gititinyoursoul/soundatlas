@@ -14,9 +14,10 @@ through raw Markdown or JSON files.
 
 ## Current And Target Boundary
 
-The route pipeline currently produces reviewable route-folder artifacts and
-uses `accepted-events.json` as its downstream gate. That implemented behavior
-remains authoritative until the focused follow-up Issues are completed.
+The route pipeline currently produces a candidate outline and one complete
+reviewable route-folder draft. `accepted-events.json` remains available as a
+deterministic compatibility handoff, but it is no longer required before the
+active complete draft or private route review is created.
 
 The target MVP interaction is:
 

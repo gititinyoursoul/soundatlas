@@ -11,10 +11,10 @@ The intended process is:
 route idea
 -> route brief
 -> candidate event longlist
--> human candidate review
--> accepted-events handoff
+-> complete route draft
+-> private human route review
 -> source and media enrichment
--> human final review
+-> exact-result publication
 -> publishable event cards
 -> map, timeline, route, and story panel
 ```
@@ -36,27 +36,26 @@ SoundAtlas currently uses a route-first workflow:
 3. A route research dossier gathers artists, places, influences, candidate
    events, candidate connections, source leads, media leads, image leads, and
    editorial risks.
-4. `event-list.md` and `event-list.json` hold candidate events for review.
-5. `route-review.json` holds one exact private review result with Draft,
+4. `candidate-outline.json` preserves the agent-generated candidate outline;
+   `complete-draft.json` holds one coherent generated route result that may
+   revise roster membership and sequence.
+5. `event-list.md` and `event-list.json` expose the active complete-draft
+   proposals for review.
+6. `route-review.json` holds one exact private review result with Draft,
    Approved, and Don’t use state, technical readiness, and minimal dormant
    decisions across regeneration.
-6. `accepted-events.json` remains the legacy structured route-level handoff
-   after human candidate review. It includes only `keep` candidates and
-   human-resolved `merge` outcomes, and its quality flags gate downstream work.
-7. `accepted-events.md` is the readable companion view for the same review, not
-   a separate approval gate.
-8. `route-concept.md` turns accepted events into a route argument and phase
-   draft.
-9. `event-framing.*`, `place-framing.json`, and `connection-framing.json`
-   create seed-shaped drafts.
-10. `seed-transfer-report.md` and `validation-report.md` preview structural
+7. `accepted-events.json` and `accepted-events.md` remain legacy deterministic
+   handoff artifacts and do not determine private route state.
+8. `route-concept.md`, `event-framing.*`, `place-framing.json`, and
+   `connection-framing.json` materialize the active complete draft.
+9. `seed-transfer-report.md` and `validation-report.md` preview structural
    seed changes before promotion.
-11. `data/seed/` is the runtime source for the map, timeline, route switching,
+10. `data/seed/` is the runtime source for the map, timeline, route switching,
    event inspector, sources, connections, media links, and image links.
-12. Enrichment scripts can create event-search components, media query plans,
+11. Enrichment scripts can create event-search components, media query plans,
    YouTube result files, draft `media_links`, and draft `image_links`.
-13. The app has an internal media/image review queue for marking draft links as
-    reviewed or rejecting them.
+12. The app has an internal media/image review queue for marking draft links as
+   reviewed or rejecting them.
 
 The documentation consistently says generated route artifacts are drafts and
 that human editorial review decides which claims, events, places, connections,
@@ -78,7 +77,7 @@ not replace the human editor or authorize publication.
 | Review candidates manually | Docs require artifact inspection | Partial | The review point exists, but it is not strongly modeled. |
 | Suggest Keep / Maybe / Merge / Reject | `event-list.json` candidate recommendations | Aligned | The current pipeline records the agent proposal separately from human review state. |
 | Set private Draft / Approved / Don’t use state | `route-review.json` and private backend API | Partial | State persistence is implemented; explorer controls remain in #72. |
-| Create handoff only for accepted events | `accepted-events.json` gate and `accepted-events.md` companion view | Aligned | The JSON file is the source of truth; Markdown is not a separate approval gate. |
+| Generate a complete route result | `complete-draft.json` and materialized framing artifacts | Aligned | The active result may revise candidate roster and sequence before human review. |
 | Enrich accepted events with sources and media | Enrichment can use accepted-event handoff files as the editorial boundary | Partial | Current scripts still run from seed data; docs now define the accepted-event boundary. |
 | Human reviews final output | Seed preview, validation report, and link review exist | Partial | There is no single final event-card approval gate. |
 | Publish as map, timeline, route, or event cards | Seed data powers runtime app | Partial | Draft seed records can still appear in the explorer. |
@@ -91,9 +90,10 @@ provider calls, confidence hints, review priorities, quality reports, ignore
 lists, and review actions. These are useful, but they should not get ahead of
 the basic editorial decision about which events belong in a route.
 
-The route pipeline now blocks seed-shaped drafts behind the accepted-events
-gate. That remains the implemented behavior. The target interaction reduces the
-remaining editorial friction by letting the editor inspect the route visually
+The route pipeline now creates a complete draft and private route-review result
+without requiring the legacy accepted-events gate. The deterministic accepted-
+events path remains available for compatibility. The target interaction reduces
+the remaining editorial friction by letting the editor inspect the route visually
 and set private route state without reviewing raw structured files.
 
 The current seed `review_status` values, `draft` and `reviewed`, are too broad
@@ -132,20 +132,22 @@ Use a simple candidate recommendation vocabulary in the current pipeline:
 - `merge`: combine into another accepted event or route context.
 - `reject`: do not continue for this route.
 
-Only human-confirmed `keep` candidates and resolved `merge` outcomes move into
-the current `accepted-events.json` handoff. In the target explorer review,
-these recommendations remain advisory while Draft, Approved, and Don’t use
-become the human controls.
+The complete-draft result, not an early accepted-events handoff, enters the
+target explorer review. Agent recommendations remain advisory while Draft,
+Approved, and Don’t use become the human controls. The accepted-events files
+remain a deterministic compatibility path.
 
-Do not create seed-shaped event, place, and connection drafts for every
-candidate. Create seed-shaped records only after the accepted-events gate
-passes.
+The complete-draft step creates seed-shaped event, place, and connection drafts
+for the active result before human review, while keeping all records in draft
+state and preserving warnings. Publication remains blocked by technical errors
+and still requires explicit human action.
 
 Separate the working layers:
 
-- Candidate layer: route brief, dossier, and longlist.
-- Accepted layer: `accepted-events.json`, with `accepted-events.md` as the
-  readable companion view.
+- Candidate layer: route brief, dossier, and `candidate-outline.json`.
+- Complete-draft layer: `complete-draft.json` and its materialized framing files.
+- Review layer: `route-review.json`, with agent recommendations separate from
+  human state.
 - Enrichment layer: source checks, media search queries, draft media, and draft
   images.
 - Publish layer: final event cards promoted into `data/seed/`.
@@ -172,7 +174,7 @@ The smallest useful target editorial MVP is:
 route input
 -> AI route brief
 -> AI candidate event longlist
--> CLI-generated route result
+-> CLI complete route draft
 -> visual review in the existing explorer
 -> human state: Draft / Approved / Don’t use
 -> warnings and technical readiness
