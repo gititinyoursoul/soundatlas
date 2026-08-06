@@ -2,11 +2,14 @@
   import { tick } from 'svelte';
   import type {
     RouteReviewProposal,
+    RoutePublicationSummary,
     ReviewAction,
     ReviewQueueItem,
     Route
   } from '$lib/types/soundatlas';
   import Icon from './Icon.svelte';
+  import EditorialEventList from './EditorialEventList.svelte';
+  import RoutePublicationPanel from './RoutePublicationPanel.svelte';
 
   type DrawerVariant = 'expanded' | 'collapsed';
   type DrawerPanel = 'main' | 'routes' | 'media-review' | 'editorial-review';
@@ -51,6 +54,10 @@
   export let editorialProposalCount = 0;
   export let editorialProposals: RouteReviewProposal[] = [];
   export let editorialErrorMessage: string | null = null;
+  export let publicationSummary: RoutePublicationSummary | null = null;
+  export let publicationSaving = false;
+  export let publicationError: string | null = null;
+  export let publicationSuccess = false;
   export let isLoading = false;
   export let errorMessage: string | null = null;
   export let onClose: () => void = () => {};
@@ -65,6 +72,7 @@
   export let onSelectEditorialProposal: (
     proposal: RouteReviewProposal
   ) => void = () => {};
+  export let onPublishRoute: () => void = () => {};
 
   let drawerElement: HTMLDivElement;
   let panelHeadingElement: HTMLHeadingElement;
@@ -430,6 +438,13 @@
                   : 's'}
               </p>
             </div>
+            <RoutePublicationPanel
+              summary={publicationSummary}
+              saving={publicationSaving}
+              errorMessage={publicationError}
+              success={publicationSuccess}
+              onPublish={onPublishRoute}
+            />
             {#if editorialErrorMessage}
               <div class="section-error">
                 <Icon name="warning" />
@@ -440,24 +455,10 @@
                 <Icon name="circle" /><span>No review candidates loaded.</span>
               </div>
             {:else}
-              <div class="review-list" aria-label="Editorial route candidates">
-                {#each editorialProposals as proposal (proposal.candidate_id)}
-                  <button
-                    type="button"
-                    class="review-summary"
-                    on:click={() => onSelectEditorialProposal(proposal)}
-                  >
-                    <strong
-                      >{String(
-                        proposal.proposal.working_title ??
-                          proposal.proposal.title ??
-                          proposal.candidate_id
-                      )}</strong
-                    >
-                    <span>{proposal.editorial_state.replace('_', ' ')}</span>
-                  </button>
-                {/each}
-              </div>
+              <EditorialEventList
+                proposals={editorialProposals}
+                onSelect={onSelectEditorialProposal}
+              />
             {/if}
           </section>
         {:else if activePanel === 'media-review' && showAdminReview}

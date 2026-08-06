@@ -31,8 +31,10 @@ CLI generates or regenerates one route result
   -> validated content becomes canonical runtime data
 ```
 
-This contract defines that target interaction without claiming that its review
-or publication behavior is implemented today.
+The focused review and publication slices are implemented. The private review
+revision binds the seed-shaped event, place, and connection content generated
+in `complete-draft.json`; publication consumes that bound content rather than
+rereading independently mutable framing files.
 
 ## Authority And Boundaries
 
@@ -49,6 +51,8 @@ media approval rules, runtime geography, or seed schemas.
 - Issue #71 owns private route-review data and state behavior.
 - Issue #72 owns the explorer-based editorial review surface.
 - Issue #73 owns exact-result validation and publication.
+- Issue #106 owns exact generated-story preview parity and binding that content
+  into the reviewed revision.
 - Issue #85 owns the deferred per-event revision-request handoff.
 
 When this target differs from implemented pipeline behavior, current workflow
@@ -70,6 +74,20 @@ The surface must:
 - keep relevant event and route warnings visible;
 - distinguish technical readiness from editorial warnings; and
 - provide one route-level Publish action when technical validation permits it.
+
+The StoryPanel uses the same reader-facing event shape and presentation in
+editorial and public modes, including title, dates, summary, significance,
+places, sources, media, and relationships. Candidate planning fields do not
+stand in for those story fields. Editorial controls, recommendations, warnings,
+and technical errors appear as separate secondary review information. Each
+event row shows warning and blocking-error counts; the selected event shows the
+full findings in labeled sections beside its Draft, Approved, and Don’t use
+controls. Route publication lives in the navigation menu rather than inside the
+selected event. It summarizes findings from included events, shows full
+route-only blocking errors, and keeps route-level editorial warnings in a
+collapsed disclosure. Don’t use events remain reviewable but do not contribute
+to publication finding counts or readiness. Missing or malformed required story
+content produces an explicit incomplete state.
 
 The first MVP surface is read-only apart from editorial-state controls. Content
 corrections continue through the existing Codex or CLI workflow. Direct field
@@ -196,8 +214,8 @@ The interaction satisfies this contract when:
 
 ## Follow-Up Boundary
 
-This contract authorizes no runtime behavior by itself. Issues #71, #72, and
-#73 implement the focused data, review-surface, and publication slices. Issue
-#85 remains deferred correction-loop work. Issues #74 and #75 remain open as
-independently valuable but deferred provenance and archive ideas; this contract
-does not require them.
+This contract authorizes no runtime behavior by itself. Issues #71, #72, #73,
+and #106 implement the focused data, review-surface, exact-preview, and
+publication slices. Issue #85 remains deferred correction-loop work. Issues
+#74 and #75 remain open as independently valuable but deferred provenance and
+archive ideas; this contract does not require them.

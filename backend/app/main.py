@@ -39,7 +39,9 @@ def create_app(
     route_publication_repository: RoutePublicationRepository | None = None,
 ) -> FastAPI:
     active_repository = repository or SeedRepository.from_seed_dir()
-    active_route_review_repository = route_review_repository or RouteReviewRepository()
+    active_route_review_repository = route_review_repository or RouteReviewRepository(
+        seed_dir=active_repository._seed_dir or DEFAULT_SEED_DIR,
+    )
     active_route_publication_repository = route_publication_repository or RoutePublicationRepository(
         active_route_review_repository,
         seed_dir=active_repository._seed_dir or DEFAULT_SEED_DIR,

@@ -1,5 +1,6 @@
 import json
 import os
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
@@ -34,6 +35,10 @@ class RoutePublicationSummary(BaseModel):
     excluded_event_ids: list[str]
     warnings: list[str] = Field(default_factory=list)
     technical_errors: list[str] = Field(default_factory=list)
+    route_warnings: list[str] = Field(default_factory=list)
+    route_technical_errors: list[str] = Field(default_factory=list)
+    included_event_warning_count: int = 0
+    included_event_technical_error_count: int = 0
     technical_ready: bool
     published_revision_id: str | None = None
 
@@ -62,6 +67,22 @@ class RoutePublicationValidationError(RoutePublicationError):
     pass
 
 
+@dataclass
+class PublicationFindings:
+    route_warnings: list[str] = field(default_factory=list)
+    route_technical_errors: list[str] = field(default_factory=list)
+    included_event_warnings: list[str] = field(default_factory=list)
+    included_event_technical_errors: list[str] = field(default_factory=list)
+
+    @property
+    def warnings(self) -> list[str]:
+        return _unique([*self.route_warnings, *self.included_event_warnings])
+
+    @property
+    def technical_errors(self) -> list[str]:
+        return _unique([*self.route_technical_errors, *self.included_event_technical_errors])
+
+
 class RoutePublicationRepository:
     def __init__(
         self,
@@ -75,9 +96,9 @@ class RoutePublicationRepository:
 
     def summary(self, route_id: str) -> RoutePublicationSummary:
         review = self._get_review(route_id)
-        payload, warnings, technical_errors = self._build_payload(review)
+        payload, findings = self._build_payload(review)
         del payload
-        return self._summary(review, warnings, technical_errors)
+        return self._summary(review, findings)
 
     def publish(self, route_id: str, revision_id: str) -> RoutePublicationResult:
         review = self._get_review(route_id)
@@ -86,12 +107,11 @@ class RoutePublicationRepository:
                 f"Route review '{route_id}' changed; reload before publishing"
             )
 
-        payload, warnings, technical_errors = self._build_payload(review)
-        summary = self._summary(review, warnings, technical_errors)
+        payload, findings = self._build_payload(review)
+        summary = self._summary(review, findings)
         if not summary.technical_ready:
             raise RoutePublicationValidationError(
-                "Publication is not technically ready: "
-                + "; ".join(summary.technical_errors)
+                "Publication is not technically ready: " + "; ".join(summary.technical_errors)
             )
 
         self._write_payloads(payload, route_id, review)
@@ -99,31 +119,16 @@ class RoutePublicationRepository:
 
     def _build_payload(
         self, review: RouteReviewResult
-    ) -> tuple[dict[str, dict[str, Any]], list[str], list[str]]:
-        route_dir = self._route_dir(review.route_id)
-        manifest = self._read_json(route_dir / "pipeline.json")
-        framing_name = (
-            manifest.get("steps", {}).get("event_framing", {}).get("events")
+    ) -> tuple[dict[str, dict[str, Any]], PublicationFindings]:
+        findings = PublicationFindings(
+            route_warnings=list(review.warnings),
+            route_technical_errors=list(review.technical_errors),
         )
-        places_name = (
-            manifest.get("steps", {}).get("event_framing", {}).get("places")
-        )
-        connections_name = (
-            manifest.get("steps", {}).get("event_framing", {}).get("connections")
-        )
-        technical_errors: list[str] = []
-        if not all(isinstance(name, str) and name for name in (framing_name, places_name, connections_name)):
-            technical_errors.append("Pipeline manifest is missing event framing outputs.")
-            return self._empty_payload(), [], technical_errors
-
         try:
-            event_framing = self._read_json(route_dir / framing_name)
-            place_framing = self._read_json(route_dir / places_name)
-            connection_framing = self._read_json(route_dir / connections_name)
             seed = self._read_seed()
         except (FileNotFoundError, json.JSONDecodeError, RoutePublicationError) as exc:
-            technical_errors.append(str(exc))
-            return self._empty_payload(), [], technical_errors
+            findings.route_technical_errors.append(str(exc))
+            return self._empty_payload(), findings
 
         proposals_by_id = {proposal.candidate_id: proposal for proposal in review.proposals}
         candidate_ids = set(proposals_by_id)
@@ -132,41 +137,36 @@ class RoutePublicationRepository:
             for proposal in review.proposals
             if proposal.active and proposal.included
         }
-        framing_events = {
-            item.get("id"): item
-            for item in event_framing.get("events", [])
-            if isinstance(item, dict) and isinstance(item.get("id"), str)
-        }
         selected_events: list[dict[str, Any]] = []
-        for candidate_id in sorted(included_ids):
-            event = framing_events.get(candidate_id)
-            if event is None:
-                technical_errors.append(
-                    f"Included proposal '{candidate_id}' has no event framing record."
-                )
+        for proposal in review.proposals:
+            candidate_id = proposal.candidate_id
+            if candidate_id not in included_ids:
                 continue
-            selected_events.append(event)
-            proposal = proposals_by_id[candidate_id]
-            technical_errors.extend(
+            findings.included_event_warnings.extend(proposal.warnings)
+            findings.included_event_technical_errors.extend(
                 f"{candidate_id}: {error}" for error in proposal.technical_errors
             )
+            if proposal.event is None:
+                if not proposal.technical_errors:
+                    findings.included_event_technical_errors.append(
+                        f"Included proposal '{candidate_id}' has no reader-facing event content."
+                    )
+                continue
+            selected_events.append(proposal.event.model_dump(mode="json"))
 
         selected_event_ids = {event.get("id") for event in selected_events}
-        selected_place_ids = {event.get("place_id") for event in selected_events}
+        selected_place_ids = {
+            place_id for event in selected_events for place_id in event.get("place_ids", [])
+        }
         new_places = [
-            item["place"]
-            for item in place_framing.get("places", [])
-            if isinstance(item, dict)
-            and item.get("decision") == "new"
-            and item.get("place_id") in selected_place_ids
-            and isinstance(item.get("place"), dict)
+            item.place.model_dump(mode="json")
+            for item in review.places
+            if item.decision == "new" and item.place.id in selected_place_ids
         ]
         selected_connections = [
-            item
-            for item in connection_framing.get("connections", [])
-            if isinstance(item, dict)
-            and item.get("from_event_id") in selected_event_ids
-            and item.get("to_event_id") in selected_event_ids
+            item.model_dump(mode="json")
+            for item in review.connections
+            if item.from_event_id in selected_event_ids and item.to_event_id in selected_event_ids
         ]
 
         previous = self._read_publication_state(review.route_id)
@@ -203,11 +203,8 @@ class RoutePublicationRepository:
             "events": {"events": events},
             "connections": {"connections": connections},
         }
-        technical_errors.extend(self._validate_payload(payload))
-        warnings = list(review.warnings)
-        for proposal in review.proposals:
-            warnings.extend(proposal.warnings)
-        return payload, _unique(warnings), _unique(technical_errors)
+        findings.route_technical_errors.extend(self._validate_payload(payload))
+        return payload, findings
 
     def _get_review(self, route_id: str) -> RouteReviewResult:
         try:
@@ -220,8 +217,7 @@ class RoutePublicationRepository:
     def _summary(
         self,
         review: RouteReviewResult,
-        warnings: list[str],
-        technical_errors: list[str],
+        findings: PublicationFindings,
     ) -> RoutePublicationSummary:
         included = [
             PublicationEventSummary(
@@ -245,9 +241,13 @@ class RoutePublicationRepository:
             source=review.source,
             included_events=included,
             excluded_event_ids=excluded,
-            warnings=warnings,
-            technical_errors=technical_errors,
-            technical_ready=not technical_errors,
+            warnings=findings.warnings,
+            technical_errors=findings.technical_errors,
+            route_warnings=_unique(findings.route_warnings),
+            route_technical_errors=_unique(findings.route_technical_errors),
+            included_event_warning_count=len(findings.included_event_warnings),
+            included_event_technical_error_count=len(findings.included_event_technical_errors),
+            technical_ready=not findings.technical_errors,
             published_revision_id=state.get("revision_id"),
         )
 
@@ -266,7 +266,9 @@ class RoutePublicationRepository:
         state = {
             "route_id": route_id,
             "revision_id": review.revision_id,
-            "event_ids": [item.candidate_id for item in review.proposals if item.active and item.included],
+            "event_ids": [
+                item.candidate_id for item in review.proposals if item.active and item.included
+            ],
             "connection_ids": [
                 item.get("id")
                 for item in payload["connections"].get("connections", [])
@@ -274,7 +276,11 @@ class RoutePublicationRepository:
             ],
         }
         files[str(state_path)] = state
-        old = {str(self._seed_dir / name): self._read_bytes(self._seed_dir / name) for name in files if not name.startswith("/")}
+        old = {
+            str(self._seed_dir / name): self._read_bytes(self._seed_dir / name)
+            for name in files
+            if not name.startswith("/")
+        }
         old[str(state_path)] = self._read_bytes(state_path)
         temp_paths: list[Path] = []
         replaced: list[Path] = []
@@ -283,7 +289,9 @@ class RoutePublicationRepository:
                 path = Path(name) if name.startswith("/") else self._seed_dir / name
                 path.parent.mkdir(parents=True, exist_ok=True)
                 temp = path.with_name(f".{path.name}.publication.tmp")
-                temp.write_text(json.dumps(value, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+                temp.write_text(
+                    json.dumps(value, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
+                )
                 temp_paths.append(temp)
                 os.replace(temp, path)
                 replaced.append(path)
@@ -294,7 +302,9 @@ class RoutePublicationRepository:
                     path.unlink(missing_ok=True)
                 else:
                     path.write_bytes(previous)
-            raise RoutePublicationError(f"Publication failed; previous route was preserved: {exc}") from exc
+            raise RoutePublicationError(
+                f"Publication failed; previous route was preserved: {exc}"
+            ) from exc
         finally:
             for temp in temp_paths:
                 temp.unlink(missing_ok=True)
@@ -305,7 +315,10 @@ class RoutePublicationRepository:
             routes = [Route.model_validate(item) for item in payload["routes"].get("routes", [])]
             places = [Place.model_validate(item) for item in payload["places"].get("places", [])]
             events = [Event.model_validate(item) for item in payload["events"].get("events", [])]
-            connections = [Connection.model_validate(item) for item in payload["connections"].get("connections", [])]
+            connections = [
+                Connection.model_validate(item)
+                for item in payload["connections"].get("connections", [])
+            ]
             SeedRepository(routes, places, events, connections).validate_references()
         except Exception as exc:
             errors.append(str(exc))
@@ -331,9 +344,13 @@ class RoutePublicationRepository:
         try:
             value = json.loads(path.read_text(encoding="utf-8"))
         except FileNotFoundError as exc:
-            raise RoutePublicationNotFoundError(f"Publication input '{path.name}' not found") from exc
+            raise RoutePublicationNotFoundError(
+                f"Publication input '{path.name}' not found"
+            ) from exc
         if not isinstance(value, dict):
-            raise RoutePublicationValidationError(f"Publication input '{path.name}' must be an object")
+            raise RoutePublicationValidationError(
+                f"Publication input '{path.name}' must be an object"
+            )
         return value
 
     @staticmethod
@@ -345,7 +362,12 @@ class RoutePublicationRepository:
 
     @staticmethod
     def _empty_payload() -> dict[str, dict[str, Any]]:
-        return {"routes": {"routes": []}, "places": {"places": []}, "events": {"events": []}, "connections": {"connections": []}}
+        return {
+            "routes": {"routes": []},
+            "places": {"places": []},
+            "events": {"events": []},
+            "connections": {"connections": []},
+        }
 
 
 def _proposal_title(proposal: RouteReviewProposal) -> str:

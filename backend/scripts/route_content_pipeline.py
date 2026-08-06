@@ -870,7 +870,10 @@ def activate_complete_draft(
                 backup_file(target)
             os.replace(stage_dir / target.relative_to(route_dir), target)
 
-    review = RouteReviewRepository(route_dir.parent).refresh(manifest["route_id"])
+    review = RouteReviewRepository(
+        route_dir.parent,
+        seed_dir=seed_dir,
+    ).refresh(manifest["route_id"])
     return [
         active_step["json"],
         active_step["markdown"],

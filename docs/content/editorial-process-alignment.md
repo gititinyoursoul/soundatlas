@@ -41,9 +41,15 @@ SoundAtlas currently uses a route-first workflow:
    revise roster membership and sequence.
 5. `event-list.md` and `event-list.json` expose the active complete-draft
    proposals for review.
-6. `route-review.json` holds one exact private review result with Draft,
-   Approved, and Don’t use state, technical readiness, and minimal dormant
-   decisions across regeneration.
+6. `route-review.json` holds one exact private review result with the active
+   seed-shaped event, place, and connection bundle; Draft, Approved, and Don’t
+   use state; technical readiness; and minimal dormant decisions across
+   regeneration. The editorial StoryPanel renders this event content directly,
+   while candidate planning fields and findings remain separate review context.
+   Event rows show warning and blocking-error counts, selected-event review
+   shows each full finding, and the route publication summary counts findings
+   only from included Draft or Approved events. Don’t use events remain visible
+   for review without affecting those route counts.
 7. `accepted-events.json` and `accepted-events.md` remain legacy deterministic
    handoff artifacts and do not determine private route state.
 8. `route-concept.md`, `event-framing.*`, `place-framing.json`, and

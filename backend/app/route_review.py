@@ -5,12 +5,14 @@ import re
 from pathlib import Path
 from typing import Any, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ValidationError
 
-from app.config import DEFAULT_CONTENT_ROOT
+from app.config import DEFAULT_CONTENT_ROOT, DEFAULT_SEED_DIR
+from app.schemas import Connection, Event, Place
 
 ROUTE_REVIEW_FILENAME = "route-review.json"
 EVENT_LIST_FILENAME = "event-list.json"
+COMPLETE_DRAFT_FILENAME = "complete-draft.json"
 
 EditorialState = Literal["draft", "approved", "dont_use"]
 
@@ -52,6 +54,12 @@ class RouteReviewProposal(BaseModel):
     technical_errors: list[str] = Field(default_factory=list)
     material_signature: str
     proposal: dict[str, Any]
+    event: Event | None = None
+
+
+class RouteReviewPlace(BaseModel):
+    decision: Literal["reuse", "new"]
+    place: Place
 
 
 class RouteReviewResult(BaseModel):
@@ -60,7 +68,10 @@ class RouteReviewResult(BaseModel):
     source: str = EVENT_LIST_FILENAME
     proposals: list[RouteReviewProposal]
     dormant_proposals: list[RouteReviewProposal] = Field(default_factory=list)
+    places: list[RouteReviewPlace] = Field(default_factory=list)
+    connections: list[Connection] = Field(default_factory=list)
     warnings: list[str] = Field(default_factory=list)
+    technical_errors: list[str] = Field(default_factory=list)
     technical_ready: bool
 
 
@@ -93,22 +104,33 @@ class RouteReviewMigrationReport(BaseModel):
 
 
 class RouteReviewRepository:
-    def __init__(self, content_root: Path = DEFAULT_CONTENT_ROOT) -> None:
+    def __init__(
+        self,
+        content_root: Path = DEFAULT_CONTENT_ROOT,
+        seed_dir: Path = DEFAULT_SEED_DIR,
+    ) -> None:
         self._content_root = content_root
+        self._seed_dir = seed_dir
 
     def get(self, route_id: str) -> RouteReviewResult:
         path = self._review_path(route_id)
         if not path.exists():
             raise RouteReviewNotFoundError(f"Route review '{route_id}' not found")
         try:
-            return RouteReviewResult.model_validate_json(path.read_text(encoding="utf-8"))
+            result = RouteReviewResult.model_validate_json(path.read_text(encoding="utf-8"))
         except (OSError, ValueError) as exc:
             raise RouteReviewError(f"Route review '{route_id}' is invalid") from exc
+        complete_draft = self._optional_complete_draft(route_id)
+        if complete_draft is not None and (
+            result.source != COMPLETE_DRAFT_FILENAME
+            or any(proposal.event is None for proposal in result.proposals)
+        ):
+            return self._build_current(route_id, result, complete_draft)
+        return result
 
     def refresh(self, route_id: str) -> RouteReviewResult:
-        event_list = self._read_event_list(route_id)
         previous = self._optional_review(route_id)
-        result = build_route_review(route_id=route_id, event_list=event_list, previous=previous)
+        result = self._build_current(route_id, previous)
         self._write(result)
         return result
 
@@ -131,10 +153,9 @@ class RouteReviewRepository:
             legacy_states[candidate_id] = LEGACY_STATE_MAP[legacy_state]
             counts[legacy_state] += 1
 
-        result = build_route_review(
-            route_id=route_id,
-            event_list=event_list,
-            previous=None,
+        result = self._build_current(
+            route_id,
+            None,
             initial_states=legacy_states,
         )
         self._write(result)
@@ -166,7 +187,10 @@ class RouteReviewRepository:
             )
         proposal.editorial_state = update.editorial_state
         proposal.included = update.editorial_state != "dont_use"
-        result.technical_ready = _technical_ready(result.proposals)
+        result.technical_ready = _technical_ready(
+            result.proposals,
+            result.technical_errors,
+        )
         result.revision_id = _revision_id(result)
         self._write(result)
         return result
@@ -193,6 +217,62 @@ class RouteReviewRepository:
             )
         _candidate_objects(payload)
         return payload
+
+    def _optional_complete_draft(self, route_id: str) -> dict[str, Any] | None:
+        path = self._route_dir(route_id) / COMPLETE_DRAFT_FILENAME
+        if not path.exists():
+            return None
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise RouteReviewError(
+                f"Complete draft for route '{route_id}' is not valid JSON"
+            ) from exc
+        if not isinstance(payload, dict):
+            raise RouteReviewError("Complete draft must be a JSON object")
+        meta = payload.get("_meta")
+        source_route_id = meta.get("route_id") if isinstance(meta, dict) else None
+        if source_route_id != route_id:
+            raise RouteReviewError(
+                f"Complete draft route '{source_route_id}' does not match '{route_id}'"
+            )
+        _candidate_objects(payload)
+        return payload
+
+    def _build_current(
+        self,
+        route_id: str,
+        previous: RouteReviewResult | None,
+        complete_draft: dict[str, Any] | None = None,
+        initial_states: dict[str, EditorialState] | None = None,
+    ) -> RouteReviewResult:
+        complete_draft = complete_draft or self._optional_complete_draft(route_id)
+        source = complete_draft or self._read_event_list(route_id)
+        return build_route_review(
+            route_id=route_id,
+            event_list=source,
+            previous=previous,
+            initial_states=initial_states,
+            complete_draft=complete_draft,
+            seed_places=self._read_seed_places(),
+        )
+
+    def _read_seed_places(self) -> dict[str, dict[str, Any]]:
+        path = self._seed_dir / "places.json"
+        if not path.exists():
+            return {}
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise RouteReviewError("Seed places are not valid JSON") from exc
+        places = payload.get("places") if isinstance(payload, dict) else None
+        if not isinstance(places, list):
+            raise RouteReviewError("Seed places must contain a places list")
+        return {
+            item["id"]: item
+            for item in places
+            if isinstance(item, dict) and isinstance(item.get("id"), str)
+        }
 
     def _optional_review(self, route_id: str) -> RouteReviewResult | None:
         try:
@@ -227,8 +307,35 @@ def build_route_review(
     event_list: dict[str, Any],
     previous: RouteReviewResult | None,
     initial_states: dict[str, EditorialState] | None = None,
+    complete_draft: dict[str, Any] | None = None,
+    seed_places: dict[str, dict[str, Any]] | None = None,
 ) -> RouteReviewResult:
     candidates = _candidate_objects(event_list)
+    event_payloads, event_collection_errors = _objects_by_id(
+        complete_draft,
+        "events",
+    )
+    active_candidate_ids = {_candidate_id(candidate) for candidate in candidates}
+    places, place_errors = _review_places(
+        complete_draft,
+        seed_places or {},
+        event_payloads,
+    )
+    resolved_place_ids = {item.place.id for item in places}
+    connections, connection_errors = _review_connections(
+        complete_draft,
+        active_candidate_ids,
+    )
+    unexpected_event_ids = sorted(set(event_payloads) - active_candidate_ids)
+    route_errors = [
+        *event_collection_errors,
+        *(
+            f"Reader-facing event '{event_id}' has no active proposal."
+            for event_id in unexpected_event_ids
+        ),
+        *place_errors,
+        *connection_errors,
+    ]
     initial_states = initial_states or {}
     previous_proposals = previous.proposals if previous else []
     previous_dormant = previous.dormant_proposals if previous else []
@@ -243,12 +350,18 @@ def build_route_review(
         if candidate_id in seen:
             raise RouteReviewError(f"Duplicate candidate_id '{candidate_id}'")
         seen.add(candidate_id)
-        signature = material_signature(candidate)
+        event, event_errors = _review_event(
+            event_payloads.get(candidate_id),
+            route_id,
+            candidate_id,
+            resolved_place_ids,
+        )
+        errors = [*proposal_errors(candidate), *event_errors]
+        signature = material_signature(candidate, event)
         prior = prior_by_id.get(candidate_id)
         state = initial_states.get(candidate_id, "draft")
         if prior is not None:
             state = _carry_state(prior, signature)
-        errors = proposal_errors(candidate)
         proposals.append(
             RouteReviewProposal(
                 candidate_id=candidate_id,
@@ -263,6 +376,7 @@ def build_route_review(
                 technical_errors=errors,
                 material_signature=signature,
                 proposal=candidate,
+                event=event,
             )
         )
 
@@ -275,17 +389,26 @@ def build_route_review(
     result = RouteReviewResult(
         route_id=route_id,
         revision_id="",
+        source=(
+            COMPLETE_DRAFT_FILENAME
+            if complete_draft is not None
+            else EVENT_LIST_FILENAME
+        ),
         proposals=proposals,
         dormant_proposals=sorted(dormant, key=lambda item: item.candidate_id),
+        places=places,
+        connections=connections,
         warnings=_route_warnings(event_list),
-        technical_ready=_technical_ready(proposals),
+        technical_errors=route_errors,
+        technical_ready=_technical_ready(proposals, route_errors),
     )
     result.revision_id = _revision_id(result)
     return result
 
 
-def material_signature(candidate: dict[str, Any]) -> str:
+def material_signature(candidate: dict[str, Any], event: Event | None = None) -> str:
     material = {field: candidate.get(field) for field in MATERIAL_FIELDS if field in candidate}
+    material["event"] = event.model_dump(mode="json") if event is not None else None
     return hashlib.sha256(_canonical_json(material).encode("utf-8")).hexdigest()
 
 
@@ -296,6 +419,189 @@ def proposal_errors(candidate: dict[str, Any]) -> list[str]:
         if not isinstance(value, str) or not value.strip():
             errors.append(f"Missing {label} ('{field}')")
     return errors
+
+
+def _objects_by_id(
+    payload: dict[str, Any] | None,
+    field: str,
+) -> tuple[dict[str, dict[str, Any]], list[str]]:
+    if payload is None:
+        return {}, []
+    values = payload.get(field)
+    if not isinstance(values, list):
+        return {}, [f"Complete draft `{field}` must be a list."]
+    objects: dict[str, dict[str, Any]] = {}
+    errors: list[str] = []
+    for index, value in enumerate(values):
+        if not isinstance(value, dict):
+            errors.append(f"Complete draft `{field}[{index}]` must be an object.")
+            continue
+        value_id = value.get("id")
+        if not isinstance(value_id, str) or not value_id:
+            errors.append(f"Complete draft `{field}[{index}]` is missing `id`.")
+            continue
+        if value_id in objects:
+            errors.append(f"Complete draft `{field}` contains duplicate ID '{value_id}'.")
+            continue
+        objects[value_id] = value
+    return objects, errors
+
+
+def _review_event(
+    payload: dict[str, Any] | None,
+    route_id: str,
+    candidate_id: str,
+    resolved_place_ids: set[str],
+) -> tuple[Event | None, list[str]]:
+    if payload is None:
+        return None, ["Missing reader-facing event content in `complete-draft.json`."]
+    try:
+        event = Event.model_validate(payload)
+    except ValidationError as exc:
+        return None, _validation_messages("Reader-facing event", exc)
+
+    errors: list[str] = []
+    if event.id != candidate_id:
+        errors.append(
+            f"Reader-facing event ID '{event.id}' does not match proposal '{candidate_id}'."
+        )
+    if event.route_id != route_id:
+        errors.append(
+            f"Reader-facing event route '{event.route_id}' does not match '{route_id}'."
+        )
+    for field, label in (
+        ("title", "title"),
+        ("summary", "What happened"),
+        ("significance", "Why it matters"),
+    ):
+        value = getattr(event, field)
+        if not value.strip():
+            errors.append(f"Reader-facing event is missing {label} ('{field}').")
+    for place_id in event.place_ids:
+        if place_id not in resolved_place_ids:
+            errors.append(
+                f"Reader-facing event references unresolved place '{place_id}'."
+            )
+    return event, errors
+
+
+def _review_places(
+    complete_draft: dict[str, Any] | None,
+    seed_places: dict[str, dict[str, Any]],
+    event_payloads: dict[str, dict[str, Any]],
+) -> tuple[list[RouteReviewPlace], list[str]]:
+    if complete_draft is None:
+        return [], []
+    place_values = complete_draft.get("places")
+    if not isinstance(place_values, list):
+        return [], ["Complete draft `places` must be a list."]
+
+    decisions: dict[str, dict[str, Any]] = {}
+    errors: list[str] = []
+    for index, value in enumerate(place_values):
+        if not isinstance(value, dict):
+            errors.append(f"Complete draft `places[{index}]` must be an object.")
+            continue
+        place_id = value.get("place_id")
+        if not isinstance(place_id, str) or not place_id:
+            errors.append(f"Complete draft `places[{index}]` is missing `place_id`.")
+            continue
+        if place_id in decisions:
+            errors.append(f"Complete draft places contain duplicate ID '{place_id}'.")
+            continue
+        decisions[place_id] = value
+
+    referenced_place_ids: set[str] = set()
+    for event in event_payloads.values():
+        place_ids = event.get("place_ids")
+        if isinstance(place_ids, list):
+            referenced_place_ids.update(
+                item for item in place_ids if isinstance(item, str) and item
+            )
+        elif isinstance(event.get("place_id"), str):
+            referenced_place_ids.add(event["place_id"])
+
+    places: list[RouteReviewPlace] = []
+    for place_id in sorted(referenced_place_ids):
+        decision = decisions.get(place_id)
+        if decision is None:
+            errors.append(f"Complete draft has no place decision for '{place_id}'.")
+            continue
+        decision_name = decision.get("decision")
+        if decision_name == "reuse":
+            raw_place = seed_places.get(place_id)
+            if raw_place is None:
+                errors.append(f"Reused place '{place_id}' is missing from canonical seeds.")
+                continue
+        elif decision_name == "new":
+            raw_place = decision.get("place")
+            if not isinstance(raw_place, dict):
+                errors.append(f"New place '{place_id}' is missing its place record.")
+                continue
+        else:
+            errors.append(
+                f"Place '{place_id}' has unsupported decision '{decision_name}'."
+            )
+            continue
+        try:
+            place = Place.model_validate(raw_place)
+        except ValidationError as exc:
+            errors.extend(_validation_messages(f"Place '{place_id}'", exc))
+            continue
+        if place.id != place_id:
+            errors.append(
+                f"Place decision '{place_id}' resolves to mismatched place '{place.id}'."
+            )
+            continue
+        places.append(RouteReviewPlace(decision=decision_name, place=place))
+    return places, errors
+
+
+def _review_connections(
+    complete_draft: dict[str, Any] | None,
+    active_candidate_ids: set[str],
+) -> tuple[list[Connection], list[str]]:
+    if complete_draft is None:
+        return [], []
+    values = complete_draft.get("connections")
+    if not isinstance(values, list):
+        return [], ["Complete draft `connections` must be a list."]
+    connections: list[Connection] = []
+    errors: list[str] = []
+    seen: set[str] = set()
+    for index, value in enumerate(values):
+        try:
+            connection = Connection.model_validate(value)
+        except ValidationError as exc:
+            errors.extend(
+                _validation_messages(f"Connection at index {index}", exc)
+            )
+            continue
+        if connection.id in seen:
+            errors.append(f"Complete draft contains duplicate connection '{connection.id}'.")
+            continue
+        seen.add(connection.id)
+        missing_endpoints = {
+            connection.from_event_id,
+            connection.to_event_id,
+        } - active_candidate_ids
+        if missing_endpoints:
+            errors.append(
+                f"Connection '{connection.id}' references inactive or missing events: "
+                + ", ".join(sorted(missing_endpoints))
+                + "."
+            )
+            continue
+        connections.append(connection)
+    return connections, errors
+
+
+def _validation_messages(label: str, error: ValidationError) -> list[str]:
+    messages = []
+    for item in error.errors(include_url=False):
+        location = ".".join(str(part) for part in item["loc"])
+        messages.append(f"{label} has invalid `{location}`: {item['msg']}.")
+    return messages
 
 
 def _candidate_objects(event_list: dict[str, Any]) -> list[dict[str, Any]]:
@@ -322,8 +628,13 @@ def _carry_state(prior: RouteReviewProposal, signature: str) -> EditorialState:
     return prior.editorial_state
 
 
-def _technical_ready(proposals: list[RouteReviewProposal]) -> bool:
-    return all(proposal.renderable or not proposal.included for proposal in proposals)
+def _technical_ready(
+    proposals: list[RouteReviewProposal],
+    route_errors: list[str],
+) -> bool:
+    return not route_errors and all(
+        proposal.renderable or not proposal.included for proposal in proposals
+    )
 
 
 def _revision_id(result: RouteReviewResult) -> str:

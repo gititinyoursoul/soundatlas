@@ -195,6 +195,12 @@ export type RouteReviewProposal = {
   technical_errors: string[];
   material_signature: string;
   proposal: Record<string, unknown>;
+  event: Event | null;
+};
+
+export type RouteReviewPlace = {
+  decision: 'reuse' | 'new';
+  place: Place;
 };
 
 export type RouteReviewResult = {
@@ -203,7 +209,10 @@ export type RouteReviewResult = {
   source: string;
   proposals: RouteReviewProposal[];
   dormant_proposals: RouteReviewProposal[];
+  places: RouteReviewPlace[];
+  connections: Connection[];
   warnings: string[];
+  technical_errors: string[];
   technical_ready: boolean;
 };
 
@@ -222,6 +231,10 @@ export type RoutePublicationSummary = {
   excluded_event_ids: string[];
   warnings: string[];
   technical_errors: string[];
+  route_warnings: string[];
+  route_technical_errors: string[];
+  included_event_warning_count: number;
+  included_event_technical_error_count: number;
   technical_ready: boolean;
   published_revision_id: string | null;
 };

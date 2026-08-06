@@ -1,5 +1,6 @@
 <script lang="ts">
   import Icon from '$lib/components/Icon.svelte';
+  import EditorialReviewTools from '$lib/components/EditorialReviewTools.svelte';
   import MediaEmbed from '$lib/components/MediaEmbed.svelte';
   import { resolvePreviewItemId } from '$lib/components/story-preview';
   import { formatRelationshipDirection } from '$lib/data/spatial';
@@ -13,7 +14,6 @@
     MediaType,
     Place,
     Route,
-    RoutePublicationSummary,
     RouteReviewProposal,
     StoryConnectionItem
   } from '$lib/types/soundatlas';
@@ -63,12 +63,8 @@
   export let editorialProposal: RouteReviewProposal | null = null;
   export let editorialSaving = false;
   export let editorialErrorMessage: string | null = null;
+  export let editorialContentError: string | null = null;
   export let onSetEditorialState: (state: EditorialState) => void = () => {};
-  export let publicationSummary: RoutePublicationSummary | null = null;
-  export let publicationSaving = false;
-  export let publicationError: string | null = null;
-  export let publicationSuccess = false;
-  export let onPublishRoute: () => void = () => {};
 
   const mediaProviderLabels: Record<MediaProvider, string> = {
     youtube: 'YouTube',
@@ -301,6 +297,17 @@
       <h2>Event details unavailable</h2>
       <p>{errorMessage}</p>
     </div>
+  {:else if editorialMode && editorialProposal && editorialContentError}
+    <div class="empty error" role="alert">
+      <h2>Reader-facing story incomplete</h2>
+      <p>{editorialContentError}</p>
+    </div>
+    <EditorialReviewTools
+      proposal={editorialProposal}
+      saving={editorialSaving}
+      errorMessage={editorialErrorMessage}
+      onSetState={onSetEditorialState}
+    />
   {:else if event}
     <header class="inspector-header">
       <div class="header-top">
@@ -319,81 +326,6 @@
           </p>
         </div>
       </div>
-
-      {#if editorialMode && editorialProposal}
-        {#if publicationSummary}
-          <section class="publication-card" aria-label="Route publication summary">
-            <div>
-              <span class="review-kicker">Route publication</span>
-              <strong>{publicationSummary.included_events.length} included</strong>
-              <span>{publicationSummary.excluded_event_ids.length} excluded</span>
-            </div>
-            <p>
-              {publicationSummary.technical_ready
-                ? 'Technical readiness passed. Warnings remain visible for editorial judgment.'
-                : 'Technical errors prevent publication.'}
-            </p>
-            <button
-              type="button"
-              disabled={!publicationSummary.technical_ready || publicationSaving}
-              on:click={onPublishRoute}
-            >{publicationSaving ? 'Publishing…' : 'Publish exact reviewed route'}</button>
-            {#if publicationSuccess}<p class="review-success" role="status">Published this exact reviewed result.</p>{/if}
-            {#if publicationError}<p class="review-error" role="alert">{publicationError}</p>{/if}
-            {#if publicationSummary.technical_errors.length > 0}
-              <ul class="review-warnings" aria-label="Publication technical errors">
-                {#each publicationSummary.technical_errors as error (error)}<li>{error}</li>{/each}
-              </ul>
-            {/if}
-            {#if publicationSummary.warnings.length > 0}
-              <ul class="review-warnings" aria-label="Publication warnings">
-                {#each publicationSummary.warnings as warning (warning)}<li>{warning}</li>{/each}
-              </ul>
-            {/if}
-          </section>
-        {/if}
-        <section class="editorial-review-card" aria-label="Editorial review">
-          <div>
-            <span class="review-kicker">Editorial review</span>
-            <strong
-              >State: {editorialProposal.editorial_state.replace(
-                '_',
-                ' '
-              )}</strong
-            >
-          </div>
-          <div class="editorial-actions" aria-label="Editorial state actions">
-            {#each ['draft', 'approved', 'dont_use'] as state (state)}
-              <button
-                type="button"
-                class:active={editorialProposal.editorial_state === state}
-                disabled={editorialSaving}
-                aria-pressed={editorialProposal.editorial_state === state}
-                on:click={() => onSetEditorialState(state as EditorialState)}
-                >{state === 'dont_use'
-                  ? 'Don’t use'
-                  : state.charAt(0).toUpperCase() + state.slice(1)}</button
-              >
-            {/each}
-          </div>
-          {#if editorialProposal.agent_recommendation}
-            <p class="review-note">
-              <strong>Agent recommendation:</strong>
-              {editorialProposal.agent_recommendation}
-            </p>
-          {/if}
-          {#if editorialProposal.warnings.length > 0 || editorialProposal.technical_errors.length > 0}
-            <ul class="review-warnings" aria-label="Review warnings">
-              {#each [...editorialProposal.warnings, ...editorialProposal.technical_errors] as warning (warning)}
-                <li>{warning}</li>
-              {/each}
-            </ul>
-          {/if}
-          {#if editorialErrorMessage}<p class="review-error" role="alert">
-              {editorialErrorMessage}
-            </p>{/if}
-        </section>
-      {/if}
 
       <div class="header-controls">
         <div
@@ -730,6 +662,14 @@
         </div>
       {/if}
     </div>
+    {#if editorialMode && editorialProposal}
+      <EditorialReviewTools
+        proposal={editorialProposal}
+        saving={editorialSaving}
+        errorMessage={editorialErrorMessage}
+        onSetState={onSetEditorialState}
+      />
+    {/if}
   {:else}
     <div class="empty">
       <h2>Select an event</h2>
@@ -774,106 +714,6 @@
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
     gap: 0.65rem;
-  }
-
-  .editorial-review-card {
-    display: grid;
-    gap: 0.55rem;
-    padding: 0.65rem;
-    border: 1px solid #c9d8f2;
-    border-radius: 8px;
-    background: #f3f7ff;
-    color: #263b5c;
-    font-size: 0.78rem;
-  }
-
-  .publication-card {
-    display: grid;
-    gap: 0.45rem;
-    padding: 0.65rem;
-    border: 1px solid #d8c58f;
-    border-radius: 8px;
-    background: #fffaf0;
-    color: #4c3b16;
-    font-size: 0.78rem;
-  }
-
-  .publication-card > div:first-child {
-    display: flex;
-    justify-content: space-between;
-    gap: 0.5rem;
-  }
-
-  .publication-card button {
-    padding: 0.45rem 0.6rem;
-    border: 1px solid #8e6d1e;
-    border-radius: 6px;
-    background: #8e6d1e;
-    color: #fff;
-    font: inherit;
-    font-weight: 700;
-  }
-
-  .publication-card button:disabled {
-    cursor: not-allowed;
-    opacity: 0.55;
-  }
-
-  .review-success {
-    color: #176b3a;
-    font-weight: 700;
-  }
-
-  .editorial-review-card > div:first-child {
-    display: flex;
-    justify-content: space-between;
-    gap: 0.5rem;
-  }
-
-  .review-kicker {
-    color: #2454d6;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  .editorial-actions {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 0.3rem;
-  }
-
-  .editorial-actions button {
-    padding: 0.35rem 0.25rem;
-    border: 1px solid #b8c8e4;
-    border-radius: 6px;
-    background: #fff;
-    color: #263b5c;
-    font: inherit;
-    font-weight: 700;
-  }
-
-  .editorial-actions button.active,
-  .editorial-actions button[aria-pressed='true'] {
-    border-color: #2454d6;
-    background: #2454d6;
-    color: #fff;
-  }
-
-  .review-note,
-  .review-error {
-    margin: 0;
-  }
-
-  .review-warnings {
-    margin: 0;
-    padding-left: 1rem;
-    color: #78510c;
-  }
-
-  .review-error {
-    color: #a32626;
-    font-weight: 700;
   }
 
   .inspector-body {

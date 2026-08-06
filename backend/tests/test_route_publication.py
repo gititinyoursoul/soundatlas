@@ -16,7 +16,7 @@ def test_publication_summary_and_publish_filter_exact_review_result(tmp_path: Pa
     content_root = tmp_path / "content"
     seed_dir = tmp_path / "seed"
     write_publication_fixture(content_root, seed_dir)
-    review_repository = RouteReviewRepository(content_root)
+    review_repository = RouteReviewRepository(content_root, seed_dir=seed_dir)
     review = review_repository.refresh(ROUTE_ID)
     review = review_repository.update_state(
         ROUTE_ID,
@@ -53,16 +53,88 @@ def test_publication_summary_and_publish_filter_exact_review_result(tmp_path: Pa
     assert published.json()["published"] is True
     events = json.loads((seed_dir / "events.json").read_text(encoding="utf-8"))["events"]
     assert [event["id"] for event in events] == ["event-one"]
-    assert json.loads(
-        (content_root / ROUTE_ID / "route-publication.json").read_text(encoding="utf-8")
-    )["revision_id"] == review.revision_id
+    assert (
+        json.loads(
+            (content_root / ROUTE_ID / "route-publication.json").read_text(encoding="utf-8")
+        )["revision_id"]
+        == review.revision_id
+    )
+
+
+def test_publication_summary_separates_route_and_included_event_findings(
+    tmp_path: Path,
+) -> None:
+    content_root = tmp_path / "content"
+    seed_dir = tmp_path / "seed"
+    write_publication_fixture(content_root, seed_dir)
+    draft_path = content_root / ROUTE_ID / "complete-draft.json"
+    draft = json.loads(draft_path.read_text(encoding="utf-8"))
+    draft["warnings"] = ["Review the route chronology."]
+    draft["candidates"][0]["risk_notes"] = ["Verify the first event date."]
+    draft["candidates"][1]["risk_notes"] = ["Verify the excluded event date."]
+    draft["events"][1].pop("summary")
+    draft_path.write_text(json.dumps(draft), encoding="utf-8")
+    review_repository = RouteReviewRepository(content_root, seed_dir=seed_dir)
+    review = review_repository.refresh(ROUTE_ID)
+    review = review_repository.update_state(
+        ROUTE_ID,
+        "event-two",
+        RouteReviewStateUpdate(
+            revision_id=review.revision_id,
+            editorial_state="dont_use",
+        ),
+    )
+    repository = RoutePublicationRepository(
+        review_repository,
+        content_root=content_root,
+        seed_dir=seed_dir,
+    )
+
+    summary = repository.summary(ROUTE_ID)
+
+    assert summary.route_warnings == ["Review the route chronology."]
+    assert summary.included_event_warning_count == 1
+    assert summary.included_event_technical_error_count == 0
+    assert summary.warnings == [
+        "Review the route chronology.",
+        "Verify the first event date.",
+    ]
+    assert "Verify the excluded event date." not in summary.warnings
+    assert summary.technical_errors == []
+    assert summary.technical_ready is True
+
+
+def test_publication_summary_keeps_route_only_errors_distinct(tmp_path: Path) -> None:
+    content_root = tmp_path / "content"
+    seed_dir = tmp_path / "seed"
+    write_publication_fixture(content_root, seed_dir)
+    draft_path = content_root / ROUTE_ID / "complete-draft.json"
+    draft = json.loads(draft_path.read_text(encoding="utf-8"))
+    draft["connections"][0]["to_event_id"] = "missing-event"
+    draft_path.write_text(json.dumps(draft), encoding="utf-8")
+    review_repository = RouteReviewRepository(content_root, seed_dir=seed_dir)
+    review_repository.refresh(ROUTE_ID)
+    repository = RoutePublicationRepository(
+        review_repository,
+        content_root=content_root,
+        seed_dir=seed_dir,
+    )
+
+    summary = repository.summary(ROUTE_ID)
+
+    assert summary.included_event_technical_error_count == 0
+    assert summary.route_technical_errors == [
+        "Connection 'event-one-to-event-two' references inactive or missing events: missing-event."
+    ]
+    assert summary.technical_errors == summary.route_technical_errors
+    assert summary.technical_ready is False
 
 
 def test_publication_rejects_stale_revision_without_writing(tmp_path: Path) -> None:
     content_root = tmp_path / "content"
     seed_dir = tmp_path / "seed"
     write_publication_fixture(content_root, seed_dir)
-    review_repository = RouteReviewRepository(content_root)
+    review_repository = RouteReviewRepository(content_root, seed_dir=seed_dir)
     first = review_repository.refresh(ROUTE_ID)
     second = review_repository.update_state(
         ROUTE_ID,
@@ -89,15 +161,49 @@ def test_publication_rejects_stale_revision_without_writing(tmp_path: Path) -> N
         json={"revision_id": first.revision_id},
     )
     assert response.status_code == 409
-    assert json.loads((seed_dir / "events.json").read_text(encoding="utf-8"))["events"][0]["id"] == "event-two"
+    assert (
+        json.loads((seed_dir / "events.json").read_text(encoding="utf-8"))["events"][0]["id"]
+        == "event-two"
+    )
     assert second.revision_id != first.revision_id
+
+
+def test_publish_uses_the_bound_review_bundle_not_framing_files(tmp_path: Path) -> None:
+    content_root = tmp_path / "content"
+    seed_dir = tmp_path / "seed"
+    write_publication_fixture(content_root, seed_dir)
+    review_repository = RouteReviewRepository(content_root, seed_dir=seed_dir)
+    review = review_repository.refresh(ROUTE_ID)
+    route_dir = content_root / ROUTE_ID
+    (route_dir / "event-framing.json").write_text(
+        json.dumps({"events": [event("event-one", "place-one", "Wrong framing title")]}),
+        encoding="utf-8",
+    )
+    (route_dir / "connection-framing.json").write_text(
+        json.dumps({"connections": []}),
+        encoding="utf-8",
+    )
+    publication_repository = RoutePublicationRepository(
+        review_repository,
+        content_root=content_root,
+        seed_dir=seed_dir,
+    )
+
+    publication_repository.publish(ROUTE_ID, review.revision_id)
+
+    events = json.loads((seed_dir / "events.json").read_text(encoding="utf-8"))["events"]
+    connections = json.loads((seed_dir / "connections.json").read_text(encoding="utf-8"))[
+        "connections"
+    ]
+    assert [item["title"] for item in events] == ["First event", "Second event"]
+    assert [item["id"] for item in connections] == ["event-one-to-event-two"]
 
 
 def test_publication_failure_restores_all_previous_files(tmp_path: Path, monkeypatch) -> None:
     content_root = tmp_path / "content"
     seed_dir = tmp_path / "seed"
     write_publication_fixture(content_root, seed_dir)
-    review_repository = RouteReviewRepository(content_root)
+    review_repository = RouteReviewRepository(content_root, seed_dir=seed_dir)
     review = review_repository.refresh(ROUTE_ID)
     publication_repository = RoutePublicationRepository(
         review_repository,
@@ -146,6 +252,25 @@ def write_publication_fixture(content_root: Path, seed_dir: Path) -> None:
         json.dumps({"_meta": {"route_id": ROUTE_ID}, "candidates": candidates}),
         encoding="utf-8",
     )
+    (route_dir / "complete-draft.json").write_text(
+        json.dumps(
+            {
+                "_meta": {"route_id": ROUTE_ID},
+                "candidates": candidates,
+                "events": [
+                    event("event-one", "place-one", "First event"),
+                    event("event-two", "place-two", "Second event"),
+                ],
+                "places": [
+                    {"decision": "reuse", "place_id": "place-one"},
+                    {"decision": "reuse", "place_id": "place-two"},
+                ],
+                "connections": [connection()],
+                "warnings": [],
+            }
+        ),
+        encoding="utf-8",
+    )
     (route_dir / "event-framing.json").write_text(
         json.dumps(
             {
@@ -168,7 +293,9 @@ def write_publication_fixture(content_root: Path, seed_dir: Path) -> None:
         ),
         encoding="utf-8",
     )
-    (route_dir / "connection-framing.json").write_text(json.dumps({"connections": []}), encoding="utf-8")
+    (route_dir / "connection-framing.json").write_text(
+        json.dumps({"connections": []}), encoding="utf-8"
+    )
     write_json(seed_dir / "routes.json", {"routes": [route()]})
     write_json(
         seed_dir / "places.json",
@@ -208,6 +335,17 @@ def event(event_id: str, place_id: str, title: str) -> dict[str, object]:
         "source_urls": [],
         "media_links": [],
         "image_links": [],
+    }
+
+
+def connection() -> dict[str, object]:
+    return {
+        "id": "event-one-to-event-two",
+        "from_event_id": "event-one",
+        "to_event_id": "event-two",
+        "type": "influence",
+        "summary": "The first event informs the second.",
+        "review_status": "draft",
     }
 
 

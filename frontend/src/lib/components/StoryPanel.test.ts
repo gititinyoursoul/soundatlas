@@ -59,10 +59,15 @@ describe('StoryPanel spatial access', () => {
     expect(body).toContain('Practice circulates toward the area.');
   });
 
-  it('renders the exact-route publication summary in editorial mode', () => {
+  it('renders event review controls after the exact reader-facing story', () => {
+    const event = makeEvent({
+      id: 'review-event',
+      title: 'Exact generated title',
+      summary: 'Exact generated summary'
+    });
     const { body } = render(StoryPanel, {
       props: {
-        event: makeEvent({ id: 'review-event' }),
+        event,
         place: makePlace({ id: 'review-place' }),
         route: makeRoute({ id: 'birth-of-hip-hop' }),
         editorialMode: true,
@@ -76,33 +81,44 @@ describe('StoryPanel spatial access', () => {
           warnings: ['Review the source.'],
           technical_errors: [],
           material_signature: 'signature',
-          proposal: { working_title: 'Review event' }
-        },
-        publicationSummary: {
-          route_id: 'birth-of-hip-hop',
-          revision_id: 'revision-1',
-          source: 'event-list.json',
-          included_events: [
-            {
-              candidate_id: 'review-event',
-              title: 'Review event',
-              editorial_state: 'draft',
-              included: true
-            }
-          ],
-          excluded_event_ids: ['excluded-event'],
-          warnings: ['Route warning.'],
-          technical_errors: [],
-          technical_ready: true,
-          published_revision_id: null
+          proposal: { working_title: 'Planning-only title' },
+          event
         }
       }
     });
 
-    expect(body).toContain('Route publication');
-    expect(body).toContain('1 included');
-    expect(body).toContain('1 excluded');
-    expect(body).toContain('Publish exact reviewed route');
-    expect(body).toContain('Route warning.');
+    expect(body).toContain('Exact generated title');
+    expect(body).toContain('Exact generated summary');
+    expect(body.indexOf('Exact generated summary')).toBeLessThan(
+      body.indexOf('Editorial review')
+    );
+    expect(body).not.toContain('Planning-only title');
+    expect(body).not.toContain('Publish exact reviewed route');
+  });
+
+  it('shows an explicit error when reader-facing event content is missing', () => {
+    const { body } = render(StoryPanel, {
+      props: {
+        editorialMode: true,
+        editorialContentError: 'summary: Field required',
+        editorialProposal: {
+          candidate_id: 'broken-event',
+          editorial_state: 'draft',
+          active: true,
+          included: false,
+          renderable: false,
+          agent_recommendation: null,
+          warnings: [],
+          technical_errors: ['summary: Field required'],
+          material_signature: 'signature',
+          proposal: {},
+          event: null
+        }
+      }
+    });
+
+    expect(body).toContain('Reader-facing story incomplete');
+    expect(body).toContain('summary: Field required');
+    expect(body).toContain('Editorial review');
   });
 });

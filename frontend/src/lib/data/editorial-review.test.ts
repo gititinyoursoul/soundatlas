@@ -1,7 +1,32 @@
 import { describe, expect, it } from 'vitest';
-import { makePlace } from '$lib/test/fixtures';
-import type { RouteReviewResult } from '$lib/types/soundatlas';
+import { makeEvent } from '$lib/test/fixtures';
+import type { RouteReviewProposal, RouteReviewResult } from '$lib/types/soundatlas';
 import { projectRouteReview } from './editorial-review';
+
+function makeProposal(
+  overrides: Partial<RouteReviewProposal> = {}
+): RouteReviewProposal {
+  return {
+    candidate_id: 'sedgwick-party',
+    editorial_state: 'draft',
+    active: true,
+    included: true,
+    renderable: true,
+    agent_recommendation: 'Keep',
+    warnings: [],
+    technical_errors: [],
+    material_signature: 'signature',
+    proposal: { working_title: 'Planning-only title', years: 'around 1973' },
+    event: makeEvent({
+      id: 'sedgwick-party',
+      title: 'Back-to-school party at 1520 Sedgwick Avenue',
+      summary: 'The exact generated reader-facing summary.',
+      significance: 'The exact generated significance.',
+      source_urls: ['https://example.com/source']
+    }),
+    ...overrides
+  };
+}
 
 function makeReview(
   overrides: Partial<RouteReviewResult> = {}
@@ -9,98 +34,64 @@ function makeReview(
   return {
     route_id: 'birth-of-hip-hop',
     revision_id: 'revision-1',
-    source: 'event-list.json',
+    source: 'complete-draft.json',
     proposals: [],
     dormant_proposals: [],
+    places: [],
+    connections: [],
     warnings: [],
+    technical_errors: [],
     technical_ready: true,
     ...overrides
   };
 }
 
 describe('editorial review projection', () => {
-  it('maps a stable place id and a year range into a temporary event', () => {
-    const review = makeReview({
-      proposals: [
-        {
-          candidate_id: 'sedgwick-party',
-          editorial_state: 'draft',
-          active: true,
-          included: true,
-          renderable: true,
-          agent_recommendation: 'Keep',
-          warnings: [],
-          technical_errors: [],
-          material_signature: 'signature',
-          proposal: {
-            working_title: 'Sedgwick party',
-            years: '1973',
-            place_id: 'sedgwick'
-          }
-        }
-      ]
-    });
+  it('passes the generated event through without rebuilding it from planning fields', () => {
+    const proposal = makeProposal();
+    const [projection] = projectRouteReview(
+      makeReview({ proposals: [proposal] })
+    );
 
-    const [projection] = projectRouteReview(review, [
-      makePlace({ id: 'sedgwick', name: '1520 Sedgwick Avenue' })
-    ]);
-    expect(projection.event.id).toBe('sedgwick-party');
-    expect(projection.event.place_ids).toEqual(['sedgwick']);
-    expect(projection.event.year_start).toBe(1973);
+    expect(projection.event).toBe(proposal.event);
+    expect(projection.event?.title).toBe(
+      'Back-to-school party at 1520 Sedgwick Avenue'
+    );
+    expect(projection.event?.summary).toBe(
+      'The exact generated reader-facing summary.'
+    );
     expect(projection.renderOnMap).toBe(true);
     expect(projection.renderOnTimeline).toBe(true);
   });
 
-  it('keeps ambiguous places list-only and preserves warnings', () => {
-    const review = makeReview({
-      proposals: [
-        {
-          candidate_id: 'bronx-context',
-          editorial_state: 'draft',
-          active: true,
-          included: true,
-          renderable: true,
-          agent_recommendation: null,
-          warnings: ['Needs place review'],
-          technical_errors: [],
-          material_signature: 'signature',
-          proposal: {
-            working_title: 'Bronx context',
-            years: '1970s',
-            place: 'Bronx'
-          }
-        }
-      ]
-    });
+  it('keeps a missing generated story list-only and exposes its technical error', () => {
+    const [projection] = projectRouteReview(
+      makeReview({
+        proposals: [
+          makeProposal({
+            event: null,
+            renderable: false,
+            technical_errors: ['Generated event is invalid.']
+          })
+        ]
+      })
+    );
 
-    const [projection] = projectRouteReview(review, [
-      makePlace({ id: 'bronx-a', name: 'Bronx' }),
-      makePlace({ id: 'bronx-b', name: 'Bronx' })
-    ]);
-    expect(projection.event.place_ids).toEqual([]);
+    expect(projection.event).toBeNull();
     expect(projection.renderOnMap).toBe(false);
-    expect(projection.renderOnTimeline).toBe(true);
-    expect(projection.warnings).toContain('Needs place review');
+    expect(projection.renderOnTimeline).toBe(false);
+    expect(projection.warnings).toContain('Generated event is invalid.');
   });
 
-  it('does not project excluded candidates into map or timeline', () => {
-    const proposal = {
-      candidate_id: 'excluded',
-      editorial_state: 'dont_use' as const,
-      active: true,
-      included: false,
-      renderable: true,
-      agent_recommendation: null,
-      warnings: [],
-      technical_errors: [],
-      material_signature: 'signature',
-      proposal: { working_title: 'Excluded', years: '1973', place_id: 'place' }
-    };
+  it('does not project excluded candidates into the map or timeline', () => {
     const [projection] = projectRouteReview(
-      makeReview({ proposals: [proposal] }),
-      [makePlace({ id: 'place' })]
+      makeReview({
+        proposals: [
+          makeProposal({ editorial_state: 'dont_use', included: false })
+        ]
+      })
     );
-    expect(projection).toBeDefined();
+
     expect(projection.renderOnMap).toBe(false);
     expect(projection.renderOnTimeline).toBe(false);
   });

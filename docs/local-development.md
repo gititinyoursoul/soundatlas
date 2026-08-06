@@ -64,7 +64,14 @@ route review through the existing map, timeline, navigation drawer, and
 StoryPanel, start the frontend with `VITE_EDITORIAL_MODE=true` while using the
 API data path. The flag is opt-in and defaults to public mode; static data mode
 does not expose editorial controls. Review state changes are sent to the
-backend review API and require its current revision.
+backend review API and require its current revision. Editorial mode renders the
+seed-shaped event, place, and connection content bound to that revision through
+the same StoryPanel used publicly; planning fields and warnings remain in the
+separate event review-tools area. Route publication is available from the
+navigation drawer's Route Review panel. That panel summarizes included-event
+warning and blocking-error counts; full event findings stay with the selected
+event, while full route-only blocking errors and collapsed route-level warnings
+remain in Route Review.
 
 ## Checks
 

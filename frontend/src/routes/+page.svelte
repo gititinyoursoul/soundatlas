@@ -78,15 +78,24 @@
   $: publicRouteEvents = [...filterEvents(events, selectedRouteId)].sort(
     compareEvents
   );
+  $: editorialEvents = editorialProjections.flatMap((item) =>
+    item.event ? [item.event] : []
+  );
+  $: activePlaces = IS_EDITORIAL_MODE
+    ? (routeReview?.places.map((item) => item.place) ?? [])
+    : places;
+  $: activeConnections = IS_EDITORIAL_MODE
+    ? (routeReview?.connections ?? [])
+    : connections;
   $: routeEvents = IS_EDITORIAL_MODE
     ? editorialProjections
-        .filter((item) => item.renderOnTimeline)
-        .map((item) => item.event)
+        .filter((item) => item.renderOnTimeline && item.event)
+        .flatMap((item) => (item.event ? [item.event] : []))
     : publicRouteEvents;
   $: mapEvents = IS_EDITORIAL_MODE
     ? editorialProjections
-        .filter((item) => item.renderOnMap)
-        .map((item) => item.event)
+        .filter((item) => item.renderOnMap && item.event)
+        .flatMap((item) => (item.event ? [item.event] : []))
     : publicRouteEvents;
   $: reviewProposals = routeReview?.proposals ?? [];
   $: selectedProjection =
@@ -146,6 +155,12 @@
     ? (selectedProjection?.event ?? null)
     : (routeEvents.find((event) => event.id === activeSelectedEventId) ?? null);
   $: selectedReviewProposal = selectedProjection?.proposal ?? null;
+  $: editorialContentError =
+    selectedReviewProposal &&
+    (!selectedReviewProposal.event || !selectedReviewProposal.renderable)
+      ? selectedReviewProposal.technical_errors.join(' ') ||
+        'The generated event is missing required reader-facing story content.'
+      : null;
   $: activeSelectedPlaceId = resolveFocusedPlaceId(
     selectedEvent,
     selectedPlaceId
@@ -159,7 +174,7 @@
     selectedEventIndex >= 0 && selectedEventIndex < routeEvents.length - 1
       ? routeEvents[selectedEventIndex + 1]
       : null;
-  $: selectedEventPlaces = getEventPlaces(selectedEvent, places);
+  $: selectedEventPlaces = getEventPlaces(selectedEvent, activePlaces);
   $: selectedPlace =
     selectedEventPlaces.find((place) => place.id === activeSelectedPlaceId) ??
     null;
@@ -187,9 +202,9 @@
   $: selectedConnections = selectedEvent
     ? buildStoryConnectionItems(
         selectedEvent,
-        connections,
-        events,
-        places,
+        activeConnections,
+        IS_EDITORIAL_MODE ? editorialEvents : events,
+        activePlaces,
         routes
       )
     : [];
@@ -211,11 +226,7 @@
         ]);
         routeReview = review;
         publicationSummary = publication;
-        editorialProjections = projectRouteReview(
-          routeReview,
-          data.places,
-          initialRouteId
-        );
+        editorialProjections = projectRouteReview(routeReview);
       }
 
       if (!IS_EDITORIAL_MODE) {
@@ -234,8 +245,11 @@
       } else {
         selectedEventId = routeReview?.proposals[0]?.candidate_id ?? null;
       }
-      const initialEvent =
-        data.events.find((event) => event.id === selectedEventId) ?? null;
+      const initialEvent = IS_EDITORIAL_MODE
+        ? (editorialProjections.find(
+            (item) => item.proposal.candidate_id === selectedEventId
+          )?.event ?? null)
+        : (data.events.find((event) => event.id === selectedEventId) ?? null);
       selectedPlaceId = resolveFocusedPlaceId(initialEvent, selectedPlaceId);
     } catch (error) {
       const message =
@@ -258,7 +272,7 @@
     }
 
     const nextEvent = IS_EDITORIAL_MODE
-      ? (editorialProjections.find((item) => item.event.id === eventId)
+      ? (editorialProjections.find((item) => item.event?.id === eventId)
           ?.event ?? null)
       : (events.find((event) => event.id === eventId) ?? null);
     selectedEventId = eventId;
@@ -269,7 +283,7 @@
 
   function selectLocation(eventId: string, placeId: string): void {
     const event = IS_EDITORIAL_MODE
-      ? editorialProjections.find((item) => item.event.id === eventId)?.event
+      ? editorialProjections.find((item) => item.event?.id === eventId)?.event
       : events.find((item) => item.id === eventId);
     if (!event || !event.place_ids.includes(placeId)) {
       return;
@@ -316,7 +330,7 @@
       if (selectedRouteId !== routeId) return;
       routeReview = review;
       publicationSummary = await loadRoutePublication(routeId);
-      editorialProjections = projectRouteReview(review, places, routeId);
+      editorialProjections = projectRouteReview(review);
       selectedEventId = review.proposals[0]?.candidate_id ?? null;
     } catch (error) {
       if (selectedRouteId !== routeId) return;
@@ -345,11 +359,7 @@
         editorialState
       );
       routeReview = updated;
-      editorialProjections = projectRouteReview(
-        updated,
-        places,
-        selectedRouteId
-      );
+      editorialProjections = projectRouteReview(updated);
       publicationSummary = await loadRoutePublication(selectedRouteId);
     } catch (error) {
       editorialActionError =
@@ -590,6 +600,10 @@
     editorialProposalCount={reviewProposals.length}
     editorialProposals={reviewProposals}
     {editorialErrorMessage}
+    {publicationSummary}
+    {publicationSaving}
+    {publicationError}
+    {publicationSuccess}
     {isLoading}
     {errorMessage}
     onClose={closeNavigation}
@@ -598,6 +612,7 @@
     onSelectRoute={selectRoute}
     onSelectReviewItem={selectReviewItem}
     onSelectEditorialProposal={(proposal) => selectEvent(proposal.candidate_id)}
+    onPublishRoute={publishSelectedRoute}
     onReviewQueueItem={reviewQueueItem}
   />
 
@@ -673,7 +688,7 @@
         <section class="map-region" tabindex="-1" aria-label="Map exploration">
           <MapView
             events={mapEvents}
-            {places}
+            places={activePlaces}
             {routes}
             {selectedRouteId}
             selectedEventId={activeSelectedEventId}
@@ -734,12 +749,8 @@
         editorialProposal={selectedReviewProposal}
         editorialSaving={editorialSavingCandidateId ===
           selectedReviewProposal?.candidate_id}
-    editorialErrorMessage={editorialActionError}
-    {publicationSummary}
-    {publicationSaving}
-    {publicationError}
-    {publicationSuccess}
-    onPublishRoute={publishSelectedRoute}
+        editorialErrorMessage={editorialActionError}
+        {editorialContentError}
         onSetEditorialState={(state) =>
           selectedReviewProposal &&
           setEditorialState(selectedReviewProposal, state)}
