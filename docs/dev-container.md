@@ -236,20 +236,30 @@ The `workspace` service uses these mounts:
 - read-only host bind mount: `../secrets/soundatlas/github-agent.env` to
   `/run/secrets/github-agent.env`
 
-Because `CODEX_HOME` points at the `codex_home` volume, Codex can keep its
-container-local SQLite state and writable `config.toml` on a Linux filesystem.
-During post-create setup, if `/mnt/host-codex` is present, host `auth.json` is
-copied into that volume and host `config.toml` is copied only if the container
-does not already have one. The post-create step then applies SoundAtlas
-dev-container defaults to the container-local config: `/workspace` is trusted,
-Codex starts in `workspace-write` with `on-request` approvals, cached web
-search is used, and workspace shell commands can use network access. Network
-egress is still bounded by the container firewall described below. The
-credentials are not copied into the repository or Docker image. The workspace
-image installs the Codex CLI, so terminal sessions inside the container use the
-seeded login cache and configuration by default when the host `.codex`
-directory exists. Override the host path with `SOUNDATLAS_HOST_CODEX_HOME`
-when needed.
+Because `CODEX_HOME` points at the `codex_home` volume, Codex keeps its
+container-local SQLite state and manually editable `config.toml` on a Linux
+filesystem. The `.codex` directory is owned by `soundatlas` with mode `0700`;
+present `config.toml` and `auth.json` files have mode `0600`.
+
+Post-create performs a one-time bootstrap only when the corresponding
+container-local file is absent: it may seed `auth.json` and `config.toml` from
+the read-only host `.codex` mount, then establishes the SoundAtlas defaults for
+the initial config. Later post-create runs preserve existing config contents;
+they do not normalize, remove, or replace user settings. The initial defaults
+trust `/workspace`, use `workspace-write` with `on-request` approvals, enable
+workspace shell network access, and allow Codex writes only to `/workspace`,
+`/home/soundatlas/.cache/uv`, and `/home/soundatlas/.npm`.
+
+The root container entrypoint may still prepare `/home/soundatlas/.codex` so
+that `soundatlas` owns the persistent Docker volume. That operating-system
+permission is distinct from Codex's sandbox writable roots: Codex does not
+receive normal workspace-sandbox write access to its own configuration
+directory. Network egress remains bounded by the container firewall described
+below. Credentials are not copied into the repository or Docker image. The
+workspace image installs the Codex CLI, so terminal sessions inside the
+container use the seeded login cache and configuration by default when the host
+`.codex` directory exists. Override the host path with
+`SOUNDATLAS_HOST_CODEX_HOME` when needed.
 The workspace intentionally shares dependency/cache volumes with the app
 services so agent-run checks and running services see the same installed
 frontend packages and uv cache.

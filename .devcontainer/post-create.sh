@@ -2,29 +2,35 @@
 set -eu
 
 CODEX_HOME="${CODEX_HOME:-/home/soundatlas/.codex}"
-HOST_CODEX_HOME="/mnt/host-codex"
+HOST_CODEX_HOME="${HOST_CODEX_HOME:-/mnt/host-codex}"
 CODEX_CONFIG="$CODEX_HOME/config.toml"
 
+umask 077
 mkdir -p "$CODEX_HOME"
+chmod 0700 "$CODEX_HOME"
 
-if [ -d "$HOST_CODEX_HOME" ]; then
-  if [ -f "$HOST_CODEX_HOME/auth.json" ]; then
-    cp "$HOST_CODEX_HOME/auth.json" "$CODEX_HOME/auth.json"
-    chmod 0600 "$CODEX_HOME/auth.json"
-  fi
-
-  if [ -f "$HOST_CODEX_HOME/config.toml" ] && [ ! -f "$CODEX_CONFIG" ]; then
-    cp "$HOST_CODEX_HOME/config.toml" "$CODEX_CONFIG"
-    chmod 0600 "$CODEX_CONFIG"
-  fi
+if [ -f "$CODEX_HOME/auth.json" ]; then
+  chmod 0600 "$CODEX_HOME/auth.json"
 fi
 
-if [ ! -f "$CODEX_CONFIG" ]; then
-  : > "$CODEX_CONFIG"
+if [ -f "$CODEX_CONFIG" ]; then
   chmod 0600 "$CODEX_CONFIG"
 fi
 
-python3 - "$CODEX_CONFIG" <<'PY'
+if [ ! -e "$CODEX_HOME/auth.json" ] && [ -f "$HOST_CODEX_HOME/auth.json" ]; then
+  cp "$HOST_CODEX_HOME/auth.json" "$CODEX_HOME/auth.json"
+  chmod 0600 "$CODEX_HOME/auth.json"
+fi
+
+if [ ! -e "$CODEX_CONFIG" ]; then
+  if [ -f "$HOST_CODEX_HOME/config.toml" ]; then
+    cp "$HOST_CODEX_HOME/config.toml" "$CODEX_CONFIG"
+  else
+    : > "$CODEX_CONFIG"
+  fi
+  chmod 0600 "$CODEX_CONFIG"
+
+  python3 - "$CODEX_CONFIG" <<'PY'
 from pathlib import Path
 import re
 import sys
@@ -96,7 +102,6 @@ writable_roots = [
   "/workspace",
   "/home/soundatlas/.cache/uv",
   "/home/soundatlas/.npm",
-  "/home/soundatlas/.codex",
 ]
 
 [projects."/workspace"]
@@ -130,6 +135,7 @@ parts.append(table_block)
 new_text = "\n\n".join(parts) + "\n"
 path.write_text(new_text, encoding="utf-8")
 PY
+fi
 
 git config --global --replace-all safe.directory /workspace
 git config --global credential.useHttpPath true
