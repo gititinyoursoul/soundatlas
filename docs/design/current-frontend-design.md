@@ -41,7 +41,7 @@ This means:
 The current main screen is organized around:
 
 - Compact app header: product name, geographic/time scope, active route title, route years, short route context, and API/status summary
-- Desktop overlay navigation drawer: icon trigger in the header, expanded/collapsed states, route switching, admin media/image review queue, direct review actions, and dim overlay behavior
+- Desktop overlay navigation drawer: icon trigger in the header, expanded/collapsed states, route switching, compact editorial route review, admin media/image review queue, direct review actions, and dim overlay behavior
 - Map: primary spatial exploration surface
 - Timeline: route sequence and selected event range
 - Event inspector: selected event details, navigation, sources, related events, and media
@@ -101,7 +101,7 @@ Owns data loading, shared selection state, derived selected event/place/route st
 
 ### `NavigationDrawer`
 
-Provides the desktop-only overlay drawer for route switching and the current admin media/image review workflow. It supports expanded and collapsed icon-only states, a real-data route list subview, a draft media/image review queue with direct review/reject actions, dim overlay close behavior, `Esc` close behavior, focus return, active item state, and loading/error/empty patterns.
+Provides the desktop-only overlay drawer for route switching and the current editorial and admin review workflows. It supports expanded and collapsed icon-only states, a real-data route list subview, a compact route-readiness and event-finding review, a draft media/image review queue with direct review/reject actions, dim overlay close behavior, `Esc` close behavior, focus return, active item state, and loading/error/empty patterns.
 
 ### `Icon`
 
@@ -169,7 +169,7 @@ Embeds playable media links when available. The active admin review workflow now
 - If the horizontal event-card strip remains, selected cards should stay centered so the fallback does not feel detached from the active selection.
 - Map selected-event context is split between the compact route header, selected marker/place chrome, timeline, and inspector; it may still need a better single focal cue.
 - Mobile behavior has an implemented ordering strategy, but it needs review against the current design baseline and screenshots.
-- The drawer is currently admin-oriented; a later public mode must hide or gate media/image review actions.
+- Public mode must continue to hide or gate editorial and media/image review actions.
 - Public-facing image/media browsing still needs a clearer behavior definition for fixed preview dimensions, long media lists, lazy loading, and focused image/video inspection.
 
 ## Open Decisions

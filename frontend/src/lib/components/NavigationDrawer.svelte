@@ -87,6 +87,11 @@
     showEditorialReview,
     editorialProposalCount
   );
+  $: reviewModeLabel = showEditorialReview
+    ? 'Editorial mode'
+    : showAdminReview
+      ? 'Admin review'
+      : 'Public explorer';
   $: if (open !== lastHandledOpen) {
     lastHandledOpen = open;
     if (open) {
@@ -130,7 +135,7 @@
         items: [
           {
             id: 'editorial-review',
-            label: 'Route Review',
+            label: 'Route review',
             icon: 'sparkles',
             badge: proposalCount > 0 ? String(proposalCount) : undefined
           }
@@ -424,18 +429,16 @@
               <span>Back to navigation</span>
             </button>
             <div class="panel-heading">
-              <span>Editorial</span>
               <h2
                 id="drawer-editorial-heading"
                 bind:this={panelHeadingElement}
                 tabindex="-1"
               >
-                Route Review
+                Route review
               </h2>
               <p>
-                {editorialProposalCount} candidate{editorialProposalCount === 1
-                  ? ''
-                  : 's'}
+                {editorialProposalCount}
+                {editorialProposalCount === 1 ? 'event' : 'events'}
               </p>
             </div>
             <RoutePublicationPanel
@@ -636,17 +639,13 @@
         {#if variant === 'expanded'}
           <div class="session">
             <span>Mode</span>
-            <strong
-              >{showAdminReview ? 'Admin review' : 'Public explorer'}</strong
-            >
+            <strong>{reviewModeLabel}</strong>
           </div>
         {:else}
           <span
             class="access-mark"
-            aria-label={showAdminReview
-              ? 'Admin review mode'
-              : 'Public explorer mode'}
-            data-tooltip={showAdminReview ? 'Admin review' : 'Public explorer'}
+            aria-label={reviewModeLabel}
+            data-tooltip={reviewModeLabel}
           >
             <Icon name="circle" />
           </span>

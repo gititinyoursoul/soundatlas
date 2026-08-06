@@ -8,14 +8,19 @@
   export let saving = false;
   export let errorMessage: string | null = null;
   export let onSetState: (state: EditorialState) => void = () => {};
+
+  function countLabel(count: number, singular: string, plural: string): string {
+    return `${count} ${count === 1 ? singular : plural}`;
+  }
+
+  function sentenceCase(value: string): string {
+    return value.charAt(0).toUpperCase() + value.slice(1);
+  }
 </script>
 
-<section class="review-tools" aria-label="Editorial review tools">
-  <section class="editorial-review-card" aria-label="Editorial review">
-    <div>
-      <span class="review-kicker">Editorial review</span>
-      <strong>State: {proposal.editorial_state.replace('_', ' ')}</strong>
-    </div>
+<section class="review-tools" aria-labelledby="event-review-heading">
+  <div class="review-heading">
+    <h3 id="event-review-heading">Event review</h3>
     <div class="editorial-actions" aria-label="Editorial state actions">
       {#each ['draft', 'approved', 'dont_use'] as state (state)}
         <button
@@ -30,78 +35,69 @@
         >
       {/each}
     </div>
-    {#if proposal.agent_recommendation}
-      <section
-        class="finding-group recommendation"
-        aria-labelledby="agent-recommendation-heading"
-      >
-        <h3 id="agent-recommendation-heading">Agent recommendation</h3>
-        <p>{proposal.agent_recommendation}</p>
-      </section>
-    {/if}
-    {#if proposal.warnings.length > 0}
-      <section
-        class="finding-group warnings"
-        aria-labelledby="event-warnings-heading"
-      >
-        <h3 id="event-warnings-heading">
-          Editorial warnings ({proposal.warnings.length})
-        </h3>
-        <ul>
-          {#each proposal.warnings as warning (warning)}
-            <li><strong>Warning</strong><span>{warning}</span></li>
-          {/each}
-        </ul>
-      </section>
-    {/if}
-    {#if proposal.technical_errors.length > 0}
-      <section
-        class="finding-group errors"
-        aria-labelledby="event-errors-heading"
-      >
-        <h3 id="event-errors-heading">
-          Technical errors ({proposal.technical_errors.length})
-        </h3>
-        <ul>
-          {#each proposal.technical_errors as error (error)}
-            <li><strong>Blocking error</strong><span>{error}</span></li>
-          {/each}
-        </ul>
-      </section>
-    {/if}
-    {#if errorMessage}<p class="review-error" role="alert">
-        {errorMessage}
-      </p>{/if}
-  </section>
+  </div>
+  {#if proposal.agent_recommendation}
+    <p class="recommendation">
+      <strong>Suggested:</strong>
+      {sentenceCase(proposal.agent_recommendation)}
+    </p>
+  {/if}
+  {#if proposal.warnings.length > 0}
+    <section
+      class="finding-group warnings"
+      aria-labelledby="event-warnings-heading"
+    >
+      <h4 id="event-warnings-heading">
+        {countLabel(proposal.warnings.length, 'warning', 'warnings')}
+      </h4>
+      <ul>
+        {#each proposal.warnings as warning (warning)}
+          <li>{warning}</li>
+        {/each}
+      </ul>
+    </section>
+  {/if}
+  {#if proposal.technical_errors.length > 0}
+    <section
+      class="finding-group errors"
+      aria-labelledby="event-errors-heading"
+    >
+      <h4 id="event-errors-heading">
+        {countLabel(
+          proposal.technical_errors.length,
+          'blocking error',
+          'blocking errors'
+        )}
+      </h4>
+      <ul>
+        {#each proposal.technical_errors as error (error)}
+          <li>{error}</li>
+        {/each}
+      </ul>
+    </section>
+  {/if}
+  {#if errorMessage}<p class="review-error" role="alert">
+      {errorMessage}
+    </p>{/if}
 </section>
 
 <style>
   .review-tools {
     display: grid;
-    gap: 0.65rem;
-    padding: 0.9rem 1rem 1rem;
+    gap: 0.55rem;
+    padding: 0.7rem 1rem 0.8rem;
     border-top: 1px solid #d9e0e7;
     background: #f6f8fa;
-  }
-
-  .editorial-review-card {
-    display: grid;
-    gap: 0.55rem;
-    padding: 0.65rem;
-    border-radius: 8px;
+    color: #314151;
     font-size: 0.78rem;
   }
-
-  .editorial-review-card {
-    border: 1px solid #c9d8f2;
-    background: #f3f7ff;
-    color: #263b5c;
+  .review-heading {
+    display: grid;
+    gap: 0.4rem;
   }
-
-  .editorial-review-card > div:first-child {
-    display: flex;
-    justify-content: space-between;
-    gap: 0.5rem;
+  .review-heading h3 {
+    margin: 0;
+    font-size: 0.9rem;
   }
 
   button:disabled {
@@ -111,19 +107,13 @@
   p {
     margin: 0;
   }
-  .review-kicker {
-    color: #2454d6;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
   .editorial-actions {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0.3rem;
   }
   .editorial-actions button {
-    padding: 0.35rem 0.25rem;
+    padding: 0.3rem 0.25rem;
     border: 1px solid #b8c8e4;
     border-radius: 6px;
     background: #fff;
@@ -138,21 +128,16 @@
   }
   .finding-group {
     display: grid;
-    gap: 0.35rem;
-    padding: 0.55rem;
-    border: 1px solid #c9d8f2;
-    border-radius: 6px;
-    background: #fff;
+    gap: 0.3rem;
+    padding-top: 0.45rem;
+    border-top: 1px solid currentColor;
   }
-  .finding-group h3,
-  .finding-group p,
+  .finding-group h4,
   .finding-group ul {
     margin: 0;
   }
-  .finding-group h3 {
+  .finding-group h4 {
     font-size: 0.74rem;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
   }
   .finding-group ul {
     display: grid;
@@ -161,16 +146,9 @@
     list-style: none;
   }
   .finding-group li {
-    display: grid;
-    gap: 0.12rem;
-    padding: 0.42rem;
-    border-left: 0.22rem solid currentColor;
-    background: #fff;
-  }
-  .finding-group li strong {
-    font-size: 0.68rem;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
+    padding: 0.3rem 0 0.3rem 0.55rem;
+    border-left: 0.18rem solid currentColor;
+    line-height: 1.35;
   }
   .finding-group.warnings {
     border-color: #e6d9b5;
@@ -183,5 +161,8 @@
   .review-error {
     color: #a32626;
     font-weight: 700;
+  }
+  .recommendation strong {
+    color: #2454d6;
   }
 </style>

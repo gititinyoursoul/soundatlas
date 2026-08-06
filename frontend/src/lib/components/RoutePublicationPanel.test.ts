@@ -31,15 +31,18 @@ describe('RoutePublicationPanel', () => {
       }
     });
 
-    expect(body).toContain('Route action');
-    expect(body).toContain('Ready to publish');
-    expect(body).toContain('Included events');
-    expect(body).toContain('Excluded events');
-    expect(body).toContain('Event warnings');
-    expect(body).toContain('Route editorial warnings (1)');
+    expect(body).toContain('Route readiness');
+    expect(body).toContain('Technically ready');
+    expect(body).toContain('1 included · 1 excluded');
+    expect(body).toContain('1 event warning');
+    expect(body).toContain('1 route warning');
     expect(body).toContain('Check the route chronology.');
     expect(body).not.toContain('Check the historical wording.');
-    expect(body).toContain('Publish exact reviewed route');
+    expect(body).not.toContain('Route action');
+    expect(body).not.toContain('Publication</h3>');
+    expect(body).not.toContain('0 blocking errors');
+    expect(body).toContain('route-warning-list');
+    expect(body).toContain('Publish reviewed route');
   });
 
   it('labels blocking errors and disables publication', () => {
@@ -69,7 +72,7 @@ describe('RoutePublicationPanel', () => {
     expect(body).toContain('Publication blocked');
     expect(body).toContain('Route blocking errors');
     expect(body).toContain('Route reference is unresolved.');
-    expect(body).toContain('Event blocking errors');
+    expect(body).toContain('1 blocking error');
     expect(body).not.toContain('Event story is incomplete.');
     expect(body).toContain('disabled');
   });

@@ -6,6 +6,10 @@
   export let errorMessage: string | null = null;
   export let success = false;
   export let onPublish: () => void = () => {};
+
+  function countLabel(count: number, singular: string, plural: string): string {
+    return `${count} ${count === 1 ? singular : plural}`;
+  }
 </script>
 
 {#if summary}
@@ -13,47 +17,43 @@
     class="publication-panel"
     aria-labelledby="route-publication-heading"
   >
-    <div class="publication-heading">
-      <span>Route action</span>
-      <h3 id="route-publication-heading">Publication</h3>
-    </div>
-
-    <dl class="publication-counts">
-      <div>
-        <dt>Included events</dt>
-        <dd>{summary.included_events.length}</dd>
-      </div>
-      <div>
-        <dt>Excluded events</dt>
-        <dd>{summary.excluded_event_ids.length}</dd>
-      </div>
-      <div class="warning-count">
-        <dt>Event warnings</dt>
-        <dd>{summary.included_event_warning_count}</dd>
-      </div>
-      <div class="error-count">
-        <dt>Event blocking errors</dt>
-        <dd>{summary.included_event_technical_error_count}</dd>
-      </div>
-    </dl>
+    <h3 id="route-publication-heading">Route readiness</h3>
 
     <div class:ready={summary.technical_ready} class="readiness" role="status">
       <strong
         >{summary.technical_ready
-          ? 'Ready to publish'
+          ? 'Technically ready'
           : 'Publication blocked'}</strong
       >
-      <span>
-        {summary.technical_ready
-          ? 'No blocking technical errors.'
-          : summary.included_event_technical_error_count > 0 &&
-              summary.route_technical_errors.length > 0
-            ? 'Review affected events below and resolve the route errors listed here.'
-            : summary.included_event_technical_error_count > 0
-              ? 'Review the affected event rows below or move unusable events to Don’t use.'
-              : 'Resolve the route blocking errors listed below.'}
-      </span>
     </div>
+
+    <p class="event-totals">
+      {summary.included_events.length} included · {summary.excluded_event_ids
+        .length} excluded
+    </p>
+
+    {#if summary.included_event_warning_count > 0 || summary.included_event_technical_error_count > 0}
+      <div class="finding-counts" aria-label="Included event findings">
+        {#if summary.included_event_warning_count > 0}
+          <span class="finding-count warning-count">
+            {countLabel(
+              summary.included_event_warning_count,
+              'event warning',
+              'event warnings'
+            )}
+          </span>
+        {/if}
+        {#if summary.included_event_technical_error_count > 0}
+          <span class="finding-count error-count">
+            {countLabel(
+              summary.included_event_technical_error_count,
+              'blocking error',
+              'blocking errors'
+            )}
+          </span>
+        {/if}
+      </div>
+    {/if}
 
     {#if summary.route_technical_errors.length > 0}
       <section
@@ -71,14 +71,14 @@
 
     {#if summary.route_warnings.length > 0}
       <details class="message-group warnings">
-        <summary
-          >Route editorial warnings ({summary.route_warnings.length})</summary
-        >
-        <p>
-          These route-level findings require editorial judgment but do not block
-          publication.
-        </p>
-        <ul>
+        <summary>
+          {countLabel(
+            summary.route_warnings.length,
+            'route warning',
+            'route warnings'
+          )}
+        </summary>
+        <ul class="route-warning-list">
           {#each summary.route_warnings as warning (warning)}<li>
               {warning}
             </li>{/each}
@@ -91,7 +91,7 @@
       class="publish-button"
       disabled={!summary.technical_ready || saving}
       on:click={onPublish}
-      >{saving ? 'Publishing…' : 'Publish exact reviewed route'}</button
+      >{saving ? 'Publishing…' : 'Publish reviewed route'}</button
     >
 
     {#if success}<p class="success" role="status">
@@ -106,75 +106,50 @@
 <style>
   .publication-panel {
     display: grid;
-    gap: 0.7rem;
-    padding: 0.75rem;
-    border: 1px solid #d8c58f;
-    border-radius: 8px;
-    background: #fffaf0;
-    color: #4c3b16;
+    gap: 0.5rem;
+    padding: 0.65rem 0;
+    border-top: 1px solid #d9e0e7;
+    border-bottom: 1px solid #d9e0e7;
+    color: #314151;
     font-size: 0.78rem;
   }
-  .publication-heading {
-    display: grid;
-    gap: 0.15rem;
-  }
-  .publication-heading span {
-    color: #78510c;
-    font-size: 0.66rem;
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-  .publication-heading h3,
+  .publication-panel > h3,
   .message-group h4 {
     margin: 0;
   }
-  .publication-heading h3 {
-    font-size: 0.95rem;
+  .publication-panel > h3 {
+    font-size: 0.9rem;
   }
-  .publication-counts {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.4rem;
+  .event-totals {
     margin: 0;
-  }
-  .publication-counts div {
-    display: grid;
-    gap: 0.1rem;
-    padding: 0.45rem;
-    border: 1px solid #e6d9b5;
-    border-radius: 6px;
-    background: #fff;
-  }
-  .publication-counts dt {
-    font-size: 0.66rem;
-    font-weight: 700;
-  }
-  .publication-counts dd {
-    margin: 0;
-    font-size: 1rem;
-    font-weight: 800;
-  }
-  .publication-counts .warning-count {
-    border-color: #e6d9b5;
-    color: #65440b;
-  }
-  .publication-counts .error-count {
-    border-color: #e8b9b9;
-    color: #8b2020;
+    color: #536170;
   }
   .readiness {
-    display: grid;
-    gap: 0.12rem;
-    padding-left: 0.55rem;
-    border-left: 0.25rem solid #a32626;
+    padding-left: 0.45rem;
+    border-left: 0.2rem solid #a32626;
   }
   .readiness.ready {
     border-left-color: #176b3a;
   }
-  .readiness span,
-  .message-group p {
-    line-height: 1.4;
+  .finding-counts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+  }
+  .finding-count {
+    padding: 0.14rem 0.36rem;
+    border: 1px solid currentColor;
+    border-radius: 999px;
+    font-size: 0.66rem;
+    font-weight: 800;
+  }
+  .warning-count {
+    color: #78510c;
+    background: #fffaf0;
+  }
+  .error-count {
+    color: #8b2020;
+    background: #fff5f5;
   }
   .message-group {
     display: grid;
@@ -188,20 +163,27 @@
     color: #8b2020;
   }
   .message-group.warnings {
-    border: 1px solid #e6d9b5;
-    background: #fff;
     color: #65440b;
   }
   .message-group summary {
     cursor: pointer;
     font-weight: 800;
   }
-  .message-group p,
   .message-group ul {
     margin: 0;
   }
-  .message-group ul {
-    padding-left: 1rem;
+  .route-warning-list {
+    max-height: 11rem;
+    margin-top: 0.4rem !important;
+    padding: 0;
+    overflow-y: auto;
+    border-top: 1px solid #e6d9b5;
+    list-style: none;
+  }
+  .route-warning-list li {
+    padding: 0.4rem 0.15rem;
+    border-bottom: 1px solid #eee3c7;
+    line-height: 1.35;
   }
   .publish-button {
     min-height: 2.25rem;

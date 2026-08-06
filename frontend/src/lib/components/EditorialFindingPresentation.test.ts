@@ -26,7 +26,7 @@ function proposal(
 }
 
 describe('editorial finding presentation', () => {
-  it('shows per-type counts and editorial state on every event row', () => {
+  it('shows compact non-zero counts and editorial state on every event row', () => {
     const { body } = render(EditorialEventList, {
       props: {
         proposals: [
@@ -44,11 +44,14 @@ describe('editorial finding presentation', () => {
     });
 
     expect(body).toContain('Exact event title');
-    expect(body).toContain('State: draft');
-    expect(body).toContain('Warnings: 2');
-    expect(body).toContain('Blocking errors: 1');
+    expect(body).toContain('>draft<');
+    expect(body).toContain('2 warnings');
+    expect(body).toContain('1 blocking error');
     expect(body).toContain('Excluded event');
-    expect(body).toContain('State: dont use');
+    expect(body).toContain('>dont use<');
+    expect(body).toContain('1 warning');
+    expect(body).not.toContain('State:');
+    expect(body).not.toContain('0 blocking errors');
   });
 
   it('separates recommendation, warning rows, and blocking-error rows', () => {
@@ -56,11 +59,14 @@ describe('editorial finding presentation', () => {
       props: { proposal: proposal() }
     });
 
-    expect(body).toContain('Agent recommendation');
-    expect(body).toContain('Editorial warnings (2)');
-    expect(body).toContain('Technical errors (1)');
-    expect(body).toContain('>Warning<');
-    expect(body).toContain('>Blocking error<');
+    expect(body).toContain('Event review');
+    expect(body).toContain('Suggested:');
+    expect(body).toContain('Keep this event.');
+    expect(body).toContain('2 warnings');
+    expect(body).toContain('1 blocking error');
+    expect(body).not.toContain('Agent recommendation');
+    expect(body).not.toContain('>Warning<');
+    expect(body).not.toContain('>Blocking error<');
     expect(body).toContain('Verify the event date.');
     expect(body).toContain('Reader-facing summary is missing.');
   });

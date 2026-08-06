@@ -90,7 +90,7 @@ describe('StoryPanel spatial access', () => {
     expect(body).toContain('Exact generated title');
     expect(body).toContain('Exact generated summary');
     expect(body.indexOf('Exact generated summary')).toBeLessThan(
-      body.indexOf('Editorial review')
+      body.indexOf('Event review')
     );
     expect(body).not.toContain('Planning-only title');
     expect(body).not.toContain('Publish exact reviewed route');
@@ -119,6 +119,6 @@ describe('StoryPanel spatial access', () => {
 
     expect(body).toContain('Reader-facing story incomplete');
     expect(body).toContain('summary: Field required');
-    expect(body).toContain('Editorial review');
+    expect(body).toContain('Event review');
   });
 });
