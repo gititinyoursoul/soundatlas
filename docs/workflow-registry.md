@@ -8,25 +8,24 @@ SoundAtlas uses three lightweight layers for agent-driven work:
 - Skills and prompts define reusable execution patterns for critique, planning,
   implementation, tests, docs, and UX.
 
-Prompts are compatibility entrypoints into those workflows. They should stay
-thin and should not redefine product behavior. `prompts/grill-me.md` is the
-default human-facing critique entrypoint. The
-`soundatlas-concept-work` skill synthesizes confirmed decisions when concept
-work is needed. The `soundatlas-implementation-review` skill performs the
+Prompts provide scoped interactive or compatibility entrypoints. They should
+not redefine product behavior or Skill procedures. The `soundatlas-grill-me`
+Skill is the central phase-aware critique entrypoint. The
+`soundatlas-concept-work` Skill synthesizes confirmed decisions when Concept
+Work is needed. The `soundatlas-implementation-review` Skill performs the
 repeatable completion comparison and evidence assessment. The
-`soundatlas-issue-planning` skill is the durable Issue-writing
-mechanism for implementation plans and the combined Implementation Report.
+`soundatlas-issue-planning` Skill is the durable Issue-writing mechanism for
+implementation plans and the combined Implementation Report.
 
 All multiline GitHub Markdown body transport follows the safe file/stdin rule
 in `docs/github-issue-workflow.md`; the generic helper is
 `scripts/gh_markdown_payload.py`.
 
-`prompts/grill-me.md` is intentionally interactive: it may briefly indicate
-whether material findings are present and, when useful, give an approximate
-count. The count is optional and never a target. It should then present one
-finding at a time, with a recommendation, and pause for user confirmation before
-continuing to the next finding. When a finding requires a material decision, it
-should offer meaningful options and a recommended choice.
+`soundatlas-grill-me` owns Review Mode selection, Phase Boundaries, Materiality
+routing, and the interactive one-finding flow. It may briefly indicate whether
+material findings are present and, when useful, give an approximate count. The
+count is optional and never a target. Material findings are presented one at a
+time with a recommendation and pause for Human confirmation.
 
 At the agreed workflow transitions, first apply a lightweight Grill-Me check.
 Continue without an interactive session when there is no material finding. If
@@ -76,8 +75,8 @@ responsibilities, boundaries, or ownership; otherwise skip it. The plan
 references an accepted concept rather than copying it.
 
 "Automatic" means the agent is instructed to perform the lightweight checks
-and may select a skill implicitly. For example,
-the concept-work and implementation-review metadata permit implicit selection.
+and may select a skill implicitly. For example, Grill-Me, Concept Work, and
+Implementation Review metadata permit implicit selection.
 This is agent routing, not independently executing automation.
 
 This overview does not redefine ownership. `AGENTS.md` owns repository-wide
@@ -98,13 +97,15 @@ document ownership.
 
 ### Use a skill for repeatable execution
 
-Use a reusable skill when work has a stable, repeatable implementation process,
-domain constraints, validation steps, and a report format that agents should
-apply consistently. A skill may cover a broad domain rather than one feature.
-The approved GitHub Issue remains the product and scope authority.
+Use a reusable skill when work has a stable, repeatable execution or review
+procedure, domain constraints, routing or validation steps, and an output format
+that agents should apply consistently. A skill may cover a broad domain rather
+than one feature. The approved GitHub Issue remains the product and scope
+authority.
 
 Current examples include:
 
+- phase-aware critique and Materiality routing: `soundatlas-grill-me`;
 - concept synthesis and recording: `soundatlas-concept-work`;
 - implementation comparison and evidence assessment:
   `soundatlas-implementation-review`;
@@ -112,13 +113,13 @@ Current examples include:
 - backend implementation: `soundatlas-backend-implementation`;
 - Issue intake, planning, and reports: `soundatlas-issue-planning`.
 
-### Keep a prompt for interactive or human-review-bound work
+### Keep a prompt for bounded specialized interaction
 
-Keep work in a prompt when its value depends on conversational critique,
-stepwise human decisions, source or media review, editorial judgment, or a
-proposal that must be narrowed before implementation. Current examples include
-Grill-Me review, UX audit and critique, route editorial work, seed curation, and
-YouTube query planning.
+Keep work in a prompt when its interaction is specialized to one bounded output
+and does not need a reusable execution procedure of its own. Current examples
+include UX audit and critique, route editorial work, seed curation, and YouTube
+query planning. Interaction alone does not require a prompt when the repository
+needs one central, repeatable procedure such as `soundatlas-grill-me`.
 
 Documentation prompts may remain the active entrypoint until their
 corresponding skill extraction is completed; the registry row must identify
@@ -132,8 +133,9 @@ may identify the skill, preserve the historical entrypoint, collect concise
 optional context, and state the output boundary. It must not duplicate or
 override the skill’s implementation rules.
 
-Remove or rename a legacy wrapper only through a separate approved Issue after
-repository references and compatibility needs have been reviewed.
+Remove or rename a legacy wrapper only when an approved Issue explicitly
+authorizes it after repository references and compatibility needs have been
+reviewed.
 
 ### Document ownership and precedence
 
@@ -142,8 +144,10 @@ repository references and compatibility needs have been reviewed.
   ownership, and precedence explicitly stated here.
 - Domain source documents own product, data, editorial, UX, and other
   domain-specific rules.
-- Skills own repeatable execution behavior, validation, and reporting guidance.
-- Prompts own interactive behavior or compatibility-entrypoint guidance.
+- Skills own repeatable execution behavior, validation, reporting guidance, and
+  phase-aware interaction when the registry assigns it.
+- Prompts own bounded interactive behavior or compatibility-entrypoint guidance
+  assigned by the registry.
 - GitHub Issues own planned scope, confirmed decisions, acceptance criteria,
   default `## Concept` records, and implementation reports. When the human
   selects an authoritative concept document under `docs/`, that document owns
@@ -171,10 +175,12 @@ For an approved prompt-to-skill extraction:
 
 1. Create or update an Issue before changing workflow guidance.
 2. Preserve the existing behavior, gates, constraints, and output expectations
-   while separating reusable execution guidance from the prompt boundary.
+   while separating reusable execution guidance from any retained prompt
+   boundary.
 3. Make the new skill authoritative for repeatable execution.
 4. Reduce the existing prompt to a compatibility wrapper when compatibility
-   matters.
+   matters; remove it only when the approved Issue includes a completed
+   reference and compatibility audit.
 5. Update the registry and active references in the same change.
 6. Validate references, skill structure, and scope; do not include application,
    seed-data, or production behavior changes unless separately approved.
@@ -190,13 +196,14 @@ For an approved prompt-to-skill extraction:
 | Documentation updates | Skill, with legacy wrapper | `soundatlas-documentation-implementation` |
 | Test planning and implementation | Skill, with legacy wrapper | `soundatlas-testing-implementation` |
 | Editorial route and seed curation | Interactive prompt | `prompts/create-route.md`, `prompts/curate-seed-data.md` |
-| UX critique and review | Interactive prompt | `prompts/design-ux.md`, `prompts/grill-me.md` |
+| Phase-aware critique | Skill | `soundatlas-grill-me` |
+| UX critique and review | Interactive prompt | `prompts/design-ux.md` |
 | Enrichment query planning | Human-reviewed prompt | `prompts/generate-youtube-search-queries.md` |
 
 ## Workflow Rules
 
 - Create an Intake Issue first for non-trivial work. Use
-  `prompts/grill-me.md` to inspect, critique, simplify, and identify blockers
+  `soundatlas-grill-me` to inspect, critique, simplify, and identify blockers
   before a risk-flagged Issue receives a Plan Update or implementation.
 - Apply a lightweight Grill-Me check at Intake, before accepting a consequential
   concept or broad Plan Update, when implementation reveals drift or new
@@ -259,7 +266,7 @@ by the agent.
 
 | Work type                               | Kind                                   | Required gate                                                                | Authoritative source                                                               | Entrypoint                                                                                                      | Output                                                              |
 | --------------------------------------- | -------------------------------------- | ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
-| Intake critique and planning front door | Interactive prompt                     | Intake Issue when non-trivial                                                | `prompts/grill-me.md` for review format; GitHub Issue for decisions                | `prompts/grill-me.md`                                                                                           | Standalone decision record or inline action note                    |
+| Phase-aware critique and planning front door | Skill                             | Intake Issue when non-trivial                                                | `.codex/skills/soundatlas-grill-me/SKILL.md` for procedure; `docs/github-issue-workflow.md` for lifecycle and completed records | `.codex/skills/soundatlas-grill-me/SKILL.md`                                                                   | Finding, verdict, or workflow handoff                               |
 | Concept synthesis                       | Skill                                  | Confirmed material decisions; only when concept work is needed               | `## Concept` Issue comment or one human-confirmed authoritative document under `docs/` | `.codex/skills/soundatlas-concept-work/SKILL.md`                                                            | Five-part concept or link to its authoritative document             |
 | Implementation review                   | Skill                                  | Completed non-trivial Issue work, or drift/risk during implementation        | Approved Issue, concept when present, plan, actual diff, evidence, and current-state docs | `.codex/skills/soundatlas-implementation-review/SKILL.md`                                               | Review Result inside the single Implementation Report               |
 | Issue intake, planning, and reports     | Skill                                  | Intake or Grill-Me as required by risk                                       | GitHub Issue body/comments; lifecycle in `docs/github-issue-workflow.md`            | `.codex/skills/soundatlas-issue-planning/SKILL.md`                                                     | Intake, Plan Update, Detailed Plan Update, or Implementation Report |
@@ -277,14 +284,15 @@ documents. Generated route artifacts, `*.ai-draft.*` files, screenshots,
 mockups, and archival records are not registry entries.
 
 The frontend, backend, documentation, and testing implementation prompts are
-compatibility wrappers for their completed skills. `grill-me.md`
-and the YouTube query prompt remain prompts because their interactive or
-specialized output boundaries are intentional.
+compatibility wrappers for their completed skills. Grill Me routes directly to
+`soundatlas-grill-me`; the removed legacy Prompt has no Compatibility Wrapper.
+The YouTube query prompt remains a prompt because its specialized output
+boundary is intentional.
 
 ## Migration Guidance
 
-1. Prefer `prompts/grill-me.md` or conversational grill-me review for vague,
-   risky, cross-cutting, or editorially sensitive work.
+1. Use `soundatlas-grill-me` for explicit Grill-Me requests and for vague,
+   risky, cross-cutting, drift-prone, or editorially sensitive work.
 2. Use `soundatlas-concept-work` after confirmed Grill-Me decisions when an
    implementation plan would otherwise have to invent the target.
 3. Use `soundatlas-implementation-review` for the repeatable implementation and

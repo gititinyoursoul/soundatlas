@@ -1,6 +1,6 @@
 # Desktop Navigation Drawer Overlay Design
 
-This document applies `prompts/grill-me.md` to a planning-only UX concept for a desktop-only overlay navigation drawer.
+This document applies Grill-Me critique to a planning-only UX concept for a desktop-only overlay navigation drawer. Current review routing is owned by `soundatlas-grill-me`.
 
 Related mockup screens:
 

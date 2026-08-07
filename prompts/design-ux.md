@@ -6,8 +6,8 @@ This prompt set is the UX entrypoint for the current workflow. If the repo has a
 
 Design UX prompts produce audit findings, critique, and UX slice proposals.
 They do not authorize implementation.
-Use `prompts/grill-me.md` or direct conversation to critique and narrow a
-selected UX slice before implementation. Use
+Use `soundatlas-grill-me` to critique and narrow a selected UX slice before
+implementation. Use
 `soundatlas-issue-planning` to turn the selected slice into a GitHub
 Issue Plan Update after recording the confirmed review under `## Grill-Me
 Review`.
@@ -81,7 +81,7 @@ Do not make changes yet. Return:
 - Files and components likely affected
 - Suggested audit filename under `docs/design/audits/` if the findings should be saved
 - Suggested mockup filenames under `docs/design/mockups/` if visual artifacts are needed
-- Next step: usually grill the selected UX slice with `prompts/grill-me.md`,
+- Next step: usually grill the selected UX slice with `soundatlas-grill-me`,
   then create or update the GitHub Issue Plan Update with
   `soundatlas-issue-planning`
 ```
@@ -153,7 +153,7 @@ Return:
 - Whether `docs/design/current-frontend-design.md` should change
 - Whether the critique should be saved under `docs/design/audits/`
 - Whether supporting annotated screenshots or mockups should be saved under `docs/design/mockups/`
-- Next step: usually grill the follow-up with `prompts/grill-me.md`, create
+- Next step: usually grill the follow-up with `soundatlas-grill-me`, create
   the follow-up Issue plan with `soundatlas-issue-planning`, or update
   the design baseline with `prompts/update-docs.md`
 ```

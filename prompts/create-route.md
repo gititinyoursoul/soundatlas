@@ -91,7 +91,7 @@ Seed data requirements
 Recommended workflow
 
 - For non-trivial route creation or route reshaping, use
-  `prompts/grill-me.md` first to critique scope, thesis, source risks, and
+  `soundatlas-grill-me` first to critique scope, thesis, source risks, and
   candidate-event boundaries. Record the confirmed review in a `## Grill-Me
 Review` Issue comment, then use `soundatlas-issue-planning` to
   create or update a GitHub Issue Plan Update before broad seed edits.

@@ -31,7 +31,7 @@ human to answer them.
    boundaries, or ownership. Skip it for clear, local, low-risk work.
 2. Check decision readiness.
    Use only human-confirmed material decisions. If a material decision remains
-   unclear, return to `prompts/grill-me.md` and do not silently resolve it.
+   unclear, return to `soundatlas-grill-me` and do not silently resolve it.
 3. Separate current behavior from the accepted target.
    Do not describe planned behavior as already implemented.
 4. Write the five-part concept in the required order.

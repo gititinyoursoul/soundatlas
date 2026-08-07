@@ -53,7 +53,7 @@ flowchart TD
 ## Current Editorial Flow
 
 1. For non-trivial route or content changes, start with
-   `prompts/grill-me.md` to critique scope, source risk, editorial boundaries,
+   `soundatlas-grill-me` to critique scope, source risk, editorial boundaries,
    and publication readiness. Use `soundatlas-issue-planning` to
    create or update a GitHub Issue Plan Update before broad multi-file edits.
 2. Start from the MVP concept in `docs/mvp-concept.md`.

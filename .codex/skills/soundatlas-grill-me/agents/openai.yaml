@@ -1,0 +1,7 @@
+interface:
+  display_name: "SoundAtlas Grill Me"
+  short_description: "Run phase-aware SoundAtlas critique"
+  default_prompt: "Use $soundatlas-grill-me to challenge this artifact at its current workflow stage."
+
+policy:
+  allow_implicit_invocation: true

@@ -27,7 +27,7 @@ Project constraints
 
 Process
 
-- If the seed work is non-trivial, use `prompts/grill-me.md` first to check
+- If the seed work is non-trivial, use `soundatlas-grill-me` first to check
   draft/publish boundaries, source risk, route fit, and data-shape risk. Record
   material findings or decisions in a standalone `## Grill-Me Review`; a clean
   check may be noted inline in the next action comment. Then use

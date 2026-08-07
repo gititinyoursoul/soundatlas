@@ -67,7 +67,7 @@ The documentation consistently says generated route artifacts are drafts and
 that human editorial review decides which claims, events, places, connections,
 and links are ready for seed promotion.
 
-`prompts/grill-me.md` is the recommended critique gate before non-trivial
+`soundatlas-grill-me` is the recommended critique gate before non-trivial
 editorial planning, candidate selection, enrichment, or seed promotion. It
 supports human review by surfacing weak claims, unclear candidate boundaries,
 source risks, premature automation, and missing acceptance criteria. It does

@@ -16,7 +16,7 @@ with:
 - the `soundatlas-implementation-review` result, when finalizing an
   Implementation Report for non-trivial Issue work
 
-Read `prompts/grill-me.md` when the request needs critique, simplification, or
+Use `soundatlas-grill-me` when the request needs critique, simplification, or
 readiness review before Issue content is drafted.
 
 ## Workflow

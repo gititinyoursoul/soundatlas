@@ -109,6 +109,9 @@ Events should contain at least:
   completed implementation, perform a lightweight Grill-Me check. Continue
   without pausing when there is no material finding; use the interactive
   one-finding flow when human confirmation is needed.
+- Use `.codex/skills/soundatlas-grill-me` for Grill-Me checks and explicit
+  Grill-Me requests. It owns Review Mode selection, Phase Boundaries,
+  Materiality routing, and the interactive one-finding flow.
 - Use `.codex/skills/soundatlas-concept-work` when the human requests concept
   work or a Grill-Me check finds that planning would otherwise have to invent
   material target behavior, runtime responsibilities, boundaries, or ownership.

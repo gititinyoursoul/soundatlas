@@ -25,6 +25,9 @@ producing their assigned artifacts and must follow this lifecycle contract.
 In particular, `soundatlas-issue-planning` drafts and revises Intake Issues,
 Plan Updates, Detailed Plan Updates, and Implementation Reports. It does not
 own lifecycle ordering, post-commit closure, or Issue-state management.
+`soundatlas-grill-me` owns the phase-aware critique procedure, Review Modes,
+Materiality routing, and interactive one-finding flow; this document owns when
+that procedure runs and the canonical completed Grill-Me record shape.
 `soundatlas-implementation-review` owns implementation comparison, evidence
 assessment, finding classification, and routing. This document owns when that
 review occurs and how its result enters the Issue lifecycle.
@@ -170,13 +173,13 @@ Perform a lightweight Grill-Me check:
 
 If no material finding exists, continue without starting an interactive review
 or adding an approval step. If a material finding needs human confirmation, use
-the one-finding flow in `prompts/grill-me.md`.
+the one-finding flow in `soundatlas-grill-me`.
 
 At the completed-implementation transition, the lightweight check selects
 `soundatlas-implementation-review` for non-trivial Issue work. Grill Me becomes
 interactive only when the review returns a material human decision.
 
-For any risk-flagged work, run `prompts/grill-me.md` after intake creation and
+For any risk-flagged work, run `soundatlas-grill-me` after intake creation and
 before planning or implementation. Keep a material finding that is awaiting
 human confirmation in the interactive conversation; do not publish it as a
 completed Issue comment. After all material findings have decisions, record one
