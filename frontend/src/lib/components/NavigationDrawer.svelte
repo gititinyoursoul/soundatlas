@@ -9,6 +9,8 @@
   } from '$lib/types/soundatlas';
   import Icon from './Icon.svelte';
   import EditorialEventList from './EditorialEventList.svelte';
+  import InactiveCandidateList from './InactiveCandidateList.svelte';
+  import type { InactiveCandidateProjection } from '$lib/data/editorial-review';
   import RoutePublicationPanel from './RoutePublicationPanel.svelte';
 
   type DrawerVariant = 'expanded' | 'collapsed';
@@ -53,6 +55,7 @@
   export let showEditorialReview = false;
   export let editorialProposalCount = 0;
   export let editorialProposals: RouteReviewProposal[] = [];
+  export let editorialInactiveCandidates: InactiveCandidateProjection[] = [];
   export let editorialErrorMessage: string | null = null;
   export let publicationSummary: RoutePublicationSummary | null = null;
   export let publicationSaving = false;
@@ -71,6 +74,9 @@
   ) => Promise<void> = async () => {};
   export let onSelectEditorialProposal: (
     proposal: RouteReviewProposal
+  ) => void = () => {};
+  export let onSelectInactiveCandidate: (
+    candidate: InactiveCandidateProjection
   ) => void = () => {};
   export let onPublishRoute: () => void = () => {};
 
@@ -437,8 +443,9 @@
                 Route review
               </h2>
               <p>
-                {editorialProposalCount}
-                {editorialProposalCount === 1 ? 'event' : 'events'}
+                {editorialProposalCount + editorialInactiveCandidates.length}
+                candidates · {editorialProposalCount} active ·
+                {editorialInactiveCandidates.length} inactive
               </p>
             </div>
             <RoutePublicationPanel
@@ -453,15 +460,33 @@
                 <Icon name="warning" />
                 <p>{editorialErrorMessage}</p>
               </div>
-            {:else if editorialProposals.length === 0}
+            {:else if editorialProposals.length === 0 && editorialInactiveCandidates.length === 0}
               <div class="section-empty">
                 <Icon name="circle" /><span>No review candidates loaded.</span>
               </div>
             {:else}
-              <EditorialEventList
-                proposals={editorialProposals}
-                onSelect={onSelectEditorialProposal}
-              />
+              {#if editorialProposals.length > 0}
+                <h3
+                  class="mb-1 mt-4 text-sm font-extrabold uppercase tracking-wide text-[#536170]"
+                >
+                  Active route events
+                </h3>
+                <EditorialEventList
+                  proposals={editorialProposals}
+                  onSelect={onSelectEditorialProposal}
+                />
+              {/if}
+              {#if editorialInactiveCandidates.length > 0}
+                <h3
+                  class="mb-1 mt-5 text-sm font-extrabold uppercase tracking-wide text-[#536170]"
+                >
+                  Inactive candidates
+                </h3>
+                <InactiveCandidateList
+                  candidates={editorialInactiveCandidates}
+                  onSelect={onSelectInactiveCandidate}
+                />
+              {/if}
             {/if}
           </section>
         {:else if activePanel === 'media-review' && showAdminReview}

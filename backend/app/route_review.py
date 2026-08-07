@@ -81,6 +81,7 @@ class RouteReviewCandidateAccount(BaseModel):
     related_candidate_ids: list[str] = Field(default_factory=list)
     active: bool
     preview: dict[str, Any] = Field(default_factory=dict)
+    context: dict[str, Any] = Field(default_factory=dict)
     findings: list[RouteReviewFinding] = Field(default_factory=list)
 
 
@@ -155,8 +156,11 @@ class RouteReviewRepository:
             result.source != COMPLETE_DRAFT_FILENAME
             or any(proposal.event is None for proposal in result.proposals)
             or not result.candidate_accounts
+            or any(not account.context for account in result.candidate_accounts)
         ):
             return self._build_current(route_id, result, complete_draft)
+        if any(not account.context for account in result.candidate_accounts):
+            return self._build_current(route_id, result)
         return result
 
     def refresh(self, route_id: str) -> RouteReviewResult:
@@ -734,6 +738,11 @@ def _candidate_accounts(
                 related_candidate_ids=[item for item in related if isinstance(item, str)],
                 active=outcome in {"active", "added"},
                 preview=preview,
+                context={
+                    key: value
+                    for key, value in candidate.items()
+                    if key not in {"composition", "preview", "editorial_state"}
+                },
                 findings=_candidate_findings(candidate, candidate_id, outcome),
             )
         )

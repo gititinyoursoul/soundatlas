@@ -1,7 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import { makeEvent } from '$lib/test/fixtures';
-import type { RouteReviewProposal, RouteReviewResult } from '$lib/types/soundatlas';
-import { projectRouteReview } from './editorial-review';
+import type {
+  RouteReviewProposal,
+  RouteReviewResult
+} from '$lib/types/soundatlas';
+import {
+  projectInactiveCandidates,
+  projectRouteReview
+} from './editorial-review';
 
 function makeProposal(
   overrides: Partial<RouteReviewProposal> = {}
@@ -39,6 +45,9 @@ function makeReview(
     dormant_proposals: [],
     places: [],
     connections: [],
+    candidate_accounts: [],
+    phase_coverage: [],
+    findings: [],
     warnings: [],
     technical_errors: [],
     technical_ready: true,
@@ -94,5 +103,35 @@ describe('editorial review projection', () => {
 
     expect(projection.renderOnMap).toBe(false);
     expect(projection.renderOnTimeline).toBe(false);
+  });
+
+  it('projects inactive candidate context without creating an event', () => {
+    const [candidate] = projectInactiveCandidates(
+      makeReview({
+        candidate_accounts: [
+          {
+            candidate_id: 'context-event',
+            outcome: 'omitted',
+            reason: 'Covered by another event.',
+            related_candidate_ids: ['sedgwick-party'],
+            active: false,
+            preview: {
+              summary: 'Useful route context.',
+              significance: 'Explains the wider setting.'
+            },
+            context: {
+              working_title: 'Context event',
+              years: '1973',
+              place: '1520 Sedgwick Avenue'
+            },
+            findings: []
+          }
+        ]
+      })
+    );
+
+    expect(candidate.title).toBe('Context event');
+    expect(candidate.summary).toBe('Useful route context.');
+    expect(candidate.years).toBe('1973');
   });
 });

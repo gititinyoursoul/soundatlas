@@ -147,6 +147,13 @@ For new route work, keep route-specific editorial artifacts under
    Events; inactive Candidates retain their composition account and findings but
    do not receive editorial state. It preserves minimal dormant decisions across
    refreshes.
+
+In editorial explorer mode, Route review reports the complete Candidate count
+with separate active Event and inactive Candidate sections. Selecting an
+inactive Candidate is read-only: its generated Content, composition account,
+findings, and resolved place/time context are shown without adding it to the
+active Route, publication payload, or public explorer. A disagreement is a
+revision request through #85, not an inactive-Candidate state or direct edit.
 10. `route-publication.json`: minimal private record of the exact revision and
    event/connection membership most recently promoted to canonical runtime data.
    It protects the published result from later route-review refreshes; it is not

@@ -1412,6 +1412,11 @@ def test_complete_draft_binds_active_review_and_blocks_legacy_steps(tmp_path: Pa
     ]
     assert accounts["outline-context-event"]["active"] is False
     assert "editorial_state" not in accounts["outline-context-event"]
+    assert accounts["outline-context-event"]["context"]["working_title"] == "Outline context event"
+    assert accounts["outline-context-event"]["context"]["source_leads"] == ["Interviews"]
+    assert accounts["outline-context-event"]["preview"]["summary"] == (
+        "An omitted candidate remains visible for review."
+    )
 
     before = (route_dir / "route-concept.md").read_bytes()
     assert main([

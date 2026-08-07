@@ -203,6 +203,34 @@ export type RouteReviewPlace = {
   place: Place;
 };
 
+export type FindingOwner =
+  | 'candidate_composition'
+  | 'active_event'
+  | 'active_route'
+  | 'source_media'
+  | 'technical';
+
+export type RouteReviewFinding = {
+  owner: FindingOwner;
+  message: string;
+  candidate_id?: string | null;
+  blocking: boolean;
+};
+
+export type CompositionOutcome =
+  'active' | 'omitted' | 'merged_into' | 'split_into' | 'added';
+
+export type RouteReviewCandidateAccount = {
+  candidate_id: string;
+  outcome: CompositionOutcome;
+  reason: string;
+  related_candidate_ids: string[];
+  active: boolean;
+  preview: Record<string, unknown>;
+  context: Record<string, unknown>;
+  findings: RouteReviewFinding[];
+};
+
 export type RouteReviewResult = {
   route_id: string;
   revision_id: string;
@@ -211,6 +239,9 @@ export type RouteReviewResult = {
   dormant_proposals: RouteReviewProposal[];
   places: RouteReviewPlace[];
   connections: Connection[];
+  candidate_accounts: RouteReviewCandidateAccount[];
+  phase_coverage: Record<string, unknown>[];
+  findings: RouteReviewFinding[];
   warnings: string[];
   technical_errors: string[];
   technical_ready: boolean;

@@ -13,11 +13,14 @@
   import Icon from '$lib/components/Icon.svelte';
   import MapView from '$lib/components/MapView.svelte';
   import NavigationDrawer from '$lib/components/NavigationDrawer.svelte';
+  import InactiveCandidatePanel from '$lib/components/InactiveCandidatePanel.svelte';
   import StoryPanel from '$lib/components/StoryPanel.svelte';
   import Timeline from '$lib/components/Timeline.svelte';
   import { filterEvents } from '$lib/data/filters';
   import {
     projectRouteReview,
+    projectInactiveCandidates,
+    type InactiveCandidateProjection,
     type EditorialProjection
   } from '$lib/data/editorial-review';
   import {
@@ -67,6 +70,8 @@
   let selectedPreviewUrl: string | null = null;
   let routeReview: RouteReviewResult | null = null;
   let editorialProjections: EditorialProjection[] = [];
+  let inactiveCandidateProjections: InactiveCandidateProjection[] = [];
+  let selectedInactiveCandidateId: string | null = null;
   let editorialErrorMessage: string | null = null;
   let editorialSavingCandidateId: string | null = null;
   let editorialActionError: string | null = null;
@@ -98,6 +103,11 @@
         .flatMap((item) => (item.event ? [item.event] : []))
     : publicRouteEvents;
   $: reviewProposals = routeReview?.proposals ?? [];
+  $: selectedInactiveCandidate =
+    inactiveCandidateProjections.find(
+      (candidate) =>
+        candidate.account.candidate_id === selectedInactiveCandidateId
+    ) ?? null;
   $: selectedProjection =
     editorialProjections.find(
       (item) => item.proposal.candidate_id === selectedEventId
@@ -165,6 +175,12 @@
     selectedEvent,
     selectedPlaceId
   );
+  $: inactiveCandidatePlaceId = selectedInactiveCandidate
+    ? resolveCandidatePlaceId(selectedInactiveCandidate, activePlaces)
+    : null;
+  $: inactiveCandidateRange = selectedInactiveCandidate
+    ? resolveCandidateRange(selectedInactiveCandidate)
+    : null;
   $: selectedEventIndex = selectedEvent
     ? routeEvents.findIndex((event) => event.id === selectedEvent.id)
     : -1;
@@ -227,6 +243,7 @@
         routeReview = review;
         publicationSummary = publication;
         editorialProjections = projectRouteReview(routeReview);
+        inactiveCandidateProjections = projectInactiveCandidates(routeReview);
       }
 
       if (!IS_EDITORIAL_MODE) {
@@ -276,9 +293,55 @@
           ?.event ?? null)
       : (events.find((event) => event.id === eventId) ?? null);
     selectedEventId = eventId;
+    selectedInactiveCandidateId = null;
     selectedPlaceId = resolveFocusedPlaceId(nextEvent, selectedPlaceId);
     selectedInspectorTab = 'story';
     selectedPreviewUrl = null;
+  }
+
+  function selectInactiveCandidate(
+    candidate: InactiveCandidateProjection
+  ): void {
+    selectedInactiveCandidateId = candidate.account.candidate_id;
+    selectedInspectorTab = 'story';
+    selectedPreviewUrl = null;
+  }
+
+  function resolveCandidatePlaceId(
+    candidate: InactiveCandidateProjection,
+    availablePlaces: Place[]
+  ): string | null {
+    const explicitPlaceId = candidate.account.context.place_id;
+    if (
+      typeof explicitPlaceId === 'string' &&
+      availablePlaces.some((place) => place.id === explicitPlaceId)
+    ) {
+      return explicitPlaceId;
+    }
+    const placeName = candidate.place?.trim().toLocaleLowerCase();
+    return (
+      availablePlaces.find(
+        (place) => place.name.trim().toLocaleLowerCase() === placeName
+      )?.id ?? null
+    );
+  }
+
+  function resolveCandidateRange(
+    candidate: InactiveCandidateProjection
+  ): { start: number; end: number } | null {
+    const context = candidate.account.context;
+    const start = numericYear(context.year_start);
+    const end = numericYear(context.year_end);
+    if (start !== null) return { start, end: end ?? start };
+
+    const years = candidate.years?.match(/\d{4}/g)?.map(Number) ?? [];
+    return years.length > 0
+      ? { start: years[0], end: years[1] ?? years[0] }
+      : null;
+  }
+
+  function numericYear(value: unknown): number | null {
+    return typeof value === 'number' && Number.isInteger(value) ? value : null;
   }
 
   function selectLocation(eventId: string, placeId: string): void {
@@ -291,6 +354,7 @@
 
     selectedRouteId = event.route_id;
     selectedEventId = event.id;
+    selectedInactiveCandidateId = null;
     selectedPlaceId = placeId;
     selectedInspectorTab = 'story';
     selectedPreviewUrl = null;
@@ -316,6 +380,8 @@
     if (IS_EDITORIAL_MODE) {
       routeReview = null;
       editorialProjections = [];
+      inactiveCandidateProjections = [];
+      selectedInactiveCandidateId = null;
       editorialErrorMessage = null;
       publicationSummary = null;
       publicationError = null;
@@ -331,12 +397,14 @@
       routeReview = review;
       publicationSummary = await loadRoutePublication(routeId);
       editorialProjections = projectRouteReview(review);
+      inactiveCandidateProjections = projectInactiveCandidates(review);
       selectedEventId = review.proposals[0]?.candidate_id ?? null;
     } catch (error) {
       if (selectedRouteId !== routeId) return;
       routeReview = null;
       publicationSummary = null;
       editorialProjections = [];
+      inactiveCandidateProjections = [];
       editorialErrorMessage =
         error instanceof Error
           ? `Editorial review unavailable: ${error.message}`
@@ -360,6 +428,7 @@
       );
       routeReview = updated;
       editorialProjections = projectRouteReview(updated);
+      inactiveCandidateProjections = projectInactiveCandidates(updated);
       publicationSummary = await loadRoutePublication(selectedRouteId);
     } catch (error) {
       editorialActionError =
@@ -599,6 +668,7 @@
     showEditorialReview={IS_EDITORIAL_MODE}
     editorialProposalCount={reviewProposals.length}
     editorialProposals={reviewProposals}
+    editorialInactiveCandidates={inactiveCandidateProjections}
     {editorialErrorMessage}
     {publicationSummary}
     {publicationSaving}
@@ -612,6 +682,7 @@
     onSelectRoute={selectRoute}
     onSelectReviewItem={selectReviewItem}
     onSelectEditorialProposal={(proposal) => selectEvent(proposal.candidate_id)}
+    onSelectInactiveCandidate={selectInactiveCandidate}
     onPublishRoute={publishSelectedRoute}
     onReviewQueueItem={reviewQueueItem}
   />
@@ -693,6 +764,7 @@
             {selectedRouteId}
             selectedEventId={activeSelectedEventId}
             selectedPlaceId={activeSelectedPlaceId}
+            contextPlaceId={inactiveCandidatePlaceId}
             {selectedPlace}
             {selectedRoute}
             {selectedPlaceEventCount}
@@ -705,16 +777,20 @@
         <Timeline
           routeStartYear={timelineStartYear}
           routeEndYear={timelineEndYear}
-          eventStartYear={IS_EDITORIAL_MODE
-            ? selectedProjection?.renderOnTimeline
-              ? (selectedEvent?.year_start ?? null)
-              : null
-            : (selectedEvent?.year_start ?? null)}
-          eventEndYear={IS_EDITORIAL_MODE
-            ? selectedProjection?.renderOnTimeline
-              ? (selectedEvent?.year_end ?? null)
-              : null
-            : (selectedEvent?.year_end ?? null)}
+          eventStartYear={selectedInactiveCandidate
+            ? (inactiveCandidateRange?.start ?? null)
+            : IS_EDITORIAL_MODE
+              ? selectedProjection?.renderOnTimeline
+                ? (selectedEvent?.year_start ?? null)
+                : null
+              : (selectedEvent?.year_start ?? null)}
+          eventEndYear={selectedInactiveCandidate
+            ? (inactiveCandidateRange?.end ?? null)
+            : IS_EDITORIAL_MODE
+              ? selectedProjection?.renderOnTimeline
+                ? (selectedEvent?.year_end ?? null)
+                : null
+              : (selectedEvent?.year_end ?? null)}
           events={routeEvents}
           selectedEventId={activeSelectedEventId}
           onSelectEvent={selectEvent}
@@ -729,32 +805,36 @@
       aria-label="Event inspector"
       on:focusin={markStoryNavigationActive}
     >
-      <StoryPanel
-        event={selectedEvent}
-        place={selectedPlace}
-        places={selectedEventPlaces}
-        selectedPlaceId={activeSelectedPlaceId}
-        route={selectedRoute}
-        connections={selectedConnections}
-        {previousEvent}
-        {nextEvent}
-        onNavigateEvent={selectEvent}
-        onFocusPlace={focusSelectedEventPlace}
-        {isLoading}
-        {errorMessage}
-        initialTab={selectedInspectorTab}
-        {selectedPreviewUrl}
-        showReviewActions={!IS_PUBLIC_STATIC_MODE}
-        editorialMode={IS_EDITORIAL_MODE}
-        editorialProposal={selectedReviewProposal}
-        editorialSaving={editorialSavingCandidateId ===
-          selectedReviewProposal?.candidate_id}
-        editorialErrorMessage={editorialActionError}
-        {editorialContentError}
-        onSetEditorialState={(state) =>
-          selectedReviewProposal &&
-          setEditorialState(selectedReviewProposal, state)}
-      />
+      {#if selectedInactiveCandidate}
+        <InactiveCandidatePanel candidate={selectedInactiveCandidate} />
+      {:else}
+        <StoryPanel
+          event={selectedEvent}
+          place={selectedPlace}
+          places={selectedEventPlaces}
+          selectedPlaceId={activeSelectedPlaceId}
+          route={selectedRoute}
+          connections={selectedConnections}
+          {previousEvent}
+          {nextEvent}
+          onNavigateEvent={selectEvent}
+          onFocusPlace={focusSelectedEventPlace}
+          {isLoading}
+          {errorMessage}
+          initialTab={selectedInspectorTab}
+          {selectedPreviewUrl}
+          showReviewActions={!IS_PUBLIC_STATIC_MODE}
+          editorialMode={IS_EDITORIAL_MODE}
+          editorialProposal={selectedReviewProposal}
+          editorialSaving={editorialSavingCandidateId ===
+            selectedReviewProposal?.candidate_id}
+          editorialErrorMessage={editorialActionError}
+          {editorialContentError}
+          onSetEditorialState={(state) =>
+            selectedReviewProposal &&
+            setEditorialState(selectedReviewProposal, state)}
+        />
+      {/if}
     </section>
   </section>
 </main>

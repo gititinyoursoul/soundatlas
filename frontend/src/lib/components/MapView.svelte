@@ -21,11 +21,14 @@
   export let selectedRouteId: string | null = null;
   export let selectedEventId: string | null = null;
   export let selectedPlaceId: string | null = null;
+  export let contextPlaceId: string | null = null;
   export let selectedPlace: Place | null = null;
   export let selectedRoute: Route | null = null;
   export let selectedPlaceEventCount = 0;
-  export let onSelectLocation: (eventId: string, placeId: string) => void =
-    () => {};
+  export let onSelectLocation: (
+    eventId: string,
+    placeId: string
+  ) => void = () => {};
 
   const defaultMapCenter: [number, number] = [40.82, -73.93];
   const defaultMapZoom = 12;
@@ -43,6 +46,7 @@
   let leaflet: typeof import('leaflet') | null = null;
   let lastFramedRouteId: string | null = null;
   let lastFramedEventId: string | null = null;
+  let lastFramedContextPlaceId: string | null = null;
   let placeChoice: { place: Place; events: Event[] } | null = null;
 
   $: if (leaflet && placeGeometryLayer && placeGeometryLabelLayer && map) {
@@ -50,7 +54,7 @@
       events,
       places,
       selectedEventId,
-      selectedPlaceId,
+      contextPlaceId ?? selectedPlaceId,
       selectedRoute?.color ?? null
     );
   }
@@ -64,6 +68,7 @@
       selectedRouteId,
       selectedEventId,
       selectedPlaceId,
+      contextPlaceId,
       events,
       places,
       routes
@@ -158,6 +163,7 @@
       selectedRouteId,
       selectedEventId,
       selectedPlaceId,
+      contextPlaceId,
       events,
       places,
       routes
@@ -210,8 +216,7 @@
         placement.route.color,
         placement.event
       );
-      const isFocused =
-        isSelected && focusedPlaceId === placement.place.id;
+      const isFocused = focusedPlaceId === placement.place.id;
       const marker = leaflet
         .marker(placement.position, {
           riseOnHover: true,
@@ -256,6 +261,7 @@
     currentSelectedRouteId: string | null,
     currentSelectedEventId: string | null,
     currentSelectedPlaceId: string | null,
+    currentContextPlaceId: string | null,
     currentEvents: Event[],
     currentPlaces: Place[],
     currentRoutes: Route[]
@@ -267,24 +273,36 @@
     try {
       const routeChanged = currentSelectedRouteId !== lastFramedRouteId;
       const eventChanged = currentSelectedEventId !== lastFramedEventId;
+      const contextPlaceChanged =
+        currentContextPlaceId !== lastFramedContextPlaceId;
       renderMarkers(
         currentSelectedEventId,
-        currentSelectedPlaceId,
+        currentContextPlaceId ?? currentSelectedPlaceId,
         currentEvents,
         currentPlaces,
         currentRoutes,
         {
-          panToSelectedEvent: !routeChanged && !eventChanged
+          panToSelectedEvent:
+            !routeChanged && !eventChanged && !contextPlaceChanged
         }
       );
 
       if (routeChanged) {
         frameRouteBounds(currentEvents, currentPlaces);
         lastFramedRouteId = currentSelectedRouteId;
-      } else if (eventChanged) {
-        frameSelectedEvent(currentSelectedEventId, currentEvents, currentPlaces);
+      } else if (eventChanged || contextPlaceChanged) {
+        if (currentContextPlaceId) {
+          framePlace(currentContextPlaceId, currentPlaces);
+        } else {
+          frameSelectedEvent(
+            currentSelectedEventId,
+            currentEvents,
+            currentPlaces
+          );
+        }
       }
       lastFramedEventId = currentSelectedEventId;
+      lastFramedContextPlaceId = currentContextPlaceId;
     } catch (error) {
       console.error(error);
     }
@@ -311,9 +329,7 @@
       return;
     }
 
-    const bounds = leaflet.latLngBounds(
-      positions
-    );
+    const bounds = leaflet.latLngBounds(positions);
 
     if (!bounds.isValid()) {
       map.setView(defaultMapCenter, defaultMapZoom);
@@ -360,6 +376,23 @@
     });
   }
 
+  function framePlace(placeId: string, currentPlaces: Place[]): void {
+    if (!leaflet || !map) return;
+    const place = currentPlaces.find((item) => item.id === placeId);
+    if (!place) return;
+    const positions = getPlaceBoundsPositions(place);
+    if (positions.length === 1) {
+      map.panTo(positions[0], { animate: true, duration: 0.35 });
+      return;
+    }
+    map.fitBounds(leaflet.latLngBounds(positions), {
+      padding: routeFitPadding,
+      maxZoom: routeFitMaxZoom,
+      animate: true,
+      duration: 0.35
+    });
+  }
+
   function getPlaceBoundsPositions(place: Place): [number, number][] {
     const focus: [number, number] = [place.latitude, place.longitude];
     if (!place.geometry) {
@@ -375,8 +408,7 @@
       ...polygons.flatMap((polygon) =>
         polygon.flatMap((ring) =>
           ring.map(
-            ([longitude, latitude]) =>
-              [latitude, longitude] as [number, number]
+            ([longitude, latitude]) => [latitude, longitude] as [number, number]
           )
         )
       )
@@ -455,18 +487,17 @@
       const isSelected = activeEvent?.place_ids.includes(place.id) ?? false;
       const isFocused = focusedPlaceId === place.id;
 
-      const labelMarker = leaflet
-        .marker([place.latitude, place.longitude], {
-          interactive: true,
-          keyboard: true,
-          pane: 'place-geometry-labels',
-          icon: leaflet.divIcon({
-            className: `place-geometry-label${isSelected ? ' selected' : ''}${isFocused ? ' focused' : ''}`,
-            html: `<span>${place.name}</span>`,
-            iconAnchor: [66, 12],
-            iconSize: [132, 24]
-          })
-        });
+      const labelMarker = leaflet.marker([place.latitude, place.longitude], {
+        interactive: true,
+        keyboard: true,
+        pane: 'place-geometry-labels',
+        icon: leaflet.divIcon({
+          className: `place-geometry-label${isSelected ? ' selected' : ''}${isFocused ? ' focused' : ''}`,
+          html: `<span>${place.name}</span>`,
+          iconAnchor: [66, 12],
+          iconSize: [132, 24]
+        })
+      });
       labelMarker.on('click', () => handlePlaceClick(place));
       labelMarker.addTo(placeGeometryLabelLayer);
     }
@@ -539,10 +570,7 @@
         continue;
       }
 
-      const from: [number, number] = [
-        fromPlace.latitude,
-        fromPlace.longitude
-      ];
+      const from: [number, number] = [fromPlace.latitude, fromPlace.longitude];
       const to: [number, number] = [toPlace.latitude, toPlace.longitude];
       const line = leaflet.polyline([from, to], {
         pane: 'place-relationships',
@@ -653,7 +681,10 @@
   {/if}
 
   {#if placeChoice}
-    <aside class="place-choice" aria-label={`Choose an event at ${placeChoice.place.name}`}>
+    <aside
+      class="place-choice"
+      aria-label={`Choose an event at ${placeChoice.place.name}`}
+    >
       <div>
         <span>Events at</span>
         <strong>{placeChoice.place.name}</strong>
