@@ -97,6 +97,17 @@ JSON-envelope repair, records input/output hashes and the repair outcome, and
 activates the complete draft, views, and bound `route-review.json` together or
 preserves the prior revision on replacement failure.
 
+Every active agent step uses a stable, route-independent prompt contract. The
+generated `*-prompt.ai-draft.md` remains the full inspectable prompt snapshot;
+its companion run metadata records the contract version and digest. Route ID,
+brief, dossier, candidate outline, preview, validation report, and revision
+request are dynamic inputs, not parts of the stable contract. Agent output is
+written to a local `*-output.ai-draft.*` staging artifact and validated before
+it replaces an active route artifact. For `complete_draft` only, one additional
+validator-informed correction call may follow a structurally invalid result.
+It may repair the contract shape but must not invent sources, approve content,
+change Human review state, publish, or write seed data.
+
 For a correction that is local to one or more Candidates, provide a route-local
 request file with the current review revision, correction text, Candidate IDs,
 and `selective` scope:

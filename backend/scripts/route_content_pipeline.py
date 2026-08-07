@@ -17,6 +17,13 @@ if str(BACKEND_ROOT) not in sys.path:
 
 from app.route_review import ROUTE_REVIEW_FILENAME, RouteReviewRepository
 from app.schemas import Connection, Event, Place, Route
+from scripts.route_prompt_contracts import (
+    contract_digest,
+    contract_markdown,
+    load_prompt_template,
+    prompt_contract,
+    validate_contract_output,
+)
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_CONTENT_ROOT = REPO_ROOT / "docs" / "content" / "routes"
@@ -708,9 +715,14 @@ def run_agent_step(
         )
     agent_step = manifest["agent_steps"][step]
     prompt_path = route_dir / agent_step["prompt"]
+    active_output_path = route_dir / agent_step.get("active_output", agent_step["output"])
     output_path = route_dir / agent_step["output"]
+    if step != "complete_draft":
+        output_path = output_path.with_name(
+            f"{output_path.stem}-output.ai-draft{output_path.suffix}"
+        )
     run_path = route_dir / agent_step["run"]
-    expected_outputs = [prompt_path, run_path] if dry_run else [prompt_path, output_path, run_path]
+    expected_outputs = [prompt_path, run_path] if dry_run else [prompt_path, active_output_path, run_path]
     skipped = maybe_skip_outputs(expected_outputs, renew)
     if skipped:
         return {"step": step, "status": "skipped", "outputs": skipped}
@@ -810,6 +822,20 @@ def run_agent_step(
                 "operation": "unwrap_single_json_code_fence",
                 "repaired_output_sha256": sha256_text(repaired),
             }
+    contract_errors = validate_contract_output(
+        step, activation_output.read_text(encoding="utf-8")
+    )
+    if contract_errors:
+        metadata.update({"status": "failed", "validation": "\n".join(contract_errors)})
+        write_json(run_path, metadata, renew=renew)
+        raise ValueError("Agent output validation failed:\n" + "\n".join(contract_errors))
+    if step != "complete_draft":
+        write_text(
+            active_output_path,
+            activation_output.read_text(encoding="utf-8"),
+            renew=renew,
+        )
+        activation_output = active_output_path
     try:
         extra_outputs = sync_agent_sidecar_outputs(
             route_dir=route_dir,
@@ -821,14 +847,69 @@ def run_agent_step(
             revision_request=request,
         )
     except Exception as exc:
-        metadata.update({"status": "failed", "validation": str(exc)})
-        write_json(run_path, metadata, renew=renew)
-        raise
+        if step != "complete_draft" or not str(exc).startswith(
+            "Complete draft validation failed:"
+        ):
+            metadata.update({"status": "failed", "validation": str(exc)})
+            write_json(run_path, metadata, renew=renew)
+            raise
+        correction_output = output_path.with_name(
+            f"{output_path.stem}-correction{output_path.suffix}"
+        )
+        correction_prompt = build_complete_draft_correction_prompt(
+            original_output=activation_output.read_text(encoding="utf-8"),
+            validation_errors=str(exc),
+        )
+        correction_command = build_codex_exec_command(
+            codex_command=codex_command, model=model, output_path=correction_output
+        )
+        correction = subprocess.run(
+            correction_command,
+            input=correction_prompt,
+            text=True,
+            capture_output=True,
+            cwd=REPO_ROOT,
+            check=False,
+        )
+        repair_outputs.extend([correction_output.name])
+        metadata["repair"] = {
+            "attempted": True,
+            "operation": "validator_informed_complete_draft_correction",
+            "initial_validation": str(exc),
+            "returncode": correction.returncode,
+            "prompt_sha256": sha256_text(correction_prompt),
+        }
+        if correction.returncode != 0 or not correction_output.exists():
+            metadata.update({"status": "failed", "validation": str(exc)})
+            write_json(run_path, metadata, renew=renew)
+            raise
+        corrected = correction_output.read_text(encoding="utf-8")
+        correction_errors = validate_contract_output(step, corrected)
+        if correction_errors:
+            metadata.update({"status": "failed", "validation": "\n".join(correction_errors)})
+            write_json(run_path, metadata, renew=renew)
+            raise ValueError("Agent correction validation failed:\n" + "\n".join(correction_errors))
+        try:
+            extra_outputs = sync_agent_sidecar_outputs(
+                route_dir=route_dir,
+                seed_dir=seed_dir,
+                manifest=manifest,
+                step=step,
+                output_path=correction_output,
+                renew=renew,
+                revision_request=request,
+            )
+        except Exception as correction_exc:
+            metadata.update({"status": "failed", "validation": str(correction_exc)})
+            write_json(run_path, metadata, renew=renew)
+            raise
+        metadata["repair"].update(
+            {"succeeded": True, "corrected_output_sha256": sha256_text(corrected)}
+        )
     metadata["validation"] = "passed"
-    active_path = route_dir / agent_step.get("active_output", agent_step["output"])
-    if active_path.exists():
+    if active_output_path.exists():
         metadata["active_output_sha256"] = sha256_text(
-            active_path.read_text(encoding="utf-8")
+            active_output_path.read_text(encoding="utf-8")
         )
     write_json(run_path, metadata, renew=renew)
     return {
@@ -837,6 +918,11 @@ def run_agent_step(
         "outputs": [
             prompt_path.name,
             output_path.name,
+            *(
+                [active_output_path.name]
+                if step != "complete_draft"
+                else []
+            ),
             *repair_outputs,
             run_path.name,
             *extra_outputs,
@@ -873,6 +959,28 @@ def sync_agent_sidecar_outputs(
     )
     write_json(outline_path, event_list, renew=renew)
     return [markdown_path.name, outline_path.name]
+
+
+def build_complete_draft_correction_prompt(
+    *, original_output: str, validation_errors: str
+) -> str:
+    return "\n".join(
+        [
+            "# SoundAtlas Agent Step: complete_draft correction",
+            "",
+            "Return only corrected complete-draft JSON. Repair only the listed structural contract errors.",
+            "Do not invent source URLs or historical claims, change Human editorial state, approve media, publish, or write seed data.",
+            "Preserve valid editorial content and unresolved warnings.",
+            "",
+            contract_markdown("complete_draft"),
+            "",
+            "## Validator errors",
+            validation_errors,
+            "",
+            "## Original output",
+            original_output,
+        ]
+    )
 
 
 def activate_complete_draft(
@@ -1415,6 +1523,7 @@ def build_agent_prompt(
             (route_dir / active_output).read_text(encoding="utf-8"),
             "",
         ]
+    template = load_prompt_template(step)
     return "\n".join(
         [
             f"# SoundAtlas Agent Step: {step}",
@@ -1432,7 +1541,9 @@ def build_agent_prompt(
             "",
             "## Task",
             "",
-            agent_step_instructions(step),
+            template.rstrip(),
+            "",
+            contract_markdown(step),
             "",
             "## Inputs",
             "",
@@ -1441,91 +1552,6 @@ def build_agent_prompt(
             *revision_blocks,
         ],
     )
-
-
-def agent_step_instructions(step: str) -> str:
-    instructions = {
-        "brief_to_dossier": (
-            "Create a route research dossier draft that follows the provided "
-            "template and quality standards. Start from the route brief only; "
-            "do not narrow the research direction beyond what the brief supports."
-        ),
-        "dossier_to_event_review": "\n".join(
-            [
-                "Improve the event selection quality in the active dossier.",
-                "Use only the dossier input. Do not invent new events or close source risks.",
-                "Separate strong route events from context-only or weak candidates.",
-                "Every candidate kept for development must explain its role in the route thesis.",
-                "Preserve candidate IDs, years, places, working titles, inclusion rationale, source leads, and risk notes.",
-                "Return only an event-list JSON draft with `_meta` and `candidates`.",
-                'Use `_meta.review_status: "draft"` and keep every candidate decision draft.',
-                "Each candidate must include `candidate_id`, `status`, `review_state`, `years`, `place`, `working_title`, `route_function`, `decision_rationale`, `review_question`, `source_leads`, `risk_notes`, and `next_action`.",
-                "Use only `keep`, `maybe`, `merge`, or `reject` as candidate statuses. Treat `status` as the agent-proposed decision, not human approval.",
-                "Use only `pending`, `approved`, or `rejected` as `review_state`. New agent drafts should normally use `pending` until human review.",
-                "For every `merge` candidate, include machine-readable `merge_target_id` and `merge_rationale`; do not hide merge targets only in prose.",
-                "When candidates overlap, align, duplicate, or form a context cluster, include top-level `review_clusters` with `cluster_id`, `title`, `member_candidate_ids`, `recommended_anchor_id`, `recommended_action`, `rationale`, and `review_guidance`.",
-                "Use only `keep_separate`, `merge`, or `use_as_context` as cluster `recommended_action`.",
-                "Do not call candidates final seed events.",
-            ],
-        ),
-        "complete_draft": "\n".join(
-            [
-                "Create one complete route draft from the candidate outline and active dossier.",
-                "The candidate outline is agent planning input, not a frozen human-approved roster.",
-                "You may add, omit, merge, split, or reorder candidates when the route argument and evidence support it.",
-                "Return only JSON with `_meta`, `route_concept`, `candidates`, `sequence`, `events`, `places`, `connections`, `phase_coverage`, `findings`, `warnings`, and `technical_errors`.",
-                "Set `_meta.review_status` to `draft`, `_meta.source_outline` to the candidate-outline input filename, and `_meta.route_id` to the route ID.",
-                "Every candidate must include `candidate_id`, `status`, `review_state`, `years`, `place`, `working_title`, `route_function`, `decision_rationale`, `review_question`, `source_leads`, `risk_notes`, `next_action`, and `composition` with `outcome`, `reason`, and `related_candidate_ids`.",
-                "Use `keep`, `maybe`, `merge`, or `reject` only for agent recommendations; every generated candidate must use `review_state: pending`.",
-                "Account for every source-outline candidate exactly once. Use `active`, `omitted`, `merged_into`, `split_into`, or `added` composition outcomes. Only active and added candidates appear in `sequence` and have seed-shaped events; inactive candidates need `preview.summary` and `preview.significance` for review.",
-                "Every event must be a complete current-schema framing draft with seed-shaped fields, source and media arrays, and at least one relevant item-level source URL. Its `id` must match an active or added candidate ID.",
-                "Every place and connection must use the current route pipeline framing shape and reference the generated event IDs.",
-                "Include phase coverage records with `phase`, `status` (`covered`, `narrowed`, or `gap`), and candidate IDs. Include owned findings with owner `candidate_composition`, `active_event`, `active_route`, `source_media`, or `technical`; do not put inactive-candidate findings in active-route findings.",
-                "Acquire and compare relevant sources before drafting reader-facing prose. Never invent source support. Keep unresolved source, historical, place, media, and wording risks in owned findings; keep structural or reference failures in `technical_errors`.",
-                "Do not approve events, publish seed data, or claim the route is publication-ready.",
-            ],
-        ),
-        "event_review_to_concept": "\n".join(
-            [
-                "Improve the route argument quality from the generated event-list draft.",
-                "Use the event-list input as the boundary and keep additions clearly marked as proposed additions requiring review.",
-                "Return only a route concept Markdown draft.",
-                "The concept must include story-serving headings, a central question, a route thesis, narrative phases, place logic, candidate sequence, source-risk notes, and open editorial questions.",
-                "Turn event candidates into a coherent editorial argument, not a chronology or checklist.",
-                "Make the route's development over time and across places legible.",
-                "Mark weak transitions, missing source support, and claims that need cautious wording.",
-                "Keep the concept draft status clear; do not claim the route is seed-ready.",
-            ],
-        ),
-        "concept_to_event_framing": "\n".join(
-            [
-                "Improve event-level story quality from the route concept and generated event-list draft.",
-                "Return only event framing Markdown; do not return seed JSON.",
-                "Use story-serving event headings. Do not use `summary` or `significance` as editorial Markdown headers.",
-                "For each event, include a product-facing event title, one-sentence what-happens prose for later seed `summary`, and one-sentence why-this-matters-here prose for later seed `significance`.",
-                "Event titles should be concise and product-facing, usually under 90 characters.",
-                "What-happens prose should focus on what happened.",
-                "Why-this-matters-here prose should focus on why the event matters to this route.",
-                "The combined what-happens and why-this-matters-here prose should usually stay under 70 words.",
-                "Also include place decision, connection rationale, source needs, and wording risks for each event.",
-                "Avoid `first`, `birthplace`, or sole-origin claims unless the source basis is explicit.",
-                "Do not claim event framing or seed JSON is publication-ready.",
-            ],
-        ),
-        "validation_to_revision_plan": "\n".join(
-            [
-                "Improve publication readiness by turning preview and validation findings into an editorial revision plan.",
-                "Use only the seed preview and validation report inputs.",
-                "Return only a Markdown revision plan.",
-                "Prioritize blockers before polish.",
-                "Group fixes by route, place, event, connection, source, and wording risk.",
-                "Separate schema/reference problems from editorial quality problems.",
-                "Call out missing source URLs, unresolved coordinates, weak event prose, unsupported claims, and connection logic gaps.",
-                "Do not edit seed data.",
-            ],
-        ),
-    }
-    return instructions[step]
 
 
 def format_prompt_file_block(label: str, content: str) -> str:
@@ -1541,6 +1567,7 @@ def build_agent_run_metadata(
     codex_command: str,
     model: str | None,
 ) -> dict[str, Any]:
+    contract = prompt_contract(step)
     return {
         "step": step,
         "provider": "codex_cli",
@@ -1554,6 +1581,11 @@ def build_agent_run_metadata(
         },
         "prompt": agent_step["prompt"],
         "output": agent_step["output"],
+        "prompt_contract": {
+            "step": contract.step,
+            "version": contract.version,
+            "sha256": contract_digest(step),
+        },
         "command": build_codex_exec_command(
             codex_command=codex_command,
             model=model,

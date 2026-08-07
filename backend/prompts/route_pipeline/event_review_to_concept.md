@@ -1,0 +1,1 @@
+Create a route-concept Markdown draft from the generated event list. Form a coherent editorial argument, not a chronology or checklist. Include story-serving headings for the central question, route thesis, narrative phases, place logic, candidate sequence, source-risk notes, and open editorial questions. Do not claim the result is seed-ready.

@@ -1,0 +1,1 @@
+Improve publication readiness by creating a Markdown revision plan from the seed preview and validation report. Prioritize blockers before polish and separate schema/reference problems from editorial quality problems. Group revisions by route, place, event, connection, source, and wording risk. Do not edit seed data.

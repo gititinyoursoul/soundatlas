@@ -189,7 +189,9 @@ The current MVP contract does not require:
 - a generalized content dashboard or CMS;
 - direct structured-field editing;
 - pipeline configuration, execution, or reruns from the review surface;
-- normalized model, prompt, or pipeline-version provenance;
+- an admin-facing provenance browser, normalized run archive, or cross-run
+  comparison; local generated prompt/run artifacts may still identify the
+  contract version used for a CLI run;
 - immutable run archival, retention rules, or run comparison;
 - automatic editorial, source, media, or publication approval; or
 - automatic commit, push, deployment, or public-repository management.

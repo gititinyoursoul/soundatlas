@@ -305,7 +305,7 @@ def test_agent_renew_writes_prompt_backup(tmp_path: Path) -> None:
 
 def test_agent_invokes_codex_cli_and_writes_direct_output(tmp_path: Path, capsys) -> None:
     content_root, seed_dir = write_pipeline_fixture(tmp_path)
-    fake_codex = write_fake_codex(tmp_path)
+    fake_codex = write_fake_codex(tmp_path, output=build_route_dossier_output())
     route_dir = content_root / ROUTE_ID
 
     assert (
@@ -329,9 +329,28 @@ def test_agent_invokes_codex_cli_and_writes_direct_output(tmp_path: Path, capsys
     )
     output = capsys.readouterr().out
     assert "Running Codex CLI for brief_to_dossier; writing" in output
-    assert (route_dir / "research-dossier.md").read_text(encoding="utf-8") == "agent output\n"
+    assert (route_dir / "research-dossier.md").read_text(encoding="utf-8") == build_route_dossier_output()
     manifest = json.loads((route_dir / "pipeline.json").read_text(encoding="utf-8"))
     assert manifest["agent_steps"]["brief_to_dossier"]["output"] == "research-dossier.md"
+
+
+def test_invalid_agent_output_preserves_existing_active_artifact(tmp_path: Path) -> None:
+    content_root, seed_dir = write_pipeline_fixture(tmp_path)
+    route_dir = content_root / ROUTE_ID
+    previous = "## Route Working Frame\n\nExisting draft.\n\n## Candidate Events\n\nExisting.\n\n## Risks And Open Claims\n\nExisting.\n"
+    (route_dir / "research-dossier.md").write_text(previous, encoding="utf-8")
+    fake_codex = write_fake_codex(tmp_path, output="invalid draft\n")
+
+    assert main(
+        [
+            "--content-root", str(content_root), "--seed-dir", str(seed_dir),
+            "agent", "--route-id", ROUTE_ID, "--step", "brief_to_dossier",
+            "--codex-command", str(fake_codex), "--renew",
+        ]
+    ) == 2
+
+    assert (route_dir / "research-dossier.md").read_text(encoding="utf-8") == previous
+    assert (route_dir / "research-dossier-output.ai-draft.md").exists()
 
 
 def test_complete_draft_materializes_active_outputs_and_refreshes_review(
@@ -552,7 +571,7 @@ def test_agent_variant_writes_named_output_without_changing_manifest(
     tmp_path: Path, capsys
 ) -> None:
     content_root, seed_dir = write_pipeline_fixture(tmp_path)
-    fake_codex = write_fake_codex(tmp_path)
+    fake_codex = write_fake_codex(tmp_path, output=build_route_dossier_output())
     route_dir = content_root / ROUTE_ID
     manifest_path = route_dir / "pipeline.json"
 
@@ -581,7 +600,7 @@ def test_agent_variant_writes_named_output_without_changing_manifest(
     assert "research-dossier.mvp-edit.md" in output
     assert (route_dir / "research-dossier.mvp-edit.md").read_text(
         encoding="utf-8"
-    ) == "agent output\n"
+    ) == build_route_dossier_output()
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     assert manifest["agent_steps"]["brief_to_dossier"]["output"] == "research-dossier.md"
 
@@ -705,6 +724,7 @@ def test_agent_prompts_include_editorial_quality_contracts(tmp_path: Path) -> No
     ]:
         assert "improve editorial quality, not merely reformat the input" in prompt
         assert "mark unresolved review needs" in prompt
+        assert "## Output Contract" in prompt
 
     assert "Separate strong route events from context-only or weak candidates" in dossier_prompt
     assert "`route_function`" in dossier_prompt
@@ -731,6 +751,11 @@ def test_agent_prompts_include_editorial_quality_contracts(tmp_path: Path) -> No
     assert "publication readiness" in revision_prompt
     assert "Prioritize blockers before polish" in revision_prompt
     assert "schema/reference problems from editorial quality problems" in revision_prompt
+    metadata = json.loads(
+        (route_dir / "complete_draft-run.ai-draft.json").read_text(encoding="utf-8")
+    )
+    assert metadata["prompt_contract"]["version"] == "1"
+    assert len(metadata["prompt_contract"]["sha256"]) == 64
 
 
 def test_codex_exec_command_uses_supported_noninteractive_flags(tmp_path: Path) -> None:
@@ -1321,6 +1346,43 @@ FAKE_CODEX_OUTPUT
     return fake_codex
 
 
+def write_fake_codex_sequence(tmp_path: Path, outputs: list[str]) -> Path:
+    payloads = []
+    for index, output in enumerate(outputs, start=1):
+        payload = tmp_path / f"fake-codex-output-{index}.txt"
+        payload.write_text(output, encoding="utf-8")
+        payloads.append(payload)
+    fake_codex = tmp_path / "fake-codex-sequence"
+    cases = "\n".join(
+        f'{index}) cp "{payload}" "$out" ;;'
+        for index, payload in enumerate(payloads, start=1)
+    )
+    fake_codex.write_text(
+        "#!/bin/sh\n"
+        "out=\"\"\n"
+        "while [ \"$#\" -gt 0 ]; do\n"
+        "  if [ \"$1\" = \"--output-last-message\" ]; then\n"
+        "    shift\n"
+        "    out=\"$1\"\n"
+        "  fi\n"
+        "  shift\n"
+        "done\n"
+        "cat >/dev/null\n"
+        "count_file=\"$0.count\"\n"
+        "count=0\n"
+        "if [ -f \"$count_file\" ]; then count=$(cat \"$count_file\"); fi\n"
+        "count=$((count + 1))\n"
+        "printf '%s' \"$count\" > \"$count_file\"\n"
+        "case \"$count\" in\n"
+        f"{cases}\n"
+        "*) exit 1 ;;\n"
+        "esac\n",
+        encoding="utf-8",
+    )
+    fake_codex.chmod(fake_codex.stat().st_mode | stat.S_IEXEC)
+    return fake_codex
+
+
 def test_complete_draft_requires_complete_candidate_accounting(tmp_path: Path) -> None:
     content_root, seed_dir = write_pipeline_fixture(tmp_path)
     payload = json.loads(build_complete_draft_json())
@@ -1414,6 +1476,34 @@ def test_complete_draft_derives_reused_place_display_text_from_seed(tmp_path: Pa
     assert "1520 Sedgwick Avenue" in (
         route_dir / "event-framing.md"
     ).read_text(encoding="utf-8")
+
+
+def test_complete_draft_repairs_one_structurally_invalid_model_output(tmp_path: Path) -> None:
+    content_root, seed_dir = write_pipeline_fixture(tmp_path)
+    route_dir = content_root / ROUTE_ID
+    (route_dir / "candidate-outline.json").write_text(
+        build_complete_draft_outline_json(), encoding="utf-8"
+    )
+    invalid = json.loads(build_complete_draft_json())
+    invalid["sequence"] = [{"event_id": "kool-herc-sedgwick-party"}]
+    fake_codex = write_fake_codex_sequence(
+        tmp_path, [json.dumps(invalid), build_complete_draft_json()]
+    )
+
+    assert main(
+        [
+            "--content-root", str(content_root), "--seed-dir", str(seed_dir),
+            "agent", "--route-id", ROUTE_ID, "--step", "complete_draft",
+            "--codex-command", str(fake_codex),
+        ]
+    ) == 0
+
+    metadata = json.loads(
+        (route_dir / "complete_draft-run.ai-draft.json").read_text(encoding="utf-8")
+    )
+    assert metadata["repair"]["operation"] == "validator_informed_complete_draft_correction"
+    assert metadata["repair"]["succeeded"] is True
+    assert (route_dir / "complete-draft-output.ai-draft-correction.json").exists()
 
 
 def test_complete_draft_binds_active_review_and_blocks_legacy_steps(tmp_path: Path) -> None:
@@ -1751,6 +1841,21 @@ def build_dossier() -> str:
 | From event | To event | Relationship type | Narrative purpose | Source leads | Risk notes |
 | --- | --- | --- | --- | --- | --- |
 | `kool-herc-sedgwick-party` | `missing-event` | context | This row is ignored because one endpoint is missing. | Source leads. | Risk notes. |
+"""
+
+
+def build_route_dossier_output() -> str:
+    return """## Route Working Frame
+
+Draft route frame.
+
+## Candidate Events
+
+Draft candidate event research.
+
+## Risks And Open Claims
+
+Draft source risk.
 """
 
 

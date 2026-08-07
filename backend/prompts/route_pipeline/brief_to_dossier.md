@@ -1,0 +1,1 @@
+Create a route research dossier draft from the route brief and supplied standards. Follow the supplied dossier structure, keep source risks explicit, and do not narrow the research direction beyond the brief.

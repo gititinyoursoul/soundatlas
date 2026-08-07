@@ -126,8 +126,10 @@ For new route work, keep route-specific editorial artifacts under
    candidate connections, and editorial risks.
 3. `pipeline.json`: route-local pipeline state, active dossier, step outputs,
    and default filenames.
-4. `*.ai-draft.*`: local Codex CLI prompt and run metadata files. These files
-   live in the route folder and are ignored by git.
+4. `*.ai-draft.*`: local Codex CLI prompt, staged-output, and run metadata
+   files. These files live in the route folder and are ignored by git. Run
+   metadata identifies the stable agent-step contract version and digest;
+   route-specific files remain dynamic inputs to that contract.
 5. Named variants such as `event-list.alternate-draft.json` or
    `route-concept.alternate-draft.md` when alternate editorial drafts are
    useful.
