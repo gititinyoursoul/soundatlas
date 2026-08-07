@@ -871,6 +871,10 @@ def test_downstream_steps_run_after_accepted_events_gate_passes(tmp_path: Path) 
     events_payload = json.loads((route_dir / "event-framing.json").read_text(encoding="utf-8"))
     assert events_payload["_meta"]["source"] == "accepted-events.json"
     assert events_payload["events"][0]["id"] == "kool-herc-sedgwick-party"
+    connections_payload = json.loads(
+        (route_dir / "connection-framing.json").read_text(encoding="utf-8")
+    )
+    assert connections_payload["connections"] == []
 
 
 def test_unresolved_merge_candidate_blocks_accepted_events_generation(tmp_path: Path) -> None:

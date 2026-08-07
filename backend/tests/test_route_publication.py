@@ -196,7 +196,7 @@ def test_publish_uses_the_bound_review_bundle_not_framing_files(tmp_path: Path) 
         "connections"
     ]
     assert [item["title"] for item in events] == ["First event", "Second event"]
-    assert [item["id"] for item in connections] == ["event-one-to-event-two"]
+    assert connections == []
 
 
 def test_publication_failure_restores_all_previous_files(tmp_path: Path, monkeypatch) -> None:

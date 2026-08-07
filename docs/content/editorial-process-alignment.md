@@ -57,15 +57,18 @@ SoundAtlas currently uses a route-first workflow:
 9. `seed-transfer-report.md` and `validation-report.md` preview structural
    seed changes before promotion.
 10. `data/seed/` is the runtime source for the map, timeline, route switching,
-   event inspector, sources, connections, media links, and image links.
+   event inspector, sources, media links, and image links. Existing
+   Connections remain readable as compatibility data but are deferred from the
+   supported MVP experience.
 11. Enrichment scripts can create event-search components, media query plans,
    YouTube result files, draft `media_links`, and draft `image_links`.
 12. The app has an internal media/image review queue for marking draft links as
    reviewed or rejecting them.
 
 The documentation consistently says generated route artifacts are drafts and
-that human editorial review decides which claims, events, places, connections,
-and links are ready for seed promotion.
+that human editorial review decides which claims, events, places, and links
+are ready for seed promotion. Connections are currently deferred because their
+implementation adds complexity without enough developed user value.
 
 `soundatlas-grill-me` is the recommended critique gate before non-trivial
 editorial planning, candidate selection, enrichment, or seed promotion. It

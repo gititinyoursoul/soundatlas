@@ -1,6 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
 import {
-  makeConnection,
   makeEvent,
   makePlace,
   makeRoute
@@ -27,36 +26,32 @@ function jsonResponse(body: unknown, init: ResponseInit = {}): Response {
 }
 
 describe('SoundAtlas API client', () => {
-  it('loads routes, places, events, and connections', async () => {
+  it('loads MVP routes, places, and events without a Connection dependency', async () => {
     const routes = [makeRoute({ id: 'birth-of-hip-hop' })];
     const places = [makePlace({ id: '1520-sedgwick-avenue' })];
     const events = [makeEvent({ id: 'kool-herc-back-to-school-jam' })];
-    const connections = [makeConnection({ id: 'breakbeat-influence' })];
     const fetcher = vi
       .fn<typeof fetch>()
       .mockResolvedValueOnce(jsonResponse(routes))
       .mockResolvedValueOnce(jsonResponse(places))
-      .mockResolvedValueOnce(jsonResponse(events))
-      .mockResolvedValueOnce(jsonResponse(connections));
+      .mockResolvedValueOnce(jsonResponse(events));
 
     await expect(loadApiSoundAtlasData(fetcher)).resolves.toEqual({
       routes,
       places,
       events,
-      connections
+      connections: []
     });
 
-    expect(fetcher).toHaveBeenCalledTimes(4);
+    expect(fetcher).toHaveBeenCalledTimes(3);
     expect(fetcher).toHaveBeenNthCalledWith(1, `${API_BASE_URL}/routes`);
     expect(fetcher).toHaveBeenNthCalledWith(2, `${API_BASE_URL}/places`);
     expect(fetcher).toHaveBeenNthCalledWith(3, `${API_BASE_URL}/events`);
-    expect(fetcher).toHaveBeenNthCalledWith(4, `${API_BASE_URL}/connections`);
   });
 
   it('handles empty collection responses', async () => {
     const fetcher = vi
       .fn<typeof fetch>()
-      .mockResolvedValueOnce(jsonResponse([]))
       .mockResolvedValueOnce(jsonResponse([]))
       .mockResolvedValueOnce(jsonResponse([]))
       .mockResolvedValueOnce(jsonResponse([]));
@@ -76,7 +71,6 @@ describe('SoundAtlas API client', () => {
         jsonResponse([], { status: 503, statusText: 'Service Unavailable' })
       )
       .mockResolvedValueOnce(jsonResponse([]))
-      .mockResolvedValueOnce(jsonResponse([]))
       .mockResolvedValueOnce(jsonResponse([]));
 
     await expect(loadApiSoundAtlasData(fetcher)).rejects.toThrow(
@@ -88,31 +82,25 @@ describe('SoundAtlas API client', () => {
     const routes = [makeRoute({ id: 'birth-of-hip-hop' })];
     const places = [makePlace({ id: '1520-sedgwick-avenue' })];
     const events = [makeEvent({ id: 'kool-herc-back-to-school-jam' })];
-    const connections = [makeConnection({ id: 'breakbeat-influence' })];
     const fetcher = vi
       .fn<typeof fetch>()
       .mockResolvedValueOnce(jsonResponse({ _meta: {}, routes }))
       .mockResolvedValueOnce(jsonResponse({ _meta: {}, places }))
       .mockResolvedValueOnce(
         jsonResponse({ _meta: {}, events, ignored_links: [] })
-      )
-      .mockResolvedValueOnce(jsonResponse({ _meta: {}, connections }));
+      );
 
     await expect(loadStaticSoundAtlasData(fetcher)).resolves.toEqual({
       routes,
       places,
       events,
-      connections
+      connections: []
     });
 
-    expect(fetcher).toHaveBeenCalledTimes(4);
+    expect(fetcher).toHaveBeenCalledTimes(3);
     expect(fetcher).toHaveBeenNthCalledWith(1, '/soundatlas-data/routes.json');
     expect(fetcher).toHaveBeenNthCalledWith(2, '/soundatlas-data/places.json');
     expect(fetcher).toHaveBeenNthCalledWith(3, '/soundatlas-data/events.json');
-    expect(fetcher).toHaveBeenNthCalledWith(
-      4,
-      '/soundatlas-data/connections.json'
-    );
   });
 
   it('surfaces malformed static public data', async () => {

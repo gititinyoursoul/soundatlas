@@ -51,7 +51,7 @@
   let routes: Route[] = [];
   let places: Place[] = [];
   let events: Event[] = [];
-  let connections: Connection[] = [];
+  const activeConnections: Connection[] = [];
   let selectedRouteId: string | null = null;
   let selectedEventId: string | null = null;
   let selectedPlaceId: string | null = null;
@@ -89,9 +89,6 @@
   $: activePlaces = IS_EDITORIAL_MODE
     ? (routeReview?.places.map((item) => item.place) ?? [])
     : places;
-  $: activeConnections = IS_EDITORIAL_MODE
-    ? (routeReview?.connections ?? [])
-    : connections;
   $: routeEvents = IS_EDITORIAL_MODE
     ? editorialProjections
         .filter((item) => item.renderOnTimeline && item.event)
@@ -231,7 +228,6 @@
       routes = data.routes;
       places = data.places;
       events = data.events;
-      connections = data.connections;
       const initialRouteId = selectedRouteId ?? getInitialRouteId(data.routes);
       selectedRouteId = initialRouteId;
 

@@ -10,6 +10,9 @@ This file defines the minimum validation rules for the curated MVP seed data und
 - References must point to existing IDs.
 - `source_urls`, `media_links`, and `image_links` are always arrays, even when empty.
 - Draft data uses `review_status: "draft"`.
+- Existing `connections.json` records are compatibility data; Connections are
+  deferred from the supported MVP and are not required for route readiness or
+  publication.
 
 ## `routes.json`
 

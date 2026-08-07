@@ -1,5 +1,4 @@
 import type {
-  Connection,
   EditorialState,
   Event,
   EventInput,
@@ -41,40 +40,34 @@ export async function loadSoundAtlasData(
 export async function loadApiSoundAtlasData(
   fetcher: typeof fetch = fetch
 ): Promise<SoundAtlasData> {
-  const [routes, places, events, connections] = await Promise.all([
+  const [routes, places, events] = await Promise.all([
     requestJson<Route[]>('/routes', fetcher),
     requestJson<Place[]>('/places', fetcher),
-    requestJson<EventInput[]>('/events', fetcher),
-    requestJson<Connection[]>('/connections', fetcher)
+    requestJson<EventInput[]>('/events', fetcher)
   ]);
 
   return {
     routes,
     places,
     events: events.map(normalizeEvent),
-    connections
+    connections: []
   };
 }
 
 export async function loadStaticSoundAtlasData(
   fetcher: typeof fetch = fetch
 ): Promise<SoundAtlasData> {
-  const [routes, places, events, connections] = await Promise.all([
+  const [routes, places, events] = await Promise.all([
     requestStaticCollection<Route>('routes.json', 'routes', fetcher),
     requestStaticCollection<Place>('places.json', 'places', fetcher),
-    requestStaticCollection<EventInput>('events.json', 'events', fetcher),
-    requestStaticCollection<Connection>(
-      'connections.json',
-      'connections',
-      fetcher
-    )
+    requestStaticCollection<EventInput>('events.json', 'events', fetcher)
   ]);
 
   return {
     routes,
     places,
     events: events.map(normalizeEvent),
-    connections
+    connections: []
   };
 }
 

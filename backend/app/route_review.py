@@ -668,6 +668,8 @@ def _review_connections(
     if complete_draft is None:
         return [], []
     values = complete_draft.get("connections")
+    if values is None:
+        return [], []
     if not isinstance(values, list):
         return [], ["Complete draft `connections` must be a list."]
     connections: list[Connection] = []

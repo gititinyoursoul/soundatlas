@@ -5,6 +5,11 @@ The canonical state vocabulary is defined in
 pipeline artifacts may use the names documented below only at migration input
 boundaries; newly generated payloads use the canonical names.
 
+Connections are deferred from the MVP because their current implementation is
+not developed enough to add sufficient user value while still adding editorial
+and runtime complexity. New pipeline runs do not propose or publish them;
+existing records remain readable temporarily for compatibility.
+
 ## Purpose
 
 This document describes how SoundAtlas app-facing editorial content is created

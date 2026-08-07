@@ -154,7 +154,6 @@ class RoutePublicationRepository:
                 continue
             selected_events.append(proposal.event.model_dump(mode="json"))
 
-        selected_event_ids = {event.get("id") for event in selected_events}
         selected_place_ids = {
             place_id for event in selected_events for place_id in event.get("place_ids", [])
         }
@@ -163,15 +162,10 @@ class RoutePublicationRepository:
             for item in review.places
             if item.decision == "new" and item.place.id in selected_place_ids
         ]
-        selected_connections = [
-            item.model_dump(mode="json")
-            for item in review.connections
-            if item.from_event_id in selected_event_ids and item.to_event_id in selected_event_ids
-        ]
-
+        # Connections are deferred from the MVP. Keep legacy seed records
+        # readable, but do not select or publish new relationship records.
         previous = self._read_publication_state(review.route_id)
         published_event_ids = set(previous.get("event_ids", []))
-        published_connection_ids = set(previous.get("connection_ids", []))
         events = [
             event
             for event in seed["events"].get("events", [])
@@ -187,16 +181,9 @@ class RoutePublicationRepository:
             if place.get("id") not in {item.get("id") for item in new_places}
         ]
         places.extend(new_places)
-        connections = [
-            connection
-            for connection in seed["connections"].get("connections", [])
-            if connection.get("id") not in published_connection_ids
-            and not (
-                connection.get("from_event_id") in candidate_ids
-                or connection.get("to_event_id") in candidate_ids
-            )
-        ]
-        connections.extend(selected_connections)
+        # Preserve legacy Connection data unchanged while it is deferred from
+        # the MVP publication path.
+        connections = list(seed["connections"].get("connections", []))
         payload = {
             "routes": seed["routes"],
             "places": {"places": places},

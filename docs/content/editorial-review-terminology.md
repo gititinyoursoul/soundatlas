@@ -20,6 +20,9 @@ New or regenerated payloads must emit only the canonical names. Once all
 consumers have migrated, the legacy `review_status` field is removed rather
 than emitted alongside `content_review_status`.
 
-Connections are intentionally outside this contract until the MVP decision in
-Issue #126. Shared places retain their own content-review status; route use is
-derived from route entries rather than a global place inclusion decision.
+Connections are deferred from the MVP because their current implementation is
+not developed enough to add sufficient user value while adding editorial and
+runtime complexity. Existing records remain readable temporarily for
+compatibility, but new runs and publication do not depend on them. Shared
+places retain their own content-review status; route use is derived from route
+entries rather than a global place inclusion decision.

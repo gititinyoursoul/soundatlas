@@ -169,6 +169,10 @@ still use `status` (`keep`, `maybe`, `merge`, or `reject`) and `review_state`
 `accepted_events` only includes `include` and resolved `merge` candidates whose
 `editorial_state` is `approved`. A `merge` candidate must include
 `merge_target_id` and `merge_rationale`; the target cannot live only in prose.
+
+Event framing retains a compatibility-shaped `connections` collection, but
+Connections are deferred from the MVP: new runs emit an empty collection and
+publication does not select new relationship records.
 The `accepted_events` step creates or consumes `accepted-events.json` as the
 structured handoff and generates `accepted-events.md` as a readable companion
 view only when missing, unless `--renew` is passed. The Markdown file helps

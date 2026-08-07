@@ -1992,11 +1992,9 @@ def generate_event_framing(
         accepted_events=accepted_events,
         seed_place_index=seed_place_index,
     )
-    connections = build_connection_drafts(
-        manifest["route_id"],
-        dossier_path.read_text(encoding="utf-8"),
-        {event["id"] for event in events},
-    )
+    # Connections are deferred from the MVP. Preserve the artifact shape for
+    # compatibility, but do not generate new relationship records.
+    connections: list[dict[str, Any]] = []
     events_payload = {
         "_meta": {
             "route_id": manifest["route_id"],
