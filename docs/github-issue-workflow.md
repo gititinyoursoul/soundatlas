@@ -23,8 +23,9 @@ entrypoint for each kind of work. Skills and prompts provide the procedures for
 producing their assigned artifacts and must follow this lifecycle contract.
 
 In particular, `soundatlas-issue-planning` drafts and revises Intake Issues,
-Plan Updates, Detailed Plan Updates, and Implementation Reports. It does not
-own lifecycle ordering, post-commit closure, or Issue-state management.
+Plan Updates, Detailed Plan Updates, `## Proceed to Implementation` records,
+and Implementation Reports. It does not own lifecycle ordering, post-commit
+closure, or Issue-state management.
 `soundatlas-grill-me` owns the phase-aware critique procedure, Review Modes,
 Materiality routing, and interactive one-finding flow; this document owns when
 that procedure runs and the canonical completed Grill-Me record shape.
@@ -76,21 +77,22 @@ bodies and may remain command arguments.
 3. Agent creates an Intake Issue containing only Task, Context, and Acceptance Criteria.
 4. Agent performs a lightweight Grill-Me check and runs the interactive review when a material finding needs human confirmation.
 5. If planning would otherwise invent material target behavior, runtime responsibilities, boundaries, or ownership, the agent uses `soundatlas-concept-work` and records an `## Concept` comment or linked authoritative document.
-6. Agent adds a `## Plan Update` or `## Detailed Plan Update` after required decisions are confirmed.
-7. Human starts implementation with explicit wording such as "implement issue #<number>".
-8. Agent implements from the approved Issue content.
-9. Agent validates the change with the relevant checks.
-10. For completed non-trivial Issue work, agent uses `soundatlas-implementation-review` to compare the accepted target, implementation, evidence, and documentation.
-11. Agent posts one combined `## Implementation Report` containing the review result.
-12. Human reviews the local diff and explicitly requests a commit when the work
+6. Agent adds a `## Plan Update` or `## Detailed Plan Update` after required decisions are confirmed. The plan references its accepted Concept or records why Concept Work was not required.
+7. Human starts implementation with explicit wording such as "implement issue #<number>". This confirms the latest Plan Update and authorizes only its recorded scope.
+8. Agent records `## Proceed to Implementation`, linking the exact confirmed Plan Update, and runs the readiness validator before the first repository edit.
+9. Agent implements from the validated Issue content.
+10. Agent validates the change with the relevant checks.
+11. For completed non-trivial Issue work, agent uses `soundatlas-implementation-review` to compare the accepted target, implementation, evidence, and documentation.
+12. Agent posts one combined `## Implementation Report` containing the review result.
+13. Human reviews the local diff and explicitly requests a commit when the work
     is ready.
-13. After a successful commit, agent captures the commit hash and runs the
+14. After a successful commit, agent captures the commit hash and runs the
     local completion gate. The gate must confirm the canonical report shape,
     checked acceptance criteria, an `Accepted` implementation review, exactly
     one completion comment plan, and Issue-relevant working-tree verification.
-14. Agent posts the standard completion comment only after the gate passes and
+15. Agent posts the standard completion comment only after the gate passes and
     closes the Issue only after that comment succeeds.
-15. If any post-commit verification or GitHub operation fails, agent reports
+16. If any post-commit verification or GitHub operation fails, agent reports
     the failure and leaves the Issue open when possible.
 ```
 
@@ -215,6 +217,8 @@ For multiple findings, number each `Finding`/`Decision` pair in the same
 comment. Every material finding must have an explicit decision, including a
 decision to defer, reject, or remain blocked. A `## Plan Update` must not rely
 on the plan itself to claim that a missing Grill-Me decision was confirmed.
+`Next step` records workflow routing; it does not by itself confirm a Plan or
+authorize implementation.
 
 Codex may set existing approved GitHub labels on Issues. New labels must be
 proposed and explicitly approved before Codex creates or uses them.
@@ -304,8 +308,25 @@ not add a separate approval status.
 
 ## Plan Update
 
-Add a Plan Update in the Issue before non-trivial implementation when the Intake
-Issue is not already decision-complete.
+Add a Plan Update in the Issue before non-trivial implementation. A
+decision-complete Intake may use a concise Plan with the Concept-not-required
+rationale; it does not skip the pre-implementation artifact gate.
+
+Before `## Plan`, include exactly one planning-basis line:
+
+```md
+Target Concept: [<accepted Concept>](<Issue comment or authoritative document>)
+```
+
+or:
+
+```md
+Concept Work: Not required — <why the Intake is decision-complete>
+```
+
+The planning entrypoint must establish that basis before producing technical
+solution detail. A Concept-not-required rationale is not a separate workflow
+status or approval step.
 
 Use this structure for normal work:
 
@@ -340,14 +361,15 @@ Rules:
 
 - Keep the plan in the GitHub Issue, not in a local or repo-versioned plan file.
 - Reference an accepted `## Concept` comment or authoritative concept document
-  when one exists; do not copy it into the Plan Update.
+  when one exists; otherwise record the concise Concept-not-required rationale.
+  Do not copy a Concept into the Plan Update.
 - If planning exposes a missing or contradictory material target decision,
   return to Grill Me and concept work instead of resolving it in the plan.
 - For risk-flagged work, add the Plan Update only after the Issue contains a
   recorded Grill-Me result with required decisions confirmed. Use a standalone
   `## Grill-Me Review` when the result contains a material finding, decision,
   blocker, or explicit standalone session; a clean check may be recorded inline
-  in the Plan Update.
+  in the Plan Update with the `Grill-Me check: clean` prefix.
 - Use `Acceptance Criteria Changes` whenever the original criteria are changed.
   Do not silently rewrite the meaning of the Issue.
 - Use `Requirements` only when complex product, API, data, security, or workflow
@@ -356,24 +378,79 @@ Rules:
   security, privacy, external API behavior, generated media review boundaries,
   historically sensitive claims, irreversible workflow behavior, or production
   stability.
+- For mechanical readiness, `## Open Questions` must start with `None` or each
+  remaining item must say `Deferred by human` and `non-blocking`. Do not use
+  either marker to hide a material unresolved decision.
+
+## Proceed to Implementation
+
+For non-trivial Issue work, one explicit human implementation request after the
+latest Plan Update both confirms that Plan and authorizes its recorded scope.
+Before editing repository artifacts, use `soundatlas-issue-planning` to record:
+
+```md
+## Proceed to Implementation
+
+- Plan: [<exact Plan Update>](<Issue comment URL>)
+- Human decision: Proceed with this plan.
+- Authorized scope: Issue #<number> <concise scope reference>
+```
+
+The heading and fields are a durable authorization record, not a new approval
+status. Do not infer it from a Grill-Me `Next step`, technical readiness, a
+request to inspect or plan an Issue, or implementation wording that predates the
+latest Plan Update.
+
+A later Plan Update, Detailed Plan Update, Intake Revision, Concept, or
+Grill-Me decision that routes work back to Concept, Planning, or Blocked
+invalidates the earlier go-ahead. The Human must authorize the current Plan and
+the agent must record a new `## Proceed to Implementation` before work resumes.
+Routine comments and implementation evidence do not invalidate it.
+
+Do not rewrite historical Issue comments to add this record. When existing open
+work next enters implementation, use its current canonical artifacts when they
+already satisfy the gate; otherwise add a new Plan Update and go-ahead while
+preserving the earlier history. Closed Issues need no migration.
 
 ## Implementation Gate
 
 Implementation may proceed when:
 
-- The human explicitly requests implementation of an Issue with wording such as
-  `implement issue #<number>`, or the change is clearly trivial.
+- The human explicitly requests implementation of the latest Plan with wording
+  such as `implement issue #<number>`, or the change is clearly trivial.
 - The Issue contains enough Task, Plan, and Acceptance Criteria detail to
   implement safely.
 - Blocking questions are resolved or intentionally deferred.
-- For risk-flagged work, the Issue contains a recorded Grill-Me result and a
-  confirmed `## Plan Update` or `## Detailed Plan Update`. The result may be
-  inline in that action comment when clean; material findings, decisions,
+- For non-trivial work, the Issue contains a current `## Plan Update` or
+  `## Detailed Plan Update`, followed by a matching `## Proceed to
+  Implementation`.
+- For risk-flagged work, the Issue also contains its required Grill-Me result.
+  The result may be inline in the Plan when clean; material findings, decisions,
   blockers, and standalone sessions use `## Grill-Me Review`.
+- The shared readiness validator passes immediately before the first Issue-scoped
+  repository edit.
 
 Explicit implementation wording does not bypass a required Grill-Me review or
-Plan Update. A low-risk assumption may be recorded and carried forward; a
-material unresolved decision requires user confirmation before implementation.
+Plan Update, the go-ahead record, or validation. A low-risk assumption may be
+recorded and carried forward; a material unresolved decision requires user
+confirmation before implementation.
+
+Export the current Issue artifacts and run the non-mutating check with:
+
+```sh
+gh issue view <number> --json number,body,comments \
+  | python scripts/check_issue_readiness.py --file -
+```
+
+Add `--require-grill-review` when the Issue has a risk flag that requires a
+recorded Grill-Me result. Without that flag, the validator still validates any
+Grill-Me records that are present; the Plan's Concept basis carries the semantic
+pre-planning decision for the clean or omitted-check path.
+
+The validator checks canonical artifact structure and ordering. It does not
+decide Materiality, create Issue comments, or replace the semantic checks owned
+by Grill Me and Issue Planning. Clearly trivial, local, low-risk work remains on
+the direct path and does not invoke this non-trivial-Issue gate.
 
 The agent must not implement behavior outside the approved Issue content. If
 implementation reveals missing behavior, the agent should:
@@ -382,6 +459,10 @@ implementation reveals missing behavior, the agent should:
   implementation.
 - Stop for approval when the decision changes product behavior or another
   high-risk boundary.
+
+If drift produces a new Plan, Intake Revision, Concept, or blocking Grill-Me
+decision, the existing go-ahead is invalid. Record a new go-ahead for the
+current Plan and rerun readiness validation before implementation resumes.
 
 ## Implementation Review
 

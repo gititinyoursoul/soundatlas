@@ -1,6 +1,6 @@
 ---
 name: soundatlas-issue-planning
-description: Draft or revise SoundAtlas GitHub Issue intake, Plan Updates, Detailed Plan Updates, and Implementation Reports for frontend, backend, data, documentation, UX, or cross-cutting changes. Use when a SoundAtlas Issue needs to be created, refined for implementation, checked for open questions, or reported after implementation.
+description: Draft or revise SoundAtlas GitHub Issue intake, Plan Updates, Detailed Plan Updates, Proceed-to-Implementation records, and Implementation Reports for frontend, backend, data, documentation, UX, or cross-cutting changes. Use when a SoundAtlas Issue needs to be created, refined or authorized for implementation, checked for open questions, or reported after implementation.
 ---
 
 # SoundAtlas Issue Planning
@@ -23,7 +23,7 @@ readiness review before Issue content is drafted.
 
 1. Classify the request.
    Decide whether the Issue needs an Intake Issue, Plan Update, Detailed Plan
-   Update, or Implementation Report.
+   Update, Proceed-to-Implementation record, or Implementation Report.
 
 2. Inspect the repo before asking questions.
    Resolve discoverable facts from docs, code, seed data, or existing Issues
@@ -53,7 +53,8 @@ readiness review before Issue content is drafted.
    When an accepted concept exists, link to it and derive the plan from its
    target behavior, scope and non-goals, runtime responsibilities, boundaries
    and ownership, and resolved decisions. Do not copy the concept into the
-   Plan Update.
+   Plan Update. When Concept Work was not required, record `Concept Work: Not
+   required — <decision-completeness rationale>` before technical Plan detail.
 
    When creating an Issue, choose exactly one approved `priority:p*` label by
    reasoning from blocking level, MVP/release impact, risk reduction, and
@@ -94,10 +95,17 @@ readiness review before Issue content is drafted.
    If the plan changes the original criteria, include an `Acceptance Criteria
 Changes` section instead of silently rewriting the meaning of the Issue.
 
-7. Stop before implementation unless the user explicitly requests implementation
-   with wording such as `implement issue #<number>` or the change qualifies for
-   the direct path in `docs/github-issue-workflow.md`. Explicit wording does not
-   bypass required review or planning gates.
+7. Record the implementation go-ahead only after authorization.
+   Stop before implementation unless the user explicitly confirms the latest
+   Plan with wording such as `implement issue #<number>` or the change qualifies
+   for the direct path in `docs/github-issue-workflow.md`. Explicit wording does
+   not bypass required review or planning gates.
+
+   For non-trivial work, verify the exact latest Plan comment and record
+   `## Proceed to Implementation` using the canonical Plan link, Human decision,
+   and authorized Issue scope fields. Do not infer authorization from a Grill-Me
+   `Next step`, technical readiness, or a request to inspect, plan, or "work on"
+   an Issue. Read the comment back before handing off to implementation.
 
 8. Finalize one combined Implementation Report after review.
    For completed non-trivial Issue work, require
@@ -121,10 +129,10 @@ Changes` section instead of silently rewriting the meaning of the Issue.
 
 ## Issue Artifact Contracts
 
-Use the canonical Intake, Plan Update, Detailed Plan Update, and
-Implementation Report shapes in `docs/github-issue-workflow.md`. Use
-`Requirements` only when complex product, API, data, security, or workflow
-rules would otherwise be unclear.
+Use the canonical Intake, Plan Update, Detailed Plan Update,
+Proceed-to-Implementation, and Implementation Report shapes in
+`docs/github-issue-workflow.md`. Use `Requirements` only when complex product,
+API, data, security, or workflow rules would otherwise be unclear.
 
 ## Planning Rules
 
@@ -144,6 +152,9 @@ rules would otherwise be unclear.
   assumptions in the Plan Update instead.
 - Do not state `Open Questions: None` while a material decision remains
   unresolved.
+- For a Plan entering mechanical readiness, start `## Open Questions` with
+  `None` or mark every remaining item `Deferred by human` and `non-blocking`.
+  Do not apply either marker without the corresponding decision.
 - Do not define behavior outside the requested change.
 - Do not describe completed non-trivial Issue work as accepted without a
   `soundatlas-implementation-review` result supported by proportionate evidence.
@@ -157,7 +168,11 @@ rules would otherwise be unclear.
   Plan Update as a substitute for a missing human decision in the Grill-Me
   record.
 - Reference an accepted concept instead of duplicating it across implementation
-  Issues or plans.
+  Issues or plans. If Concept Work was not needed, record the bounded rationale
+  instead of inventing a separate Concept status.
+- Treat a Grill-Me `Next step` as routing, not implementation authorization.
+  `## Proceed to Implementation` must link the exact latest Plan and may be
+  written only after the Human explicitly confirms that Plan's scope.
 - Prefer small, reviewable revisions over broad rewrites.
 - Do not silently broaden an Intake. Split a separate deliverable, changed
   primary outcome, materially different domain/owner, or independently
@@ -178,5 +193,6 @@ Return the planning result in this order:
 3. Open questions, if any remain.
 4. Draft Issue content or comment content.
 5. Validation approach, when implementation is expected.
-6. Next step: approve the Plan Update, request implementation with
-   `implement issue #<number>`, or review the Implementation Report.
+6. Next step: request implementation with `implement issue #<number>` to
+   confirm the latest Plan and authorize its scope, record/verify
+   `## Proceed to Implementation`, or review the Implementation Report.

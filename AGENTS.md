@@ -124,23 +124,35 @@ Events should contain at least:
 - Record the implementation-review result inside the single
   `## Implementation Report` comment. Do not add a separate routine review
   comment or treat review as human commit approval.
-- New Issues are intake records, not implementation-ready plans. For risky,
-  vague, or cross-cutting work, Grill-Me review and a confirmed Plan Update are
-  required before implementation; explicit wording such as `implement issue
-#<number>` does not bypass those gates. Clearly trivial, local, low-risk work
-  may proceed directly.
+- New Issues are intake records, not implementation-ready plans. Non-trivial
+  Issue work requires a confirmed Plan Update before implementation; risky,
+  vague, or cross-cutting work also requires Grill-Me review. The Plan must
+  reference its accepted Concept or state why Concept Work was not required.
+  Explicit wording such as `implement issue #<number>` does not bypass those
+  gates. Clearly trivial, local, low-risk work may proceed directly.
 - Use standardized Issue records: a standalone `## Grill-Me Review` for
   material findings, confirmed decisions, blockers, or explicit standalone
   sessions; `## Concept` when concept work is needed; `## Plan Update` or
-  `## Detailed Plan Update`; and `## Implementation Report`. Clean lightweight
-  checks may be recorded inline in the next action comment or omitted when no
-  durable record is useful.
+  `## Detailed Plan Update`; `## Proceed to Implementation` after the Human
+  confirms the latest Plan and authorizes its scope; and `## Implementation
+  Report`. Clean lightweight checks may be recorded inline in the next action
+  comment or omitted when no durable record is useful.
 - Before planning, record scope changes as an `## Intake Revision` comment and
   rerun Grill-Me for material revisions; do not silently broaden an Intake.
-- Plan Updates, Detailed Plan Updates, and Implementation Reports should live in the GitHub Issue rather than local or repo-versioned plan files.
+- Plan Updates, Detailed Plan Updates, Proceed-to-Implementation records, and
+  Implementation Reports should live in the GitHub Issue rather than local or
+  repo-versioned plan files.
 - Use `docs/workflow-registry.md` as the routing guide for repeatable execution work that should live in skills or prompt wrappers.
 - Treat `docs/workflow-registry.md` as the authoritative policy for skill, prompt, compatibility-wrapper, and workflow-document boundaries; correct conflicts in the authoritative source rather than interpreting duplicated instructions.
-- Use the repo skill at `.codex/skills/soundatlas-issue-planning` when an Issue needs an Intake structure, Plan Update, Detailed Plan Update, or Implementation Report.
+- Use the repo skill at `.codex/skills/soundatlas-issue-planning` when an Issue
+  needs an Intake structure, Plan Update, Detailed Plan Update, Proceed-to-
+  Implementation record, or Implementation Report.
+- Before the first repository edit for non-trivial Issue work, require a
+  `## Proceed to Implementation` record that links the latest Plan and run
+  `python scripts/check_issue_readiness.py` against the current exported Issue
+  artifacts. Add `--require-grill-review` when risk flags require a recorded
+  Grill-Me result. A Grill-Me `Next step` is routing, not implementation
+  authorization.
 - `TODO.md` is a legacy backlog and should not receive new planned work unless the user explicitly asks for a legacy note.
 - If the scope changes, update `docs/mvp-concept.md` first and then create or update the relevant GitHub Issue.
 - Codex may set existing approved GitHub labels on Issues. New labels must be proposed and explicitly approved before Codex creates or uses them.

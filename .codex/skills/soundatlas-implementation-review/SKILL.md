@@ -17,6 +17,8 @@ Read the smallest available set that establishes the target and result:
 - the accepted `## Concept` comment or authoritative concept document, when one
   exists;
 - the approved Plan Update or Detailed Plan Update, when one was required;
+- the matching `## Proceed to Implementation` record when the current workflow
+  required one;
 - the actual diff and Issue-relevant working-tree state;
 - validation results and other supplied evidence; and
 - current-state documentation affected by the implementation.
@@ -37,8 +39,10 @@ artifact. Inspect discoverable evidence before declaring it missing.
 3. Establish the available authorities.
    Treat the Issue as the scope and acceptance-criteria authority, the concept
    as the target-behavior authority when present, and the plan as the authority
-   for implementation tasks and planned validation. Treat contradictions as
-   findings instead of silently choosing a winner.
+   for implementation tasks and planned validation. Treat the Proceed record as
+   evidence of Human authorization for that exact Plan, not approval of the
+   completed implementation. Treat contradictions as findings instead of
+   silently choosing a winner.
 4. Identify material claims.
    List the target behaviors, runtime responsibilities, acceptance criteria,
    non-goals, and material documentation claims the implementation must support.

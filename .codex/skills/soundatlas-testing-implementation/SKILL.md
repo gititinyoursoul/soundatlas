@@ -47,6 +47,16 @@ wording does not bypass required Grill-Me and Plan Update gates for risky,
 workflow, cross-cutting, or materially ambiguous work. Clearly trivial,
 local, low-risk test changes may proceed directly.
 
+For non-trivial Issue work, require a current Plan and a `## Proceed to
+Implementation` record linking it. Before the first repository edit, and again
+before resuming after a canonical revision or blocking decision, export the
+current Issue fields defined in `docs/github-issue-workflow.md` and require
+`python scripts/check_issue_readiness.py --file <export>` to pass. Add
+`--require-grill-review` when risk flags require a recorded Grill-Me result. If
+the Human has authorized the latest Plan but the Proceed record is missing, use
+`soundatlas-issue-planning` to record it first. Keep deterministic artifact
+rules in the shared validator rather than duplicating them here.
+
 ## Process
 
 1. Read the approved Issue or focused test request and identify the exact test

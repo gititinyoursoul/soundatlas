@@ -45,6 +45,10 @@ Concept Work remains conditional. Do not require it when an Intake is already
 decision-complete and Planning would not have to invent material target
 behavior, runtime responsibilities, Boundaries, or Ownership.
 
+A Grill-Me `Next step` routes the reviewed artifact; it does not confirm a Plan
+or authorize implementation. The separate lifecycle record in
+`docs/github-issue-workflow.md` owns that Human go-ahead.
+
 ## Review workflow
 
 1. Identify the active artifact and select the smallest applicable Review Mode.
@@ -161,9 +165,10 @@ authorized.
 ### Implementation Readiness Grill
 
 Check that the approved Issue, required confirmed Grill-Me decisions, optional
-Concept when needed, Plan Update, explicit implementation authorization, and
-blocking-question resolution are present. Do not replace any future mechanical
-readiness validator.
+Concept when needed, current Plan Update, matching `## Proceed to
+Implementation`, blocking-question resolution, and passing mechanical readiness
+validation are present. Keep semantic Materiality assessment in this Skill and
+deterministic artifact validation in `scripts/check_issue_readiness.py`.
 
 ### Implementation Grill
 
@@ -269,6 +274,9 @@ Route implementation fixes to implementation, Concept changes to
 `soundatlas-concept-work`, Plan changes to `soundatlas-issue-planning`, and
 completed-implementation evidence comparison to
 `soundatlas-implementation-review`.
+
+Keep `Next step` limited to routing. Do not use it as a substitute for
+`## Proceed to Implementation`.
 
 ## SoundAtlas constraints
 

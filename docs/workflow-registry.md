@@ -4,7 +4,8 @@ SoundAtlas uses three lightweight layers for agent-driven work:
 
 - GitHub Issues are the source of truth for planned agent work.
 - Issue comments and body updates hold Intake Issues, Concept records, Plan
-  Updates, Detailed Plan Updates, and Implementation Reports.
+  Updates, Detailed Plan Updates, Proceed-to-Implementation records, and
+  Implementation Reports.
 - Skills and prompts define reusable execution patterns for critique, planning,
   implementation, tests, docs, and UX.
 
@@ -15,7 +16,8 @@ Skill is the central phase-aware critique entrypoint. The
 Work is needed. The `soundatlas-implementation-review` Skill performs the
 repeatable completion comparison and evidence assessment. The
 `soundatlas-issue-planning` Skill is the durable Issue-writing mechanism for
-implementation plans and the combined Implementation Report.
+implementation plans, Proceed-to-Implementation records, and the combined
+Implementation Report.
 
 All multiline GitHub Markdown body transport follows the safe file/stdin rule
 in `docs/github-issue-workflow.md`; the generic helper is
@@ -41,7 +43,8 @@ Grill Me.
 SoundAtlas uses instruction-driven orchestration. There is no workflow service,
 state machine, Git hook, or GitHub Action that advances work automatically.
 Agents follow the repository guidance, while GitHub Issues preserve the durable
-scope, decisions, plans, and completion evidence.
+scope, decisions, plans, implementation go-ahead, and completion evidence. The
+local readiness validator checks those artifacts but does not advance state.
 
 ```text
 Request
@@ -60,6 +63,8 @@ Request
         -> Optional concept work when requested or needed
         -> Plan Update as required
         -> Explicit implementation request
+        -> Proceed to Implementation record
+        -> Readiness validation
         -> Relevant execution skill
         -> Validation
         -> soundatlas-implementation-review
@@ -149,14 +154,20 @@ reviewed.
 - Prompts own bounded interactive behavior or compatibility-entrypoint guidance
   assigned by the registry.
 - GitHub Issues own planned scope, confirmed decisions, acceptance criteria,
-  default `## Concept` records, and implementation reports. When the human
-  selects an authoritative concept document under `docs/`, that document owns
-  the concept and the Issue links to it without duplication.
+  default `## Concept` records, `## Proceed to Implementation` records, and
+  implementation reports. When the human selects an authoritative concept
+  document under `docs/`, that document owns the concept and the Issue links to
+  it without duplication.
 
 The detailed lifecycle and canonical Issue artifact shapes live in
 `docs/github-issue-workflow.md`. `soundatlas-issue-planning` owns the procedure
 for drafting and revising those artifacts, but not lifecycle ordering,
 post-commit closure, or Issue-state management.
+
+`scripts/check_issue_readiness.py` owns deterministic pre-implementation
+artifact checks. It does not decide Materiality, infer Human authorization,
+write Issue comments, or replace the semantic routing owned by Grill Me and
+Issue Planning.
 
 For completion review, `soundatlas-implementation-review` owns comparison,
 proportional evidence assessment, finding classification, and routing. Grill Me
@@ -189,12 +200,12 @@ For an approved prompt-to-skill extraction:
 
 | Work category | Default boundary | Current guidance |
 | --- | --- | --- |
-| Frontend implementation | Skill, with legacy wrapper | `soundatlas-frontend-implementation` |
-| Backend implementation | Skill, with legacy wrapper | `soundatlas-backend-implementation` |
+| Frontend implementation | Skill | `soundatlas-frontend-implementation` |
+| Backend implementation | Skill | `soundatlas-backend-implementation` |
 | Concept synthesis | Skill | `soundatlas-concept-work` |
 | Implementation review | Skill | `soundatlas-implementation-review` |
-| Documentation updates | Skill, with legacy wrapper | `soundatlas-documentation-implementation` |
-| Test planning and implementation | Skill, with legacy wrapper | `soundatlas-testing-implementation` |
+| Documentation updates | Skill | `soundatlas-documentation-implementation` |
+| Test planning and implementation | Skill | `soundatlas-testing-implementation` |
 | Editorial route and seed curation | Interactive prompt | `prompts/create-route.md`, `prompts/curate-seed-data.md` |
 | Phase-aware critique | Skill | `soundatlas-grill-me` |
 | UX critique and review | Interactive prompt | `prompts/design-ux.md` |
@@ -230,9 +241,14 @@ For an approved prompt-to-skill extraction:
   Update` when risk flags are present. Use a standalone `## Grill-Me Review`
   for material findings, decisions, blockers, or explicit standalone sessions;
   record clean checks inline in the action comment when useful.
-- Implement from a risk-flagged Issue only after the review and plan gates are
-  complete plus explicit wording such as `implement issue #<number>`. Clearly
-  trivial, local, low-risk work may proceed directly.
+- Before technical planning detail, require the Plan to reference its accepted
+  Concept or state why Concept Work was not required. This is a semantic check,
+  not a new Concept status.
+- Implement from a non-trivial Issue only after the Plan gate is complete, the
+  Human explicitly confirms the latest Plan with wording such as `implement
+  issue #<number>`, the agent records `## Proceed to Implementation`, and the
+  shared readiness validator passes. Risk-flagged work also requires its
+  Grill-Me gate. Clearly trivial, local, low-risk work may proceed directly.
 - Use a skill or prompt entrypoint to carry out the approved Issue content.
 - Let Codex set existing approved Issue labels when useful. New labels must be
   proposed and explicitly approved before Codex creates or uses them.
@@ -269,11 +285,11 @@ by the agent.
 | Phase-aware critique and planning front door | Skill                             | Intake Issue when non-trivial                                                | `.codex/skills/soundatlas-grill-me/SKILL.md` for procedure; `docs/github-issue-workflow.md` for lifecycle and completed records | `.codex/skills/soundatlas-grill-me/SKILL.md`                                                                   | Finding, verdict, or workflow handoff                               |
 | Concept synthesis                       | Skill                                  | Confirmed material decisions; only when concept work is needed               | `## Concept` Issue comment or one human-confirmed authoritative document under `docs/` | `.codex/skills/soundatlas-concept-work/SKILL.md`                                                            | Five-part concept or link to its authoritative document             |
 | Implementation review                   | Skill                                  | Completed non-trivial Issue work, or drift/risk during implementation        | Approved Issue, concept when present, plan, actual diff, evidence, and current-state docs | `.codex/skills/soundatlas-implementation-review/SKILL.md`                                               | Review Result inside the single Implementation Report               |
-| Issue intake, planning, and reports     | Skill                                  | Intake or Grill-Me as required by risk                                       | GitHub Issue body/comments; lifecycle in `docs/github-issue-workflow.md`            | `.codex/skills/soundatlas-issue-planning/SKILL.md`                                                     | Intake, Plan Update, Detailed Plan Update, or Implementation Report |
-| Frontend implementation                 | Skill plus compatibility wrapper       | Approved Issue; Grill-Me and Plan Update when risk-flagged                   | Approved GitHub Issue; `.codex/skills/soundatlas-frontend-implementation/SKILL.md` | `.codex/skills/soundatlas-frontend-implementation/SKILL.md` with `prompts/implement-frontend-map.md` as wrapper | Frontend changes and implementation report                          |
-| Backend implementation                  | Skill plus compatibility wrapper       | Approved Issue; Grill-Me and Plan Update when risk-flagged                   | Approved GitHub Issue; `.codex/skills/soundatlas-backend-implementation/SKILL.md` | `.codex/skills/soundatlas-backend-implementation/SKILL.md` with `prompts/implement-backend-api.md` as wrapper | Backend changes and implementation report                           |
-| Documentation and workflow changes      | Skill plus compatibility wrapper       | Approved Issue; Grill-Me for workflow or other risk-flagged changes          | Approved GitHub Issue; `.codex/skills/soundatlas-documentation-implementation/SKILL.md` | `.codex/skills/soundatlas-documentation-implementation/SKILL.md` with `prompts/update-docs.md` as wrapper        | Documentation changes and implementation report                     |
-| Test planning and implementation        | Skill plus compatibility wrapper       | Approved Issue or focused test scope; Grill-Me for risk-flagged work         | Approved GitHub Issue or focused scope; `.codex/skills/soundatlas-testing-implementation/SKILL.md` | `.codex/skills/soundatlas-testing-implementation/SKILL.md` with `prompts/write-tests.md` as wrapper               | Tests and verification report                                       |
+| Issue intake, planning, and reports     | Skill                                  | Intake or Grill-Me as required by risk                                       | GitHub Issue body/comments; lifecycle in `docs/github-issue-workflow.md`            | `.codex/skills/soundatlas-issue-planning/SKILL.md`                                                     | Intake, Plan Update, Detailed Plan Update, Proceed record, or Implementation Report |
+| Frontend implementation                 | Skill                                  | Validated latest Plan and Proceed record when non-trivial                    | Approved GitHub Issue; `.codex/skills/soundatlas-frontend-implementation/SKILL.md` | `.codex/skills/soundatlas-frontend-implementation/SKILL.md`                                                      | Frontend changes and implementation report                          |
+| Backend implementation                  | Skill                                  | Validated latest Plan and Proceed record when non-trivial                    | Approved GitHub Issue; `.codex/skills/soundatlas-backend-implementation/SKILL.md` | `.codex/skills/soundatlas-backend-implementation/SKILL.md`                                                        | Backend changes and implementation report                           |
+| Documentation and workflow changes      | Skill                                  | Validated latest Plan and Proceed record when non-trivial                    | Approved GitHub Issue; `.codex/skills/soundatlas-documentation-implementation/SKILL.md` | `.codex/skills/soundatlas-documentation-implementation/SKILL.md`                                                  | Documentation changes and implementation report                     |
+| Test planning and implementation        | Skill                                  | Validated latest Plan and Proceed record for non-trivial Issue work          | Approved GitHub Issue or focused scope; `.codex/skills/soundatlas-testing-implementation/SKILL.md` | `.codex/skills/soundatlas-testing-implementation/SKILL.md`                                                        | Tests and verification report                                       |
 | UX audit and critique                   | Prompt                                 | Inspection before implementation; Grill-Me before Issue planning when needed | `docs/design/current-frontend-design.md` and relevant audit                        | `prompts/design-ux.md`                                                                                          | Findings, UX slice, or audit                                        |
 | Route editorial workflow                | Prompt plus command reference          | Grill-Me and approved Issue before broad route/seed changes                  | Route-folder artifacts and `docs/content/editorial-workflow.md`                    | `prompts/create-route.md` and `docs/content/workflow-commands.md`                                               | Route artifacts and reviewed seed proposal                          |
 | Seed data curation                      | Prompt                                 | Grill-Me and accepted-event boundary for non-trivial work                    | `docs/data/seed-data-validation.md` and accepted route artifacts                   | `prompts/curate-seed-data.md`                                                                                   | Seed changes or review proposal                                     |
@@ -283,11 +299,10 @@ The registry covers active human-facing entrypoints and source-of-truth
 documents. Generated route artifacts, `*.ai-draft.*` files, screenshots,
 mockups, and archival records are not registry entries.
 
-The frontend, backend, documentation, and testing implementation prompts are
-compatibility wrappers for their completed skills. Grill Me routes directly to
-`soundatlas-grill-me`; the removed legacy Prompt has no Compatibility Wrapper.
-The YouTube query prompt remains a prompt because its specialized output
-boundary is intentional.
+Frontend, backend, documentation, and testing implementation route directly to
+their corresponding skills. Grill Me also routes directly to
+`soundatlas-grill-me`. The YouTube query prompt remains a prompt because its
+specialized output boundary is intentional.
 
 ## Migration Guidance
 
@@ -299,8 +314,9 @@ boundary is intentional.
    evidence comparison; return material decisions to Grill Me.
 4. Use GitHub Issues as the durable planning, implementation, and verification
    record for non-trivial work.
-5. Use `soundatlas-issue-planning` to create Issue bodies, plans, and
-   the combined Implementation Report without copying accepted concepts.
+5. Use `soundatlas-issue-planning` to create Issue bodies, plans,
+   Proceed-to-Implementation records, and the combined Implementation Report
+   without copying accepted concepts.
 6. Prefer skills for repeatable execution steps.
 7. Keep prompts as short, stable wrappers while the repo transitions toward
    skills.
@@ -326,6 +342,9 @@ Use standardized Issue comments as the canonical workflow record:
   the Issue links to one authoritative concept document under `docs/`.
 - `## Plan Update` or `## Detailed Plan Update` records implementation-ready
   scope after required decisions are confirmed.
+- `## Proceed to Implementation` records the Human's confirmation of the exact
+  latest Plan and authorization of its scope. A Grill-Me `Next step` does not
+  substitute for this record.
 - `## Implementation Report` records completed work, verification, the Review
   Result, and remaining risks. Routine implementation review does not create a
   separate Issue comment.

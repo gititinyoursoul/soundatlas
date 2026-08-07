@@ -55,16 +55,16 @@ Follow these rules for every UX cycle:
 - Use screenshots for visual critique after implementation.
 - Document durable findings or decisions in `docs/`.
 
-## Prompt Stack
+## Workflow Stack
 
-Use the existing prompts in this order:
+Use these entrypoints in this order:
 
 1. `prompts/design-ux.md` - UX audit, main screen design plan, screenshot critique
 2. `soundatlas-grill-me` - critique and narrow the selected UX idea before Issue planning when needed
 3. `soundatlas-issue-planning` - turn the selected design idea into one Issue Plan Update when needed
-4. `.codex/skills/soundatlas-frontend-implementation/SKILL.md` - implement frontend changes from an approved Issue; `prompts/implement-frontend-map.md` remains the compatibility wrapper
-5. `prompts/write-tests.md` - add or update focused tests
-6. `prompts/update-docs.md` - update durable docs that the UX change relies on or changes
+4. `.codex/skills/soundatlas-frontend-implementation/SKILL.md` - implement frontend changes from an approved Issue
+5. `.codex/skills/soundatlas-testing-implementation/SKILL.md` - add or update focused tests
+6. `.codex/skills/soundatlas-documentation-implementation/SKILL.md` - update durable docs that the UX change relies on or changes
 
 Avoid creating one-off prompts for audit, design direction, or screenshot critique unless `prompts/design-ux.md` no longer covers the work.
 
@@ -226,8 +226,7 @@ Output:
 
 Use `.codex/skills/soundatlas-frontend-implementation/SKILL.md` for frontend
 map or exploration-surface changes from an approved Issue with the required
-Plan Update. Use `prompts/implement-frontend-map.md` only as the compatibility
-wrapper for older references.
+Plan Update.
 
 Rules:
 
@@ -239,7 +238,7 @@ Rules:
 - Keep route switching, timeline, map, and event inspector synchronized through shared state.
 - Capture real follow-up work that is out of scope for the pass in GitHub Issues.
 
-If the pass changes shared state, filtering, API behavior, or interaction logic, use `prompts/write-tests.md` to add or update focused tests.
+If the pass changes shared state, filtering, API behavior, or interaction logic, use `.codex/skills/soundatlas-testing-implementation/SKILL.md` to add or update focused tests.
 
 ### Step 7: Validate
 

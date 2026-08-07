@@ -2,7 +2,7 @@
 
 Reusable prompts for UX and design work on SoundAtlas. These are working templates, not project documentation.
 
-This prompt set is the UX entrypoint for the current workflow. If the repo has a matching UX skill, use that skill's instructions and keep these prompts as the compatibility wrapper.
+This prompt set is the UX entrypoint for the current workflow.
 
 Design UX prompts produce audit findings, critique, and UX slice proposals.
 They do not authorize implementation.
@@ -155,5 +155,6 @@ Return:
 - Whether supporting annotated screenshots or mockups should be saved under `docs/design/mockups/`
 - Next step: usually grill the follow-up with `soundatlas-grill-me`, create
   the follow-up Issue plan with `soundatlas-issue-planning`, or update
-  the design baseline with `prompts/update-docs.md`
+  the design baseline with
+  `.codex/skills/soundatlas-documentation-implementation/SKILL.md`
 ```
