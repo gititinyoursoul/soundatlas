@@ -72,6 +72,18 @@ def candidate_editorial_state(candidate: dict[str, Any]) -> str | None:
         )
     state = candidate.get("editorial_state")
     return state if isinstance(state, str) else None
+
+
+def candidate_route_entry_role(candidate: dict[str, Any]) -> str:
+    explicit = candidate.get("route_entry_role") or candidate.get("editorial_role")
+    if explicit in {"active", "context", "exclude"}:
+        return explicit
+    recommendation = candidate.get("agent_recommendation")
+    if recommendation == "context" or candidate.get("status") == "maybe":
+        return "context"
+    if recommendation == "exclude" or candidate.get("status") == "reject":
+        return "exclude"
+    return "active"
 CLUSTER_RECOMMENDED_ACTIONS = {"keep_separate", "merge", "use_as_context"}
 QUALITY_GATE_FIELDS = (
     "route_fit_confirmed",
@@ -1246,6 +1258,23 @@ def validate_complete_draft(
             errors.append(f"Complete draft candidate `{candidate_id}` has unsupported status.")
         if candidate_editorial_state(candidate) != "draft":
             errors.append(f"Complete draft candidate `{candidate_id}` must remain draft.")
+        if candidate_route_entry_role(candidate) == "context":
+            task = candidate.get("next_evidence_task")
+            required_task_fields = (
+                "missing_evidence",
+                "target_claim",
+                "target_place",
+                "expected_output",
+            )
+            if not isinstance(task, dict) or any(
+                not isinstance(task.get(field), str) or not task[field].strip()
+                for field in required_task_fields
+            ):
+                errors.append(
+                    f"Complete draft context candidate `{candidate_id}` requires "
+                    "next_evidence_task with missing_evidence, target_claim, "
+                    "target_place, and expected_output."
+                )
         for field in ("years", "place", "working_title", "route_function"):
             if not isinstance(candidate.get(field), str) or not candidate[field].strip():
                 errors.append(f"Complete draft candidate `{candidate_id}` is missing `{field}`.")

@@ -105,6 +105,29 @@ describe('editorial review projection', () => {
     expect(projection.renderOnTimeline).toBe(false);
   });
 
+  it('projects an approved context entry with its evidence task and role', () => {
+    const [projection] = projectRouteReview(
+      makeReview({
+        proposals: [
+          makeProposal({
+            route_entry_role: 'context',
+            next_evidence_task: {
+              missing_evidence: 'Confirm the documented practice area.',
+              target_claim: 'The practice occurred in the South Bronx.',
+              target_place: 'south-bronx',
+              expected_output: 'A source-backed area description.'
+            }
+          })
+        ]
+      })
+    );
+
+    expect(projection.routeEntryRole).toBe('context');
+    expect(projection.nextEvidenceTask?.target_place).toBe('south-bronx');
+    expect(projection.renderOnMap).toBe(true);
+    expect(projection.renderOnTimeline).toBe(true);
+  });
+
   it('projects inactive candidate context without creating an event', () => {
     const [candidate] = projectInactiveCandidates(
       makeReview({

@@ -121,6 +121,7 @@ export type Event = {
   default_place_id: string;
   place_relationships: PlaceRelationship[];
   title: string;
+  route_entry_role?: RouteEntryRole;
   year_start: number;
   year_end: number;
   summary: string;
@@ -185,6 +186,7 @@ export type ReviewQueueItem = {
 };
 
 export type EditorialState = 'draft' | 'approved' | 'dont_use';
+export type RouteEntryRole = 'active' | 'context' | 'exclude';
 
 export type RouteReviewProposal = {
   candidate_id: string;
@@ -193,6 +195,8 @@ export type RouteReviewProposal = {
   included: boolean;
   renderable: boolean;
   agent_recommendation: string | null;
+  route_entry_role?: RouteEntryRole;
+  next_evidence_task?: Record<string, unknown> | null;
   warnings: string[];
   technical_errors: string[];
   material_signature: string;

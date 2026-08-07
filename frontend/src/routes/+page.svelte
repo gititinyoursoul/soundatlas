@@ -92,12 +92,20 @@
   $: routeEvents = IS_EDITORIAL_MODE
     ? editorialProjections
         .filter((item) => item.renderOnTimeline && item.event)
-        .flatMap((item) => (item.event ? [item.event] : []))
+        .flatMap((item) =>
+          item.event
+            ? [{ ...item.event, route_entry_role: item.routeEntryRole }]
+            : []
+        )
     : publicRouteEvents;
   $: mapEvents = IS_EDITORIAL_MODE
     ? editorialProjections
         .filter((item) => item.renderOnMap && item.event)
-        .flatMap((item) => (item.event ? [item.event] : []))
+        .flatMap((item) =>
+          item.event
+            ? [{ ...item.event, route_entry_role: item.routeEntryRole }]
+            : []
+        )
     : publicRouteEvents;
   $: reviewProposals = routeReview?.proposals ?? [];
   $: selectedInactiveCandidate =
@@ -822,6 +830,7 @@
           showReviewActions={!IS_PUBLIC_STATIC_MODE}
           editorialMode={IS_EDITORIAL_MODE}
           editorialProposal={selectedReviewProposal}
+          editorialRole={selectedReviewProposal?.route_entry_role ?? 'active'}
           editorialSaving={editorialSavingCandidateId ===
             selectedReviewProposal?.candidate_id}
           editorialErrorMessage={editorialActionError}

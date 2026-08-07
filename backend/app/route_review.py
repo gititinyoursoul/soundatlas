@@ -15,6 +15,7 @@ EVENT_LIST_FILENAME = "event-list.json"
 COMPLETE_DRAFT_FILENAME = "complete-draft.json"
 
 EditorialState = Literal["draft", "approved", "dont_use"]
+RouteEntryRole = Literal["active", "context", "exclude"]
 CompositionOutcome = Literal["active", "omitted", "merged_into", "split_into", "added"]
 FindingOwner = Literal[
     "candidate_composition",
@@ -67,6 +68,18 @@ def _canonical_recommendation(candidate: dict[str, Any]) -> str | None:
     return LEGACY_RECOMMENDATION_MAP.get(status) if isinstance(status, str) else None
 
 
+def _route_entry_role(candidate: dict[str, Any]) -> RouteEntryRole:
+    explicit = candidate.get("route_entry_role") or candidate.get("editorial_role")
+    if explicit in {"active", "context", "exclude"}:
+        return explicit
+    recommendation = _canonical_recommendation(candidate)
+    if recommendation == "context":
+        return "context"
+    if recommendation == "exclude":
+        return "exclude"
+    return "active"
+
+
 class RouteReviewProposal(BaseModel):
     candidate_id: str
     editorial_state: EditorialState
@@ -74,6 +87,8 @@ class RouteReviewProposal(BaseModel):
     included: bool = True
     renderable: bool = True
     agent_recommendation: str | None = None
+    route_entry_role: RouteEntryRole = "active"
+    next_evidence_task: dict[str, Any] | None = None
     warnings: list[str] = Field(default_factory=list)
     technical_errors: list[str] = Field(default_factory=list)
     material_signature: str
@@ -451,6 +466,12 @@ def build_route_review(
                 included=state != "dont_use",
                 renderable=not renderability_errors,
                 agent_recommendation=_canonical_recommendation(candidate),
+                route_entry_role=_route_entry_role(candidate),
+                next_evidence_task=(
+                    candidate.get("next_evidence_task")
+                    if isinstance(candidate.get("next_evidence_task"), dict)
+                    else None
+                ),
                 warnings=_unique_strings(
                     candidate.get("risk_notes"),
                     candidate.get("warnings"),
@@ -520,6 +541,17 @@ def proposal_errors(candidate: dict[str, Any]) -> list[str]:
         value = candidate.get(field)
         if not isinstance(value, str) or not value.strip():
             errors.append(f"Missing {label} ('{field}')")
+    if _route_entry_role(candidate) == "context":
+        task = candidate.get("next_evidence_task")
+        required = ("missing_evidence", "target_claim", "target_place", "expected_output")
+        if not isinstance(task, dict) or any(
+            not isinstance(task.get(field), str) or not task[field].strip()
+            for field in required
+        ):
+            errors.append(
+                "Context route entries require next_evidence_task with "
+                "missing_evidence, target_claim, target_place, and expected_output."
+            )
     return errors
 
 

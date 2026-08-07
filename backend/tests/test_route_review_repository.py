@@ -273,7 +273,11 @@ def test_invalid_identifiable_proposal_remains_reviewable_and_can_be_excluded(
     result = repository.refresh(ROUTE_ID)
 
     assert result.proposals[0].renderable is False
-    assert result.proposals[0].technical_errors == ["Missing place ('place')"]
+    assert result.proposals[0].technical_errors == [
+        "Missing place ('place')",
+        "Context route entries require next_evidence_task with missing_evidence, "
+        "target_claim, target_place, and expected_output.",
+    ]
     assert result.technical_ready is False
 
     excluded = repository.update_state(

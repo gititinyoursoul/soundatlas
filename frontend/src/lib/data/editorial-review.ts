@@ -8,6 +8,8 @@ import type {
 export type EditorialProjection = {
   proposal: RouteReviewProposal;
   event: Event | null;
+  routeEntryRole: 'active' | 'context' | 'exclude';
+  nextEvidenceTask: Record<string, unknown> | null;
   renderOnMap: boolean;
   renderOnTimeline: boolean;
   warnings: string[];
@@ -63,6 +65,8 @@ function projectProposal(proposal: RouteReviewProposal): EditorialProjection {
   return {
     proposal,
     event,
+    routeEntryRole: proposal.route_entry_role ?? 'active',
+    nextEvidenceTask: proposal.next_evidence_task ?? null,
     renderOnMap:
       Boolean(event?.default_place_id) &&
       proposal.renderable &&

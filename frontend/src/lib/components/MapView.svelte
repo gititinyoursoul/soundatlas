@@ -229,7 +229,7 @@
           })
         })
         .bindTooltip(
-          `${placement.event.title} (${placement.event.year_start})`,
+          `${placement.event.route_entry_role === 'context' ? 'Route context: ' : ''}${placement.event.title} (${placement.event.year_start})`,
           {
             className: 'event-tooltip',
             direction: 'top',

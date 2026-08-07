@@ -42,6 +42,17 @@
       {sentenceCase(proposal.agent_recommendation)}
     </p>
   {/if}
+  {#if proposal.route_entry_role === 'context'}
+    <p class="recommendation">
+      <strong>Placement:</strong> Route context
+    </p>
+    {#if proposal.next_evidence_task}
+      <p class="recommendation">
+        <strong>Next evidence:</strong>
+        {proposal.next_evidence_task.expected_output ?? 'Evidence task recorded'}
+      </p>
+    {/if}
+  {/if}
   {#if proposal.warnings.length > 0}
     <section
       class="finding-group warnings"

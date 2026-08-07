@@ -147,9 +147,9 @@
           class="event-tick"
           type="button"
           style:left={`${Math.max(0, Math.min(100, toPercent(event.year_start)))}%`}
-          aria-label={`Select ${event.title}, ${formatEventYears(event)}`}
+          aria-label={`Select ${event.route_entry_role === 'context' ? 'route context ' : ''}${event.title}, ${formatEventYears(event)}`}
           aria-pressed={selectedEventId === event.id}
-          title={`${event.title} (${formatEventYears(event)})`}
+          title={`${event.route_entry_role === 'context' ? 'Route context: ' : ''}${event.title} (${formatEventYears(event)})`}
           on:click={() => onSelectEvent(event.id)}
         >
           <span>{event.year_start}</span>
@@ -172,7 +172,7 @@
             on:click={() => onSelectEvent(event.id)}
           >
             <span>{formatEventYears(event)}</span>
-            <strong>{event.title}</strong>
+            <strong>{event.route_entry_role === 'context' ? 'Route context: ' : ''}{event.title}</strong>
             {#if selectedEventId === event.id}
               <em>Selected</em>
             {/if}

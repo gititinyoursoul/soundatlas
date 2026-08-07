@@ -61,6 +61,7 @@
   export let showReviewActions = true;
   export let editorialMode = false;
   export let editorialProposal: RouteReviewProposal | null = null;
+  export let editorialRole: 'active' | 'context' | 'exclude' = 'active';
   export let editorialSaving = false;
   export let editorialErrorMessage: string | null = null;
   export let editorialContentError: string | null = null;
@@ -312,6 +313,9 @@
     <header class="inspector-header">
       <div class="header-top">
         <div class="title-block">
+          {#if editorialMode && editorialRole === 'context'}
+            <span class="context-badge">Route context</span>
+          {/if}
           <h2>{event.title}</h2>
           <p class="event-meta-line">
             {#if route}
@@ -726,6 +730,18 @@
     display: grid;
     gap: 0.18rem;
     min-width: 0;
+  }
+
+  .context-badge {
+    width: fit-content;
+    padding: 0.16rem 0.42rem;
+    border: 1px solid #b8c8e4;
+    border-radius: 999px;
+    color: #2454d6;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
   }
 
   .title-block h2,
