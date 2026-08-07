@@ -885,6 +885,7 @@ def activate_complete_draft(
     revision_request: dict[str, Any] | None = None,
 ) -> list[str]:
     payload = read_json(output_path)
+    normalize_reused_place_display_text(payload=payload, seed_dir=seed_dir)
     source_outline = read_json(
         route_dir / manifest["agent_steps"]["complete_draft"]["inputs"][0]
     )
@@ -997,6 +998,28 @@ def activate_complete_draft(
         ROUTE_REVIEW_FILENAME,
         f"review:{review.revision_id}",
     ]
+
+
+def normalize_reused_place_display_text(*, payload: dict[str, Any], seed_dir: Path) -> None:
+    """Fill an optional generated display field from an existing seed place."""
+    places = payload.get("places")
+    if not isinstance(places, list):
+        return
+    seed_places = load_seed_payloads(seed_dir)["places"].get("places", [])
+    seed_places_by_id = {
+        place["id"]: place
+        for place in seed_places
+        if isinstance(place, dict) and isinstance(place.get("id"), str)
+    }
+    for place in places:
+        if not isinstance(place, dict) or place.get("decision") != "reuse":
+            continue
+        source_text = place.get("source_place_text")
+        if isinstance(source_text, str) and source_text.strip():
+            continue
+        seed_place = seed_places_by_id.get(place.get("place_id"))
+        if isinstance(seed_place, dict) and isinstance(seed_place.get("name"), str):
+            place["source_place_text"] = seed_place["name"]
 
 
 def validate_complete_draft(

@@ -1391,6 +1391,31 @@ def test_complete_draft_repair_unwraps_one_json_code_fence(tmp_path: Path) -> No
     assert (route_dir / "complete-draft-output.ai-draft-repair.json").exists()
 
 
+def test_complete_draft_derives_reused_place_display_text_from_seed(tmp_path: Path) -> None:
+    content_root, seed_dir = write_pipeline_fixture(tmp_path)
+    route_dir = content_root / ROUTE_ID
+    (route_dir / "candidate-outline.json").write_text(
+        build_complete_draft_outline_json(), encoding="utf-8"
+    )
+    draft = json.loads(build_complete_draft_json())
+    del draft["places"][0]["source_place_text"]
+    fake_codex = write_fake_codex(tmp_path, output=json.dumps(draft))
+
+    assert main(
+        [
+            "--content-root", str(content_root), "--seed-dir", str(seed_dir),
+            "agent", "--route-id", ROUTE_ID, "--step", "complete_draft",
+            "--codex-command", str(fake_codex),
+        ]
+    ) == 0
+
+    active = json.loads((route_dir / "complete-draft.json").read_text(encoding="utf-8"))
+    assert active["places"][0]["source_place_text"] == "1520 Sedgwick Avenue"
+    assert "1520 Sedgwick Avenue" in (
+        route_dir / "event-framing.md"
+    ).read_text(encoding="utf-8")
+
+
 def test_complete_draft_binds_active_review_and_blocks_legacy_steps(tmp_path: Path) -> None:
     content_root, seed_dir = write_pipeline_fixture(tmp_path)
     route_dir = content_root / ROUTE_ID
