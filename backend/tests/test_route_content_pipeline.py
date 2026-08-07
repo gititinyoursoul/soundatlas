@@ -2,6 +2,8 @@ import json
 import stat
 from pathlib import Path
 
+import pytest
+
 from app.route_review import RouteReviewRepository, RouteReviewStateUpdate
 from scripts import route_content_pipeline
 from scripts.route_content_pipeline import main
@@ -338,7 +340,7 @@ def test_complete_draft_materializes_active_outputs_and_refreshes_review(
     content_root, seed_dir = write_pipeline_fixture(tmp_path)
     route_dir = content_root / ROUTE_ID
     (route_dir / "candidate-outline.json").write_text(
-        build_agent_event_list_json(), encoding="utf-8"
+        build_complete_draft_outline_json(), encoding="utf-8"
     )
     fake_codex = write_fake_codex(tmp_path, output=build_complete_draft_json())
 
@@ -382,7 +384,7 @@ def test_complete_draft_refresh_preserves_route_review_state(
     content_root, seed_dir = write_pipeline_fixture(tmp_path)
     route_dir = content_root / ROUTE_ID
     (route_dir / "candidate-outline.json").write_text(
-        build_agent_event_list_json(), encoding="utf-8"
+        build_complete_draft_outline_json(), encoding="utf-8"
     )
     fake_codex = write_fake_codex(tmp_path, output=build_complete_draft_json())
     assert (
@@ -448,7 +450,7 @@ def test_invalid_complete_draft_preserves_active_outputs(tmp_path: Path) -> None
     content_root, seed_dir = write_pipeline_fixture(tmp_path)
     route_dir = content_root / ROUTE_ID
     (route_dir / "candidate-outline.json").write_text(
-        build_agent_event_list_json(), encoding="utf-8"
+        build_complete_draft_outline_json(), encoding="utf-8"
     )
     valid_codex = write_fake_codex(tmp_path / "valid", output=build_complete_draft_json())
     assert (
@@ -504,7 +506,7 @@ def test_status_does_not_mark_legacy_outputs_stale_when_complete_draft_is_active
     content_root, seed_dir = write_pipeline_fixture(tmp_path)
     route_dir = content_root / ROUTE_ID
     (route_dir / "candidate-outline.json").write_text(
-        build_agent_event_list_json(), encoding="utf-8"
+        build_complete_draft_outline_json(), encoding="utf-8"
     )
     fake_codex = write_fake_codex(tmp_path, output=build_complete_draft_json())
     assert (
@@ -1319,9 +1321,223 @@ FAKE_CODEX_OUTPUT
     return fake_codex
 
 
+def test_complete_draft_requires_complete_candidate_accounting(tmp_path: Path) -> None:
+    content_root, seed_dir = write_pipeline_fixture(tmp_path)
+    payload = json.loads(build_complete_draft_json())
+    outline = json.loads(build_complete_draft_outline_json())
+    payload["candidates"] = [
+        candidate
+        for candidate in payload["candidates"]
+        if candidate["candidate_id"] != "outline-context-event"
+    ]
+
+    errors = route_content_pipeline.validate_complete_draft(
+        payload=payload,
+        route_id=ROUTE_ID,
+        seed_dir=seed_dir,
+        source_outline="candidate-outline.json",
+        source_outline_payload=outline,
+    )
+
+    assert "outline-context-event" in "\n".join(errors)
+
+
+def test_complete_draft_rejects_invalid_composition_relationship_and_phase_coverage(
+    tmp_path: Path,
+) -> None:
+    _, seed_dir = write_pipeline_fixture(tmp_path)
+    payload = json.loads(build_complete_draft_json())
+    payload["candidates"][1]["composition"] = {
+        "outcome": "merged_into",
+        "reason": "Merge this context into the active event.",
+        "related_candidate_ids": ["missing-target"],
+    }
+    payload["phase_coverage"] = []
+
+    errors = route_content_pipeline.validate_complete_draft(
+        payload=payload,
+        route_id=ROUTE_ID,
+        seed_dir=seed_dir,
+        source_outline="candidate-outline.json",
+        source_outline_payload=json.loads(build_complete_draft_outline_json()),
+    )
+
+    assert "missing-target" in "\n".join(errors)
+    assert "phase_coverage" in "\n".join(errors)
+
+
+def test_complete_draft_repair_unwraps_one_json_code_fence(tmp_path: Path) -> None:
+    content_root, seed_dir = write_pipeline_fixture(tmp_path)
+    route_dir = content_root / ROUTE_ID
+    (route_dir / "candidate-outline.json").write_text(
+        build_complete_draft_outline_json(), encoding="utf-8"
+    )
+    fenced = "```json\n" + build_complete_draft_json() + "```\n"
+    fake_codex = write_fake_codex(tmp_path, output=fenced)
+
+    assert main(
+        [
+            "--content-root", str(content_root), "--seed-dir", str(seed_dir),
+            "agent", "--route-id", ROUTE_ID, "--step", "complete_draft",
+            "--codex-command", str(fake_codex),
+        ]
+    ) == 0
+
+    metadata = json.loads(
+        (route_dir / "complete_draft-run.ai-draft.json").read_text(encoding="utf-8")
+    )
+    assert metadata["repair"]["operation"] == "unwrap_single_json_code_fence"
+    assert metadata["validation"] == "passed"
+    assert (route_dir / "complete-draft-output.ai-draft-repair.json").exists()
+
+
+def test_complete_draft_binds_active_review_and_blocks_legacy_steps(tmp_path: Path) -> None:
+    content_root, seed_dir = write_pipeline_fixture(tmp_path)
+    route_dir = content_root / ROUTE_ID
+    (route_dir / "candidate-outline.json").write_text(
+        build_complete_draft_outline_json(), encoding="utf-8"
+    )
+    fake_codex = write_fake_codex(tmp_path, output=build_complete_draft_json())
+    command = [
+        "--content-root", str(content_root), "--seed-dir", str(seed_dir),
+        "agent", "--route-id", ROUTE_ID, "--step", "complete_draft",
+        "--codex-command", str(fake_codex),
+    ]
+
+    assert main(command) == 0
+    review = json.loads((route_dir / "route-review.json").read_text(encoding="utf-8"))
+    accounts = {item["candidate_id"]: item for item in review["candidate_accounts"]}
+    assert [item["candidate_id"] for item in review["proposals"]] == [
+        "kool-herc-sedgwick-party", "added-route-event"
+    ]
+    assert accounts["outline-context-event"]["active"] is False
+    assert "editorial_state" not in accounts["outline-context-event"]
+
+    before = (route_dir / "route-concept.md").read_bytes()
+    assert main([
+        "--content-root", str(content_root), "--seed-dir", str(seed_dir),
+        "run", "--route-id", ROUTE_ID, "--step", "route_concept", "--renew",
+    ]) == 0
+    assert (route_dir / "route-concept.md").read_bytes() == before
+
+
+def test_complete_draft_activation_rolls_back_every_target_on_replace_failure(
+    tmp_path: Path, monkeypatch
+) -> None:
+    content_root, seed_dir = write_pipeline_fixture(tmp_path)
+    route_dir = content_root / ROUTE_ID
+    (route_dir / "candidate-outline.json").write_text(
+        build_complete_draft_outline_json(), encoding="utf-8"
+    )
+    fake_codex = write_fake_codex(tmp_path, output=build_complete_draft_json())
+    command = [
+        "--content-root", str(content_root), "--seed-dir", str(seed_dir),
+        "agent", "--route-id", ROUTE_ID, "--step", "complete_draft",
+        "--codex-command", str(fake_codex),
+    ]
+    assert main(command) == 0
+    targets = [
+        route_dir / name
+        for name in (
+            "complete-draft.json", "complete-draft.md", "event-list.json",
+            "event-list.md", "route-concept.md", "event-framing.md",
+            "event-framing.json", "place-framing.json", "connection-framing.json",
+            "route-review.json",
+        )
+    ]
+    before = {path: path.read_bytes() for path in targets}
+    calls = 0
+
+    def fail_on_second_replace(source: Path, target: Path) -> None:
+        nonlocal calls
+        calls += 1
+        if calls == 2:
+            raise OSError("simulated activation failure")
+        source.replace(target)
+
+    monkeypatch.setattr(route_content_pipeline.os, "replace", fail_on_second_replace)
+    assert main([*command, "--renew"]) == 2
+    assert {path: path.read_bytes() for path in targets} == before
+
+
+def test_selective_regeneration_preserves_unaffected_events(tmp_path: Path) -> None:
+    content_root, seed_dir = write_pipeline_fixture(tmp_path)
+    route_dir = content_root / ROUTE_ID
+    (route_dir / "candidate-outline.json").write_text(
+        build_complete_draft_outline_json(), encoding="utf-8"
+    )
+    initial = build_complete_draft_json()
+    fake_codex = write_fake_codex(tmp_path, output=initial)
+    command = [
+        "--content-root", str(content_root), "--seed-dir", str(seed_dir),
+        "agent", "--route-id", ROUTE_ID, "--step", "complete_draft",
+        "--codex-command", str(fake_codex),
+    ]
+    assert main(command) == 0
+    revision = RouteReviewRepository(content_root, seed_dir=seed_dir).get(ROUTE_ID).revision_id
+    request = {
+        "base_revision_id": revision,
+        "scope": "selective",
+        "change_kind": "local",
+        "candidate_ids": ["added-route-event"],
+        "correction": "Improve the later transition.",
+    }
+    request_path = route_dir / "revision-request.json"
+    request_path.write_text(json.dumps(request), encoding="utf-8")
+    regenerated = json.loads(initial)
+    regenerated["_meta"]["regenerated_candidate_ids"] = ["added-route-event"]
+    regenerated["events"][1]["summary"] = "A selectively regenerated event summary."
+    fake_regeneration = write_fake_codex(
+        tmp_path / "regenerated", output=json.dumps(regenerated)
+    )
+
+    assert main(
+        [*command, "--renew", "--codex-command", str(fake_regeneration),
+         "--revision-request", "revision-request.json"]
+    ) == 0
+    active = json.loads((route_dir / "complete-draft.json").read_text(encoding="utf-8"))
+    assert active["events"][0]["summary"] == "A complete draft event summary."
+    assert active["events"][1]["summary"] == "A selectively regenerated event summary."
+
+
+def test_broad_revision_request_requires_full_regeneration(tmp_path: Path) -> None:
+    content_root, seed_dir = write_pipeline_fixture(tmp_path)
+    route_dir = content_root / ROUTE_ID
+    (route_dir / "candidate-outline.json").write_text(
+        build_complete_draft_outline_json(), encoding="utf-8"
+    )
+    fake_codex = write_fake_codex(tmp_path, output=build_complete_draft_json())
+    assert main([
+        "--content-root", str(content_root), "--seed-dir", str(seed_dir),
+        "agent", "--route-id", ROUTE_ID, "--step", "complete_draft",
+        "--codex-command", str(fake_codex),
+    ]) == 0
+    revision = RouteReviewRepository(content_root, seed_dir=seed_dir).get(ROUTE_ID).revision_id
+    request_path = route_dir / "revision-request.json"
+    request_path.write_text(json.dumps({
+        "base_revision_id": revision,
+        "scope": "selective",
+        "change_kind": "thesis",
+        "candidate_ids": ["kool-herc-sedgwick-party"],
+        "correction": "Change the route thesis.",
+    }), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="full regeneration"):
+        route_content_pipeline.load_revision_request(
+            route_dir=route_dir,
+            request_path=request_path,
+            current_revision=revision,
+        )
+
+
 def build_complete_draft_json() -> str:
-    def candidate(candidate_id: str, title: str, route_function: str) -> dict[str, object]:
-        return {
+    def candidate(
+        candidate_id: str,
+        title: str,
+        route_function: str,
+        outcome: str,
+    ) -> dict[str, object]:
+        candidate: dict[str, object] = {
             "candidate_id": candidate_id,
             "status": "keep",
             "review_state": "pending",
@@ -1334,7 +1550,18 @@ def build_complete_draft_json() -> str:
             "source_leads": ["Interviews"],
             "risk_notes": ["Needs source comparison."],
             "next_action": "Review in editorial mode.",
+            "composition": {
+                "outcome": outcome,
+                "reason": "Complete-draft route fit.",
+                "related_candidate_ids": [],
+            },
         }
+        if outcome == "omitted":
+            candidate["preview"] = {
+                "summary": "An omitted candidate remains visible for review.",
+                "significance": "It adds useful context without entering the active route.",
+            }
+        return candidate
 
     events = []
     for event_id, title in [
@@ -1356,7 +1583,7 @@ def build_complete_draft_json() -> str:
                 "significance": "A complete draft route significance.",
                 "tags": [],
                 "review_status": "draft",
-                "source_urls": [],
+                "source_urls": ["https://example.org/source"],
                 "media_links": [],
                 "image_links": [],
             }
@@ -1374,8 +1601,20 @@ def build_complete_draft_json() -> str:
                 "kool-herc-sedgwick-party",
                 "Kool Herc and Cindy Campbell's Sedgwick party",
                 "Route anchor.",
+                "active",
             ),
-            candidate("added-route-event", "A newly discovered route event", "Adds a later link."),
+            candidate(
+                "outline-context-event",
+                "Outline context event",
+                "Context that remains reviewable.",
+                "omitted",
+            ),
+            candidate(
+                "added-route-event",
+                "A newly discovered route event",
+                "Adds a later link.",
+                "added",
+            ),
         ],
         "events": events,
         "places": [
@@ -1395,10 +1634,45 @@ def build_complete_draft_json() -> str:
                 "review_status": "draft",
             }
         ],
+        "phase_coverage": [
+            {
+                "phase": "early formation",
+                "status": "covered",
+                "candidate_ids": ["kool-herc-sedgwick-party", "added-route-event"],
+            }
+        ],
+        "findings": [
+            {
+                "owner": "candidate_composition",
+                "candidate_id": "outline-context-event",
+                "message": "Retained as inactive context.",
+            }
+        ],
         "warnings": ["Source comparison remains required."],
         "technical_errors": [],
     }
     return json.dumps(payload, indent=2) + "\n"
+
+
+def build_complete_draft_outline_json() -> str:
+    return json.dumps(
+        {
+            "_meta": {"route_id": ROUTE_ID, "review_status": "draft"},
+            "candidates": [
+                {
+                    "candidate_id": "kool-herc-sedgwick-party",
+                    "status": "keep",
+                    "review_state": "pending",
+                },
+                {
+                    "candidate_id": "outline-context-event",
+                    "status": "maybe",
+                    "review_state": "pending",
+                },
+            ],
+        },
+        indent=2,
+    ) + "\n"
 
 
 def build_agent_event_list_json() -> str:

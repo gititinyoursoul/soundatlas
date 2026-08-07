@@ -332,7 +332,7 @@ def event(event_id: str, place_id: str, title: str) -> dict[str, object]:
         "significance": "Significance",
         "tags": [],
         "review_status": "draft",
-        "source_urls": [],
+        "source_urls": ["https://example.org/source"],
         "media_links": [],
         "image_links": [],
     }

@@ -83,7 +83,8 @@ summary.
 
 An event meeting these standards needs at least one relevant source. One source
 is sufficient when it supports the event's concrete claims and scene details.
-A draft may carry a missing-source warning while research continues.
+A draft may remain visible while research continues, but an included active
+Event with no Source URL is technically unready for Publication.
 
 - use a source that addresses the event, not merely the broad genre, city, or
   era

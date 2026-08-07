@@ -1,4 +1,5 @@
 import argparse
+import hashlib
 import json
 import os
 import re
@@ -85,6 +86,7 @@ def main(argv: list[str] | None = None) -> int:
                 codex_command=args.codex_command,
                 model=args.model,
                 variant=args.variant,
+                revision_request=args.revision_request,
             )
             print(format_agent_summary(result))
         elif args.command == "status":
@@ -214,6 +216,11 @@ def build_parser() -> argparse.ArgumentParser:
         "--model",
         help="Optional Codex model name passed to codex exec.",
     )
+    agent_parser.add_argument(
+        "--revision-request",
+        type=Path,
+        help="Route-local JSON request for selective or full complete-draft regeneration.",
+    )
     status_parser = subparsers.add_parser("status", help="Report route pipeline state.")
     status_parser.add_argument("--route-id", required=True)
 
@@ -248,6 +255,13 @@ def build_parser() -> argparse.ArgumentParser:
 
 def route_dir_for(content_root: Path, route_id: str) -> Path:
     return content_root / route_id
+
+
+def active_complete_draft_path(route_dir: Path, manifest: dict[str, Any]) -> Path:
+    filename = manifest.get("agent_steps", {}).get("complete_draft", {}).get(
+        "active_output", manifest["steps"]["complete_draft"]["json"]
+    )
+    return route_dir / filename
 
 
 def init_pipeline(
@@ -593,6 +607,17 @@ def run_step(
     step: str,
     renew: bool,
 ) -> dict[str, Any]:
+    if step in {"route_concept", "event_framing"} and active_complete_draft_path(
+        route_dir, manifest
+    ).exists():
+        return {
+            "step": step,
+            "status": "blocked",
+            "outputs": [],
+            "errors": [
+                "Active complete draft is the content authority; use its generated views instead."
+            ],
+        }
     if step == "event_list":
         return generate_event_list(route_dir=route_dir, manifest=manifest, renew=renew)
     if step == "accepted_events":
@@ -634,6 +659,7 @@ def run_agent_pipeline(
     codex_command: str,
     model: str | None,
     variant: str | None = None,
+    revision_request: Path | None = None,
 ) -> list[dict[str, Any]]:
     route_dir = route_dir_for(content_root, route_id)
     manifest = load_or_create_manifest(route_dir, route_id)
@@ -652,6 +678,7 @@ def run_agent_pipeline(
                 dry_run=dry_run,
                 codex_command=codex_command,
                 model=model,
+                revision_request=revision_request,
             )
         )
     if not variant:
@@ -669,7 +696,16 @@ def run_agent_step(
     dry_run: bool,
     codex_command: str,
     model: str | None,
+    revision_request: Path | None = None,
 ) -> dict[str, Any]:
+    if (
+        step in {"event_review_to_concept", "concept_to_event_framing"}
+        and active_complete_draft_path(route_dir, manifest).exists()
+        and not dry_run
+    ):
+        raise ValueError(
+            "Active complete draft is the content authority; secondary agent steps cannot overwrite its views."
+        )
     agent_step = manifest["agent_steps"][step]
     prompt_path = route_dir / agent_step["prompt"]
     output_path = route_dir / agent_step["output"]
@@ -679,7 +715,23 @@ def run_agent_step(
     if skipped:
         return {"step": step, "status": "skipped", "outputs": skipped}
 
-    prompt = build_agent_prompt(route_dir=route_dir, manifest=manifest, step=step)
+    request = None
+    if revision_request is not None:
+        if step != "complete_draft":
+            raise ValueError("Revision requests are supported only by complete_draft.")
+        request = load_revision_request(
+            route_dir=route_dir,
+            request_path=revision_request,
+            current_revision=RouteReviewRepository(route_dir.parent, seed_dir=seed_dir)
+            .get(manifest["route_id"])
+            .revision_id,
+        )
+    prompt = build_agent_prompt(
+        route_dir=route_dir,
+        manifest=manifest,
+        step=step,
+        revision_request=request,
+    )
     write_text(prompt_path, prompt, renew=renew)
     metadata = build_agent_run_metadata(
         route_dir=route_dir,
@@ -719,26 +771,76 @@ def run_agent_step(
             "stderr": completed.stderr,
         },
     )
-    write_json(run_path, metadata, renew=renew)
     if completed.returncode != 0:
+        write_json(run_path, metadata, renew=renew)
         raise ValueError(
             "Codex CLI agent step failed:\n"
             + (completed.stderr.strip() or completed.stdout.strip() or "no output"),
         )
     if not output_path.exists():
         write_text(output_path, completed.stdout, renew=False)
-    extra_outputs = sync_agent_sidecar_outputs(
-        route_dir=route_dir,
-        seed_dir=seed_dir,
-        manifest=manifest,
-        step=step,
-        output_path=output_path,
-        renew=renew,
-    )
+    raw_output = output_path.read_text(encoding="utf-8")
+    metadata["raw_output_sha256"] = sha256_text(raw_output)
+    activation_output = output_path
+    repair_outputs: list[str] = []
+    if step == "complete_draft":
+        try:
+            json.loads(raw_output)
+            metadata["repair"] = {"attempted": False}
+        except json.JSONDecodeError:
+            repaired = normalize_json_envelope(raw_output)
+            if repaired is None:
+                metadata.update(
+                    {
+                        "status": "failed",
+                        "validation": "raw output is not a repairable JSON envelope",
+                        "repair": {"attempted": True, "succeeded": False},
+                    }
+                )
+                write_json(run_path, metadata, renew=renew)
+                raise ValueError("Complete draft output is not a repairable JSON envelope.")
+            activation_output = output_path.with_name(
+                f"{output_path.stem}-repair{output_path.suffix}"
+            )
+            write_text(activation_output, repaired, renew=renew)
+            repair_outputs.append(activation_output.name)
+            metadata["repair"] = {
+                "attempted": True,
+                "succeeded": True,
+                "operation": "unwrap_single_json_code_fence",
+                "repaired_output_sha256": sha256_text(repaired),
+            }
+    try:
+        extra_outputs = sync_agent_sidecar_outputs(
+            route_dir=route_dir,
+            seed_dir=seed_dir,
+            manifest=manifest,
+            step=step,
+            output_path=activation_output,
+            renew=renew,
+            revision_request=request,
+        )
+    except Exception as exc:
+        metadata.update({"status": "failed", "validation": str(exc)})
+        write_json(run_path, metadata, renew=renew)
+        raise
+    metadata["validation"] = "passed"
+    active_path = route_dir / agent_step.get("active_output", agent_step["output"])
+    if active_path.exists():
+        metadata["active_output_sha256"] = sha256_text(
+            active_path.read_text(encoding="utf-8")
+        )
+    write_json(run_path, metadata, renew=renew)
     return {
         "step": step,
         "status": "written",
-        "outputs": [prompt_path.name, output_path.name, run_path.name, *extra_outputs],
+        "outputs": [
+            prompt_path.name,
+            output_path.name,
+            *repair_outputs,
+            run_path.name,
+            *extra_outputs,
+        ],
     }
 
 
@@ -750,6 +852,7 @@ def sync_agent_sidecar_outputs(
     step: str,
     output_path: Path,
     renew: bool,
+    revision_request: dict[str, Any] | None = None,
 ) -> list[str]:
     if step == "complete_draft":
         return activate_complete_draft(
@@ -758,6 +861,7 @@ def sync_agent_sidecar_outputs(
             manifest=manifest,
             output_path=output_path,
             renew=renew,
+            revision_request=revision_request,
         )
     if step != "dossier_to_event_review":
         return []
@@ -778,14 +882,28 @@ def activate_complete_draft(
     manifest: dict[str, Any],
     output_path: Path,
     renew: bool,
+    revision_request: dict[str, Any] | None = None,
 ) -> list[str]:
     payload = read_json(output_path)
+    source_outline = read_json(
+        route_dir / manifest["agent_steps"]["complete_draft"]["inputs"][0]
+    )
     errors = validate_complete_draft(
         payload=payload,
         route_id=manifest["route_id"],
         seed_dir=seed_dir,
         source_outline=manifest["agent_steps"]["complete_draft"]["inputs"][0],
+        source_outline_payload=source_outline,
     )
+    if revision_request is not None:
+        errors.extend(
+            validate_regeneration(
+                route_dir=route_dir,
+                manifest=manifest,
+                payload=payload,
+                request=revision_request,
+            )
+        )
     if errors:
         raise ValueError("Complete draft validation failed:\n" + "\n".join(errors))
 
@@ -838,6 +956,10 @@ def activate_complete_draft(
         "active_output": source,
         "review_status": "draft",
     }
+    review_repository = RouteReviewRepository(route_dir.parent, seed_dir=seed_dir)
+    review = review_repository.build_from_complete_draft(
+        manifest["route_id"], complete_draft
+    )
     files: dict[str, str] = {
         active_step["json"]: json.dumps(complete_draft, indent=2, ensure_ascii=False) + "\n",
         active_step["markdown"]: format_complete_draft_markdown(complete_draft),
@@ -856,24 +978,12 @@ def activate_complete_draft(
             connection_framing, indent=2, ensure_ascii=False
         )
         + "\n",
+        ROUTE_REVIEW_FILENAME: json.dumps(
+            review.model_dump(), indent=2, ensure_ascii=False
+        )
+        + "\n",
     }
-    staged_paths: list[Path] = []
-    with tempfile.TemporaryDirectory(prefix=".complete-draft-", dir=route_dir) as stage_name:
-        stage_dir = Path(stage_name)
-        for filename, content in files.items():
-            staged_path = stage_dir / filename
-            staged_path.parent.mkdir(parents=True, exist_ok=True)
-            staged_path.write_text(content, encoding="utf-8")
-            staged_paths.append(route_dir / filename)
-        for target in staged_paths:
-            if renew and target.exists():
-                backup_file(target)
-            os.replace(stage_dir / target.relative_to(route_dir), target)
-
-    review = RouteReviewRepository(
-        route_dir.parent,
-        seed_dir=seed_dir,
-    ).refresh(manifest["route_id"])
+    replace_route_files(route_dir=route_dir, files=files, renew=renew)
     return [
         active_step["json"],
         active_step["markdown"],
@@ -895,6 +1005,7 @@ def validate_complete_draft(
     route_id: str,
     seed_dir: Path,
     source_outline: str,
+    source_outline_payload: dict[str, Any] | None = None,
 ) -> list[str]:
     errors: list[str] = []
     metadata = payload.get("_meta")
@@ -907,7 +1018,18 @@ def validate_complete_draft(
         errors.append(f"Complete draft source_outline must be `{source_outline}`.")
     if metadata.get("review_status") != "draft":
         errors.append("Complete draft `_meta.review_status` must be `draft`.")
-    for field in ("route_concept", "candidates", "sequence", "events", "places", "connections", "warnings", "technical_errors"):
+    for field in (
+        "route_concept",
+        "candidates",
+        "sequence",
+        "events",
+        "places",
+        "connections",
+        "phase_coverage",
+        "findings",
+        "warnings",
+        "technical_errors",
+    ):
         if field not in payload:
             errors.append(f"Complete draft is missing `{field}`.")
     if not isinstance(payload.get("route_concept"), str) or not payload.get("route_concept", "").strip():
@@ -943,6 +1065,8 @@ def validate_complete_draft(
         connections = []
 
     candidate_ids: list[str] = []
+    active_candidate_ids: list[str] = []
+    candidate_by_id: dict[str, dict[str, Any]] = {}
     for candidate in candidates:
         if not isinstance(candidate, dict):
             errors.append("Complete draft contains a non-object candidate.")
@@ -954,6 +1078,7 @@ def validate_complete_draft(
         if candidate_id in candidate_ids:
             errors.append(f"Complete draft contains duplicate candidate `{candidate_id}`.")
         candidate_ids.append(candidate_id)
+        candidate_by_id[candidate_id] = candidate
         if candidate.get("status") not in CANDIDATE_DECISIONS:
             errors.append(f"Complete draft candidate `{candidate_id}` has unsupported status.")
         if candidate.get("review_state") != "pending":
@@ -961,20 +1086,93 @@ def validate_complete_draft(
         for field in ("years", "place", "working_title", "route_function"):
             if not isinstance(candidate.get(field), str) or not candidate[field].strip():
                 errors.append(f"Complete draft candidate `{candidate_id}` is missing `{field}`.")
-        if candidate.get("status") == "merge":
-            target = candidate.get("merge_target_id")
-            if not isinstance(target, str) or not target:
-                errors.append(f"Complete draft candidate `{candidate_id}` merge has no target.")
-            if not isinstance(candidate.get("merge_rationale"), str) or not candidate["merge_rationale"].strip():
-                errors.append(f"Complete draft candidate `{candidate_id}` merge has no rationale.")
-    if sequence != candidate_ids:
-        errors.append("Complete draft sequence must contain each candidate exactly once in route order.")
+        composition = candidate.get("composition")
+        if not isinstance(composition, dict):
+            errors.append(f"Complete draft candidate `{candidate_id}` is missing composition.")
+            continue
+        outcome = composition.get("outcome")
+        if outcome not in {"active", "omitted", "merged_into", "split_into", "added"}:
+            errors.append(f"Complete draft candidate `{candidate_id}` has unsupported composition outcome.")
+            continue
+        if not isinstance(composition.get("reason"), str) or not composition["reason"].strip():
+            errors.append(f"Complete draft candidate `{candidate_id}` composition has no reason.")
+        related = composition.get("related_candidate_ids", [])
+        if not isinstance(related, list) or any(not isinstance(item, str) or not item for item in related):
+            errors.append(f"Complete draft candidate `{candidate_id}` has invalid composition relationships.")
+        if outcome in {"merged_into", "split_into"} and not related:
+            errors.append(f"Complete draft candidate `{candidate_id}` {outcome} has no target.")
+        if outcome in {"omitted", "merged_into", "split_into"}:
+            preview = candidate.get("preview")
+            if not isinstance(preview, dict) or any(
+                not isinstance(preview.get(field), str) or not preview[field].strip()
+                for field in ("summary", "significance")
+            ):
+                errors.append(
+                    f"Complete draft inactive candidate `{candidate_id}` has incomplete preview content."
+                )
+        if outcome in {"active", "added"}:
+            active_candidate_ids.append(candidate_id)
+
+    for candidate_id, candidate in candidate_by_id.items():
+        composition = candidate.get("composition")
+        if not isinstance(composition, dict):
+            continue
+        for related_id in composition.get("related_candidate_ids", []):
+            if related_id == candidate_id or related_id not in candidate_by_id:
+                errors.append(
+                    f"Complete draft candidate `{candidate_id}` has unresolved composition target `{related_id}`."
+                )
+    if sequence != active_candidate_ids:
+        errors.append("Complete draft sequence must contain each active or added candidate exactly once in route order.")
+
+    outline_ids = _outline_candidate_ids(source_outline_payload)
+    if source_outline_payload is not None:
+        missing_outline = sorted(outline_ids - set(candidate_ids))
+        if missing_outline:
+            errors.append("Complete draft does not account for outline candidates: " + ", ".join(missing_outline))
+        unexpected = sorted(set(candidate_ids) - outline_ids)
+        for candidate_id in unexpected:
+            composition = candidate_by_id[candidate_id].get("composition")
+            if not isinstance(composition, dict) or composition.get("outcome") != "added":
+                errors.append(f"Complete draft new candidate `{candidate_id}` must use added composition outcome.")
+
+    phase_coverage = payload.get("phase_coverage", [])
+    if not isinstance(phase_coverage, list) or not phase_coverage:
+        errors.append("Complete draft phase_coverage must be a non-empty list.")
+    else:
+        for item in phase_coverage:
+            if not isinstance(item, dict) or not isinstance(item.get("phase"), str) or not item["phase"].strip():
+                errors.append("Complete draft phase coverage requires a phase.")
+                continue
+            candidate_refs = item.get("candidate_ids", [])
+            if not isinstance(candidate_refs, list) or any(item not in candidate_by_id for item in candidate_refs):
+                errors.append(f"Complete draft phase `{item['phase']}` has unresolved candidates.")
+            if item.get("status") not in {"covered", "narrowed", "gap"}:
+                errors.append(f"Complete draft phase `{item['phase']}` has invalid status.")
+
+    findings = payload.get("findings", [])
+    if not isinstance(findings, list):
+        errors.append("Complete draft findings must be a list.")
+    else:
+        for finding in findings:
+            if not isinstance(finding, dict) or finding.get("owner") not in {
+                "candidate_composition",
+                "active_event",
+                "active_route",
+                "source_media",
+                "technical",
+            } or not isinstance(finding.get("message"), str) or not finding["message"].strip():
+                errors.append("Complete draft contains an invalid owned finding.")
+                continue
+            candidate_id = finding.get("candidate_id")
+            if candidate_id is not None and candidate_id not in candidate_by_id:
+                errors.append(f"Complete draft finding has unknown candidate `{candidate_id}`.")
 
     event_ids = [event.get("id") for event in events if isinstance(event, dict)]
     if len(event_ids) != len(events) or len(set(event_ids)) != len(event_ids):
         errors.append("Complete draft events must have unique IDs.")
-    if set(event_ids) != set(candidate_ids):
-        errors.append("Complete draft event IDs must match candidate IDs.")
+    if set(event_ids) != set(active_candidate_ids):
+        errors.append("Complete draft event IDs must match active or added candidate IDs.")
 
     seed = load_seed_payloads(seed_dir)
     new_places = drafted_places({"places": {"places": places}})
@@ -998,6 +1196,139 @@ def validate_complete_draft(
     if len(connection_ids) != len(set(connection_ids)):
         errors.append("Complete draft connections must have unique IDs.")
     return errors
+
+
+def _outline_candidate_ids(payload: dict[str, Any] | None) -> set[str]:
+    if not isinstance(payload, dict):
+        return set()
+    candidates = payload.get("candidates")
+    if not isinstance(candidates, list):
+        return set()
+    return {
+        item["candidate_id"]
+        for item in candidates
+        if isinstance(item, dict) and isinstance(item.get("candidate_id"), str)
+    }
+
+
+def load_revision_request(
+    *,
+    route_dir: Path,
+    request_path: Path,
+    current_revision: str,
+) -> dict[str, Any]:
+    path = request_path if request_path.is_absolute() else route_dir / request_path
+    if path.parent.resolve() != route_dir.resolve() or not path.exists():
+        raise ValueError("Revision request must be an existing route-local JSON file.")
+    request = read_json(path)
+    if request.get("base_revision_id") != current_revision:
+        raise ValueError("Revision request is stale; reload the current route review first.")
+    if request.get("scope") not in {"selective", "full"}:
+        raise ValueError("Revision request scope must be selective or full.")
+    if not isinstance(request.get("correction"), str) or not request["correction"].strip():
+        raise ValueError("Revision request needs a correction.")
+    candidate_ids = request.get("candidate_ids")
+    if not isinstance(candidate_ids, list) or not candidate_ids or any(
+        not isinstance(item, str) or not item for item in candidate_ids
+    ):
+        raise ValueError("Revision request needs one or more candidate IDs.")
+    kind = request.get("change_kind", "local")
+    if kind not in {
+        "local",
+        "brief",
+        "thesis",
+        "dossier",
+        "source_invalidation",
+        "whole_route",
+        "non_local",
+    }:
+        raise ValueError("Revision request has an unsupported change_kind.")
+    if kind != "local" and request["scope"] != "full":
+        raise ValueError("Broad revision requests must use full regeneration.")
+    return request
+
+
+def validate_regeneration(
+    *,
+    route_dir: Path,
+    manifest: dict[str, Any],
+    payload: dict[str, Any],
+    request: dict[str, Any],
+) -> list[str]:
+    if request["scope"] == "full":
+        return []
+    errors: list[str] = []
+    metadata = payload.get("_meta")
+    regenerated = metadata.get("regenerated_candidate_ids") if isinstance(metadata, dict) else None
+    if not isinstance(regenerated, list) or not regenerated or any(
+        not isinstance(item, str) or not item for item in regenerated
+    ):
+        return ["Selective regeneration must identify regenerated_candidate_ids."]
+    if not set(request["candidate_ids"]).issubset(set(regenerated)):
+        errors.append("Selective regeneration must include every requested candidate ID.")
+    active_path = route_dir / manifest["steps"]["complete_draft"]["json"]
+    if not active_path.exists():
+        return ["Selective regeneration requires an active complete draft."]
+    prior = read_json(active_path)
+    prior_events = {
+        item.get("id"): item
+        for item in prior.get("events", [])
+        if isinstance(item, dict) and isinstance(item.get("id"), str)
+    }
+    next_events = {
+        item.get("id"): item
+        for item in payload.get("events", [])
+        if isinstance(item, dict) and isinstance(item.get("id"), str)
+    }
+    for event_id, event in prior_events.items():
+        if event_id in regenerated:
+            continue
+        if event_id not in next_events or _canonical_json(event) != _canonical_json(next_events[event_id]):
+            errors.append(
+                f"Selective regeneration changed unaffected event `{event_id}`."
+            )
+    return errors
+
+
+def _canonical_json(value: Any) -> str:
+    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+
+
+def replace_route_files(
+    *,
+    route_dir: Path,
+    files: dict[str, str],
+    renew: bool,
+) -> None:
+    """Replace one activated route revision or restore every prior target."""
+    targets = [route_dir / filename for filename in files]
+    previous = {
+        target: target.read_bytes() if target.exists() else None
+        for target in targets
+    }
+    replaced: list[Path] = []
+    with tempfile.TemporaryDirectory(prefix=".complete-draft-", dir=route_dir) as stage_name:
+        stage_dir = Path(stage_name)
+        try:
+            for filename, content in files.items():
+                staged_path = stage_dir / filename
+                staged_path.parent.mkdir(parents=True, exist_ok=True)
+                staged_path.write_text(content, encoding="utf-8")
+            for target in targets:
+                if renew and target.exists():
+                    backup_file(target)
+                os.replace(stage_dir / target.relative_to(route_dir), target)
+                replaced.append(target)
+        except OSError as exc:
+            for target in replaced:
+                original = previous[target]
+                if original is None:
+                    target.unlink(missing_ok=True)
+                else:
+                    target.write_bytes(original)
+            raise ValueError(
+                f"Complete draft activation failed; previous revision was preserved: {exc}"
+            ) from exc
 
 
 def order_complete_draft_candidates(payload: dict[str, Any]) -> list[dict[str, Any]]:
@@ -1036,6 +1367,7 @@ def build_agent_prompt(
     route_dir: Path,
     manifest: dict[str, Any],
     step: str,
+    revision_request: dict[str, Any] | None = None,
 ) -> str:
     agent_step = manifest["agent_steps"][step]
     input_blocks = []
@@ -1047,6 +1379,19 @@ def build_agent_prompt(
             format_prompt_file_block(input_file, input_path.read_text(encoding="utf-8"))
         )
 
+    revision_blocks: list[str] = []
+    if revision_request is not None:
+        active_output = manifest["agent_steps"]["complete_draft"].get(
+            "active_output", "complete-draft.json"
+        )
+        revision_blocks = [
+            "## Revision request",
+            json.dumps(revision_request, indent=2, ensure_ascii=False),
+            "",
+            "## Current complete draft",
+            (route_dir / active_output).read_text(encoding="utf-8"),
+            "",
+        ]
     return "\n".join(
         [
             f"# SoundAtlas Agent Step: {step}",
@@ -1070,6 +1415,7 @@ def build_agent_prompt(
             "",
             "\n\n".join(input_blocks),
             "",
+            *revision_blocks,
         ],
     )
 
@@ -1104,13 +1450,15 @@ def agent_step_instructions(step: str) -> str:
                 "Create one complete route draft from the candidate outline and active dossier.",
                 "The candidate outline is agent planning input, not a frozen human-approved roster.",
                 "You may add, omit, merge, split, or reorder candidates when the route argument and evidence support it.",
-                "Return only JSON with `_meta`, `route_concept`, `candidates`, `events`, `places`, `connections`, `warnings`, and `technical_errors`.",
+                "Return only JSON with `_meta`, `route_concept`, `candidates`, `sequence`, `events`, `places`, `connections`, `phase_coverage`, `findings`, `warnings`, and `technical_errors`.",
                 "Set `_meta.review_status` to `draft`, `_meta.source_outline` to the candidate-outline input filename, and `_meta.route_id` to the route ID.",
-                "Every candidate must include `candidate_id`, `status`, `review_state`, `years`, `place`, `working_title`, `route_function`, `decision_rationale`, `review_question`, `source_leads`, `risk_notes`, and `next_action`.",
+                "Every candidate must include `candidate_id`, `status`, `review_state`, `years`, `place`, `working_title`, `route_function`, `decision_rationale`, `review_question`, `source_leads`, `risk_notes`, `next_action`, and `composition` with `outcome`, `reason`, and `related_candidate_ids`.",
                 "Use `keep`, `maybe`, `merge`, or `reject` only for agent recommendations; every generated candidate must use `review_state: pending`.",
-                "Every event must be a complete current-schema framing draft with seed-shaped fields and source and media arrays, and its `id` must match a candidate ID.",
+                "Account for every source-outline candidate exactly once. Use `active`, `omitted`, `merged_into`, `split_into`, or `added` composition outcomes. Only active and added candidates appear in `sequence` and have seed-shaped events; inactive candidates need `preview.summary` and `preview.significance` for review.",
+                "Every event must be a complete current-schema framing draft with seed-shaped fields, source and media arrays, and at least one relevant item-level source URL. Its `id` must match an active or added candidate ID.",
                 "Every place and connection must use the current route pipeline framing shape and reference the generated event IDs.",
-                "Keep unresolved source, historical, place, media, and wording risks in `warnings`; keep structural or reference failures in `technical_errors`.",
+                "Include phase coverage records with `phase`, `status` (`covered`, `narrowed`, or `gap`), and candidate IDs. Include owned findings with owner `candidate_composition`, `active_event`, `active_route`, `source_media`, or `technical`; do not put inactive-candidate findings in active-route findings.",
+                "Acquire and compare relevant sources before drafting reader-facing prose. Never invent source support. Keep unresolved source, historical, place, media, and wording risks in owned findings; keep structural or reference failures in `technical_errors`.",
                 "Do not approve events, publish seed data, or claim the route is publication-ready.",
             ],
         ),
@@ -1176,6 +1524,11 @@ def build_agent_run_metadata(
         "dry_run": dry_run,
         "created_at": datetime.now(timezone.utc).isoformat(),
         "inputs": agent_step.get("inputs", []),
+        "input_sha256": {
+            item: sha256_text((route_dir / item).read_text(encoding="utf-8"))
+            for item in agent_step.get("inputs", [])
+            if (route_dir / item).exists()
+        },
         "prompt": agent_step["prompt"],
         "output": agent_step["output"],
         "command": build_codex_exec_command(
@@ -1184,6 +1537,16 @@ def build_agent_run_metadata(
             output_path=route_dir / agent_step["output"],
         ),
     }
+
+
+def sha256_text(value: str) -> str:
+    return hashlib.sha256(value.encode("utf-8")).hexdigest()
+
+
+def normalize_json_envelope(value: str) -> str | None:
+    """Perform the one allowed value-preserving repair for fenced JSON."""
+    match = re.fullmatch(r"\s*```(?:json)?\s*\n(?P<body>\{.*\})\s*\n```\s*", value, re.DOTALL)
+    return match.group("body") if match else None
 
 
 def build_codex_exec_command(

@@ -86,11 +86,31 @@ the step output:
 `dossier_to_event_review` preserves its generated candidate outline as
 `candidate-outline.json`. `complete_draft` reads that outline and the active
 dossier, then may add, omit, merge, split, or reorder proposals before
-materializing one validated active result. Every generated proposal remains
-pending for private Draft, Approved, or Don’t use review.
+materializing one validated active result. It records an outcome, Reason,
+relationships, review Context, phase coverage, and owned findings for every
+outline Candidate and every addition. Only active and added Candidates become
+Events; inactive Candidates remain reviewable without becoming editorial state.
 
-The complete-draft step does not require `accepted-events.json`. It refreshes
-`route-review.json` only after the complete result validates and activates.
+The complete-draft step does not require `accepted-events.json`. It validates
+the same output contract named in its prompt, permits at most one deterministic
+JSON-envelope repair, records input/output hashes and the repair outcome, and
+activates the complete draft, views, and bound `route-review.json` together or
+preserves the prior revision on replacement failure.
+
+For a correction that is local to one or more Candidates, provide a route-local
+request file with the current review revision, correction text, Candidate IDs,
+and `selective` scope:
+
+```bash
+uv run --project backend python backend/scripts/route_content_pipeline.py agent \
+  --route-id birth-of-hip-hop --step complete_draft --renew \
+  --revision-request revision-request.json
+```
+
+Selective regeneration carries unaffected Events forward verbatim and creates a
+complete new revision. Broad brief, thesis, dossier, route-wide Source, whole
+Route, or non-local corrections use `full` scope instead. The command consumes
+the request; #85 owns capturing it from the review surface.
 
 Prompt and run metadata stay in ignored local files:
 
@@ -214,10 +234,11 @@ uv run --project backend python backend/scripts/route_content_pipeline.py review
 ```
 
 The command writes `route-review.json` atomically in the route folder. It keeps
-one active result and a minimal dormant record for removed proposals. New
-proposals start as Draft; unchanged proposals retain state; materially changed
-Approved proposals return to Draft; and Don’t use remains excluded until a
-human changes it.
+one active result and a minimal dormant record for removed active proposals.
+Newly active Candidates start as Draft; unchanged proposals retain state;
+materially changed Approved proposals return to Draft; and Don’t use remains
+excluded until a human changes it. Inactive Candidate accounts have no Draft,
+Approved, or Don’t use state.
 
 The private backend boundary for the later explorer review surface is:
 

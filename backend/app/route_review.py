@@ -15,6 +15,14 @@ EVENT_LIST_FILENAME = "event-list.json"
 COMPLETE_DRAFT_FILENAME = "complete-draft.json"
 
 EditorialState = Literal["draft", "approved", "dont_use"]
+CompositionOutcome = Literal["active", "omitted", "merged_into", "split_into", "added"]
+FindingOwner = Literal[
+    "candidate_composition",
+    "active_event",
+    "active_route",
+    "source_media",
+    "technical",
+]
 
 LEGACY_STATE_MAP: dict[str, EditorialState] = {
     "pending": "draft",
@@ -57,6 +65,23 @@ class RouteReviewProposal(BaseModel):
     event: Event | None = None
 
 
+class RouteReviewFinding(BaseModel):
+    owner: FindingOwner
+    message: str
+    candidate_id: str | None = None
+    blocking: bool = False
+
+
+class RouteReviewCandidateAccount(BaseModel):
+    candidate_id: str
+    outcome: CompositionOutcome
+    reason: str
+    related_candidate_ids: list[str] = Field(default_factory=list)
+    active: bool
+    preview: dict[str, Any] = Field(default_factory=dict)
+    findings: list[RouteReviewFinding] = Field(default_factory=list)
+
+
 class RouteReviewPlace(BaseModel):
     decision: Literal["reuse", "new"]
     place: Place
@@ -70,6 +95,9 @@ class RouteReviewResult(BaseModel):
     dormant_proposals: list[RouteReviewProposal] = Field(default_factory=list)
     places: list[RouteReviewPlace] = Field(default_factory=list)
     connections: list[Connection] = Field(default_factory=list)
+    candidate_accounts: list[RouteReviewCandidateAccount] = Field(default_factory=list)
+    phase_coverage: list[dict[str, Any]] = Field(default_factory=list)
+    findings: list[RouteReviewFinding] = Field(default_factory=list)
     warnings: list[str] = Field(default_factory=list)
     technical_errors: list[str] = Field(default_factory=list)
     technical_ready: bool
@@ -124,6 +152,7 @@ class RouteReviewRepository:
         if complete_draft is not None and (
             result.source != COMPLETE_DRAFT_FILENAME
             or any(proposal.event is None for proposal in result.proposals)
+            or not result.candidate_accounts
         ):
             return self._build_current(route_id, result, complete_draft)
         return result
@@ -133,6 +162,18 @@ class RouteReviewRepository:
         result = self._build_current(route_id, previous)
         self._write(result)
         return result
+
+    def build_from_complete_draft(
+        self,
+        route_id: str,
+        complete_draft: dict[str, Any],
+    ) -> RouteReviewResult:
+        """Build, but do not write, the review bound to an exact complete draft."""
+        return self._build_current(
+            route_id,
+            self._optional_review(route_id),
+            complete_draft=complete_draft,
+        )
 
     def migrate_legacy(self, route_id: str) -> RouteReviewMigrationReport:
         if self._review_path(route_id).exists():
@@ -311,11 +352,14 @@ def build_route_review(
     seed_places: dict[str, dict[str, Any]] | None = None,
 ) -> RouteReviewResult:
     candidates = _candidate_objects(event_list)
+    candidate_accounts = _candidate_accounts(candidates)
+    active_accounts = [account for account in candidate_accounts if account.active]
+    active_candidate_ids = {account.candidate_id for account in active_accounts}
+    candidates_by_id = {_candidate_id(candidate): candidate for candidate in candidates}
     event_payloads, event_collection_errors = _objects_by_id(
         complete_draft,
         "events",
     )
-    active_candidate_ids = {_candidate_id(candidate) for candidate in candidates}
     places, place_errors = _review_places(
         complete_draft,
         seed_places or {},
@@ -345,7 +389,14 @@ def build_route_review(
     seen: set[str] = set()
     proposals: list[RouteReviewProposal] = []
 
-    for candidate in candidates:
+    findings = _review_findings(event_list, candidate_accounts)
+    route_errors.extend(
+        finding.message
+        for finding in findings
+        if finding.owner == "technical" and finding.blocking
+    )
+    for account in active_accounts:
+        candidate = candidates_by_id[account.candidate_id]
         candidate_id = _candidate_id(candidate)
         if candidate_id in seen:
             raise RouteReviewError(f"Duplicate candidate_id '{candidate_id}'")
@@ -379,6 +430,19 @@ def build_route_review(
                 event=event,
             )
         )
+        findings.extend(
+            RouteReviewFinding(
+                owner=(
+                    "source_media"
+                    if "source URL" in error
+                    else "technical"
+                ),
+                message=error,
+                candidate_id=candidate_id,
+                blocking=True,
+            )
+            for error in errors
+        )
 
     dormant = []
     for candidate_id, prior in prior_by_id.items():
@@ -398,7 +462,14 @@ def build_route_review(
         dormant_proposals=sorted(dormant, key=lambda item: item.candidate_id),
         places=places,
         connections=connections,
-        warnings=_route_warnings(event_list),
+        candidate_accounts=candidate_accounts,
+        phase_coverage=_phase_coverage(event_list),
+        findings=_unique_findings(findings),
+        warnings=[
+            finding.message
+            for finding in _unique_findings(findings)
+            if finding.owner == "active_route"
+        ],
         technical_errors=route_errors,
         technical_ready=_technical_ready(proposals, route_errors),
     )
@@ -477,6 +548,8 @@ def _review_event(
         value = getattr(event, field)
         if not value.strip():
             errors.append(f"Reader-facing event is missing {label} ('{field}').")
+    if not event.source_urls:
+        errors.append("Reader-facing event has no source URL.")
     for place_id in event.place_ids:
         if place_id not in resolved_place_ids:
             errors.append(
@@ -611,6 +684,114 @@ def _candidate_objects(event_list: dict[str, Any]) -> list[dict[str, Any]]:
     if any(not isinstance(candidate, dict) for candidate in candidates):
         raise RouteReviewError("Generated event list contains a non-object candidate")
     return candidates
+
+
+def _candidate_accounts(
+    candidates: list[dict[str, Any]],
+) -> list[RouteReviewCandidateAccount]:
+    accounts: list[RouteReviewCandidateAccount] = []
+    for candidate in candidates:
+        candidate_id = _candidate_id(candidate)
+        composition = candidate.get("composition")
+        if not isinstance(composition, dict):
+            composition = {}
+        outcome = composition.get("outcome", "active")
+        if outcome not in {"active", "omitted", "merged_into", "split_into", "added"}:
+            outcome = "omitted"
+        reason = composition.get("reason")
+        if not isinstance(reason, str) or not reason.strip():
+            reason = _optional_string(candidate.get("decision_rationale")) or "Generated composition decision."
+        related = composition.get("related_candidate_ids", [])
+        if not isinstance(related, list):
+            related = []
+        preview = candidate.get("preview")
+        if not isinstance(preview, dict):
+            preview = {
+                key: candidate[key]
+                for key in (
+                    "working_title",
+                    "years",
+                    "place",
+                    "route_function",
+                    "decision_rationale",
+                    "review_question",
+                    "source_leads",
+                    "risk_notes",
+                    "next_action",
+                )
+                if key in candidate
+            }
+        accounts.append(
+            RouteReviewCandidateAccount(
+                candidate_id=candidate_id,
+                outcome=outcome,
+                reason=reason,
+                related_candidate_ids=[item for item in related if isinstance(item, str)],
+                active=outcome in {"active", "added"},
+                preview=preview,
+                findings=_candidate_findings(candidate, candidate_id, outcome),
+            )
+        )
+    return accounts
+
+
+def _candidate_findings(
+    candidate: dict[str, Any],
+    candidate_id: str,
+    outcome: str,
+) -> list[RouteReviewFinding]:
+    raw_findings = candidate.get("findings")
+    findings: list[RouteReviewFinding] = []
+    if isinstance(raw_findings, list):
+        for raw in raw_findings:
+            try:
+                findings.append(RouteReviewFinding.model_validate(raw))
+            except ValidationError:
+                continue
+    if findings:
+        return findings
+    owner: FindingOwner = "active_event" if outcome in {"active", "added"} else "candidate_composition"
+    return [
+        RouteReviewFinding(owner=owner, message=message, candidate_id=candidate_id)
+        for message in _unique_strings(candidate.get("risk_notes"), candidate.get("warnings"))
+    ]
+
+
+def _review_findings(
+    event_list: dict[str, Any],
+    accounts: list[RouteReviewCandidateAccount],
+) -> list[RouteReviewFinding]:
+    values: list[RouteReviewFinding] = [
+        finding
+        for account in accounts
+        for finding in account.findings
+    ]
+    raw_findings = event_list.get("findings")
+    if isinstance(raw_findings, list):
+        for raw in raw_findings:
+            try:
+                values.append(RouteReviewFinding.model_validate(raw))
+            except ValidationError:
+                continue
+    if not any(finding.owner == "active_route" for finding in values):
+        values.extend(
+            RouteReviewFinding(owner="active_route", message=message)
+            for message in _route_warnings(event_list)
+        )
+    return values
+
+
+def _phase_coverage(event_list: dict[str, Any]) -> list[dict[str, Any]]:
+    values = event_list.get("phase_coverage")
+    return [item for item in values if isinstance(item, dict)] if isinstance(values, list) else []
+
+
+def _unique_findings(values: list[RouteReviewFinding]) -> list[RouteReviewFinding]:
+    unique: dict[tuple[str, str | None, bool, str], RouteReviewFinding] = {}
+    for value in values:
+        key = (value.owner, value.candidate_id, value.blocking, value.message)
+        unique.setdefault(key, value)
+    return list(unique.values())
 
 
 def _candidate_id(candidate: dict[str, Any]) -> str:

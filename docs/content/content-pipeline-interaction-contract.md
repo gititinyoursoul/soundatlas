@@ -129,8 +129,14 @@ route does not convert its Draft events to Approved.
 
 Missing or weak sources, unresolved claims or merges, uncertain place or time
 data, unreviewed media or images, and other editorial risks remain visible as
-warnings. Warnings inform judgment but do not require individual acknowledgment
-and do not block publication by themselves.
+owned findings. Inactive-Candidate findings stay with that Candidate and do not
+inflate active Route counts. Warnings inform judgment and do not require
+individual acknowledgement.
+
+Every included active Event needs at least one Source URL before Publication.
+An absent active-event Source is a blocking Source/media finding, not an
+automatic approval state: the Human evaluates relevance through the exact
+reviewed result and makes the separate explicit Publication decision.
 
 Structurally invalid data and failed or unresolved references are technical
 errors. They are not editorial decisions and may prevent publication when the
@@ -199,13 +205,16 @@ The interaction satisfies this contract when:
   without reading raw structured files;
 - every proposed event has a private Draft, Approved, or Don’t use state and
   generated proposals default to Draft;
+- every Candidate considered for the Route has a reviewable composition outcome,
+  Reason, Context, and owned findings; inactive Candidates have no editorial
+  state;
 - Draft and Approved events are included, while Don’t use events are excluded
   without deletion;
 - public presentation exposes none of those editorial states;
 - agent recommendations, seed compatibility state, media/source review,
   warnings, technical errors, and publication authorization remain distinct;
-- warnings remain visible and non-blocking while unsafe technical errors may
-  prevent publication;
+- warnings remain visible and non-blocking while unsafe technical errors and
+  missing active-event Sources prevent publication;
 - one explicit action publishes the exact reviewed Draft-plus-Approved result;
 - later changes cannot replace the published result without another explicit
   review and publication decision; and

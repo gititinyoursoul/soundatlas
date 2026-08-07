@@ -81,7 +81,9 @@ flowchart TD
     questions; the human should normally only approve, reject, or correct those
     proposals.
 12. Run the complete-draft agent step after candidate outline generation. It may
-    add, omit, merge, split, or reorder proposals and materializes one coherent
+    add, omit, merge, split, or reorder proposals, but it must account for
+    every outline Candidate and every addition with an outcome, Reason,
+    relationships, and reviewable Content/Context. It materializes one coherent
     active result before human editorial decisions.
 13. Create or refresh `route-review.json` to keep the private Draft, Approved,
     and Don’t use state separate from agent recommendations. The complete-draft
@@ -93,9 +95,10 @@ flowchart TD
     drafting and do not determine private route state.
 15. Treat the complete draft and route-review result as reviewable drafts, not
     publication-ready data. The legacy accepted-event handoff remains
-    enrichment-ready compatibility material. AI may draft dossier content and
-    suggest source statuses, but human editors confirm source status and
-    source/media readiness.
+    enrichment-ready compatibility material. AI acquires and compares Sources
+    before drafting active reader-facing prose; Human publication remains the
+    decision that accepts those Sources as relevant. An active Event without a
+    Source URL is visible as a blocking Source finding and cannot be published.
 16. Run the event editorial quality pass from
     `docs/content/event-editorial-quality-standards.md` before translating
     accepted events into `data/seed/`.
@@ -130,18 +133,20 @@ For new route work, keep route-specific editorial artifacts under
    useful.
 6. `candidate-outline.json`: preserved agent-generated candidate outline used
    as input to complete drafting.
-7. `complete-draft.json` and `complete-draft.md`: one validated active route
-   draft with event, place, connection, warning, technical-readiness, and
-   source-outline information.
-8. `event-list.md` and `event-list.json`: active candidate proposals
-   materialized from the complete draft for route review. `event-list.md`
+7. `complete-draft.json` and `complete-draft.md`: the single generated
+   Content/composition authority for one validated Route revision. It contains
+   the complete Candidate account, active Event/Place/Connection Content, phase
+   coverage, owned findings, technical readiness, and source-outline identity.
+8. `event-list.md` and `event-list.json`: deterministic active-Candidate views
+   materialized from the complete draft for compatibility. `event-list.md`
    should minimize human effort by showing overview counts, overlap-cluster
    recommendations, merge targets, `maybe` items, and then the full candidate
    appendix.
-9. `route-review.json`: authoritative private review result for the target
-   workflow. It identifies one exact active revision, keeps agent recommendation
-   separate from Draft, Approved, and Don’t use state, retains identifiable
-   invalid proposals, and preserves minimal dormant decisions across refreshes.
+9. `route-review.json`: authoritative private Human-state record bound to one
+   exact complete draft. It keeps Draft, Approved, and Don’t use only on active
+   Events; inactive Candidates retain their composition account and findings but
+   do not receive editorial state. It preserves minimal dormant decisions across
+   refreshes.
 10. `route-publication.json`: minimal private record of the exact revision and
    event/connection membership most recently promoted to canonical runtime data.
    It protects the published result from later route-review refreshes; it is not
@@ -166,10 +171,11 @@ The generated files are working drafts. They should not be treated as final
 historical claims or publication-ready seed data without review.
 
 The route content pipeline keeps `accepted-events.json` as a legacy
-compatibility contract for deterministic commands. The active complete-draft
-result feeds `route-review.json`, which is authoritative for private human
-state and is consumed by Issues #72 and #73. The two paths are not silently
-synchronized.
+compatibility contract for deterministic commands. The active complete draft is
+the only generated Content authority; route concept, event list, and framing
+artifacts are its deterministic views, and `route-review.json` binds that exact
+Content to private Human state. Secondary commands must not overwrite active
+complete-draft views. The legacy path is retired separately through #103.
 
 The publication API is available only through API-backed editorial mode:
 
