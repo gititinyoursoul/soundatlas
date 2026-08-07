@@ -50,6 +50,8 @@ RENDER_FIELDS = {
     "route_function": "route function",
 }
 
+MISSING_SOURCE_URL_ERROR = "Reader-facing event has no source URL."
+
 
 class RouteReviewProposal(BaseModel):
     candidate_id: str
@@ -408,6 +410,9 @@ def build_route_review(
             resolved_place_ids,
         )
         errors = [*proposal_errors(candidate), *event_errors]
+        renderability_errors = [
+            error for error in errors if error != MISSING_SOURCE_URL_ERROR
+        ]
         signature = material_signature(candidate, event)
         prior = prior_by_id.get(candidate_id)
         state = initial_states.get(candidate_id, "draft")
@@ -418,7 +423,7 @@ def build_route_review(
                 candidate_id=candidate_id,
                 editorial_state=state,
                 included=state != "dont_use",
-                renderable=not errors,
+                renderable=not renderability_errors,
                 agent_recommendation=_optional_string(candidate.get("status")),
                 warnings=_unique_strings(
                     candidate.get("risk_notes"),
@@ -549,7 +554,7 @@ def _review_event(
         if not value.strip():
             errors.append(f"Reader-facing event is missing {label} ('{field}').")
     if not event.source_urls:
-        errors.append("Reader-facing event has no source URL.")
+        errors.append(MISSING_SOURCE_URL_ERROR)
     for place_id in event.place_ids:
         if place_id not in resolved_place_ids:
             errors.append(
@@ -814,7 +819,9 @@ def _technical_ready(
     route_errors: list[str],
 ) -> bool:
     return not route_errors and all(
-        proposal.renderable or not proposal.included for proposal in proposals
+        not proposal.included
+        or (proposal.renderable and not proposal.technical_errors)
+        for proposal in proposals
     )
 
 

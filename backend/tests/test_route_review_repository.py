@@ -147,7 +147,9 @@ def test_invalid_reader_facing_event_is_an_explicit_technical_error(tmp_path: Pa
     assert "Reader-facing event has invalid `summary`" in result.proposals[0].technical_errors[0]
 
 
-def test_missing_source_is_owned_and_blocks_the_active_review(tmp_path: Path) -> None:
+def test_missing_source_is_owned_blocks_publication_but_preserves_preview(
+    tmp_path: Path,
+) -> None:
     repository = write_review_fixture(tmp_path)
     draft_path = tmp_path / ROUTE_ID / "complete-draft.json"
     payload = json.loads(draft_path.read_text(encoding="utf-8"))
@@ -157,6 +159,8 @@ def test_missing_source_is_owned_and_blocks_the_active_review(tmp_path: Path) ->
     result = repository.refresh(ROUTE_ID)
 
     assert result.technical_ready is False
+    assert result.proposals[0].event is not None
+    assert result.proposals[0].renderable is True
     assert result.proposals[0].technical_errors == ["Reader-facing event has no source URL."]
     assert any(
         finding.owner == "source_media"
