@@ -397,7 +397,9 @@ def summarize_candidate(
         "query": candidate.get("query") or "",
         "confidence": normalized_confidence(candidate.get("confidence")),
         "specificity": specificity,
-        "review_status": candidate.get("review_status") or "",
+        "content_review_status": candidate.get("content_review_status")
+        or candidate.get("review_status")
+        or "",
         "would_add": would_add,
     }
     review_warnings = candidate_review_warnings(kind=kind, candidate=candidate, event=event)

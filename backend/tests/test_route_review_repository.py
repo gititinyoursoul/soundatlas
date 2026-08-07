@@ -28,7 +28,7 @@ def test_refresh_defaults_to_draft_and_preserves_agent_recommendation(tmp_path: 
 
     assert result.proposals[0].editorial_state == "draft"
     assert result.proposals[0].included is True
-    assert result.proposals[0].agent_recommendation == "reject"
+    assert result.proposals[0].agent_recommendation == "exclude"
     assert result.proposals[0].warnings == ["Check the date."]
     assert result.warnings == ["Route chronology needs review."]
     assert result.technical_ready is True
@@ -357,7 +357,7 @@ def test_legacy_migration_is_explicit_and_does_not_use_agent_decisions(tmp_path:
 
     assert report.migrated == {"pending": 0, "approved": 1, "rejected": 1}
     assert result.proposals[0].editorial_state == "approved"
-    assert result.proposals[0].agent_recommendation == "reject"
+    assert result.proposals[0].agent_recommendation == "exclude"
     assert result.proposals[1].editorial_state == "dont_use"
     with pytest.raises(RouteReviewConflictError, match="one-time"):
         repository.migrate_legacy(ROUTE_ID)

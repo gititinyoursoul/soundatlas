@@ -29,6 +29,12 @@ LEGACY_STATE_MAP: dict[str, EditorialState] = {
     "approved": "approved",
     "rejected": "dont_use",
 }
+LEGACY_RECOMMENDATION_MAP = {
+    "keep": "include",
+    "maybe": "context",
+    "merge": "merge",
+    "reject": "exclude",
+}
 
 MATERIAL_FIELDS = (
     "working_title",
@@ -51,6 +57,14 @@ RENDER_FIELDS = {
 }
 
 MISSING_SOURCE_URL_ERROR = "Reader-facing event has no source URL."
+
+
+def _canonical_recommendation(candidate: dict[str, Any]) -> str | None:
+    recommendation = candidate.get("agent_recommendation")
+    if isinstance(recommendation, str):
+        return LEGACY_RECOMMENDATION_MAP.get(recommendation, recommendation)
+    status = candidate.get("status")
+    return LEGACY_RECOMMENDATION_MAP.get(status) if isinstance(status, str) else None
 
 
 class RouteReviewProposal(BaseModel):
@@ -192,6 +206,14 @@ class RouteReviewRepository:
         for candidate in _candidate_objects(event_list):
             candidate_id = _candidate_id(candidate)
             legacy_state = candidate.get("review_state")
+            if legacy_state is None:
+                canonical_state = candidate.get("editorial_state")
+                if isinstance(canonical_state, str):
+                    legacy_state = {
+                        "draft": "pending",
+                        "approved": "approved",
+                        "dont_use": "rejected",
+                    }.get(canonical_state)
             if not isinstance(legacy_state, str) or legacy_state not in LEGACY_STATE_MAP:
                 raise RouteReviewError(
                     f"Candidate '{candidate_id}' has unsupported legacy review_state "
@@ -428,7 +450,7 @@ def build_route_review(
                 editorial_state=state,
                 included=state != "dont_use",
                 renderable=not renderability_errors,
-                agent_recommendation=_optional_string(candidate.get("status")),
+                agent_recommendation=_canonical_recommendation(candidate),
                 warnings=_unique_strings(
                     candidate.get("risk_notes"),
                     candidate.get("warnings"),

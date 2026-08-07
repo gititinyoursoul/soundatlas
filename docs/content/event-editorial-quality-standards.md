@@ -101,9 +101,9 @@ This event-level source model does not require sentence-level citation fields.
 If a claim cannot be represented responsibly with the current model, keep the
 event in draft or raise a separate schema proposal.
 
-### `review_status`
+### `content_review_status`
 
-Use `review_status: "draft"` for generated, uncertain, newly accepted, or not
+Use `content_review_status: "draft"` for generated, uncertain, newly accepted, or not
 final-reviewed event records.
 
 - agents and automated checks must not assign `reviewed`
@@ -226,11 +226,11 @@ Draft, Approved, and Don’t use controls. Draft and Approved events may be
 published; Don’t use events remain in editorial history but are excluded. The
 target state does not make an agent recommendation authoritative.
 
-Seed `review_status` describes the review state of a structured seed or runtime
+Seed `content_review_status` describes the Human content review state of a structured seed or runtime
 record. It does not decide whether a candidate belongs in the route and does
 not replace `accepted-events.json` or its companion `accepted-events.md`.
 
-A `keep` event can still become a seed record with `review_status: "draft"`.
+A candidate with `agent_recommendation: "include"` can still become a seed record with `content_review_status: "draft"`.
 Do not convert unresolved `maybe`, unresolved `merge`, `reject`, or unreviewed
 legacy-status candidates into seed-shaped records.
 

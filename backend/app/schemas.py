@@ -2,7 +2,10 @@ from typing import Annotated, Any, Literal
 
 from pydantic import BaseModel, Field, field_validator, model_validator
 
-ReviewStatus = Literal["draft", "reviewed"]
+ContentReviewStatus = Literal["draft", "reviewed"]
+# Kept as an input/type alias for downstream callers during the bounded
+# migration. Canonical models expose ``content_review_status`` instead.
+ReviewStatus = ContentReviewStatus
 MediaReviewAction = Literal["reviewed", "reject"]
 LinkReviewKind = Literal["media", "image"]
 MediaProvider = Literal["youtube", "spotify", "qobuz"]
@@ -106,7 +109,29 @@ class YearRangeMixin(BaseModel):
         return self
 
 
-class Route(YearRangeMixin):
+class ContentReviewMixin(BaseModel):
+    """Human content-review state with a legacy input compatibility shim."""
+
+    content_review_status: ContentReviewStatus
+
+    @model_validator(mode="before")
+    @classmethod
+    def normalize_legacy_review_status(cls, value: Any) -> Any:
+        if isinstance(value, dict) and "content_review_status" not in value:
+            legacy = value.get("review_status")
+            if legacy is not None:
+                value = dict(value)
+                value["content_review_status"] = legacy
+        return value
+
+    @property
+    def review_status(self) -> ContentReviewStatus:
+        """Read-only compatibility accessor; never emitted in canonical JSON."""
+
+        return self.content_review_status
+
+
+class Route(ContentReviewMixin, YearRangeMixin):
     id: str
     title: str
     color: str
@@ -114,11 +139,10 @@ class Route(YearRangeMixin):
     summary: str
     thesis: str
     tags: list[str]
-    review_status: ReviewStatus
     source_urls: list[str]
 
 
-class Place(BaseModel):
+class Place(ContentReviewMixin):
     id: str
     name: str
     borough: str
@@ -126,7 +150,6 @@ class Place(BaseModel):
     latitude: float
     longitude: float
     summary: str
-    review_status: ReviewStatus
     source_urls: list[str]
     geometry: PlaceGeometry | None = None
     geometry_precision: GeometryPrecision | None = None
@@ -178,14 +201,13 @@ class Place(BaseModel):
         return self
 
 
-class MediaLink(BaseModel):
+class MediaLink(ContentReviewMixin):
     provider: MediaProvider
     type: MediaType
     title: str
     url: str
     query: str
     confidence: float
-    review_status: ReviewStatus
     playback_mode: MediaPlaybackMode = "embed"
     video_id: str | None = None
     channel_title: str | None = None
@@ -201,7 +223,7 @@ class MediaLink(BaseModel):
         return value
 
 
-class ImageLink(BaseModel):
+class ImageLink(ContentReviewMixin):
     provider: ImageProvider
     type: ImageType
     title: str
@@ -211,7 +233,6 @@ class ImageLink(BaseModel):
     alt_text: str
     query: str
     confidence: float
-    review_status: ReviewStatus
     thumbnail_url: str | None = None
     creator: str | None = None
     license: str | None = None
@@ -253,7 +274,7 @@ class PlaceRelationship(BaseModel):
         return self
 
 
-class Event(YearRangeMixin):
+class Event(ContentReviewMixin, YearRangeMixin):
     id: str
     route_id: str
     place_id: str
@@ -264,7 +285,6 @@ class Event(YearRangeMixin):
     summary: str
     significance: str
     tags: list[str]
-    review_status: ReviewStatus
     source_urls: list[str]
     media_links: list[MediaLink]
     image_links: list[ImageLink]

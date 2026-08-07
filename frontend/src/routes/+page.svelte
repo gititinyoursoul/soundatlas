@@ -125,7 +125,7 @@
     ? []
     : events.flatMap((event) => [
         ...event.media_links
-          .filter((mediaLink) => mediaLink.review_status === 'draft')
+          .filter((mediaLink) => mediaLink.content_review_status === 'draft')
           .map<ReviewQueueItem>((mediaLink) => ({
             id: `media:${event.id}:${mediaLink.url}`,
             kind: 'media',
@@ -138,7 +138,7 @@
             url: mediaLink.url
           })),
         ...event.image_links
-          .filter((imageLink) => imageLink.review_status === 'draft')
+          .filter((imageLink) => imageLink.content_review_status === 'draft')
           .map<ReviewQueueItem>((imageLink) => ({
             id: `image:${event.id}:${imageLink.image_url}`,
             kind: 'image',

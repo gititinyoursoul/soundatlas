@@ -60,7 +60,7 @@ def test_enrich_events_payload_merges_youtube_result_items() -> None:
         "url": "https://www.youtube.com/watch?v=interview",
         "query": "DJ Kool Herc 1973 interview",
         "confidence": 0.75,
-        "review_status": "draft",
+        "content_review_status": "draft",
     }
     assert media_links[2]["type"] == "playlist"
 

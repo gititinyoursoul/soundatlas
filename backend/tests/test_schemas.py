@@ -4,6 +4,25 @@ from pydantic import ValidationError
 from app.schemas import Event, ImageLink, MediaLink
 
 
+def test_legacy_review_status_is_input_only_and_canonical_field_is_emitted() -> None:
+    link = MediaLink.model_validate(
+        {
+            "provider": "youtube",
+            "type": "video",
+            "title": "Example",
+            "url": "https://www.youtube.com/watch?v=example",
+            "query": "example",
+            "confidence": 0.5,
+            "review_status": "draft",
+        }
+    )
+
+    assert link.content_review_status == "draft"
+    assert link.review_status == "draft"
+    assert "content_review_status" in link.model_dump()
+    assert "review_status" not in link.model_dump()
+
+
 def test_media_link_accepts_structured_provider_link() -> None:
     media_link = MediaLink.model_validate(
         {

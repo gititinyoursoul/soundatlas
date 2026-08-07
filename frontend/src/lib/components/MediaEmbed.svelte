@@ -79,7 +79,7 @@
         <strong>{selectedEntry.mediaLink.title}</strong>
         <span>
           {#if showReviewActions}
-            {selectedEntry.mediaLink.review_status} · {selectedEntry.embed.kind}
+            {selectedEntry.mediaLink.content_review_status} · {selectedEntry.embed.kind}
           {:else}
             {selectedEntry.embed.kind}
           {/if}
@@ -93,7 +93,7 @@
         <button
           type="button"
           disabled={isSaving ||
-            selectedEntry.mediaLink.review_status === 'reviewed'}
+            selectedEntry.mediaLink.content_review_status === 'reviewed'}
           on:click={() => reviewSelectedMediaLink('reviewed')}
         >
           Mark reviewed

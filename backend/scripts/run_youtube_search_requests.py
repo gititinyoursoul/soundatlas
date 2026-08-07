@@ -375,7 +375,7 @@ def normalize_youtube_search_items(
                 "published_at": snippet.get("publishedAt"),
                 "matched_query": candidate.get("q", ""),
                 "intent": candidate.get("intent"),
-                "review_status": "draft",
+                "content_review_status": "draft",
             },
         )
     return normalized_items

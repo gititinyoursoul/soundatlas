@@ -174,7 +174,7 @@ The MVP should be data-driven. The frontend only renders what the backend provid
   "summary": "How local parties, DJ technique, Bronx communities, and media circulation turned hip-hop into a global cultural form.",
   "thesis": "Hip-hop emerges from DJ practice, community spaces, urban conditions, and media circulation, not from a single point of origin.",
   "tags": ["dj-culture", "block-party", "breakbeat", "bronx"],
-  "review_status": "draft",
+  "content_review_status": "draft",
   "source_urls": []
 }
 ```
@@ -190,7 +190,7 @@ The MVP should be data-driven. The frontend only renders what the backend provid
   "latitude": 40.8459,
   "longitude": -73.9230,
   "summary": "Apartment building associated with an early Kool Herc party.",
-  "review_status": "draft",
+  "content_review_status": "draft",
   "source_urls": []
 }
 ```
@@ -208,7 +208,7 @@ The MVP should be data-driven. The frontend only renders what the backend provid
   "summary": "A party often cited as a symbolic origin point for hip-hop culture.",
   "significance": "Shows how DJ practice, community space and youth culture converged in the Bronx.",
   "tags": ["dj-culture", "block-party", "bronx"],
-  "review_status": "draft",
+  "content_review_status": "draft",
   "source_urls": [],
   "media_links": [],
   "image_links": []
@@ -224,7 +224,7 @@ The MVP should be data-driven. The frontend only renders what the backend provid
   "to_event_id": "kool-herc-back-to-school-jam",
   "type": "influence",
   "summary": "Connects Jamaican soundsystem practice with early Bronx DJ culture.",
-  "review_status": "draft"
+  "content_review_status": "draft"
 }
 ```
 

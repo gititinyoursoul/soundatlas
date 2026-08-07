@@ -106,7 +106,7 @@ def test_media_link_can_be_marked_reviewed(tmp_path) -> None:
 
     assert response.status_code == 200
     media_link = response.json()["media_links"][0]
-    assert media_link["review_status"] == "reviewed"
+    assert media_link["content_review_status"] == "reviewed"
     assert "reviewed" in (tmp_path / "events.json").read_text(encoding="utf-8")
 
 
@@ -151,7 +151,7 @@ def test_event_link_can_mark_image_reviewed(tmp_path) -> None:
 
     assert response.status_code == 200
     image_link = response.json()["image_links"][0]
-    assert image_link["review_status"] == "reviewed"
+    assert image_link["content_review_status"] == "reviewed"
     assert "reviewed" in (tmp_path / "events.json").read_text(encoding="utf-8")
 
 

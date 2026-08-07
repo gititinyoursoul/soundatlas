@@ -94,7 +94,7 @@ describe('map utils', () => {
             alt_text: 'Avatar image',
             query: 'Grand Opening',
             confidence: 0.9,
-            review_status: 'draft'
+            content_review_status: 'draft'
           }
         ]
       })

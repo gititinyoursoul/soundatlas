@@ -1,5 +1,10 @@
 # Editorial Workflow
 
+The canonical state vocabulary is defined in
+[`editorial-review-terminology.md`](editorial-review-terminology.md). Legacy
+pipeline artifacts may use the names documented below only at migration input
+boundaries; newly generated payloads use the canonical names.
+
 ## Purpose
 
 This document describes how SoundAtlas app-facing editorial content is created

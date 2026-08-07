@@ -131,7 +131,7 @@ describe('SoundAtlas API client', () => {
   it('sends media review updates and returns the updated event', async () => {
     const updatedEvent = makeEvent({
       id: 'kool-herc-back-to-school-jam',
-      review_status: 'reviewed'
+      content_review_status: 'reviewed'
     });
     const fetcher = vi
       .fn<typeof fetch>()

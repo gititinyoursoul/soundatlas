@@ -326,7 +326,7 @@ def build_media_link_from_youtube_item(
         "url": url,
         "query": query,
         "confidence": confidence,
-        "review_status": "draft",
+        "content_review_status": "draft",
     }
     description = item.get("description")
     if isinstance(description, str) and description:

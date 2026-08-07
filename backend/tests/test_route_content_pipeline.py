@@ -49,9 +49,9 @@ def test_pipeline_missing_mode_creates_accepted_events_and_blocks_downstream(
     assert (route_dir / "validation-report.md").exists()
 
     event_list = json.loads((route_dir / "event-list.json").read_text(encoding="utf-8"))
-    assert event_list["_meta"]["review_status"] == "draft"
+    assert event_list["_meta"]["content_review_status"] == "draft"
     assert event_list["candidates"][0]["candidate_id"] == "kool-herc-sedgwick-party"
-    assert event_list["candidates"][0]["status"] == "maybe"
+    assert event_list["candidates"][0]["agent_recommendation"] == "context"
     accepted_events = json.loads((route_dir / "accepted-events.json").read_text(encoding="utf-8"))
     assert accepted_events["accepted_events"] == []
 
@@ -912,7 +912,7 @@ def test_unapproved_keep_candidate_blocks_accepted_events_generation(tmp_path: P
     )
 
     assert result[0]["status"] == "blocked"
-    assert "review_state is not approved" in "\n".join(result[0]["errors"])
+    assert "editorial state is not approved" in "\n".join(result[0]["errors"])
 
 
 def test_merge_candidate_requires_target_and_rationale() -> None:

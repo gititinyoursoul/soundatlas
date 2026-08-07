@@ -14,7 +14,7 @@ export function makeRoute(
     summary: 'Route summary',
     thesis: 'Route thesis',
     tags: [],
-    review_status: 'draft',
+    content_review_status: 'draft',
     source_urls: [],
     ...routeOverrides,
     id
@@ -33,7 +33,7 @@ export function makePlace(
     latitude: 40.82,
     longitude: -73.93,
     summary: 'Place summary',
-    review_status: 'draft',
+    content_review_status: 'draft',
     source_urls: [],
     ...placeOverrides,
     id
@@ -69,7 +69,7 @@ export function makeEvent(
     summary: 'Event summary',
     significance: 'Event significance',
     tags: [],
-    review_status: 'draft',
+    content_review_status: 'draft',
     source_urls: [],
     media_links: [],
     image_links: [],

@@ -148,7 +148,7 @@ class SeedRepository:
         if link is None:
             return None
 
-        link.review_status = "reviewed"
+        link.content_review_status = "reviewed"
         self._write_link_review_status(event_id, link_kind, url, "reviewed")
         return event
 
@@ -253,7 +253,7 @@ class SeedRepository:
                 continue
             for link in event.get(collection_key, []):
                 if raw_link_matches_url(link, url):
-                    link["review_status"] = review_status
+                    link["content_review_status"] = review_status
                     write_json_payload(events_path, payload)
                     return
 

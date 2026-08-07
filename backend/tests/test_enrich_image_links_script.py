@@ -157,7 +157,7 @@ def test_build_wikimedia_image_link_defaults_to_archive_photo() -> None:
 
     assert candidate is not None
     assert candidate["type"] == "archive_photo"
-    assert candidate["review_status"] == "draft"
+    assert candidate["content_review_status"] == "draft"
 
 
 def test_build_wikimedia_image_link_rejects_generic_broad_place_matches() -> None:

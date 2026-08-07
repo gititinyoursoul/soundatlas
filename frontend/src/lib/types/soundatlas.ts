@@ -1,4 +1,6 @@
-export type ReviewStatus = 'draft' | 'reviewed';
+export type ContentReviewStatus = 'draft' | 'reviewed';
+/** Legacy type name retained for migration consumers; use ContentReviewStatus. */
+export type ReviewStatus = ContentReviewStatus;
 export type ReviewAction = 'reviewed' | 'reject';
 export type ReviewLinkKind = 'media' | 'image';
 export type MediaProvider = 'youtube' | 'spotify' | 'qobuz';
@@ -48,7 +50,7 @@ export type Route = {
   summary: string;
   thesis: string;
   tags: string[];
-  review_status: ReviewStatus;
+  content_review_status: ContentReviewStatus;
   source_urls: string[];
 };
 
@@ -60,7 +62,7 @@ export type Place = {
   latitude: number;
   longitude: number;
   summary: string;
-  review_status: ReviewStatus;
+  content_review_status: ContentReviewStatus;
   source_urls: string[];
   geometry?: PlaceGeometry | null;
   geometry_precision?: GeometryPrecision | null;
@@ -77,7 +79,7 @@ export type MediaLink = {
   url: string;
   query: string;
   confidence: number;
-  review_status: ReviewStatus;
+  content_review_status: ContentReviewStatus;
   playback_mode?: MediaPlaybackMode;
   video_id?: string | null;
   channel_title?: string | null;
@@ -100,7 +102,7 @@ export type ImageLink = {
   alt_text: string;
   query: string;
   confidence: number;
-  review_status: ReviewStatus;
+  content_review_status: ContentReviewStatus;
 };
 
 export type PlaceRelationship = {
@@ -124,7 +126,7 @@ export type Event = {
   summary: string;
   significance: string;
   tags: string[];
-  review_status: ReviewStatus;
+  content_review_status: ContentReviewStatus;
   source_urls: string[];
   media_links: MediaLink[];
   image_links: ImageLink[];

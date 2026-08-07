@@ -41,6 +41,37 @@ PIPELINE_STEPS = (
 ACCEPTED_EVENT_DECISIONS = {"keep", "merge"}
 CANDIDATE_DECISIONS = {"keep", "maybe", "merge", "reject"}
 REVIEW_STATES = {"pending", "approved", "rejected"}
+AGENT_RECOMMENDATION_MAP = {
+    "keep": "include",
+    "maybe": "context",
+    "merge": "merge",
+    "reject": "exclude",
+}
+LEGACY_AGENT_RECOMMENDATION_MAP = {
+    value: key for key, value in AGENT_RECOMMENDATION_MAP.items()
+}
+
+
+def candidate_legacy_decision(candidate: dict[str, Any]) -> str | None:
+    status = candidate.get("status")
+    if isinstance(status, str):
+        return status
+    recommendation = candidate.get("agent_recommendation")
+    return (
+        LEGACY_AGENT_RECOMMENDATION_MAP.get(recommendation)
+        if isinstance(recommendation, str)
+        else None
+    )
+
+
+def candidate_editorial_state(candidate: dict[str, Any]) -> str | None:
+    legacy_state = candidate.get("review_state")
+    if isinstance(legacy_state, str):
+        return {"pending": "draft", "approved": "approved", "rejected": "dont_use"}.get(
+            legacy_state
+        )
+    state = candidate.get("editorial_state")
+    return state if isinstance(state, str) else None
 CLUSTER_RECOMMENDED_ACTIONS = {"keep_separate", "merge", "use_as_context"}
 QUALITY_GATE_FIELDS = (
     "route_fit_confirmed",
@@ -1024,7 +1055,7 @@ def activate_complete_draft(
         "_meta": {
             "route_id": manifest["route_id"],
             "target_output": manifest["steps"]["event_list"]["json"],
-            "review_status": "draft",
+            "content_review_status": "draft",
             "source_basis": [payload["_meta"]["source_outline"], source],
             "generated_by": SCRIPT_NAME,
         },
@@ -1036,7 +1067,7 @@ def activate_complete_draft(
             "route_id": manifest["route_id"],
             "source": source,
             "generated_by": SCRIPT_NAME,
-            "review_status": "draft",
+            "content_review_status": "draft",
         },
         "events": payload["events"],
     }
@@ -1045,7 +1076,7 @@ def activate_complete_draft(
             "route_id": manifest["route_id"],
             "source": source,
             "generated_by": SCRIPT_NAME,
-            "review_status": "draft",
+            "content_review_status": "draft",
         },
         "places": payload["places"],
     }
@@ -1054,7 +1085,7 @@ def activate_complete_draft(
             "route_id": manifest["route_id"],
             "source": source,
             "generated_by": SCRIPT_NAME,
-            "review_status": "draft",
+            "content_review_status": "draft",
         },
         "connections": payload["connections"],
     }
@@ -1063,7 +1094,7 @@ def activate_complete_draft(
         **payload["_meta"],
         "generated_by": SCRIPT_NAME,
         "active_output": source,
-        "review_status": "draft",
+        "content_review_status": "draft",
     }
     review_repository = RouteReviewRepository(route_dir.parent, seed_dir=seed_dir)
     review = review_repository.build_from_complete_draft(
@@ -1147,8 +1178,9 @@ def validate_complete_draft(
         errors.append(f"Complete draft route_id must be `{route_id}`.")
     if metadata.get("source_outline") != source_outline:
         errors.append(f"Complete draft source_outline must be `{source_outline}`.")
-    if metadata.get("review_status") != "draft":
-        errors.append("Complete draft `_meta.review_status` must be `draft`.")
+    content_review_status = metadata.get("content_review_status", metadata.get("review_status"))
+    if content_review_status != "draft":
+        errors.append("Complete draft `_meta.content_review_status` must be `draft`.")
     for field in (
         "route_concept",
         "candidates",
@@ -1210,10 +1242,10 @@ def validate_complete_draft(
             errors.append(f"Complete draft contains duplicate candidate `{candidate_id}`.")
         candidate_ids.append(candidate_id)
         candidate_by_id[candidate_id] = candidate
-        if candidate.get("status") not in CANDIDATE_DECISIONS:
+        if candidate_legacy_decision(candidate) not in CANDIDATE_DECISIONS:
             errors.append(f"Complete draft candidate `{candidate_id}` has unsupported status.")
-        if candidate.get("review_state") != "pending":
-            errors.append(f"Complete draft candidate `{candidate_id}` must remain pending.")
+        if candidate_editorial_state(candidate) != "draft":
+            errors.append(f"Complete draft candidate `{candidate_id}` must remain draft.")
         for field in ("years", "place", "working_title", "route_function"):
             if not isinstance(candidate.get(field), str) or not candidate[field].strip():
                 errors.append(f"Complete draft candidate `{candidate_id}` is missing `{field}`.")
@@ -1649,13 +1681,13 @@ def generate_event_list(
             "route_id": manifest["route_id"],
             "source": step["input"],
             "generated_by": SCRIPT_NAME,
-            "review_status": "draft",
+            "content_review_status": "draft",
         },
         "candidates": [
             {
                 **candidate,
-                "status": "maybe",
-                "review_state": "pending",
+                "agent_recommendation": "context",
+                "editorial_state": "draft",
                 "decision_rationale": "",
                 "review_question": "Approve this proposed candidate decision?",
                 "next_action": "review candidate",
@@ -1739,21 +1771,21 @@ def validate_event_list_decisions(event_list: dict[str, Any]) -> list[str]:
     }
     for candidate in candidates:
         candidate_id = candidate.get("candidate_id", "<missing>")
-        status = candidate.get("status")
-        review_state = candidate.get("review_state")
+        status = candidate_legacy_decision(candidate)
+        review_state = candidate_editorial_state(candidate)
         if status not in CANDIDATE_DECISIONS:
             errors.append(
                 f"Candidate `{candidate_id}` has unsupported decision `{status}`; "
                 "use keep, maybe, merge, or reject.",
             )
-        if review_state not in REVIEW_STATES:
+        if review_state not in REVIEW_STATES | {"draft", "dont_use"}:
             errors.append(
-                f"Candidate `{candidate_id}` has unsupported review_state `{review_state}`; "
-                "use pending, approved, or rejected.",
+                f"Candidate `{candidate_id}` has unsupported editorial state `{review_state}`; "
+                "use draft, approved, or dont_use.",
             )
         if status in ACCEPTED_EVENT_DECISIONS and review_state != "approved":
             errors.append(
-                f"Candidate `{candidate_id}` is `{status}` but review_state is not approved.",
+                f"Candidate `{candidate_id}` is `{status}` but editorial state is not approved.",
             )
         if status == "merge" and not candidate.get("merge_target_id"):
             errors.append(f"Candidate `{candidate_id}` is merge but has no merge_target_id.")
@@ -1801,14 +1833,14 @@ def build_accepted_events_payload(
 ) -> dict[str, Any]:
     accepted_events = []
     for candidate in event_list.get("candidates", []):
-        decision = candidate.get("status")
+        decision = candidate_legacy_decision(candidate)
         if decision not in ACCEPTED_EVENT_DECISIONS:
             continue
         accepted_events.append(
             {
                 "event_id": candidate["candidate_id"],
                 "decision": decision,
-                "review_state": candidate.get("review_state"),
+                "editorial_state": candidate_editorial_state(candidate),
                 "merge_target_id": candidate.get("merge_target_id")
                 if decision == "merge"
                 else None,
@@ -1829,7 +1861,7 @@ def build_accepted_events_payload(
             "route_id": route_id,
             "source": source,
             "generated_by": SCRIPT_NAME,
-            "review_status": "draft",
+            "content_review_status": "draft",
             "handoff_status": "draft",
         },
         "accepted_events": accepted_events,
@@ -1970,7 +2002,7 @@ def generate_event_framing(
             "route_id": manifest["route_id"],
             "source": accepted_events_path.name,
             "generated_by": SCRIPT_NAME,
-            "review_status": "draft",
+            "content_review_status": "draft",
         },
         "events": events,
     }
@@ -1979,7 +2011,7 @@ def generate_event_framing(
             "route_id": manifest["route_id"],
             "source": accepted_events_path.name,
             "generated_by": SCRIPT_NAME,
-            "review_status": "draft",
+            "content_review_status": "draft",
         },
         "places": places,
     }
@@ -1988,7 +2020,7 @@ def generate_event_framing(
             "route_id": manifest["route_id"],
             "source": manifest["active_dossier"],
             "generated_by": SCRIPT_NAME,
-            "review_status": "draft",
+            "content_review_status": "draft",
         },
         "connections": connections,
     }
@@ -2505,7 +2537,7 @@ def build_event_and_place_drafts(
                 "significance": accepted_event.get("route_rationale")
                 or "Draft significance pending review.",
                 "tags": [],
-                "review_status": "draft",
+                "content_review_status": "draft",
                 "source_urls": [],
                 "media_links": [],
                 "image_links": [],
@@ -2538,7 +2570,7 @@ def build_place_decision(
             "latitude": 0.0,
             "longitude": 0.0,
             "summary": "Draft place generated from route pipeline; review before seed promotion.",
-            "review_status": "draft",
+            "content_review_status": "draft",
             "source_urls": [],
         },
     }
@@ -2575,7 +2607,7 @@ def build_connection_drafts(
                 "to_event_id": candidate["to_event_id"],
                 "type": candidate["type"],
                 "summary": candidate["summary"] or f"Draft {route_id} connection pending review.",
-                "review_status": "draft",
+            "content_review_status": "draft",
             },
         )
     return connections

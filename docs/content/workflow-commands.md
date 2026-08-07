@@ -162,12 +162,12 @@ uv run --project backend python backend/scripts/route_content_pipeline.py run --
 | `seed_preview` | `seed-transfer-report.md` |
 | `validation` | `validation-report.md` |
 
-`event_list` generates candidate-review artifacts with `maybe` decisions and
-`review_state: pending` by default. Agent-reviewed event lists use `status` for
-the proposed candidate decision: `keep`, `maybe`, `merge`, or `reject`.
-Human review uses `review_state`: `pending`, `approved`, or `rejected`.
-`accepted_events` only includes `keep` and resolved `merge` candidates whose
-`review_state` is `approved`. A `merge` candidate must include
+`event_list` generates candidate-review artifacts with an `agent_recommendation`
+of `context` and Human `editorial_state: draft` by default. Legacy input may
+still use `status` (`keep`, `maybe`, `merge`, or `reject`) and `review_state`
+(`pending`, `approved`, or `rejected`) during migration.
+`accepted_events` only includes `include` and resolved `merge` candidates whose
+`editorial_state` is `approved`. A `merge` candidate must include
 `merge_target_id` and `merge_rationale`; the target cannot live only in prose.
 The `accepted_events` step creates or consumes `accepted-events.json` as the
 structured handoff and generates `accepted-events.md` as a readable companion

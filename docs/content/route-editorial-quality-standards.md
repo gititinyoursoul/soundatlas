@@ -53,7 +53,7 @@ The dossier should cover:
   investigate later.
 - Risks and open claims: weakly sourced claims, contested origin stories,
   uncertain dates, rights risks, attribution gaps, or material that should stay
-  `review_status: "draft"`.
+  `content_review_status: "draft"`.
 
 ## Draft Source Standard
 

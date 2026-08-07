@@ -811,7 +811,7 @@ def build_wikimedia_image_link(
         "alt_text": alt_text,
         "query": query,
         "confidence": confidence,
-        "review_status": "draft",
+        "content_review_status": "draft",
     }
     thumbnail_url = info.get("thumburl")
     if isinstance(thumbnail_url, str) and thumbnail_url:
