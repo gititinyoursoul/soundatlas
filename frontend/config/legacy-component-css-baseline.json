@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "description": "Maximum legacy CSS bytes for component-scoped Svelte styles and approved global exception surfaces.",
+  "exceptions": {
+    "global_styles": ["src/styles/app.css"],
+    "library_override_files": ["src/styles/library-overrides.css"]
+  },
+  "total_bytes": 44727,
+  "components": {
+    "lib/components/EditorialReviewTools.svelte": 1585,
+    "lib/components/Icon.svelte": 68,
+    "lib/components/MapView.svelte": 6278,
+    "lib/components/MediaEmbed.svelte": 1435,
+    "lib/components/NavigationDrawer.svelte": 12711,
+    "lib/components/RouteFilter.svelte": 991,
+    "lib/components/RoutePublicationPanel.svelte": 2027,
+    "lib/components/StoryPanel.svelte": 12072,
+    "lib/components/Timeline.svelte": 2844,
+    "routes/+page.svelte": 4273
+  },
+  "exception_files": {
+    "src/styles/app.css": 368,
+    "src/styles/library-overrides.css": 75
+  }
+}

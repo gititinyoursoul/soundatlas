@@ -9,15 +9,15 @@
   }
 </script>
 
-<div class="event-list" aria-label="Editorial route candidates">
+<div class="grid" aria-label="Editorial route candidates">
   {#each proposals as proposal (proposal.candidate_id)}
     <button
       type="button"
-      class="event-summary"
+      class="group grid min-w-0 gap-[0.3rem] border-0 border-b border-[#d9e0e7] bg-transparent px-[0.1rem] py-[0.55rem] text-left text-[#314151]"
       on:click={() => onSelect(proposal)}
     >
-      <span class="event-heading">
-        <strong
+      <span class="flex items-baseline justify-between gap-2">
+        <strong class="group-hover:text-[#bb3f22]"
           >{String(
             proposal.event?.title ??
               proposal.proposal.working_title ??
@@ -25,19 +25,27 @@
               proposal.candidate_id
           )}</strong
         >
-        <span class="event-review-state"
+        <span
+          class="shrink-0 capitalize text-[0.72rem] font-bold text-[#536170]"
           >{proposal.editorial_state.replace('_', ' ')}</span
         >
       </span>
       {#if proposal.warnings.length > 0 || proposal.technical_errors.length > 0}
-        <span class="finding-counts" aria-label="Event finding counts">
+        <span
+          class="flex flex-wrap gap-[0.3rem]"
+          aria-label="Event finding counts"
+        >
           {#if proposal.warnings.length > 0}
-            <span class="finding-count warning-count">
+            <span
+              class="rounded-full border border-current bg-[#fffaf0] px-[0.38rem] py-[0.16rem] text-[0.66rem] font-extrabold text-[#78510c]"
+            >
               {countLabel(proposal.warnings.length, 'warning', 'warnings')}
             </span>
           {/if}
           {#if proposal.technical_errors.length > 0}
-            <span class="finding-count error-count">
+            <span
+              class="rounded-full border border-current bg-[#fff5f5] px-[0.38rem] py-[0.16rem] text-[0.66rem] font-extrabold text-[#8b2020]"
+            >
               {countLabel(
                 proposal.technical_errors.length,
                 'blocking error',
@@ -50,57 +58,3 @@
     </button>
   {/each}
 </div>
-
-<style>
-  .event-list {
-    display: grid;
-  }
-  .event-summary {
-    display: grid;
-    gap: 0.3rem;
-    min-width: 0;
-    padding: 0.55rem 0.1rem;
-    border: 0;
-    border-bottom: 1px solid #d9e0e7;
-    background: transparent;
-    color: #314151;
-    font: inherit;
-    text-align: left;
-  }
-  .event-summary:hover strong {
-    color: #bb3f22;
-  }
-  .event-heading {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 0.5rem;
-  }
-  .event-review-state {
-    flex: 0 0 auto;
-    color: #536170;
-    font-size: 0.72rem;
-    font-weight: 700;
-    text-transform: capitalize;
-  }
-  .finding-counts {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.3rem;
-  }
-  .finding-count {
-    padding: 0.16rem 0.38rem;
-    border: 1px solid currentColor;
-    border-radius: 999px;
-    font-size: 0.66rem;
-    font-weight: 800;
-  }
-  .warning-count {
-    color: #78510c;
-    background: #fffaf0;
-  }
-  .error-count {
-    color: #8b2020;
-    background: #fff5f5;
-  }
-</style>

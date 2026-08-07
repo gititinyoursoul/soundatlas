@@ -78,6 +78,24 @@ in this Skill.
 - Treat media and review controls as admin-only unless the approved Issue
   explicitly defines a public-facing behavior and its gating.
 
+## Tailwind migration policy
+
+Tailwind CSS is the canonical styling approach for application UI.
+
+- New application UI styling must use Tailwind utilities; do not add new
+  component-specific legacy CSS.
+- Existing component-scoped CSS may remain until that component is migrated.
+  A component is fully migrated only when its obsolete component-specific CSS
+  has been removed.
+- The tracked legacy-CSS baseline, including component CSS and approved global
+  exception surfaces, is monotonic: it may stay the same or decrease, but must
+  not increase.
+- `src/styles/app.css` is the global base-style exception. Third-party or
+  library selector overrides belong only in `src/styles/library-overrides.css`;
+  neither exception is for new application component styling.
+- A stricter requirement to migrate every substantially touched component is a
+  separate, later policy phase unless an approved Issue explicitly requires it.
+
 ## Process
 
 1. Read the approved Issue and identify the exact frontend acceptance criteria.
