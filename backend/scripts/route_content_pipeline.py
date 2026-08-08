@@ -1024,6 +1024,8 @@ def build_complete_draft_correction_prompt(
             "Preserve valid editorial content and unresolved warnings.",
             "Preserve every original Candidate ID exactly once and preserve every valid composition target.",
             "Do not remove Candidates, reorder active Candidates outside the required sequence rule, or change valid editorial decisions.",
+            "Preserve every valid Event field verbatim, including image_links, media_links, source_urls, and place_relationships; never omit a required Event field while repairing another field.",
+            "For a missing optional-looking list field required by the schema, preserve the original value or emit an empty list only when no entries are supported.",
             "Add missing inactive Candidate previews and only repair the fields named by the validator.",
             "",
             contract_markdown("complete_draft"),

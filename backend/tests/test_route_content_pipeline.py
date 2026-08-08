@@ -1531,6 +1531,8 @@ def test_complete_draft_correction_prompt_preserves_outline_and_composition_targ
 
     assert "Preserve every original Candidate ID exactly once" in prompt
     assert "preserve every valid composition target" in prompt
+    assert "Preserve every valid Event field verbatim" in prompt
+    assert "image_links" in prompt
     assert "## Candidate outline authority" in prompt
     assert "## Canonical place catalog" in prompt
     assert "kool-herc-sedgwick-party" in prompt
