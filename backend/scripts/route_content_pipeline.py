@@ -900,9 +900,12 @@ def run_agent_step(
         correction_output = output_path.with_name(
             f"{output_path.stem}-correction{output_path.suffix}"
         )
+        source_outline_path = route_dir / manifest["agent_steps"]["complete_draft"]["inputs"][0]
         correction_prompt = build_complete_draft_correction_prompt(
             original_output=activation_output.read_text(encoding="utf-8"),
             validation_errors=str(exc),
+            source_outline=source_outline_path.read_text(encoding="utf-8"),
+            canonical_place_catalog=canonical_place_catalog_json(seed_dir),
         )
         correction_command = build_codex_exec_command(
             codex_command=codex_command, model=model, output_path=correction_output
@@ -1006,7 +1009,11 @@ def sync_agent_sidecar_outputs(
 
 
 def build_complete_draft_correction_prompt(
-    *, original_output: str, validation_errors: str
+    *,
+    original_output: str,
+    validation_errors: str,
+    source_outline: str,
+    canonical_place_catalog: str,
 ) -> str:
     return "\n".join(
         [
@@ -1015,8 +1022,17 @@ def build_complete_draft_correction_prompt(
             "Return only corrected complete-draft JSON. Repair only the listed structural contract errors.",
             "Do not invent source URLs or historical claims, change Human editorial state, approve media, publish, or write seed data.",
             "Preserve valid editorial content and unresolved warnings.",
+            "Preserve every original Candidate ID exactly once and preserve every valid composition target.",
+            "Do not remove Candidates, reorder active Candidates outside the required sequence rule, or change valid editorial decisions.",
+            "Add missing inactive Candidate previews and only repair the fields named by the validator.",
             "",
             contract_markdown("complete_draft"),
+            "",
+            "## Canonical place catalog",
+            canonical_place_catalog,
+            "",
+            "## Candidate outline authority",
+            source_outline,
             "",
             "## Validator errors",
             validation_errors,
@@ -1574,20 +1590,10 @@ def build_agent_prompt(
         )
 
     if step == "complete_draft":
-        seed_places = load_seed_payloads(seed_dir)["places"].get("places", [])
-        catalog = [
-            {
-                "id": place["id"],
-                "name": place["name"],
-                "borough": place["borough"],
-                "place_type": place["place_type"],
-            }
-            for place in seed_places
-        ]
         input_blocks.append(
             format_prompt_file_block(
                 "canonical-place-catalog.json",
-                json.dumps({"places": catalog}, indent=2, ensure_ascii=False),
+                canonical_place_catalog_json(seed_dir),
             )
         )
 
@@ -1637,6 +1643,20 @@ def build_agent_prompt(
 
 def format_prompt_file_block(label: str, content: str) -> str:
     return "\n".join([f"### `{label}`", "", "```md", content.rstrip(), "```"])
+
+
+def canonical_place_catalog_json(seed_dir: Path) -> str:
+    seed_places = load_seed_payloads(seed_dir)["places"].get("places", [])
+    catalog = [
+        {
+            "id": place["id"],
+            "name": place["name"],
+            "borough": place["borough"],
+            "place_type": place["place_type"],
+        }
+        for place in seed_places
+    ]
+    return json.dumps({"places": catalog}, indent=2, ensure_ascii=False)
 
 
 def build_agent_run_metadata(

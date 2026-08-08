@@ -1515,6 +1515,28 @@ def test_complete_draft_repairs_one_structurally_invalid_model_output(tmp_path: 
     assert (route_dir / "complete-draft-output.ai-draft-correction.json").exists()
 
 
+def test_complete_draft_correction_prompt_preserves_outline_and_composition_targets(
+    tmp_path: Path,
+) -> None:
+    _, seed_dir = write_pipeline_fixture(tmp_path)
+    outline = build_complete_draft_outline_json()
+    catalog = route_content_pipeline.canonical_place_catalog_json(seed_dir)
+
+    prompt = route_content_pipeline.build_complete_draft_correction_prompt(
+        original_output=build_complete_draft_json(),
+        validation_errors="missing preview",
+        source_outline=outline,
+        canonical_place_catalog=catalog,
+    )
+
+    assert "Preserve every original Candidate ID exactly once" in prompt
+    assert "preserve every valid composition target" in prompt
+    assert "## Candidate outline authority" in prompt
+    assert "## Canonical place catalog" in prompt
+    assert "kool-herc-sedgwick-party" in prompt
+    assert "1520 Sedgwick Avenue" in prompt
+
+
 def test_complete_draft_binds_active_review_and_blocks_legacy_steps(tmp_path: Path) -> None:
     content_root, seed_dir = write_pipeline_fixture(tmp_path)
     route_dir = content_root / ROUTE_ID
