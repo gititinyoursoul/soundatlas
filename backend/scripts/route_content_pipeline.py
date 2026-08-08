@@ -783,6 +783,7 @@ def run_agent_step(
         )
     prompt = build_agent_prompt(
         route_dir=route_dir,
+        seed_dir=seed_dir,
         manifest=manifest,
         step=step,
         revision_request=request,
@@ -1557,6 +1558,7 @@ def format_complete_draft_markdown(payload: dict[str, Any]) -> str:
 def build_agent_prompt(
     *,
     route_dir: Path,
+    seed_dir: Path,
     manifest: dict[str, Any],
     step: str,
     revision_request: dict[str, Any] | None = None,
@@ -1569,6 +1571,24 @@ def build_agent_prompt(
             raise ValueError(f"Missing input for {step}: {input_path}")
         input_blocks.append(
             format_prompt_file_block(input_file, input_path.read_text(encoding="utf-8"))
+        )
+
+    if step == "complete_draft":
+        seed_places = load_seed_payloads(seed_dir)["places"].get("places", [])
+        catalog = [
+            {
+                "id": place["id"],
+                "name": place["name"],
+                "borough": place["borough"],
+                "place_type": place["place_type"],
+            }
+            for place in seed_places
+        ]
+        input_blocks.append(
+            format_prompt_file_block(
+                "canonical-place-catalog.json",
+                json.dumps({"places": catalog}, indent=2, ensure_ascii=False),
+            )
         )
 
     revision_blocks: list[str] = []
@@ -1674,6 +1694,7 @@ def build_codex_exec_command(
     command = [
         codex_command,
         "exec",
+        "--ephemeral",
         "--cd",
         str(REPO_ROOT),
         "--sandbox",

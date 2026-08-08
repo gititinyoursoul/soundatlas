@@ -3,7 +3,7 @@
 FROM node:24.11.1-bookworm-slim AS node
 FROM ghcr.io/astral-sh/uv:python3.13-bookworm-slim
 
-ARG CODEX_CLI_VERSION=0.146.0
+ARG CODEX_CLI_VERSION=0.147.0
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \

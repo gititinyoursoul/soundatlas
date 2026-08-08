@@ -728,6 +728,10 @@ def test_agent_prompts_include_editorial_quality_contracts(tmp_path: Path) -> No
 
     assert "Separate strong route events from context-only or weak candidates" in dossier_prompt
     assert "`route_function`" in dossier_prompt
+    assert 'source_outline: "candidate-outline.json"' in complete_prompt
+    assert "same order in which those Candidates appear" in complete_prompt
+    assert "from_place_id" in complete_prompt
+    assert "canonical-place-catalog.json" in complete_prompt
     assert "`review_state`" in dossier_prompt
     assert "`merge_target_id` and `merge_rationale`" in dossier_prompt
     assert "top-level `review_clusters`" in dossier_prompt
@@ -758,7 +762,7 @@ def test_agent_prompts_include_editorial_quality_contracts(tmp_path: Path) -> No
     assert len(metadata["prompt_contract"]["sha256"]) == 64
 
 
-def test_codex_exec_command_uses_supported_noninteractive_flags(tmp_path: Path) -> None:
+def test_codex_exec_command_uses_ephemeral_noninteractive_flags(tmp_path: Path) -> None:
     command = route_content_pipeline.build_codex_exec_command(
         codex_command="codex",
         model=None,
@@ -766,6 +770,7 @@ def test_codex_exec_command_uses_supported_noninteractive_flags(tmp_path: Path) 
     )
 
     assert command[:2] == ["codex", "exec"]
+    assert "--ephemeral" in command
     assert "--sandbox" in command
     assert "read-only" in command
     assert "--output-last-message" in command
