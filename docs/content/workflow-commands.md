@@ -92,10 +92,13 @@ outline Candidate and every addition. Only active and added Candidates become
 Events; inactive Candidates remain reviewable without becoming editorial state.
 
 The complete-draft step does not require `accepted-events.json`. It validates
-the same output contract named in its prompt, permits at most one deterministic
-JSON-envelope repair, records input/output hashes and the repair outcome, and
-activates the complete draft, views, and bound `route-review.json` together or
-preserves the prior revision on replacement failure.
+the same output contract named in its prompt, permits JSON-envelope
+normalization and, only for an exclusively patchable validation failure, one
+bounded Candidate-local correction patch. The correction preserves the
+original draft for every other field, records input/output hashes and the
+repair outcome, and activates the complete draft, views, and bound
+`route-review.json` together or preserves the prior revision on replacement
+failure.
 
 Every active agent step uses a stable, route-independent prompt contract. The
 generated `*-prompt.ai-draft.md` remains the full inspectable prompt snapshot;
@@ -104,9 +107,12 @@ brief, dossier, candidate outline, preview, validation report, and revision
 request are dynamic inputs, not parts of the stable contract. Agent output is
 written to a local `*-output.ai-draft.*` staging artifact and validated before
 it replaces an active route artifact. For `complete_draft` only, one additional
-validator-informed correction call may follow a structurally invalid result.
-It may repair the contract shape but must not invent sources, approve content,
-change Human review state, publish, or write seed data.
+correction call may follow a result with only patchable inactive-preview or
+context-evidence-task validation errors. It returns a strict Candidate-keyed
+patch limited to the approved local fields; structural, composition, sequence,
+Event, Place, Finding, or other errors do not invoke correction. It must not
+invent sources, approve content, change Human review state, publish, or write
+seed data.
 
 For a correction that is local to one or more Candidates, provide a route-local
 request file with the current review revision, correction text, Candidate IDs,

@@ -517,6 +517,11 @@ def test_invalid_complete_draft_preserves_active_outputs(tmp_path: Path) -> None
     )
     assert (route_dir / "complete-draft.json").read_text(encoding="utf-8") == active_before
     assert (route_dir / "route-review.json").read_text(encoding="utf-8") == review_before
+    metadata = json.loads(
+        (route_dir / "complete_draft-run.ai-draft.json").read_text(encoding="utf-8")
+    )
+    assert metadata["repair"]["attempted"] is False
+    assert metadata["repair"]["eligible"] is False
 
 
 def test_status_does_not_mark_legacy_outputs_stale_when_complete_draft_is_active(
@@ -1487,16 +1492,26 @@ def test_complete_draft_derives_reused_place_display_text_from_seed(tmp_path: Pa
     ).read_text(encoding="utf-8")
 
 
-def test_complete_draft_repairs_one_structurally_invalid_model_output(tmp_path: Path) -> None:
+def test_complete_draft_repairs_one_patchable_model_output(tmp_path: Path) -> None:
     content_root, seed_dir = write_pipeline_fixture(tmp_path)
     route_dir = content_root / ROUTE_ID
     (route_dir / "candidate-outline.json").write_text(
         build_complete_draft_outline_json(), encoding="utf-8"
     )
     invalid = json.loads(build_complete_draft_json())
-    invalid["sequence"] = [{"event_id": "kool-herc-sedgwick-party"}]
+    invalid["candidates"][1].pop("preview")
+    correction = {
+        "patches": {
+            "outline-context-event": {
+                "preview": {
+                    "summary": "The omitted candidate remains visible for review.",
+                    "significance": "It adds useful context without entering the active route.",
+                }
+            }
+        }
+    }
     fake_codex = write_fake_codex_sequence(
-        tmp_path, [json.dumps(invalid), build_complete_draft_json()]
+        tmp_path, [json.dumps(invalid), json.dumps(correction)]
     )
 
     assert main(
@@ -1510,9 +1525,11 @@ def test_complete_draft_repairs_one_structurally_invalid_model_output(tmp_path: 
     metadata = json.loads(
         (route_dir / "complete_draft-run.ai-draft.json").read_text(encoding="utf-8")
     )
-    assert metadata["repair"]["operation"] == "validator_informed_complete_draft_correction"
+    assert metadata["repair"]["operation"] == "bounded_complete_draft_patch"
     assert metadata["repair"]["succeeded"] is True
     assert (route_dir / "complete-draft-output.ai-draft-correction.json").exists()
+    active = json.loads((route_dir / "complete-draft.json").read_text(encoding="utf-8"))
+    assert active["candidates"][1]["preview"]["summary"].startswith("The omitted")
 
 
 def test_complete_draft_correction_prompt_preserves_outline_and_composition_targets(
@@ -1527,16 +1544,54 @@ def test_complete_draft_correction_prompt_preserves_outline_and_composition_targ
         validation_errors="missing preview",
         source_outline=outline,
         canonical_place_catalog=catalog,
+        patch_paths={
+            ("outline-context-event", "preview", "summary"),
+            ("outline-context-event", "preview", "significance"),
+        },
     )
 
-    assert "Preserve every original Candidate ID exactly once" in prompt
-    assert "preserve every valid composition target" in prompt
-    assert "Preserve every valid Event field verbatim" in prompt
+    assert 'Return only a JSON object shaped as {"patches"' in prompt
+    assert "original complete draft remains authoritative" in prompt
+    assert "Do not remove Candidates" not in prompt
     assert "image_links" in prompt
     assert "## Candidate outline authority" in prompt
     assert "## Canonical place catalog" in prompt
     assert "kool-herc-sedgwick-party" in prompt
     assert "1520 Sedgwick Avenue" in prompt
+
+
+def test_complete_draft_correction_rejects_unauthorized_patch_paths() -> None:
+    original = build_complete_draft_json()
+    patch, errors = route_content_pipeline.parse_correction_patch(
+        json.dumps(
+            {
+                "patches": {
+                    "outline-context-event": {
+                        "preview": {"summary": "Updated preview."},
+                        "composition": {"reason": "Unauthorized change."},
+                    }
+                }
+            }
+        ),
+        original_output=original,
+        allowed_paths={("outline-context-event", "preview", "summary")},
+    )
+
+    assert patch
+    assert any("composition" in error for error in errors)
+
+
+def test_complete_draft_correction_preserves_unpatched_fields() -> None:
+    original = build_complete_draft_json()
+    allowed = {("outline-context-event", "preview", "summary")}
+    patch = {"patches": {"outline-context-event": {"preview": {"summary": "Updated preview."}}}}
+    patched = route_content_pipeline.apply_correction_patch(original, patch)
+
+    assert route_content_pipeline.validate_patch_preservation(original, patched, allowed) == []
+    original_payload = json.loads(original)
+    patched_payload = json.loads(patched)
+    assert patched_payload["events"] == original_payload["events"]
+    assert patched_payload["candidates"][0] == original_payload["candidates"][0]
 
 
 def test_complete_draft_binds_active_review_and_blocks_legacy_steps(tmp_path: Path) -> None:

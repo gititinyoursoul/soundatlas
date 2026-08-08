@@ -50,6 +50,15 @@ AGENT_RECOMMENDATION_MAP = {
 LEGACY_AGENT_RECOMMENDATION_MAP = {
     value: key for key, value in AGENT_RECOMMENDATION_MAP.items()
 }
+CORRECTION_PATCH_FIELDS = {
+    "next_evidence_task": {
+        "missing_evidence",
+        "target_claim",
+        "target_place",
+        "expected_output",
+    },
+    "preview": {"summary", "significance"},
+}
 
 
 def candidate_legacy_decision(candidate: dict[str, Any]) -> str | None:
@@ -897,6 +906,19 @@ def run_agent_step(
             metadata.update({"status": "failed", "validation": str(exc)})
             write_json(run_path, metadata, renew=renew)
             raise
+        validation_errors = str(exc).splitlines()[1:]
+        patch_paths = patchable_correction_paths(validation_errors)
+        metadata["repair"] = {
+            "attempted": False,
+            "operation": "bounded_complete_draft_patch",
+            "initial_validation": str(exc),
+            "eligible": bool(patch_paths),
+        }
+        if not patch_paths:
+            metadata["repair"]["reason"] = "validation includes non-patchable errors"
+            metadata.update({"status": "failed", "validation": str(exc)})
+            write_json(run_path, metadata, renew=renew)
+            raise
         correction_output = output_path.with_name(
             f"{output_path.stem}-correction{output_path.suffix}"
         )
@@ -906,6 +928,7 @@ def run_agent_step(
             validation_errors=str(exc),
             source_outline=source_outline_path.read_text(encoding="utf-8"),
             canonical_place_catalog=canonical_place_catalog_json(seed_dir),
+            patch_paths=patch_paths,
         )
         correction_command = build_codex_exec_command(
             codex_command=codex_command, model=model, output_path=correction_output
@@ -919,23 +942,42 @@ def run_agent_step(
             check=False,
         )
         repair_outputs.extend([correction_output.name])
-        metadata["repair"] = {
-            "attempted": True,
-            "operation": "validator_informed_complete_draft_correction",
-            "initial_validation": str(exc),
-            "returncode": correction.returncode,
-            "prompt_sha256": sha256_text(correction_prompt),
-        }
+        metadata["repair"].update(
+            {
+                "attempted": True,
+                "returncode": correction.returncode,
+                "prompt_sha256": sha256_text(correction_prompt),
+                "allowed_paths": sorted(format_patch_path(path) for path in patch_paths),
+            }
+        )
         if correction.returncode != 0 or not correction_output.exists():
             metadata.update({"status": "failed", "validation": str(exc)})
             write_json(run_path, metadata, renew=renew)
             raise
         corrected = correction_output.read_text(encoding="utf-8")
-        correction_errors = validate_contract_output(step, corrected)
-        if correction_errors:
-            metadata.update({"status": "failed", "validation": "\n".join(correction_errors)})
+        patch, patch_errors = parse_correction_patch(
+            corrected,
+            original_output=activation_output.read_text(encoding="utf-8"),
+            allowed_paths=patch_paths,
+        )
+        if patch_errors:
+            metadata.update({"status": "failed", "validation": "\n".join(patch_errors)})
             write_json(run_path, metadata, renew=renew)
-            raise ValueError("Agent correction validation failed:\n" + "\n".join(correction_errors))
+            raise ValueError("Agent correction patch validation failed:\n" + "\n".join(patch_errors))
+        patched = apply_correction_patch(
+            activation_output.read_text(encoding="utf-8"), patch
+        )
+        preservation_errors = validate_patch_preservation(
+            activation_output.read_text(encoding="utf-8"), patched, patch_paths
+        )
+        if preservation_errors:
+            metadata.update({"status": "failed", "validation": "\n".join(preservation_errors)})
+            write_json(run_path, metadata, renew=renew)
+            raise ValueError(
+                "Agent correction patch changed unauthorized fields:\n"
+                + "\n".join(preservation_errors)
+            )
+        write_text(correction_output, patched, renew=renew)
         try:
             extra_outputs = sync_agent_sidecar_outputs(
                 route_dir=route_dir,
@@ -951,7 +993,11 @@ def run_agent_step(
             write_json(run_path, metadata, renew=renew)
             raise
         metadata["repair"].update(
-            {"succeeded": True, "corrected_output_sha256": sha256_text(corrected)}
+            {
+                "succeeded": True,
+                "patch_sha256": sha256_text(corrected),
+                "corrected_output_sha256": sha256_text(patched),
+            }
         )
     metadata["validation"] = "passed"
     if active_output_path.exists():
@@ -1008,25 +1054,170 @@ def sync_agent_sidecar_outputs(
     return [markdown_path.name, outline_path.name]
 
 
+def format_patch_path(path: tuple[str, str, str]) -> str:
+    return ".".join(path)
+
+
+def patchable_correction_paths(
+    validation_errors: list[str],
+) -> set[tuple[str, str, str]]:
+    paths: set[tuple[str, str, str]] = set()
+    for error in validation_errors:
+        preview_match = re.fullmatch(
+            r"Complete draft inactive candidate `([^`]+)` has incomplete preview content\.",
+            error,
+        )
+        if preview_match:
+            candidate_id = preview_match.group(1)
+            paths.update(
+                (candidate_id, "preview", field)
+                for field in ("summary", "significance")
+            )
+            continue
+        task_match = re.fullmatch(
+            r"Complete draft context candidate `([^`]+)` requires next_evidence_task "
+            r"with missing_evidence, target_claim, target_place, and expected_output\.",
+            error,
+        )
+        if task_match:
+            candidate_id = task_match.group(1)
+            paths.update(
+                (candidate_id, "next_evidence_task", field)
+                for field in CORRECTION_PATCH_FIELDS["next_evidence_task"]
+            )
+            continue
+        return set()
+    return paths
+
+
+def parse_correction_patch(
+    value: str,
+    *,
+    original_output: str,
+    allowed_paths: set[tuple[str, str, str]],
+) -> tuple[dict[str, Any], list[str]]:
+    errors: list[str] = []
+    try:
+        payload = json.loads(value)
+    except json.JSONDecodeError as exc:
+        return {}, [f"Correction patch must be valid JSON: {exc.msg}."]
+    if not isinstance(payload, dict) or set(payload) != {"patches"}:
+        return {}, ["Correction patch must contain only the `patches` object."]
+    patches = payload.get("patches")
+    if not isinstance(patches, dict):
+        return {}, ["Correction patch `patches` must be an object keyed by Candidate ID."]
+    original = json.loads(original_output)
+    candidate_ids = {
+        item.get("candidate_id")
+        for item in original.get("candidates", [])
+        if isinstance(item, dict) and isinstance(item.get("candidate_id"), str)
+    }
+    for raw_candidate_id, candidate_patch in patches.items():
+        candidate_id = str(raw_candidate_id)
+        if candidate_id not in candidate_ids:
+            errors.append(f"Correction patch has unknown Candidate ID `{candidate_id}`.")
+            continue
+        if not isinstance(candidate_patch, dict) or not candidate_patch:
+            errors.append(f"Correction patch for `{candidate_id}` must be a non-empty object.")
+            continue
+        for raw_section, fields in candidate_patch.items():
+            section = str(raw_section)
+            if section not in CORRECTION_PATCH_FIELDS or not isinstance(fields, dict):
+                errors.append(f"Correction patch for `{candidate_id}` has unauthorized path `{section}`.")
+                continue
+            for raw_field, new_value in fields.items():
+                field = str(raw_field)
+                path = (candidate_id, section, field)
+                if field not in CORRECTION_PATCH_FIELDS[section] or path not in allowed_paths:
+                    errors.append(f"Correction patch has unauthorized path `{format_patch_path(path)}`.")
+                elif not isinstance(new_value, str) or not new_value.strip():
+                    errors.append(f"Correction patch value at `{format_patch_path(path)}` must be a non-empty string.")
+    return payload, errors
+
+
+def apply_correction_patch(original_output: str, patch: dict[str, Any]) -> str:
+    payload = json.loads(original_output)
+    candidates = {
+        item["candidate_id"]: item
+        for item in payload["candidates"]
+        if isinstance(item, dict) and isinstance(item.get("candidate_id"), str)
+    }
+    for candidate_id, candidate_patch in patch["patches"].items():
+        candidate = candidates[candidate_id]
+        for section, fields in candidate_patch.items():
+            section_value = candidate.setdefault(section, {})
+            section_value.update(fields)
+    return json.dumps(payload, indent=2, ensure_ascii=False) + "\n"
+
+
+def validate_patch_preservation(
+    original_output: str,
+    patched_output: str,
+    allowed_paths: set[tuple[str, str, str]],
+) -> list[str]:
+    original = json.loads(original_output)
+    patched = json.loads(patched_output)
+    unauthorized: list[str] = []
+    original_without_candidates = {key: value for key, value in original.items() if key != "candidates"}
+    patched_without_candidates = {key: value for key, value in patched.items() if key != "candidates"}
+    if _canonical_json(original_without_candidates) != _canonical_json(patched_without_candidates):
+        unauthorized.append("top-level fields")
+    original_candidates = {
+        item.get("candidate_id"): item
+        for item in original.get("candidates", [])
+        if isinstance(item, dict) and isinstance(item.get("candidate_id"), str)
+    }
+    patched_candidates = {
+        item.get("candidate_id"): item
+        for item in patched.get("candidates", [])
+        if isinstance(item, dict) and isinstance(item.get("candidate_id"), str)
+    }
+    if list(original_candidates) != list(patched_candidates):
+        unauthorized.append("candidates.order-or-membership")
+    for raw_candidate_id in original_candidates.keys() & patched_candidates.keys():
+        candidate_id = str(raw_candidate_id)
+        original_candidate = original_candidates[candidate_id]
+        patched_candidate = patched_candidates[candidate_id]
+        for key in set(original_candidate) | set(patched_candidate):
+            if key not in CORRECTION_PATCH_FIELDS:
+                if _canonical_json(original_candidate.get(key)) != _canonical_json(patched_candidate.get(key)):
+                    unauthorized.append(f"{candidate_id}.{key}")
+                continue
+            original_section = original_candidate.get(key, {})
+            patched_section = patched_candidate.get(key, {})
+            if not isinstance(original_section, dict) or not isinstance(patched_section, dict):
+                unauthorized.append(f"{candidate_id}.{key}")
+                continue
+            for raw_field in set(original_section) | set(patched_section):
+                field = str(raw_field)
+                path = (candidate_id, key, field)
+                if path not in allowed_paths and _canonical_json(
+                    original_section.get(field)
+                ) != _canonical_json(patched_section.get(field)):
+                    unauthorized.append(format_patch_path(path))
+    return [
+        "Correction patch changed unauthorized paths: " + ", ".join(sorted(unauthorized))
+    ] if unauthorized else []
+
+
 def build_complete_draft_correction_prompt(
     *,
     original_output: str,
     validation_errors: str,
     source_outline: str,
     canonical_place_catalog: str,
+    patch_paths: set[tuple[str, str, str]],
 ) -> str:
     return "\n".join(
         [
-            "# SoundAtlas Agent Step: complete_draft correction",
+            "# SoundAtlas Agent Step: complete_draft correction patch",
             "",
-            "Return only corrected complete-draft JSON. Repair only the listed structural contract errors.",
+            "Return only a JSON object shaped as {\"patches\": {\"candidate-id\": {\"preview\": {\"summary\": \"...\"}}}}.",
+            "Patch only the explicitly allowed paths listed below; never return a complete draft.",
             "Do not invent source URLs or historical claims, change Human editorial state, approve media, publish, or write seed data.",
-            "Preserve valid editorial content and unresolved warnings.",
-            "Preserve every original Candidate ID exactly once and preserve every valid composition target.",
-            "Do not remove Candidates, reorder active Candidates outside the required sequence rule, or change valid editorial decisions.",
-            "Preserve every valid Event field verbatim, including image_links, media_links, source_urls, and place_relationships; never omit a required Event field while repairing another field.",
-            "For a missing optional-looking list field required by the schema, preserve the original value or emit an empty list only when no entries are supported.",
-            "Add missing inactive Candidate previews and only repair the fields named by the validator.",
+            "The original complete draft remains authoritative for every field not explicitly patched.",
+            "Use only the existing Candidate IDs and preserve all composition, sequence, Event, Place, Finding, metadata, warning, and technical-error content.",
+            "Return no wrapper commentary and no keys other than `patches`.",
             "",
             contract_markdown("complete_draft"),
             "",
@@ -1038,6 +1229,9 @@ def build_complete_draft_correction_prompt(
             "",
             "## Validator errors",
             validation_errors,
+            "",
+            "## Allowed patch paths",
+            "\n".join(f"- `{format_patch_path(path)}`" for path in sorted(patch_paths)),
             "",
             "## Original output",
             original_output,
