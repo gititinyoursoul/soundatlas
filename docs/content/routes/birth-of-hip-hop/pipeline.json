@@ -12,6 +12,11 @@
       "json": "accepted-events.json",
       "markdown": "accepted-events.md"
     },
+    "complete_draft": {
+      "input": "candidate-outline.json",
+      "json": "complete-draft.json",
+      "markdown": "complete-draft.md"
+    },
     "route_concept": {
       "input": "accepted-events.json",
       "markdown": "route-concept.md"
@@ -48,11 +53,23 @@
       ],
       "prompt": "dossier_to_event_review-prompt.ai-draft.md",
       "output": "event-list.json",
+      "outline": "candidate-outline.json",
       "run": "dossier_to_event_review-run.ai-draft.json"
+    },
+    "complete_draft": {
+      "inputs": [
+        "candidate-outline.json",
+        "research-dossier.md",
+        "../../route-editorial-quality-standards.md"
+      ],
+      "prompt": "complete_draft-prompt.ai-draft.md",
+      "output": "complete-draft-output.ai-draft.json",
+      "active_output": "complete-draft.json",
+      "run": "complete_draft-run.ai-draft.json"
     },
     "event_review_to_concept": {
       "inputs": [
-        "accepted-events.json"
+        "event-list.json"
       ],
       "prompt": "event_review_to_concept-prompt.ai-draft.md",
       "output": "route-concept.md",
@@ -61,7 +78,7 @@
     "concept_to_event_framing": {
       "inputs": [
         "route-concept.md",
-        "accepted-events.json"
+        "event-list.json"
       ],
       "prompt": "concept_to_event_framing-prompt.ai-draft.md",
       "output": "event-framing.md",

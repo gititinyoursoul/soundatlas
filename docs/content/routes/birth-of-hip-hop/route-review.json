@@ -1,0 +1,3804 @@
+{
+  "route_id": "birth-of-hip-hop",
+  "revision_id": "24c217d11f6d819b007c223969459919f5038711cbaa4c298f2a24173b891f28",
+  "source": "complete-draft.json",
+  "proposals": [
+    {
+      "candidate_id": "caribbean-soundsystem-context-nyc",
+      "editorial_state": "draft",
+      "active": true,
+      "included": true,
+      "renderable": true,
+      "agent_recommendation": "context",
+      "route_entry_role": "context",
+      "next_evidence_task": {
+        "missing_evidence": "Named New York practitioners, places, practices, and dates.",
+        "target_claim": "Caribbean and Jamaican sound-system practices formed one part of the surrounding New York conditions.",
+        "target_place": "south-bronx",
+        "expected_output": "A claim-level comparison of migration, oral-history, and local-history sources."
+      },
+      "warnings": [
+        "Context may be better represented in route framing.",
+        "Influence and causality remain unresolved."
+      ],
+      "technical_errors": [
+        "Reader-facing event has no source URL."
+      ],
+      "material_signature": "af8fc960bd469967e50a76f68261cfbc3612b600282e9c64da909c4f9875a975",
+      "proposal": {
+        "candidate_id": "caribbean-soundsystem-context-nyc",
+        "agent_recommendation": "context",
+        "editorial_state": "draft",
+        "route_entry_role": "context",
+        "years": "ca. 1965-1973",
+        "place": "Bronx / New York City",
+        "working_title": "Caribbean sound system context in New York",
+        "route_function": "Frames migration, amplification, records, and party practice as possible conditions around Bronx DJ culture.",
+        "decision_rationale": "The topic is important but not yet a bounded event. It should remain contextual and avoid a one-way Caribbean-to-Bronx origin story.",
+        "review_question": "Can specific New York people, places, practices, and dates be documented without flattening Caribbean, Jamaican, Black, Latino, and Bronx histories?",
+        "source_leads": [
+          "Migration histories",
+          "Interviews",
+          "Cultural studies",
+          "Oral histories"
+        ],
+        "risk_notes": [
+          "Context may be better represented in route framing.",
+          "Influence and causality remain unresolved."
+        ],
+        "next_action": "Find specific sourceable examples and reassess event status.",
+        "composition": {
+          "outcome": "active",
+          "reason": "Retained as a clearly labeled conditions-phase context event.",
+          "related_candidate_ids": [
+            "bronx-record-and-party-culture-before-1973",
+            "mobile-sound-and-breakbeat-practice"
+          ]
+        },
+        "next_evidence_task": {
+          "missing_evidence": "Named New York practitioners, places, practices, and dates.",
+          "target_claim": "Caribbean and Jamaican sound-system practices formed one part of the surrounding New York conditions.",
+          "target_place": "south-bronx",
+          "expected_output": "A claim-level comparison of migration, oral-history, and local-history sources."
+        }
+      },
+      "event": {
+        "year_start": 1965,
+        "year_end": 1973,
+        "content_review_status": "draft",
+        "id": "caribbean-soundsystem-context-nyc",
+        "route_id": "birth-of-hip-hop",
+        "place_id": "south-bronx",
+        "place_ids": [
+          "south-bronx"
+        ],
+        "default_place_id": "south-bronx",
+        "place_relationships": [],
+        "title": "Caribbean sound system context in New York",
+        "summary": "A draft context entry for migration, amplification, records, and party practices surrounding New York's early Bronx scene. The relationship is a research question, not a settled one-way origin account.",
+        "significance": "Keeps the route attentive to wider communities and material practices without reducing Bronx culture to a transfer from elsewhere.",
+        "tags": [
+          "context",
+          "migration",
+          "sound-systems",
+          "party-culture"
+        ],
+        "source_urls": [],
+        "media_links": [],
+        "image_links": []
+      }
+    },
+    {
+      "candidate_id": "bronx-record-and-party-culture-before-1973",
+      "editorial_state": "draft",
+      "active": true,
+      "included": true,
+      "renderable": true,
+      "agent_recommendation": "context",
+      "route_entry_role": "context",
+      "next_evidence_task": {
+        "missing_evidence": "Specific parties, flyers, organizers, and dates before 1973.",
+        "target_claim": "Bronx party and record practices predated and surrounded the Sedgwick anchor.",
+        "target_place": "south-bronx",
+        "expected_output": "A bounded event frame or a recommendation to move the material into route context."
+      },
+      "warnings": [
+        "Earlier party culture was not one unified scene.",
+        "Preparation or causation claims require comparison."
+      ],
+      "technical_errors": [
+        "Reader-facing event has no source URL."
+      ],
+      "material_signature": "2682a9143b80470ed6cd637976a37417cd9531ecbe347d205f2971cd8ea3ea1d",
+      "proposal": {
+        "candidate_id": "bronx-record-and-party-culture-before-1973",
+        "agent_recommendation": "context",
+        "editorial_state": "draft",
+        "route_entry_role": "context",
+        "years": "late 1960s-1973",
+        "place": "Bronx",
+        "working_title": "Bronx record and party culture before the origin story",
+        "route_function": "Establishes local conditions and repeated practices before the Sedgwick public-memory anchor.",
+        "decision_rationale": "This prevents a single-origin narrative, but the broad regional claim needs named parties, organizers, places, flyers, or oral histories.",
+        "review_question": "Can this be grounded in identifiable local evidence rather than a generalized summary of the Bronx?",
+        "source_leads": [
+          "Oral histories",
+          "Flyers",
+          "Local newspapers",
+          "Community archives"
+        ],
+        "risk_notes": [
+          "Earlier party culture was not one unified scene.",
+          "Preparation or causation claims require comparison."
+        ],
+        "next_action": "Identify concrete examples; otherwise keep the entry narrowly contextual.",
+        "composition": {
+          "outcome": "active",
+          "reason": "Retained as a pre-anchor context event with cautious regional framing.",
+          "related_candidate_ids": [
+            "caribbean-soundsystem-context-nyc",
+            "kool-herc-cindy-campbell-sedgwick-party"
+          ]
+        },
+        "next_evidence_task": {
+          "missing_evidence": "Specific parties, flyers, organizers, and dates before 1973.",
+          "target_claim": "Bronx party and record practices predated and surrounded the Sedgwick anchor.",
+          "target_place": "south-bronx",
+          "expected_output": "A bounded event frame or a recommendation to move the material into route context."
+        }
+      },
+      "event": {
+        "year_start": 1968,
+        "year_end": 1973,
+        "content_review_status": "draft",
+        "id": "bronx-record-and-party-culture-before-1973",
+        "route_id": "birth-of-hip-hop",
+        "place_id": "south-bronx",
+        "place_ids": [
+          "south-bronx"
+        ],
+        "default_place_id": "south-bronx",
+        "place_relationships": [],
+        "title": "Bronx record and party culture before the origin story",
+        "summary": "A draft regional frame for records, parties, youth culture, and neighborhood social life before the best-known Sedgwick memory anchor. Specific examples remain to be established.",
+        "significance": "Prevents the route from presenting one date as the beginning of an otherwise invisible culture.",
+        "tags": [
+          "context",
+          "bronx",
+          "records",
+          "party-culture"
+        ],
+        "source_urls": [],
+        "media_links": [],
+        "image_links": []
+      }
+    },
+    {
+      "candidate_id": "kool-herc-cindy-campbell-sedgwick-party",
+      "editorial_state": "draft",
+      "active": true,
+      "included": true,
+      "renderable": true,
+      "agent_recommendation": "include",
+      "route_entry_role": "active",
+      "next_evidence_task": null,
+      "warnings": [
+        "Do not call it the sole birthplace of hip-hop.",
+        "Verify Campbell's exact role.",
+        "Retrospective memory requires comparison."
+      ],
+      "technical_errors": [
+        "Reader-facing event has no source URL."
+      ],
+      "material_signature": "a647c257fbf86a595f348028a65ef8975e6b582b12647876def00e35c3a11ef4",
+      "proposal": {
+        "candidate_id": "kool-herc-cindy-campbell-sedgwick-party",
+        "agent_recommendation": "include",
+        "editorial_state": "draft",
+        "route_entry_role": "active",
+        "years": "1973",
+        "place": "1520 Sedgwick Avenue",
+        "working_title": "Kool Herc, Cindy Campbell, and the Sedgwick party",
+        "route_function": "Provides a named place-and-time anchor for party organization, sound, public memory, and contested origin narratives.",
+        "decision_rationale": "It is the strongest named anchor in the dossier, provided Cindy Campbell's organizing role and the party's later public-memory status are sourced carefully.",
+        "review_question": "Which exact claims about the party, its organization, and its later symbolic status are supported by compared sources?",
+        "source_leads": [
+          "Interviews",
+          "Historic preservation materials",
+          "Museum timelines",
+          "Public history"
+        ],
+        "risk_notes": [
+          "Do not call it the sole birthplace of hip-hop.",
+          "Verify Campbell's exact role.",
+          "Retrospective memory requires comparison."
+        ],
+        "next_action": "Build a claim-level source comparison and draft cautious wording.",
+        "composition": {
+          "outcome": "active",
+          "reason": "Retained as the route's principal named place anchor.",
+          "related_candidate_ids": [
+            "bronx-record-and-party-culture-before-1973",
+            "mobile-sound-and-breakbeat-practice"
+          ]
+        }
+      },
+      "event": {
+        "year_start": 1973,
+        "year_end": 1973,
+        "content_review_status": "draft",
+        "id": "kool-herc-cindy-campbell-sedgwick-party",
+        "route_id": "birth-of-hip-hop",
+        "place_id": "1520-sedgwick-avenue",
+        "place_ids": [
+          "1520-sedgwick-avenue"
+        ],
+        "default_place_id": "1520-sedgwick-avenue",
+        "place_relationships": [],
+        "title": "Kool Herc, Cindy Campbell, and the Sedgwick party",
+        "summary": "The 1973 party associated with 1520 Sedgwick Avenue is drafted as a named Bronx anchor. Its exact organization, sound, and later public-memory claims require comparison across interviews, public-history materials, and other sources.",
+        "significance": "Provides a concrete place and date for examining party organization and origin memory without calling the site the sole birthplace of hip-hop.",
+        "tags": [
+          "anchor",
+          "sedgwick",
+          "party",
+          "public-memory"
+        ],
+        "source_urls": [],
+        "media_links": [],
+        "image_links": []
+      }
+    },
+    {
+      "candidate_id": "mobile-sound-and-breakbeat-practice",
+      "editorial_state": "draft",
+      "active": true,
+      "included": true,
+      "renderable": true,
+      "agent_recommendation": "include",
+      "route_entry_role": "active",
+      "next_evidence_task": null,
+      "warnings": [
+        "Technical claims may become mythic.",
+        "Do not imply one DJ or party created the whole practice."
+      ],
+      "technical_errors": [
+        "Reader-facing event has no source URL."
+      ],
+      "material_signature": "d5fd518ecc6f5ac744e55ced82c97da350af2ac5a6845b61d6a0d695a05b7636",
+      "proposal": {
+        "candidate_id": "mobile-sound-and-breakbeat-practice",
+        "agent_recommendation": "include",
+        "editorial_state": "draft",
+        "route_entry_role": "active",
+        "years": "early-mid 1970s",
+        "place": "Bronx",
+        "working_title": "Mobile sound and breakbeat practice develop",
+        "route_function": "Makes equipment, records, repetition, dance response, and mobile party infrastructure central to the route's sound-and-culture argument.",
+        "decision_rationale": "The candidate explains development through repeated material and social practices rather than one event, but needs specific, source-backed examples.",
+        "review_question": "What equipment, record, and party practices can be described without assigning unsupported invention or priority?",
+        "source_leads": [
+          "DJ interviews",
+          "Equipment histories",
+          "Music histories"
+        ],
+        "risk_notes": [
+          "Technical claims may become mythic.",
+          "Do not imply one DJ or party created the whole practice."
+        ],
+        "next_action": "Identify sourceable practices and connect them to honest place representations.",
+        "composition": {
+          "outcome": "active",
+          "reason": "Retained as a distinct practice-development event.",
+          "related_candidate_ids": [
+            "kool-herc-cindy-campbell-sedgwick-party",
+            "grandmaster-flash-turntable-technique"
+          ]
+        }
+      },
+      "event": {
+        "year_start": 1972,
+        "year_end": 1976,
+        "content_review_status": "draft",
+        "id": "mobile-sound-and-breakbeat-practice",
+        "route_id": "birth-of-hip-hop",
+        "place_id": "south-bronx",
+        "place_ids": [
+          "south-bronx"
+        ],
+        "default_place_id": "south-bronx",
+        "place_relationships": [],
+        "title": "Mobile sound and breakbeat practice develop",
+        "summary": "A draft practice event about mobile sound systems, records, repetition, equipment, and dance response in Bronx party settings. Priority and invention claims are intentionally withheld.",
+        "significance": "Makes the emergence story material and cumulative rather than dependent on a single symbolic party.",
+        "tags": [
+          "djing",
+          "equipment",
+          "breaks",
+          "practice"
+        ],
+        "source_urls": [],
+        "media_links": [],
+        "image_links": []
+      }
+    },
+    {
+      "candidate_id": "bronx-schools-parks-community-centers-parties",
+      "editorial_state": "draft",
+      "active": true,
+      "included": true,
+      "renderable": true,
+      "agent_recommendation": "include",
+      "route_entry_role": "active",
+      "next_evidence_task": null,
+      "warnings": [
+        "Regional geography is imprecise.",
+        "A single event may overstate breadth."
+      ],
+      "technical_errors": [
+        "Reader-facing event has no source URL."
+      ],
+      "material_signature": "764c594dd5bbb24fb2e053b3756af2adc28909bda130d43eaebf695bfa83bcd6",
+      "proposal": {
+        "candidate_id": "bronx-schools-parks-community-centers-parties",
+        "agent_recommendation": "include",
+        "editorial_state": "draft",
+        "route_entry_role": "active",
+        "years": "1970s",
+        "place": "Bronx",
+        "working_title": "Schools, parks, and community centers host party culture",
+        "route_function": "Shows how repeated public and semi-public spaces enabled participation, circulation, and scene continuity beyond one famous venue.",
+        "decision_rationale": "This is essential to map-first community logic, but the event must remain explicitly representative rather than implying all such spaces hosted identical activity.",
+        "review_question": "Can representative locations, dates, and gatherings be identified?",
+        "source_leads": [
+          "Flyers",
+          "Oral histories",
+          "School archives",
+          "Community archives"
+        ],
+        "risk_notes": [
+          "Regional geography is imprecise.",
+          "A single event may overstate breadth."
+        ],
+        "next_action": "Narrow to documented examples or retain as a clearly bounded regional context event.",
+        "composition": {
+          "outcome": "active",
+          "reason": "Retained as the community-infrastructure anchor.",
+          "related_candidate_ids": [
+            "cedar-park-outdoor-party-culture",
+            "bronx-river-crews-community-organization",
+            "mc-crew-and-party-hosting-practices"
+          ]
+        }
+      },
+      "event": {
+        "year_start": 1970,
+        "year_end": 1979,
+        "content_review_status": "draft",
+        "id": "bronx-schools-parks-community-centers-parties",
+        "route_id": "birth-of-hip-hop",
+        "place_id": "south-bronx",
+        "place_ids": [
+          "south-bronx"
+        ],
+        "default_place_id": "south-bronx",
+        "place_relationships": [],
+        "title": "Schools, parks, and community centers host party culture",
+        "summary": "A draft representative regional event for the public and semi-public spaces where parties and participation may have been sustained. It does not claim that all Bronx schools, parks, or centers hosted the same activity.",
+        "significance": "Centers repeated community infrastructure rather than only famous venues.",
+        "tags": [
+          "community",
+          "public-space",
+          "parties",
+          "bronx"
+        ],
+        "source_urls": [],
+        "media_links": [],
+        "image_links": []
+      }
+    },
+    {
+      "candidate_id": "grandmaster-flash-turntable-technique",
+      "editorial_state": "draft",
+      "active": true,
+      "included": true,
+      "renderable": true,
+      "agent_recommendation": "include",
+      "route_entry_role": "active",
+      "next_evidence_task": null,
+      "warnings": [
+        "Avoid first or sole-inventor wording.",
+        "Retrospective accounts may conflict."
+      ],
+      "technical_errors": [
+        "Reader-facing event has no source URL."
+      ],
+      "material_signature": "bd8744eac28eb0905ec25623e94b616ce9ce04305be62ce406b0f42cfa55826d",
+      "proposal": {
+        "candidate_id": "grandmaster-flash-turntable-technique",
+        "agent_recommendation": "include",
+        "editorial_state": "draft",
+        "route_entry_role": "active",
+        "years": "mid-late 1970s",
+        "place": "Bronx",
+        "working_title": "Grandmaster Flash and turntable technique",
+        "route_function": "Provides a named practitioner node for technique, equipment, performance method, and retrospective attribution.",
+        "decision_rationale": "It gives the route a concrete technical node if narrow claims are separated from group history and later recording history.",
+        "review_question": "Which technique and equipment claims are independently supported?",
+        "source_leads": [
+          "Smithsonian",
+          "NAMM Oral History Program",
+          "Interviews",
+          "Museum articles"
+        ],
+        "risk_notes": [
+          "Avoid first or sole-inventor wording.",
+          "Retrospective accounts may conflict."
+        ],
+        "next_action": "Compare institutional and interview sources and define one narrow claim.",
+        "composition": {
+          "outcome": "active",
+          "reason": "Retained as the technique anchor, incorporating comparison material.",
+          "related_candidate_ids": [
+            "scratching-and-dj-technique-attribution",
+            "mobile-sound-and-breakbeat-practice"
+          ]
+        }
+      },
+      "event": {
+        "year_start": 1975,
+        "year_end": 1979,
+        "content_review_status": "draft",
+        "id": "grandmaster-flash-turntable-technique",
+        "route_id": "birth-of-hip-hop",
+        "place_id": "south-bronx",
+        "place_ids": [
+          "south-bronx"
+        ],
+        "default_place_id": "south-bronx",
+        "place_relationships": [],
+        "title": "Grandmaster Flash and turntable technique",
+        "summary": "A draft technique event centered on Grandmaster Flash as a named practitioner. The event will compare institutional and retrospective accounts of equipment and method without resolving sole-inventor claims.",
+        "significance": "Shows how DJ practice became technically differentiated and publicly remembered.",
+        "tags": [
+          "grandmaster-flash",
+          "djing",
+          "turntables",
+          "technique"
+        ],
+        "source_urls": [],
+        "media_links": [],
+        "image_links": []
+      }
+    },
+    {
+      "candidate_id": "mc-crew-and-party-hosting-practices",
+      "editorial_state": "draft",
+      "active": true,
+      "included": true,
+      "renderable": true,
+      "agent_recommendation": "include",
+      "route_entry_role": "active",
+      "next_evidence_task": null,
+      "warnings": [
+        "Named examples and chronology remain unresolved.",
+        "Avoid generalizing from famous performers."
+      ],
+      "technical_errors": [
+        "Reader-facing event has no source URL."
+      ],
+      "material_signature": "6aa3cab8a93e2398ebb3aa6b629ecdcae8db64c0fe080891c029c3f992b42c6c",
+      "proposal": {
+        "candidate_id": "mc-crew-and-party-hosting-practices",
+        "agent_recommendation": "include",
+        "editorial_state": "draft",
+        "route_entry_role": "active",
+        "years": "1970s",
+        "place": "Bronx",
+        "working_title": "MCs, crews, and party hosting practices",
+        "route_function": "Shows how hosting, call-and-response, crews, and audience interaction developed around DJ-led parties.",
+        "decision_rationale": "This is central to the practice-to-culture phase and keeps MCing from appearing only as a record-industry development.",
+        "review_question": "Which MCs, crews, parties, or recordings provide representative evidence?",
+        "source_leads": [
+          "Oral histories",
+          "Flyers",
+          "Recordings",
+          "Interviews"
+        ],
+        "risk_notes": [
+          "Named examples and chronology remain unresolved.",
+          "Avoid generalizing from famous performers."
+        ],
+        "next_action": "Identify representative sourceable examples and their relationship to party spaces.",
+        "composition": {
+          "outcome": "active",
+          "reason": "Retained as a distinct live-practice event.",
+          "related_candidate_ids": [
+            "bronx-schools-parks-community-centers-parties",
+            "rappers-delight-commercial-visibility"
+          ]
+        }
+      },
+      "event": {
+        "year_start": 1970,
+        "year_end": 1979,
+        "content_review_status": "draft",
+        "id": "mc-crew-and-party-hosting-practices",
+        "route_id": "birth-of-hip-hop",
+        "place_id": "south-bronx",
+        "place_ids": [
+          "south-bronx"
+        ],
+        "default_place_id": "south-bronx",
+        "place_relationships": [],
+        "title": "MCs, crews, and party hosting practices",
+        "summary": "A draft live-practice event about MC hosting, call-and-response, crews, and audience interaction around DJ-led parties. Representative names and dates remain unresolved.",
+        "significance": "Keeps MCing connected to live social practice before commercial recording.",
+        "tags": [
+          "mcing",
+          "crews",
+          "hosting",
+          "live-practice"
+        ],
+        "source_urls": [],
+        "media_links": [],
+        "image_links": []
+      }
+    },
+    {
+      "candidate_id": "dance-crews-and-party-floor-culture",
+      "editorial_state": "draft",
+      "active": true,
+      "included": true,
+      "renderable": true,
+      "agent_recommendation": "context",
+      "route_entry_role": "context",
+      "next_evidence_task": {
+        "missing_evidence": "Named crews, parties, performances, dates, and places.",
+        "target_claim": "Dance and audience response were constitutive parts of party culture.",
+        "target_place": "south-bronx",
+        "expected_output": "One representative event frame or a decision to move this material into supporting context."
+      },
+      "warnings": [
+        "Film evidence may be staged or retrospective.",
+        "Dance must not be decorative context."
+      ],
+      "technical_errors": [
+        "Reader-facing event has no source URL."
+      ],
+      "material_signature": "638e52173a4fbecf24aba01db9c31c162f0495950858406b48179cd73b6cacfa",
+      "proposal": {
+        "candidate_id": "dance-crews-and-party-floor-culture",
+        "agent_recommendation": "context",
+        "editorial_state": "draft",
+        "route_entry_role": "context",
+        "years": "1970s-early 1980s",
+        "place": "Bronx / New York City",
+        "working_title": "Dance crews and party-floor culture",
+        "route_function": "Makes embodied participation, competition, and audience response part of the route's account of culture formation.",
+        "decision_rationale": "The practice fits the thesis but lacks a representative named event, place, and date.",
+        "review_question": "Can a specific dance crew, party, or documented performance demonstrate the relationship between dance, music, and place?",
+        "source_leads": [
+          "Film materials",
+          "Dance histories",
+          "Oral histories"
+        ],
+        "risk_notes": [
+          "Film evidence may be staged or retrospective.",
+          "Dance must not be decorative context."
+        ],
+        "next_action": "Find a source-backed place-and-time anchor.",
+        "composition": {
+          "outcome": "active",
+          "reason": "Retained as a context event pending a narrower representative anchor.",
+          "related_candidate_ids": [
+            "mc-crew-and-party-hosting-practices",
+            "wild-style-film-documentation"
+          ]
+        },
+        "next_evidence_task": {
+          "missing_evidence": "Named crews, parties, performances, dates, and places.",
+          "target_claim": "Dance and audience response were constitutive parts of party culture.",
+          "target_place": "south-bronx",
+          "expected_output": "One representative event frame or a decision to move this material into supporting context."
+        }
+      },
+      "event": {
+        "year_start": 1970,
+        "year_end": 1982,
+        "content_review_status": "draft",
+        "id": "dance-crews-and-party-floor-culture",
+        "route_id": "birth-of-hip-hop",
+        "place_id": "south-bronx",
+        "place_ids": [
+          "south-bronx"
+        ],
+        "default_place_id": "south-bronx",
+        "place_relationships": [],
+        "title": "Dance crews and party-floor culture",
+        "summary": "A draft context event for dance, competition, embodied participation, and audience response in party settings. A named representative event is still needed.",
+        "significance": "Treats dance as a constitutive practice rather than decorative accompaniment to music history.",
+        "tags": [
+          "dance",
+          "b-boys",
+          "b-girls",
+          "party-culture"
+        ],
+        "source_urls": [],
+        "media_links": [],
+        "image_links": []
+      }
+    },
+    {
+      "candidate_id": "graffiti-trains-and-visual-culture",
+      "editorial_state": "draft",
+      "active": true,
+      "included": true,
+      "renderable": true,
+      "agent_recommendation": "context",
+      "route_entry_role": "context",
+      "next_evidence_task": {
+        "missing_evidence": "A named place, crew, documented relationship, or dated media transition.",
+        "target_claim": "Visual practice intersected with shared urban and cultural networks relevant to the route.",
+        "target_place": "south-bronx",
+        "expected_output": "A source-backed relationship and an honest place strategy."
+      },
+      "warnings": [
+        "A non-point map strategy may be required.",
+        "Image rights, attribution, identity, and context remain unresolved."
+      ],
+      "technical_errors": [
+        "Reader-facing event has no source URL."
+      ],
+      "material_signature": "d7adc96fa0379c56f0a6f94c797ca7952b41b6f2d94bb06242b22a146053eb17",
+      "proposal": {
+        "candidate_id": "graffiti-trains-and-visual-culture",
+        "agent_recommendation": "context",
+        "editorial_state": "draft",
+        "route_entry_role": "context",
+        "years": "1970s-early 1980s",
+        "place": "Bronx / NYC subway network",
+        "working_title": "Graffiti, trains, and visual culture",
+        "route_function": "Connects hip-hop to visual practice, crews, city surfaces, and mobile urban circulation.",
+        "decision_rationale": "It broadens the cultural argument but currently describes a networked practice rather than a discrete event.",
+        "review_question": "What source-backed relationship to party culture or shared crews justifies inclusion?",
+        "source_leads": [
+          "Photo archives",
+          "Exhibition catalogs",
+          "Film materials"
+        ],
+        "risk_notes": [
+          "A non-point map strategy may be required.",
+          "Image rights, attribution, identity, and context remain unresolved."
+        ],
+        "next_action": "Identify a specific documented relationship or media transition.",
+        "composition": {
+          "outcome": "active",
+          "reason": "Retained as a visual-culture context event with cautious scope.",
+          "related_candidate_ids": [
+            "bronx-schools-parks-community-centers-parties",
+            "downtown-clubs-art-and-hip-hop-exchange"
+          ]
+        },
+        "next_evidence_task": {
+          "missing_evidence": "A named place, crew, documented relationship, or dated media transition.",
+          "target_claim": "Visual practice intersected with shared urban and cultural networks relevant to the route.",
+          "target_place": "south-bronx",
+          "expected_output": "A source-backed relationship and an honest place strategy."
+        }
+      },
+      "event": {
+        "year_start": 1970,
+        "year_end": 1982,
+        "content_review_status": "draft",
+        "id": "graffiti-trains-and-visual-culture",
+        "route_id": "birth-of-hip-hop",
+        "place_id": "south-bronx",
+        "place_ids": [
+          "south-bronx"
+        ],
+        "default_place_id": "south-bronx",
+        "place_relationships": [],
+        "title": "Graffiti, trains, and visual culture",
+        "summary": "A draft context event for graffiti, crews, city surfaces, and mobile visual circulation. It does not yet establish a specific shared event with party culture.",
+        "significance": "Keeps the route's cultural frame broader than sound while requiring evidence of meaningful relationships.",
+        "tags": [
+          "graffiti",
+          "trains",
+          "visual-culture",
+          "crews"
+        ],
+        "source_urls": [],
+        "media_links": [],
+        "image_links": []
+      }
+    },
+    {
+      "candidate_id": "bronx-river-crews-community-organization",
+      "editorial_state": "draft",
+      "active": true,
+      "included": true,
+      "renderable": true,
+      "agent_recommendation": "context",
+      "route_entry_role": "context",
+      "next_evidence_task": {
+        "missing_evidence": "Specific activity, organization, date, and relationship to party or crew practice.",
+        "target_claim": "Bronx River Houses was a documented site of relevant community or crew activity.",
+        "target_place": "bronx-river-houses",
+        "expected_output": "A bounded event frame or a merge recommendation."
+      },
+      "warnings": [
+        "Do not conflate crews, organizations, and residents.",
+        "Later institutional history needs sensitive review."
+      ],
+      "technical_errors": [
+        "Reader-facing event has no source URL."
+      ],
+      "material_signature": "8309ab4422cddb35372c7f354332f3740e359f3692b23bb933050352ce9ec0c9",
+      "proposal": {
+        "candidate_id": "bronx-river-crews-community-organization",
+        "agent_recommendation": "context",
+        "editorial_state": "draft",
+        "route_entry_role": "context",
+        "years": "1970s",
+        "place": "Bronx River Houses",
+        "working_title": "Bronx River crews and community organization",
+        "route_function": "Adds neighborhood organization, crews, and community identity to the account of sustained local practice.",
+        "decision_rationale": "The geography is useful, but no bounded event or sufficiently specific organization history is established.",
+        "review_question": "What documented activity connects Bronx River Houses to the party, crew, or organizational thesis?",
+        "source_leads": [
+          "Oral histories",
+          "Local histories",
+          "Journalism"
+        ],
+        "risk_notes": [
+          "Do not conflate crews, organizations, and residents.",
+          "Later institutional history needs sensitive review."
+        ],
+        "next_action": "Research concrete community and crew activity.",
+        "composition": {
+          "outcome": "active",
+          "reason": "Retained as a place-specific context event pending source narrowing.",
+          "related_candidate_ids": [
+            "bronx-schools-parks-community-centers-parties"
+          ]
+        },
+        "next_evidence_task": {
+          "missing_evidence": "Specific activity, organization, date, and relationship to party or crew practice.",
+          "target_claim": "Bronx River Houses was a documented site of relevant community or crew activity.",
+          "target_place": "bronx-river-houses",
+          "expected_output": "A bounded event frame or a merge recommendation."
+        }
+      },
+      "event": {
+        "year_start": 1970,
+        "year_end": 1979,
+        "content_review_status": "draft",
+        "id": "bronx-river-crews-community-organization",
+        "route_id": "birth-of-hip-hop",
+        "place_id": "bronx-river-houses",
+        "place_ids": [
+          "bronx-river-houses"
+        ],
+        "default_place_id": "bronx-river-houses",
+        "place_relationships": [],
+        "title": "Bronx River crews and community organization",
+        "summary": "A draft place-specific context event for crews, neighborhood identity, and community organization at Bronx River Houses. The relevant activity and its relationship to party culture remain to be documented.",
+        "significance": "Offers a community-centered geography that can counter a purely performer-centered route.",
+        "tags": [
+          "bronx-river",
+          "community",
+          "crews",
+          "organization"
+        ],
+        "source_urls": [],
+        "media_links": [],
+        "image_links": []
+      }
+    },
+    {
+      "candidate_id": "blackout-1977-context-and-myth",
+      "editorial_state": "draft",
+      "active": true,
+      "included": true,
+      "renderable": true,
+      "agent_recommendation": "context",
+      "route_entry_role": "context",
+      "next_evidence_task": {
+        "missing_evidence": "Compared evidence about the 1977 blackout's relationship to Bronx equipment access, parties, and later retrospective narratives.",
+        "target_claim": "The blackout shaped later explanations of hip-hop equipment and party culture without being established here as a direct cause.",
+        "target_place": "new-york-city",
+        "expected_output": "A claim-level source comparison separating documented relationships from retrospective myth and recommending contextual treatment or a narrower event."
+      },
+      "warnings": [
+        "Direct causality is unproven here.",
+        "Citywide geography does not map cleanly to Bronx practice."
+      ],
+      "technical_errors": [
+        "Reader-facing event has no source URL."
+      ],
+      "material_signature": "e933b3cbb4c1810eac12a8787fa9e0031384fc8a40ebb5a296a7c01cfbeb2b69",
+      "proposal": {
+        "candidate_id": "blackout-1977-context-and-myth",
+        "agent_recommendation": "context",
+        "editorial_state": "draft",
+        "route_entry_role": "context",
+        "years": "1977",
+        "place": "New York City",
+        "working_title": "The 1977 blackout as context and myth",
+        "route_function": "Examines urban crisis, equipment narratives, and retrospective memory without making the blackout a direct cause.",
+        "decision_rationale": "The candidate is editorially valuable as source criticism, but the draft should not convert a widely repeated story into causal history.",
+        "review_question": "What is documented about the blackout's relationship to equipment, parties, or memory?",
+        "source_leads": [
+          "PBS",
+          "Newspapers",
+          "Urban histories",
+          "Oral histories"
+        ],
+        "risk_notes": [
+          "Direct causality is unproven here.",
+          "Citywide geography does not map cleanly to Bronx practice."
+        ],
+        "next_action": "Use as contextual annotation unless comparison supports a narrower claim.",
+        "composition": {
+          "outcome": "active",
+          "reason": "Retained as a clearly labeled context and myth event.",
+          "related_candidate_ids": [
+            "bronx-schools-parks-community-centers-parties"
+          ]
+        },
+        "next_evidence_task": {
+          "missing_evidence": "Compared evidence about the 1977 blackout's relationship to Bronx equipment access, parties, and later retrospective narratives.",
+          "target_claim": "The blackout shaped later explanations of hip-hop equipment and party culture without being established here as a direct cause.",
+          "target_place": "new-york-city",
+          "expected_output": "A claim-level source comparison separating documented relationships from retrospective myth and recommending contextual treatment or a narrower event."
+        }
+      },
+      "event": {
+        "year_start": 1977,
+        "year_end": 1977,
+        "content_review_status": "draft",
+        "id": "blackout-1977-context-and-myth",
+        "route_id": "birth-of-hip-hop",
+        "place_id": "new-york-city",
+        "place_ids": [
+          "new-york-city"
+        ],
+        "default_place_id": "new-york-city",
+        "place_relationships": [],
+        "title": "The 1977 blackout as context and myth",
+        "summary": "A draft source-criticism event examining the blackout's urban context and later equipment narratives. No direct causal relationship to hip-hop is asserted.",
+        "significance": "Shows how crisis and anniversary memory can shape explanations of cultural history.",
+        "tags": [
+          "blackout",
+          "urban-history",
+          "memory",
+          "myth"
+        ],
+        "source_urls": [],
+        "media_links": [],
+        "image_links": []
+      }
+    },
+    {
+      "candidate_id": "bronx-clubs-and-local-performance-circuit",
+      "editorial_state": "draft",
+      "active": true,
+      "included": true,
+      "renderable": true,
+      "agent_recommendation": "context",
+      "route_entry_role": "context",
+      "next_evidence_task": {
+        "missing_evidence": "Named venue, address, active years, and documented performance activity.",
+        "target_claim": "Indoor Bronx venues supplemented public-space party infrastructure.",
+        "target_place": "south-bronx",
+        "expected_output": "A named venue event or a decision to retain only route context."
+      },
+      "warnings": [
+        "Do not imply a continuous circuit without evidence.",
+        "Access and audience claims require sourcing."
+      ],
+      "technical_errors": [
+        "Reader-facing event has no source URL."
+      ],
+      "material_signature": "fd49d74b4ff7627619c0151226952aed082cafb25fa67ad1ff2c75aedf3dd9cc",
+      "proposal": {
+        "candidate_id": "bronx-clubs-and-local-performance-circuit",
+        "agent_recommendation": "context",
+        "editorial_state": "draft",
+        "route_entry_role": "context",
+        "years": "late 1970s-early 1980s",
+        "place": "Bronx",
+        "working_title": "Bronx clubs and local performance circuits",
+        "route_function": "Tests indoor venues, local businesses, youth access, and performance continuity alongside parks and parties.",
+        "decision_rationale": "The venue-network question is relevant, but no named club, address, or active period is supplied.",
+        "review_question": "Which venues can be documented as distinct nodes?",
+        "source_leads": [
+          "Club histories",
+          "Flyers",
+          "Oral histories",
+          "Journalism"
+        ],
+        "risk_notes": [
+          "Do not imply a continuous circuit without evidence.",
+          "Access and audience claims require sourcing."
+        ],
+        "next_action": "Research named venues; consider Disco Fever only if evidence supports it.",
+        "composition": {
+          "outcome": "active",
+          "reason": "Retained as a context event while venue selection remains open.",
+          "related_candidate_ids": [
+            "bronx-schools-parks-community-centers-parties",
+            "rappers-delight-commercial-visibility"
+          ]
+        },
+        "next_evidence_task": {
+          "missing_evidence": "Named venue, address, active years, and documented performance activity.",
+          "target_claim": "Indoor Bronx venues supplemented public-space party infrastructure.",
+          "target_place": "south-bronx",
+          "expected_output": "A named venue event or a decision to retain only route context."
+        }
+      },
+      "event": {
+        "year_start": 1977,
+        "year_end": 1982,
+        "content_review_status": "draft",
+        "id": "bronx-clubs-and-local-performance-circuit",
+        "route_id": "birth-of-hip-hop",
+        "place_id": "south-bronx",
+        "place_ids": [
+          "south-bronx"
+        ],
+        "default_place_id": "south-bronx",
+        "place_relationships": [],
+        "title": "Bronx clubs and local performance circuits",
+        "summary": "A draft context event testing whether named Bronx clubs and indoor venues added a distinct performance pathway alongside parks and parties. No generalized continuous circuit is claimed.",
+        "significance": "Could connect public-space practice to indoor performance and local business infrastructure if specific venues are verified.",
+        "tags": [
+          "clubs",
+          "venues",
+          "performance",
+          "bronx"
+        ],
+        "source_urls": [],
+        "media_links": [],
+        "image_links": []
+      }
+    },
+    {
+      "candidate_id": "rappers-delight-commercial-visibility",
+      "editorial_state": "draft",
+      "active": true,
+      "included": true,
+      "renderable": true,
+      "agent_recommendation": "include",
+      "route_entry_role": "active",
+      "next_evidence_task": null,
+      "warnings": [
+        "Commercial visibility is not cultural origin.",
+        "New Jersey geography needs route justification."
+      ],
+      "technical_errors": [
+        "Reader-facing event has no source URL."
+      ],
+      "material_signature": "16334365efd73b74931503118eaaaf810dfe105549687f40b9ce90aca6023447",
+      "proposal": {
+        "candidate_id": "rappers-delight-commercial-visibility",
+        "agent_recommendation": "include",
+        "editorial_state": "draft",
+        "route_entry_role": "active",
+        "years": "1979",
+        "place": "New York / New Jersey industry node",
+        "working_title": "\"Rapper's Delight\" and commercial visibility",
+        "route_function": "Marks a transition from live local practice to recorded, mediated, and commercially visible rap.",
+        "decision_rationale": "This is a strong media-transition anchor when separated from cultural origin and framed through recording, label mediation, and public visibility.",
+        "review_question": "What local practices, performers, labels, and distribution channels can be connected to the record without treating it as a complete account?",
+        "source_leads": [
+          "Label histories",
+          "Record histories",
+          "Journalism",
+          "Interviews"
+        ],
+        "risk_notes": [
+          "Commercial visibility is not cultural origin.",
+          "New Jersey geography needs route justification."
+        ],
+        "next_action": "Confirm the New York-centered route function and external-node treatment.",
+        "composition": {
+          "outcome": "active",
+          "reason": "Retained as the principal recording and visibility transition.",
+          "related_candidate_ids": [
+            "mc-crew-and-party-hosting-practices",
+            "early-rap-records-and-independent-labels"
+          ]
+        }
+      },
+      "event": {
+        "year_start": 1979,
+        "year_end": 1979,
+        "content_review_status": "draft",
+        "id": "rappers-delight-commercial-visibility",
+        "route_id": "birth-of-hip-hop",
+        "place_id": "englewood-sugar-hill-records",
+        "place_ids": [
+          "englewood-sugar-hill-records"
+        ],
+        "default_place_id": "englewood-sugar-hill-records",
+        "place_relationships": [],
+        "title": "\"Rapper's Delight\" and commercial visibility",
+        "summary": "A draft media-transition event for the record's role in making rap commercially visible through recording, label mediation, and regional industry links. It is not framed as the culture's beginning.",
+        "significance": "Marks a transition from local live practice to recorded and commercially mediated circulation.",
+        "tags": [
+          "recording",
+          "commercial-visibility",
+          "sugar-hill",
+          "media-transition"
+        ],
+        "source_urls": [],
+        "media_links": [],
+        "image_links": []
+      }
+    },
+    {
+      "candidate_id": "early-rap-records-and-independent-labels",
+      "editorial_state": "draft",
+      "active": true,
+      "included": true,
+      "renderable": true,
+      "agent_recommendation": "context",
+      "route_entry_role": "context",
+      "next_evidence_task": {
+        "missing_evidence": "One distinct label, recording, distribution, or circulation development.",
+        "target_claim": "Early records changed how local rap practices circulated.",
+        "target_place": "englewood-sugar-hill-records",
+        "expected_output": "A focused industry event or a merge recommendation."
+      },
+      "warnings": [
+        "Market-centered sources may underrepresent local practice.",
+        "Personnel and Bronx relationships require verification."
+      ],
+      "technical_errors": [
+        "Reader-facing event has no source URL."
+      ],
+      "material_signature": "12c727df097e1f65bbcb6561880e6ab80608014b284e508c278bc25f24430af3",
+      "proposal": {
+        "candidate_id": "early-rap-records-and-independent-labels",
+        "agent_recommendation": "context",
+        "editorial_state": "draft",
+        "route_entry_role": "context",
+        "years": "1979-1982",
+        "place": "NYC / regional industry nodes",
+        "working_title": "Early rap records and independent labels",
+        "route_function": "Broadens the commercial transition from one record to recording, distribution, and label formation.",
+        "decision_rationale": "The industry question is useful but risks becoming discography. It remains contextual until one distinct circulation change is identified.",
+        "review_question": "What label or recording development adds route meaning beyond the Rapper's Delight anchor?",
+        "source_leads": [
+          "Discographies",
+          "Label histories",
+          "Newspapers",
+          "Interviews"
+        ],
+        "risk_notes": [
+          "Market-centered sources may underrepresent local practice.",
+          "Personnel and Bronx relationships require verification."
+        ],
+        "next_action": "Select one distinct transition or merge the evidence into the commercial-visibility event.",
+        "composition": {
+          "outcome": "active",
+          "reason": "Retained as a context event for industry transition, not a discography.",
+          "related_candidate_ids": [
+            "rappers-delight-commercial-visibility",
+            "radio-djs-and-broadcast-circulation"
+          ]
+        },
+        "next_evidence_task": {
+          "missing_evidence": "One distinct label, recording, distribution, or circulation development.",
+          "target_claim": "Early records changed how local rap practices circulated.",
+          "target_place": "englewood-sugar-hill-records",
+          "expected_output": "A focused industry event or a merge recommendation."
+        }
+      },
+      "event": {
+        "year_start": 1979,
+        "year_end": 1982,
+        "content_review_status": "draft",
+        "id": "early-rap-records-and-independent-labels",
+        "route_id": "birth-of-hip-hop",
+        "place_id": "englewood-sugar-hill-records",
+        "place_ids": [
+          "englewood-sugar-hill-records"
+        ],
+        "default_place_id": "englewood-sugar-hill-records",
+        "place_relationships": [],
+        "title": "Early rap records and independent labels",
+        "summary": "A draft industry context event for early recordings, labels, and distribution. It remains deliberately narrower than a discography and awaits one distinct route-relevant transition.",
+        "significance": "Can explain how local practices acquired new circulation channels without replacing community history with market chronology.",
+        "tags": [
+          "records",
+          "labels",
+          "distribution",
+          "industry"
+        ],
+        "source_urls": [],
+        "media_links": [],
+        "image_links": []
+      }
+    },
+    {
+      "candidate_id": "radio-djs-and-broadcast-circulation",
+      "editorial_state": "draft",
+      "active": true,
+      "included": true,
+      "renderable": true,
+      "agent_recommendation": "context",
+      "route_entry_role": "context",
+      "next_evidence_task": {
+        "missing_evidence": "Named station, program, broadcast date, and route-relevant circulation claim.",
+        "target_claim": "Radio helped mediate movement from local practice to wider New York audiences.",
+        "target_place": "wbls-nyc-radio",
+        "expected_output": "A source-backed broadcast event or a context-only treatment."
+      },
+      "warnings": [
+        "Broadcast reach may not map cleanly.",
+        "Station metadata and dates may be incomplete."
+      ],
+      "technical_errors": [
+        "Reader-facing event has no source URL."
+      ],
+      "material_signature": "828bf8f97342efcb993bf0ef964517ccea0ad6bd9fa76d7b247583b9f46c070f",
+      "proposal": {
+        "candidate_id": "radio-djs-and-broadcast-circulation",
+        "agent_recommendation": "context",
+        "editorial_state": "draft",
+        "route_entry_role": "context",
+        "years": "late 1970s-early 1980s",
+        "place": "NYC radio sites",
+        "working_title": "Radio DJs and broadcast circulation",
+        "route_function": "Explains how local sound and recorded rap reached wider audiences through broadcast infrastructure.",
+        "decision_rationale": "Broadcast circulation is distinct and useful, but specific stations, programs, dates, and geographic logic remain open.",
+        "review_question": "Can broadcast evidence show a meaningful circulation pathway without reducing radio to a single point?",
+        "source_leads": [
+          "Broadcast archives",
+          "Oral histories",
+          "Music journalism"
+        ],
+        "risk_notes": [
+          "Broadcast reach may not map cleanly.",
+          "Station metadata and dates may be incomplete."
+        ],
+        "next_action": "Identify specific programs or broadcasts and decide on a media-node representation.",
+        "composition": {
+          "outcome": "active",
+          "reason": "Retained as a context event for media circulation.",
+          "related_candidate_ids": [
+            "rappers-delight-commercial-visibility",
+            "international-tours-records-and-media-spread"
+          ]
+        },
+        "next_evidence_task": {
+          "missing_evidence": "Named station, program, broadcast date, and route-relevant circulation claim.",
+          "target_claim": "Radio helped mediate movement from local practice to wider New York audiences.",
+          "target_place": "wbls-nyc-radio",
+          "expected_output": "A source-backed broadcast event or a context-only treatment."
+        }
+      },
+      "event": {
+        "year_start": 1977,
+        "year_end": 1982,
+        "content_review_status": "draft",
+        "id": "radio-djs-and-broadcast-circulation",
+        "route_id": "birth-of-hip-hop",
+        "place_id": "wbls-nyc-radio",
+        "place_ids": [
+          "wbls-nyc-radio"
+        ],
+        "default_place_id": "wbls-nyc-radio",
+        "place_relationships": [],
+        "title": "Radio DJs and broadcast circulation",
+        "summary": "A draft media context event for radio programs and DJs that may have carried local sound and recorded rap to wider audiences. Specific broadcasts remain to be verified.",
+        "significance": "Adds broadcast infrastructure to the route's account of public visibility and circulation.",
+        "tags": [
+          "radio",
+          "broadcast",
+          "media-circulation",
+          "djs"
+        ],
+        "source_urls": [],
+        "media_links": [],
+        "image_links": []
+      }
+    },
+    {
+      "candidate_id": "downtown-clubs-art-and-hip-hop-exchange",
+      "editorial_state": "draft",
+      "active": true,
+      "included": true,
+      "renderable": true,
+      "agent_recommendation": "context",
+      "route_entry_role": "context",
+      "next_evidence_task": {
+        "missing_evidence": "Named venue, date, participants, and documented exchange.",
+        "target_claim": "Downtown venues formed one circulation path for Bronx hip-hop practices and representations.",
+        "target_place": "the-roxy-nyc",
+        "expected_output": "A source-backed exchange event with a specific place or a context-only treatment."
+      },
+      "warnings": [
+        "Named places and dates are missing.",
+        "Institutional narratives require community-source balance."
+      ],
+      "technical_errors": [
+        "Reader-facing event has no source URL."
+      ],
+      "material_signature": "35d923bf20bccec5123dc9575b8350d494de8a359cb8014408675fb752995e51",
+      "proposal": {
+        "candidate_id": "downtown-clubs-art-and-hip-hop-exchange",
+        "agent_recommendation": "context",
+        "editorial_state": "draft",
+        "route_entry_role": "context",
+        "years": "early 1980s",
+        "place": "Downtown Manhattan",
+        "working_title": "Downtown clubs, art spaces, and hip-hop exchange",
+        "route_function": "Examines cross-scene circulation among Bronx practitioners, downtown venues, galleries, performers, writers, and media.",
+        "decision_rationale": "The candidate supports an exchange phase, but it needs named venues, dates, and participant links and must not frame downtown attention as validation.",
+        "review_question": "Which documented exchanges changed circulation, representation, or working relationships?",
+        "source_leads": [
+          "Art histories",
+          "Club histories",
+          "Interviews",
+          "Journalism"
+        ],
+        "risk_notes": [
+          "Named places and dates are missing.",
+          "Institutional narratives require community-source balance."
+        ],
+        "next_action": "Identify one or two source-backed exchanges.",
+        "composition": {
+          "outcome": "active",
+          "reason": "Retained as a context event leading into film documentation.",
+          "related_candidate_ids": [
+            "graffiti-trains-and-visual-culture",
+            "wild-style-film-documentation"
+          ]
+        },
+        "next_evidence_task": {
+          "missing_evidence": "Named venue, date, participants, and documented exchange.",
+          "target_claim": "Downtown venues formed one circulation path for Bronx hip-hop practices and representations.",
+          "target_place": "the-roxy-nyc",
+          "expected_output": "A source-backed exchange event with a specific place or a context-only treatment."
+        }
+      },
+      "event": {
+        "year_start": 1980,
+        "year_end": 1982,
+        "content_review_status": "draft",
+        "id": "downtown-clubs-art-and-hip-hop-exchange",
+        "route_id": "birth-of-hip-hop",
+        "place_id": "the-roxy-nyc",
+        "place_ids": [
+          "the-roxy-nyc"
+        ],
+        "default_place_id": "the-roxy-nyc",
+        "place_relationships": [],
+        "title": "Downtown clubs, art spaces, and hip-hop exchange",
+        "summary": "A draft context event for documented exchanges among Bronx practitioners, downtown venues, art spaces, and media. The Roxy is a provisional existing place representation pending venue-specific evidence.",
+        "significance": "Examines one circulation path into Manhattan institutions without treating downtown attention as validation.",
+        "tags": [
+          "downtown",
+          "clubs",
+          "art",
+          "exchange"
+        ],
+        "source_urls": [],
+        "media_links": [],
+        "image_links": []
+      }
+    },
+    {
+      "candidate_id": "wild-style-film-documentation",
+      "editorial_state": "draft",
+      "active": true,
+      "included": true,
+      "renderable": true,
+      "agent_recommendation": "include",
+      "route_entry_role": "active",
+      "next_evidence_task": null,
+      "warnings": [
+        "Separate filming locations from screening sites.",
+        "Film rights and clip availability remain unresolved."
+      ],
+      "technical_errors": [
+        "Reader-facing event has no source URL."
+      ],
+      "material_signature": "9bdc188050264e7ff56ff3795b289817efe526fb0f67cb12d2d5859e6a6a3b6a",
+      "proposal": {
+        "candidate_id": "wild-style-film-documentation",
+        "agent_recommendation": "include",
+        "editorial_state": "draft",
+        "route_entry_role": "active",
+        "years": "1982-1983",
+        "place": "New York City",
+        "working_title": "*Wild Style* and film documentation",
+        "route_function": "Shows how hip-hop practices were documented, staged, represented, and circulated through film.",
+        "decision_rationale": "It is a strong late-route media anchor connecting music, graffiti, dance, performance, and circulation, provided production and fictionalization are distinguished.",
+        "review_question": "Which production, participant, setting, and reception claims illuminate the transition from local practice to wider representation?",
+        "source_leads": [
+          "Film at Lincoln Center",
+          "Cornell Cinema",
+          "Film histories",
+          "Interviews"
+        ],
+        "risk_notes": [
+          "Separate filming locations from screening sites.",
+          "Film rights and clip availability remain unresolved."
+        ],
+        "next_action": "Verify metadata, locations, participant relationships, reception, and rights-cleared references.",
+        "composition": {
+          "outcome": "active",
+          "reason": "Retained as the principal documentation and representation anchor.",
+          "related_candidate_ids": [
+            "downtown-clubs-art-and-hip-hop-exchange",
+            "style-wars-and-television-documentation"
+          ]
+        }
+      },
+      "event": {
+        "year_start": 1982,
+        "year_end": 1983,
+        "content_review_status": "draft",
+        "id": "wild-style-film-documentation",
+        "route_id": "birth-of-hip-hop",
+        "place_id": "new-york-city",
+        "place_ids": [
+          "new-york-city"
+        ],
+        "default_place_id": "new-york-city",
+        "place_relationships": [],
+        "title": "*Wild Style* and film documentation",
+        "summary": "A draft film event examining how music, graffiti, dance, and performance were documented, staged, and circulated through *Wild Style*. Production settings and participant relationships require verification.",
+        "significance": "Shows the transition from local practice to wider representation while distinguishing documentation from fictionalization.",
+        "tags": [
+          "wild-style",
+          "film",
+          "documentation",
+          "representation"
+        ],
+        "source_urls": [],
+        "media_links": [],
+        "image_links": []
+      }
+    },
+    {
+      "candidate_id": "style-wars-and-television-documentation",
+      "editorial_state": "draft",
+      "active": true,
+      "included": true,
+      "renderable": true,
+      "agent_recommendation": "context",
+      "route_entry_role": "context",
+      "next_evidence_task": {
+        "missing_evidence": "Specific music-related scenes, participants, broadcast context, and route relevance.",
+        "target_claim": "Television documentation framed overlapping hip-hop practices differently from film.",
+        "target_place": "new-york-city",
+        "expected_output": "A non-duplicative comparison frame or omission recommendation."
+      },
+      "warnings": [
+        "Production methods and cultural focus must be distinguished.",
+        "Rights and availability require review."
+      ],
+      "technical_errors": [
+        "Reader-facing event has no source URL."
+      ],
+      "material_signature": "90a59f0fd724f821def0a5cb873982a979567aeb7b8aef43fa40ab20f9566d7d",
+      "proposal": {
+        "candidate_id": "style-wars-and-television-documentation",
+        "agent_recommendation": "context",
+        "editorial_state": "draft",
+        "route_entry_role": "context",
+        "years": "1983",
+        "place": "New York City / broadcast context",
+        "working_title": "*Style Wars* and television documentation",
+        "route_function": "Compares television documentation of graffiti, dance, and hip-hop communities with other forms of film circulation.",
+        "decision_rationale": "It adds a distinct broadcast and visual-culture perspective, but its music-history fit and non-duplicative relationship to Wild Style require review.",
+        "review_question": "Does the film add evidence about music-related circulation and community representation?",
+        "source_leads": [
+          "Film and broadcast sources",
+          "Interviews",
+          "Exhibition materials"
+        ],
+        "risk_notes": [
+          "Production methods and cultural focus must be distinguished.",
+          "Rights and availability require review."
+        ],
+        "next_action": "Compare its route function with Wild Style.",
+        "composition": {
+          "outcome": "active",
+          "reason": "Retained as a context comparison for documentation and public framing.",
+          "related_candidate_ids": [
+            "wild-style-film-documentation"
+          ]
+        },
+        "next_evidence_task": {
+          "missing_evidence": "Specific music-related scenes, participants, broadcast context, and route relevance.",
+          "target_claim": "Television documentation framed overlapping hip-hop practices differently from film.",
+          "target_place": "new-york-city",
+          "expected_output": "A non-duplicative comparison frame or omission recommendation."
+        }
+      },
+      "event": {
+        "year_start": 1983,
+        "year_end": 1983,
+        "content_review_status": "draft",
+        "id": "style-wars-and-television-documentation",
+        "route_id": "birth-of-hip-hop",
+        "place_id": "new-york-city",
+        "place_ids": [
+          "new-york-city"
+        ],
+        "default_place_id": "new-york-city",
+        "place_relationships": [],
+        "title": "*Style Wars* and television documentation",
+        "summary": "A draft context event comparing television documentation of graffiti, dance, and hip-hop communities with other film forms. Its music-history relevance remains under review.",
+        "significance": "Could show how broadcast framing changed public interpretation of overlapping practices.",
+        "tags": [
+          "style-wars",
+          "television",
+          "documentation",
+          "visual-culture"
+        ],
+        "source_urls": [],
+        "media_links": [],
+        "image_links": []
+      }
+    },
+    {
+      "candidate_id": "international-tours-records-and-media-spread",
+      "editorial_state": "draft",
+      "active": true,
+      "included": true,
+      "renderable": true,
+      "agent_recommendation": "context",
+      "route_entry_role": "context",
+      "next_evidence_task": {
+        "missing_evidence": "A specific New York-based tour, record, or media pathway.",
+        "target_claim": "New York-centered media circulation helped carry hip-hop beyond local scenes.",
+        "target_place": "new-york-city",
+        "expected_output": "One representative circulation pathway or a route-conclusion note."
+      },
+      "warnings": [
+        "International scope exceeds the primary map focus.",
+        "Specific pathway is unresolved."
+      ],
+      "technical_errors": [
+        "Reader-facing event has no source URL."
+      ],
+      "material_signature": "b7fc54a9dc5d5574803d75a16e1f56215c232ff5c6c2d386e82f88e498bef739",
+      "proposal": {
+        "candidate_id": "international-tours-records-and-media-spread",
+        "agent_recommendation": "context",
+        "editorial_state": "draft",
+        "route_entry_role": "context",
+        "years": "1980s",
+        "place": "NYC / global circulation",
+        "working_title": "Tours, records, and media spread hip-hop beyond New York",
+        "route_function": "Provides a possible closing context for outward circulation from a New York-centered culture.",
+        "decision_rationale": "Useful as a conclusion, but too broad for a mapped MVP event unless a specific New York-origin pathway is identified.",
+        "review_question": "What New York-based tour, record, or media pathway can represent outward movement without becoming global history?",
+        "source_leads": [
+          "Music journalism",
+          "Tour histories",
+          "Broadcast sources",
+          "Oral histories"
+        ],
+        "risk_notes": [
+          "International scope exceeds the primary map focus.",
+          "Specific pathway is unresolved."
+        ],
+        "next_action": "Retain as closing context and defer mapped expansion.",
+        "composition": {
+          "outcome": "active",
+          "reason": "Retained as a bounded endpoint context rather than a global event.",
+          "related_candidate_ids": [
+            "radio-djs-and-broadcast-circulation",
+            "wild-style-film-documentation"
+          ]
+        },
+        "next_evidence_task": {
+          "missing_evidence": "A specific New York-based tour, record, or media pathway.",
+          "target_claim": "New York-centered media circulation helped carry hip-hop beyond local scenes.",
+          "target_place": "new-york-city",
+          "expected_output": "One representative circulation pathway or a route-conclusion note."
+        }
+      },
+      "event": {
+        "year_start": 1980,
+        "year_end": 1985,
+        "content_review_status": "draft",
+        "id": "international-tours-records-and-media-spread",
+        "route_id": "birth-of-hip-hop",
+        "place_id": "new-york-city",
+        "place_ids": [
+          "new-york-city"
+        ],
+        "default_place_id": "new-york-city",
+        "place_relationships": [],
+        "title": "Tours, records, and media spread hip-hop beyond New York",
+        "summary": "A draft closing context for outward circulation from New York. It remains a placeholder for a specific New York-based tour, record, or media pathway rather than a global-history event.",
+        "significance": "Provides a possible endpoint showing that local practice acquired wider circulation without abandoning the route's New York focus.",
+        "tags": [
+          "circulation",
+          "tours",
+          "media",
+          "new-york"
+        ],
+        "source_urls": [],
+        "media_links": [],
+        "image_links": []
+      }
+    }
+  ],
+  "dormant_proposals": [],
+  "places": [
+    {
+      "decision": "reuse",
+      "place": {
+        "content_review_status": "draft",
+        "id": "1520-sedgwick-avenue",
+        "name": "1520 Sedgwick Avenue",
+        "borough": "Bronx",
+        "place_type": "building",
+        "latitude": 40.8471,
+        "longitude": -73.9243,
+        "summary": "Apartment building whose community room is considered a symbolic node in early hip-hop history.",
+        "source_urls": [
+          "https://www.history.com/this-day-in-history/hip-hop-is-born-at-a-birthday-party-in-the-bronx"
+        ],
+        "geometry": null,
+        "geometry_precision": null,
+        "geometry_source_type": null,
+        "geometry_source_url": null,
+        "geometry_source_note": null,
+        "geometry_license": null
+      }
+    },
+    {
+      "decision": "reuse",
+      "place": {
+        "content_review_status": "draft",
+        "id": "bronx-river-houses",
+        "name": "Bronx River Houses",
+        "borough": "Bronx",
+        "place_type": "housing_complex",
+        "latitude": 40.835,
+        "longitude": -73.8769,
+        "summary": "Housing complex in the Soundview context, closely connected to Afrika Bambaataa and early scene organization.",
+        "source_urls": [
+          "https://citylore.org/places/bronx-river-houses/",
+          "https://bronxriver.org/post/greenway/the-bronx-river-houses-resilience/feed"
+        ],
+        "geometry": null,
+        "geometry_precision": null,
+        "geometry_source_type": null,
+        "geometry_source_url": null,
+        "geometry_source_note": null,
+        "geometry_license": null
+      }
+    },
+    {
+      "decision": "reuse",
+      "place": {
+        "content_review_status": "draft",
+        "id": "englewood-sugar-hill-records",
+        "name": "Sugar Hill Records / Englewood",
+        "borough": "External",
+        "place_type": "external_node",
+        "latitude": 40.8929,
+        "longitude": -73.9726,
+        "summary": "External industry node in Englewood, New Jersey, connected to Sugar Hill Records and Rapper's Delight.",
+        "source_urls": [
+          "https://www.britannica.com/topic/the-Sugarhill-Gang",
+          "https://www.latimes.com/entertainment-arts/music/story/2023-08-07/sugar-hill-records-gang-sylvia-robinson-rappers-delight-1979-50th-anniversary-hip-hop"
+        ],
+        "geometry": null,
+        "geometry_precision": null,
+        "geometry_source_type": null,
+        "geometry_source_url": null,
+        "geometry_source_note": null,
+        "geometry_license": null
+      }
+    },
+    {
+      "decision": "reuse",
+      "place": {
+        "content_review_status": "draft",
+        "id": "new-york-city",
+        "name": "New York City",
+        "borough": "Citywide",
+        "place_type": "city",
+        "latitude": 40.7128,
+        "longitude": -74.006,
+        "summary": "Citywide context for the blackout, media, the record industry, and club circulation.",
+        "source_urls": [
+          "https://www.pbs.org/wgbh/americanexperience/films/blackout/"
+        ],
+        "geometry": null,
+        "geometry_precision": null,
+        "geometry_source_type": null,
+        "geometry_source_url": null,
+        "geometry_source_note": null,
+        "geometry_license": null
+      }
+    },
+    {
+      "decision": "reuse",
+      "place": {
+        "content_review_status": "draft",
+        "id": "south-bronx",
+        "name": "South Bronx",
+        "borough": "Bronx",
+        "place_type": "region",
+        "latitude": 40.8176,
+        "longitude": -73.9182,
+        "summary": "Regional context for many early hip-hop parties, crews, and social conditions.",
+        "source_urls": [
+          "https://americanhistory.si.edu/press/releases/hip-hop-comes-smithsonian"
+        ],
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                -73.9195,
+                40.8564
+              ],
+              [
+                -73.9,
+                40.852
+              ],
+              [
+                -73.88,
+                40.849
+              ],
+              [
+                -73.868,
+                40.847
+              ],
+              [
+                -73.874,
+                40.838
+              ],
+              [
+                -73.8785,
+                40.8255
+              ],
+              [
+                -73.878,
+                40.815
+              ],
+              [
+                -73.871,
+                40.8065
+              ],
+              [
+                -73.8585,
+                40.802
+              ],
+              [
+                -73.852751919912,
+                40.799825050778
+              ],
+              [
+                -73.862928,
+                40.797265
+              ],
+              [
+                -73.868350426088,
+                40.792342147554
+              ],
+              [
+                -73.890459134842,
+                40.790269456109
+              ],
+              [
+                -73.912528,
+                40.796118
+              ],
+              [
+                -73.919896,
+                40.799392
+              ],
+              [
+                -73.922663,
+                40.802119
+              ],
+              [
+                -73.927663,
+                40.802399
+              ],
+              [
+                -73.932364,
+                40.808519
+              ],
+              [
+                -73.932857,
+                40.810327
+              ],
+              [
+                -73.932828,
+                40.823366
+              ],
+              [
+                -73.933763,
+                40.831686
+              ],
+              [
+                -73.933247,
+                40.835632
+              ],
+              [
+                -73.927091,
+                40.847353
+              ],
+              [
+                -73.920137719979,
+                40.856507739027
+              ],
+              [
+                -73.9195,
+                40.8564
+              ]
+            ]
+          ]
+        },
+        "geometry_precision": "interpretive",
+        "geometry_source_type": "curated",
+        "geometry_source_url": "https://commons.wikimedia.org/wiki/File:Southbronx.png",
+        "geometry_source_note": "SoundAtlas-curated cultural-area outline, clipped to the frontend's simplified Bronx boundary; northern and eastern limits use Southbronx.png as an illustrative, unreviewed visual reference. Not an administrative boundary.",
+        "geometry_license": "CC BY-SA 2.5"
+      }
+    },
+    {
+      "decision": "reuse",
+      "place": {
+        "content_review_status": "draft",
+        "id": "the-roxy-nyc",
+        "name": "The Roxy",
+        "borough": "Manhattan",
+        "place_type": "club",
+        "latitude": 40.7463,
+        "longitude": -74.0069,
+        "summary": "Downtown club and roller rink on West 18th Street, relevant to hip-hop as a club, art, and media phenomenon.",
+        "source_urls": [
+          "https://www.filmlinc.org/films/wild-style/"
+        ],
+        "geometry": null,
+        "geometry_precision": null,
+        "geometry_source_type": null,
+        "geometry_source_url": null,
+        "geometry_source_note": null,
+        "geometry_license": null
+      }
+    },
+    {
+      "decision": "reuse",
+      "place": {
+        "content_review_status": "draft",
+        "id": "wbls-nyc-radio",
+        "name": "WBLS / NYC Radio",
+        "borough": "Manhattan",
+        "place_type": "media_node",
+        "latitude": 40.727,
+        "longitude": -74.007,
+        "summary": "A radio and media node linking club response, DJs, labels, and broader pop reception.",
+        "source_urls": [
+          "https://pitchfork.com/features/article/9710-the-larry-levan-bump-how-the-legendary-paradise-garage-dj-ignited-some-of-the-80s-biggest-hits/"
+        ],
+        "geometry": null,
+        "geometry_precision": null,
+        "geometry_source_type": null,
+        "geometry_source_url": null,
+        "geometry_source_note": null,
+        "geometry_license": null
+      }
+    }
+  ],
+  "connections": [],
+  "candidate_accounts": [
+    {
+      "candidate_id": "caribbean-soundsystem-context-nyc",
+      "outcome": "active",
+      "reason": "Retained as a clearly labeled conditions-phase context event.",
+      "related_candidate_ids": [
+        "bronx-record-and-party-culture-before-1973",
+        "mobile-sound-and-breakbeat-practice"
+      ],
+      "active": true,
+      "preview": {
+        "working_title": "Caribbean sound system context in New York",
+        "years": "ca. 1965-1973",
+        "place": "Bronx / New York City",
+        "route_function": "Frames migration, amplification, records, and party practice as possible conditions around Bronx DJ culture.",
+        "decision_rationale": "The topic is important but not yet a bounded event. It should remain contextual and avoid a one-way Caribbean-to-Bronx origin story.",
+        "review_question": "Can specific New York people, places, practices, and dates be documented without flattening Caribbean, Jamaican, Black, Latino, and Bronx histories?",
+        "source_leads": [
+          "Migration histories",
+          "Interviews",
+          "Cultural studies",
+          "Oral histories"
+        ],
+        "risk_notes": [
+          "Context may be better represented in route framing.",
+          "Influence and causality remain unresolved."
+        ],
+        "next_action": "Find specific sourceable examples and reassess event status."
+      },
+      "context": {
+        "candidate_id": "caribbean-soundsystem-context-nyc",
+        "agent_recommendation": "context",
+        "route_entry_role": "context",
+        "years": "ca. 1965-1973",
+        "place": "Bronx / New York City",
+        "working_title": "Caribbean sound system context in New York",
+        "route_function": "Frames migration, amplification, records, and party practice as possible conditions around Bronx DJ culture.",
+        "decision_rationale": "The topic is important but not yet a bounded event. It should remain contextual and avoid a one-way Caribbean-to-Bronx origin story.",
+        "review_question": "Can specific New York people, places, practices, and dates be documented without flattening Caribbean, Jamaican, Black, Latino, and Bronx histories?",
+        "source_leads": [
+          "Migration histories",
+          "Interviews",
+          "Cultural studies",
+          "Oral histories"
+        ],
+        "risk_notes": [
+          "Context may be better represented in route framing.",
+          "Influence and causality remain unresolved."
+        ],
+        "next_action": "Find specific sourceable examples and reassess event status.",
+        "next_evidence_task": {
+          "missing_evidence": "Named New York practitioners, places, practices, and dates.",
+          "target_claim": "Caribbean and Jamaican sound-system practices formed one part of the surrounding New York conditions.",
+          "target_place": "south-bronx",
+          "expected_output": "A claim-level comparison of migration, oral-history, and local-history sources."
+        }
+      },
+      "findings": [
+        {
+          "owner": "active_event",
+          "message": "Context may be better represented in route framing.",
+          "candidate_id": "caribbean-soundsystem-context-nyc",
+          "blocking": false
+        },
+        {
+          "owner": "active_event",
+          "message": "Influence and causality remain unresolved.",
+          "candidate_id": "caribbean-soundsystem-context-nyc",
+          "blocking": false
+        }
+      ]
+    },
+    {
+      "candidate_id": "bronx-record-and-party-culture-before-1973",
+      "outcome": "active",
+      "reason": "Retained as a pre-anchor context event with cautious regional framing.",
+      "related_candidate_ids": [
+        "caribbean-soundsystem-context-nyc",
+        "kool-herc-cindy-campbell-sedgwick-party"
+      ],
+      "active": true,
+      "preview": {
+        "working_title": "Bronx record and party culture before the origin story",
+        "years": "late 1960s-1973",
+        "place": "Bronx",
+        "route_function": "Establishes local conditions and repeated practices before the Sedgwick public-memory anchor.",
+        "decision_rationale": "This prevents a single-origin narrative, but the broad regional claim needs named parties, organizers, places, flyers, or oral histories.",
+        "review_question": "Can this be grounded in identifiable local evidence rather than a generalized summary of the Bronx?",
+        "source_leads": [
+          "Oral histories",
+          "Flyers",
+          "Local newspapers",
+          "Community archives"
+        ],
+        "risk_notes": [
+          "Earlier party culture was not one unified scene.",
+          "Preparation or causation claims require comparison."
+        ],
+        "next_action": "Identify concrete examples; otherwise keep the entry narrowly contextual."
+      },
+      "context": {
+        "candidate_id": "bronx-record-and-party-culture-before-1973",
+        "agent_recommendation": "context",
+        "route_entry_role": "context",
+        "years": "late 1960s-1973",
+        "place": "Bronx",
+        "working_title": "Bronx record and party culture before the origin story",
+        "route_function": "Establishes local conditions and repeated practices before the Sedgwick public-memory anchor.",
+        "decision_rationale": "This prevents a single-origin narrative, but the broad regional claim needs named parties, organizers, places, flyers, or oral histories.",
+        "review_question": "Can this be grounded in identifiable local evidence rather than a generalized summary of the Bronx?",
+        "source_leads": [
+          "Oral histories",
+          "Flyers",
+          "Local newspapers",
+          "Community archives"
+        ],
+        "risk_notes": [
+          "Earlier party culture was not one unified scene.",
+          "Preparation or causation claims require comparison."
+        ],
+        "next_action": "Identify concrete examples; otherwise keep the entry narrowly contextual.",
+        "next_evidence_task": {
+          "missing_evidence": "Specific parties, flyers, organizers, and dates before 1973.",
+          "target_claim": "Bronx party and record practices predated and surrounded the Sedgwick anchor.",
+          "target_place": "south-bronx",
+          "expected_output": "A bounded event frame or a recommendation to move the material into route context."
+        }
+      },
+      "findings": [
+        {
+          "owner": "active_event",
+          "message": "Earlier party culture was not one unified scene.",
+          "candidate_id": "bronx-record-and-party-culture-before-1973",
+          "blocking": false
+        },
+        {
+          "owner": "active_event",
+          "message": "Preparation or causation claims require comparison.",
+          "candidate_id": "bronx-record-and-party-culture-before-1973",
+          "blocking": false
+        }
+      ]
+    },
+    {
+      "candidate_id": "kool-herc-cindy-campbell-sedgwick-party",
+      "outcome": "active",
+      "reason": "Retained as the route's principal named place anchor.",
+      "related_candidate_ids": [
+        "bronx-record-and-party-culture-before-1973",
+        "mobile-sound-and-breakbeat-practice"
+      ],
+      "active": true,
+      "preview": {
+        "working_title": "Kool Herc, Cindy Campbell, and the Sedgwick party",
+        "years": "1973",
+        "place": "1520 Sedgwick Avenue",
+        "route_function": "Provides a named place-and-time anchor for party organization, sound, public memory, and contested origin narratives.",
+        "decision_rationale": "It is the strongest named anchor in the dossier, provided Cindy Campbell's organizing role and the party's later public-memory status are sourced carefully.",
+        "review_question": "Which exact claims about the party, its organization, and its later symbolic status are supported by compared sources?",
+        "source_leads": [
+          "Interviews",
+          "Historic preservation materials",
+          "Museum timelines",
+          "Public history"
+        ],
+        "risk_notes": [
+          "Do not call it the sole birthplace of hip-hop.",
+          "Verify Campbell's exact role.",
+          "Retrospective memory requires comparison."
+        ],
+        "next_action": "Build a claim-level source comparison and draft cautious wording."
+      },
+      "context": {
+        "candidate_id": "kool-herc-cindy-campbell-sedgwick-party",
+        "agent_recommendation": "include",
+        "route_entry_role": "active",
+        "years": "1973",
+        "place": "1520 Sedgwick Avenue",
+        "working_title": "Kool Herc, Cindy Campbell, and the Sedgwick party",
+        "route_function": "Provides a named place-and-time anchor for party organization, sound, public memory, and contested origin narratives.",
+        "decision_rationale": "It is the strongest named anchor in the dossier, provided Cindy Campbell's organizing role and the party's later public-memory status are sourced carefully.",
+        "review_question": "Which exact claims about the party, its organization, and its later symbolic status are supported by compared sources?",
+        "source_leads": [
+          "Interviews",
+          "Historic preservation materials",
+          "Museum timelines",
+          "Public history"
+        ],
+        "risk_notes": [
+          "Do not call it the sole birthplace of hip-hop.",
+          "Verify Campbell's exact role.",
+          "Retrospective memory requires comparison."
+        ],
+        "next_action": "Build a claim-level source comparison and draft cautious wording."
+      },
+      "findings": [
+        {
+          "owner": "active_event",
+          "message": "Do not call it the sole birthplace of hip-hop.",
+          "candidate_id": "kool-herc-cindy-campbell-sedgwick-party",
+          "blocking": false
+        },
+        {
+          "owner": "active_event",
+          "message": "Verify Campbell's exact role.",
+          "candidate_id": "kool-herc-cindy-campbell-sedgwick-party",
+          "blocking": false
+        },
+        {
+          "owner": "active_event",
+          "message": "Retrospective memory requires comparison.",
+          "candidate_id": "kool-herc-cindy-campbell-sedgwick-party",
+          "blocking": false
+        }
+      ]
+    },
+    {
+      "candidate_id": "mobile-sound-and-breakbeat-practice",
+      "outcome": "active",
+      "reason": "Retained as a distinct practice-development event.",
+      "related_candidate_ids": [
+        "kool-herc-cindy-campbell-sedgwick-party",
+        "grandmaster-flash-turntable-technique"
+      ],
+      "active": true,
+      "preview": {
+        "working_title": "Mobile sound and breakbeat practice develop",
+        "years": "early-mid 1970s",
+        "place": "Bronx",
+        "route_function": "Makes equipment, records, repetition, dance response, and mobile party infrastructure central to the route's sound-and-culture argument.",
+        "decision_rationale": "The candidate explains development through repeated material and social practices rather than one event, but needs specific, source-backed examples.",
+        "review_question": "What equipment, record, and party practices can be described without assigning unsupported invention or priority?",
+        "source_leads": [
+          "DJ interviews",
+          "Equipment histories",
+          "Music histories"
+        ],
+        "risk_notes": [
+          "Technical claims may become mythic.",
+          "Do not imply one DJ or party created the whole practice."
+        ],
+        "next_action": "Identify sourceable practices and connect them to honest place representations."
+      },
+      "context": {
+        "candidate_id": "mobile-sound-and-breakbeat-practice",
+        "agent_recommendation": "include",
+        "route_entry_role": "active",
+        "years": "early-mid 1970s",
+        "place": "Bronx",
+        "working_title": "Mobile sound and breakbeat practice develop",
+        "route_function": "Makes equipment, records, repetition, dance response, and mobile party infrastructure central to the route's sound-and-culture argument.",
+        "decision_rationale": "The candidate explains development through repeated material and social practices rather than one event, but needs specific, source-backed examples.",
+        "review_question": "What equipment, record, and party practices can be described without assigning unsupported invention or priority?",
+        "source_leads": [
+          "DJ interviews",
+          "Equipment histories",
+          "Music histories"
+        ],
+        "risk_notes": [
+          "Technical claims may become mythic.",
+          "Do not imply one DJ or party created the whole practice."
+        ],
+        "next_action": "Identify sourceable practices and connect them to honest place representations."
+      },
+      "findings": [
+        {
+          "owner": "active_event",
+          "message": "Technical claims may become mythic.",
+          "candidate_id": "mobile-sound-and-breakbeat-practice",
+          "blocking": false
+        },
+        {
+          "owner": "active_event",
+          "message": "Do not imply one DJ or party created the whole practice.",
+          "candidate_id": "mobile-sound-and-breakbeat-practice",
+          "blocking": false
+        }
+      ]
+    },
+    {
+      "candidate_id": "bronx-schools-parks-community-centers-parties",
+      "outcome": "active",
+      "reason": "Retained as the community-infrastructure anchor.",
+      "related_candidate_ids": [
+        "cedar-park-outdoor-party-culture",
+        "bronx-river-crews-community-organization",
+        "mc-crew-and-party-hosting-practices"
+      ],
+      "active": true,
+      "preview": {
+        "working_title": "Schools, parks, and community centers host party culture",
+        "years": "1970s",
+        "place": "Bronx",
+        "route_function": "Shows how repeated public and semi-public spaces enabled participation, circulation, and scene continuity beyond one famous venue.",
+        "decision_rationale": "This is essential to map-first community logic, but the event must remain explicitly representative rather than implying all such spaces hosted identical activity.",
+        "review_question": "Can representative locations, dates, and gatherings be identified?",
+        "source_leads": [
+          "Flyers",
+          "Oral histories",
+          "School archives",
+          "Community archives"
+        ],
+        "risk_notes": [
+          "Regional geography is imprecise.",
+          "A single event may overstate breadth."
+        ],
+        "next_action": "Narrow to documented examples or retain as a clearly bounded regional context event."
+      },
+      "context": {
+        "candidate_id": "bronx-schools-parks-community-centers-parties",
+        "agent_recommendation": "include",
+        "route_entry_role": "active",
+        "years": "1970s",
+        "place": "Bronx",
+        "working_title": "Schools, parks, and community centers host party culture",
+        "route_function": "Shows how repeated public and semi-public spaces enabled participation, circulation, and scene continuity beyond one famous venue.",
+        "decision_rationale": "This is essential to map-first community logic, but the event must remain explicitly representative rather than implying all such spaces hosted identical activity.",
+        "review_question": "Can representative locations, dates, and gatherings be identified?",
+        "source_leads": [
+          "Flyers",
+          "Oral histories",
+          "School archives",
+          "Community archives"
+        ],
+        "risk_notes": [
+          "Regional geography is imprecise.",
+          "A single event may overstate breadth."
+        ],
+        "next_action": "Narrow to documented examples or retain as a clearly bounded regional context event."
+      },
+      "findings": [
+        {
+          "owner": "active_event",
+          "message": "Regional geography is imprecise.",
+          "candidate_id": "bronx-schools-parks-community-centers-parties",
+          "blocking": false
+        },
+        {
+          "owner": "active_event",
+          "message": "A single event may overstate breadth.",
+          "candidate_id": "bronx-schools-parks-community-centers-parties",
+          "blocking": false
+        }
+      ]
+    },
+    {
+      "candidate_id": "cedar-park-outdoor-party-culture",
+      "outcome": "merged_into",
+      "reason": "Currently functions as an example of broader community-space infrastructure.",
+      "related_candidate_ids": [
+        "bronx-schools-parks-community-centers-parties"
+      ],
+      "active": false,
+      "preview": {
+        "summary": "Cedar Playground is a possible example of outdoor Bronx party culture, but the draft lacks a bounded event and verified date.",
+        "significance": "It could make public-space use concrete if sourceable; otherwise it should not become a standalone map pin."
+      },
+      "context": {
+        "candidate_id": "cedar-park-outdoor-party-culture",
+        "agent_recommendation": "merge",
+        "route_entry_role": "exclude",
+        "years": "1970s",
+        "place": "Cedar Playground",
+        "working_title": "Cedar Playground and outdoor party culture",
+        "route_function": "Potential place-specific example of public-space gathering and outdoor party infrastructure.",
+        "decision_rationale": "The place may strengthen the public-space argument, but no distinct date or event is currently established.",
+        "review_question": "Does place-specific evidence warrant a separate record?",
+        "source_leads": [
+          "Local histories",
+          "Oral histories",
+          "Archives"
+        ],
+        "risk_notes": [
+          "Exact dates and event specificity are unresolved.",
+          "General association is insufficient for a place anchor."
+        ],
+        "next_action": "Research Cedar Playground and fold verified evidence into the community-infrastructure event."
+      },
+      "findings": [
+        {
+          "owner": "candidate_composition",
+          "message": "Exact dates and event specificity are unresolved.",
+          "candidate_id": "cedar-park-outdoor-party-culture",
+          "blocking": false
+        },
+        {
+          "owner": "candidate_composition",
+          "message": "General association is insufficient for a place anchor.",
+          "candidate_id": "cedar-park-outdoor-party-culture",
+          "blocking": false
+        }
+      ]
+    },
+    {
+      "candidate_id": "grandmaster-flash-turntable-technique",
+      "outcome": "active",
+      "reason": "Retained as the technique anchor, incorporating comparison material.",
+      "related_candidate_ids": [
+        "scratching-and-dj-technique-attribution",
+        "mobile-sound-and-breakbeat-practice"
+      ],
+      "active": true,
+      "preview": {
+        "working_title": "Grandmaster Flash and turntable technique",
+        "years": "mid-late 1970s",
+        "place": "Bronx",
+        "route_function": "Provides a named practitioner node for technique, equipment, performance method, and retrospective attribution.",
+        "decision_rationale": "It gives the route a concrete technical node if narrow claims are separated from group history and later recording history.",
+        "review_question": "Which technique and equipment claims are independently supported?",
+        "source_leads": [
+          "Smithsonian",
+          "NAMM Oral History Program",
+          "Interviews",
+          "Museum articles"
+        ],
+        "risk_notes": [
+          "Avoid first or sole-inventor wording.",
+          "Retrospective accounts may conflict."
+        ],
+        "next_action": "Compare institutional and interview sources and define one narrow claim."
+      },
+      "context": {
+        "candidate_id": "grandmaster-flash-turntable-technique",
+        "agent_recommendation": "include",
+        "route_entry_role": "active",
+        "years": "mid-late 1970s",
+        "place": "Bronx",
+        "working_title": "Grandmaster Flash and turntable technique",
+        "route_function": "Provides a named practitioner node for technique, equipment, performance method, and retrospective attribution.",
+        "decision_rationale": "It gives the route a concrete technical node if narrow claims are separated from group history and later recording history.",
+        "review_question": "Which technique and equipment claims are independently supported?",
+        "source_leads": [
+          "Smithsonian",
+          "NAMM Oral History Program",
+          "Interviews",
+          "Museum articles"
+        ],
+        "risk_notes": [
+          "Avoid first or sole-inventor wording.",
+          "Retrospective accounts may conflict."
+        ],
+        "next_action": "Compare institutional and interview sources and define one narrow claim."
+      },
+      "findings": [
+        {
+          "owner": "active_event",
+          "message": "Avoid first or sole-inventor wording.",
+          "candidate_id": "grandmaster-flash-turntable-technique",
+          "blocking": false
+        },
+        {
+          "owner": "active_event",
+          "message": "Retrospective accounts may conflict.",
+          "candidate_id": "grandmaster-flash-turntable-technique",
+          "blocking": false
+        }
+      ]
+    },
+    {
+      "candidate_id": "scratching-and-dj-technique-attribution",
+      "outcome": "merged_into",
+      "reason": "Merged to preserve contested attribution research without duplicating coverage.",
+      "related_candidate_ids": [
+        "grandmaster-flash-turntable-technique"
+      ],
+      "active": false,
+      "preview": {
+        "summary": "Scratching and DJ-technique attribution remains a research question within the technique event.",
+        "significance": "Its value is source criticism and comparison, not a separate invention claim."
+      },
+      "context": {
+        "candidate_id": "scratching-and-dj-technique-attribution",
+        "agent_recommendation": "merge",
+        "route_entry_role": "exclude",
+        "years": "mid-late 1970s",
+        "place": "Bronx",
+        "working_title": "Scratching and DJ technique attribution",
+        "route_function": "Tests how technique stories are constructed and attributed across multiple DJs.",
+        "decision_rationale": "The research question is important but overlaps directly with the technique anchor and should not duplicate it.",
+        "review_question": "Can multiple contributions be compared without producing a new unsupported invention narrative?",
+        "source_leads": [
+          "Interviews",
+          "Oral histories",
+          "Hip-hop histories"
+        ],
+        "risk_notes": [
+          "High risk around first and invented language.",
+          "Conflicting retrospectives require comparison."
+        ],
+        "next_action": "Fold comparison into the Grandmaster Flash technique event."
+      },
+      "findings": [
+        {
+          "owner": "candidate_composition",
+          "message": "High risk around first and invented language.",
+          "candidate_id": "scratching-and-dj-technique-attribution",
+          "blocking": false
+        },
+        {
+          "owner": "candidate_composition",
+          "message": "Conflicting retrospectives require comparison.",
+          "candidate_id": "scratching-and-dj-technique-attribution",
+          "blocking": false
+        }
+      ]
+    },
+    {
+      "candidate_id": "mc-crew-and-party-hosting-practices",
+      "outcome": "active",
+      "reason": "Retained as a distinct live-practice event.",
+      "related_candidate_ids": [
+        "bronx-schools-parks-community-centers-parties",
+        "rappers-delight-commercial-visibility"
+      ],
+      "active": true,
+      "preview": {
+        "working_title": "MCs, crews, and party hosting practices",
+        "years": "1970s",
+        "place": "Bronx",
+        "route_function": "Shows how hosting, call-and-response, crews, and audience interaction developed around DJ-led parties.",
+        "decision_rationale": "This is central to the practice-to-culture phase and keeps MCing from appearing only as a record-industry development.",
+        "review_question": "Which MCs, crews, parties, or recordings provide representative evidence?",
+        "source_leads": [
+          "Oral histories",
+          "Flyers",
+          "Recordings",
+          "Interviews"
+        ],
+        "risk_notes": [
+          "Named examples and chronology remain unresolved.",
+          "Avoid generalizing from famous performers."
+        ],
+        "next_action": "Identify representative sourceable examples and their relationship to party spaces."
+      },
+      "context": {
+        "candidate_id": "mc-crew-and-party-hosting-practices",
+        "agent_recommendation": "include",
+        "route_entry_role": "active",
+        "years": "1970s",
+        "place": "Bronx",
+        "working_title": "MCs, crews, and party hosting practices",
+        "route_function": "Shows how hosting, call-and-response, crews, and audience interaction developed around DJ-led parties.",
+        "decision_rationale": "This is central to the practice-to-culture phase and keeps MCing from appearing only as a record-industry development.",
+        "review_question": "Which MCs, crews, parties, or recordings provide representative evidence?",
+        "source_leads": [
+          "Oral histories",
+          "Flyers",
+          "Recordings",
+          "Interviews"
+        ],
+        "risk_notes": [
+          "Named examples and chronology remain unresolved.",
+          "Avoid generalizing from famous performers."
+        ],
+        "next_action": "Identify representative sourceable examples and their relationship to party spaces."
+      },
+      "findings": [
+        {
+          "owner": "active_event",
+          "message": "Named examples and chronology remain unresolved.",
+          "candidate_id": "mc-crew-and-party-hosting-practices",
+          "blocking": false
+        },
+        {
+          "owner": "active_event",
+          "message": "Avoid generalizing from famous performers.",
+          "candidate_id": "mc-crew-and-party-hosting-practices",
+          "blocking": false
+        }
+      ]
+    },
+    {
+      "candidate_id": "dance-crews-and-party-floor-culture",
+      "outcome": "active",
+      "reason": "Retained as a context event pending a narrower representative anchor.",
+      "related_candidate_ids": [
+        "mc-crew-and-party-hosting-practices",
+        "wild-style-film-documentation"
+      ],
+      "active": true,
+      "preview": {
+        "working_title": "Dance crews and party-floor culture",
+        "years": "1970s-early 1980s",
+        "place": "Bronx / New York City",
+        "route_function": "Makes embodied participation, competition, and audience response part of the route's account of culture formation.",
+        "decision_rationale": "The practice fits the thesis but lacks a representative named event, place, and date.",
+        "review_question": "Can a specific dance crew, party, or documented performance demonstrate the relationship between dance, music, and place?",
+        "source_leads": [
+          "Film materials",
+          "Dance histories",
+          "Oral histories"
+        ],
+        "risk_notes": [
+          "Film evidence may be staged or retrospective.",
+          "Dance must not be decorative context."
+        ],
+        "next_action": "Find a source-backed place-and-time anchor."
+      },
+      "context": {
+        "candidate_id": "dance-crews-and-party-floor-culture",
+        "agent_recommendation": "context",
+        "route_entry_role": "context",
+        "years": "1970s-early 1980s",
+        "place": "Bronx / New York City",
+        "working_title": "Dance crews and party-floor culture",
+        "route_function": "Makes embodied participation, competition, and audience response part of the route's account of culture formation.",
+        "decision_rationale": "The practice fits the thesis but lacks a representative named event, place, and date.",
+        "review_question": "Can a specific dance crew, party, or documented performance demonstrate the relationship between dance, music, and place?",
+        "source_leads": [
+          "Film materials",
+          "Dance histories",
+          "Oral histories"
+        ],
+        "risk_notes": [
+          "Film evidence may be staged or retrospective.",
+          "Dance must not be decorative context."
+        ],
+        "next_action": "Find a source-backed place-and-time anchor.",
+        "next_evidence_task": {
+          "missing_evidence": "Named crews, parties, performances, dates, and places.",
+          "target_claim": "Dance and audience response were constitutive parts of party culture.",
+          "target_place": "south-bronx",
+          "expected_output": "One representative event frame or a decision to move this material into supporting context."
+        }
+      },
+      "findings": [
+        {
+          "owner": "active_event",
+          "message": "Film evidence may be staged or retrospective.",
+          "candidate_id": "dance-crews-and-party-floor-culture",
+          "blocking": false
+        },
+        {
+          "owner": "active_event",
+          "message": "Dance must not be decorative context.",
+          "candidate_id": "dance-crews-and-party-floor-culture",
+          "blocking": false
+        }
+      ]
+    },
+    {
+      "candidate_id": "graffiti-trains-and-visual-culture",
+      "outcome": "active",
+      "reason": "Retained as a visual-culture context event with cautious scope.",
+      "related_candidate_ids": [
+        "bronx-schools-parks-community-centers-parties",
+        "downtown-clubs-art-and-hip-hop-exchange"
+      ],
+      "active": true,
+      "preview": {
+        "working_title": "Graffiti, trains, and visual culture",
+        "years": "1970s-early 1980s",
+        "place": "Bronx / NYC subway network",
+        "route_function": "Connects hip-hop to visual practice, crews, city surfaces, and mobile urban circulation.",
+        "decision_rationale": "It broadens the cultural argument but currently describes a networked practice rather than a discrete event.",
+        "review_question": "What source-backed relationship to party culture or shared crews justifies inclusion?",
+        "source_leads": [
+          "Photo archives",
+          "Exhibition catalogs",
+          "Film materials"
+        ],
+        "risk_notes": [
+          "A non-point map strategy may be required.",
+          "Image rights, attribution, identity, and context remain unresolved."
+        ],
+        "next_action": "Identify a specific documented relationship or media transition."
+      },
+      "context": {
+        "candidate_id": "graffiti-trains-and-visual-culture",
+        "agent_recommendation": "context",
+        "route_entry_role": "context",
+        "years": "1970s-early 1980s",
+        "place": "Bronx / NYC subway network",
+        "working_title": "Graffiti, trains, and visual culture",
+        "route_function": "Connects hip-hop to visual practice, crews, city surfaces, and mobile urban circulation.",
+        "decision_rationale": "It broadens the cultural argument but currently describes a networked practice rather than a discrete event.",
+        "review_question": "What source-backed relationship to party culture or shared crews justifies inclusion?",
+        "source_leads": [
+          "Photo archives",
+          "Exhibition catalogs",
+          "Film materials"
+        ],
+        "risk_notes": [
+          "A non-point map strategy may be required.",
+          "Image rights, attribution, identity, and context remain unresolved."
+        ],
+        "next_action": "Identify a specific documented relationship or media transition.",
+        "next_evidence_task": {
+          "missing_evidence": "A named place, crew, documented relationship, or dated media transition.",
+          "target_claim": "Visual practice intersected with shared urban and cultural networks relevant to the route.",
+          "target_place": "south-bronx",
+          "expected_output": "A source-backed relationship and an honest place strategy."
+        }
+      },
+      "findings": [
+        {
+          "owner": "active_event",
+          "message": "A non-point map strategy may be required.",
+          "candidate_id": "graffiti-trains-and-visual-culture",
+          "blocking": false
+        },
+        {
+          "owner": "active_event",
+          "message": "Image rights, attribution, identity, and context remain unresolved.",
+          "candidate_id": "graffiti-trains-and-visual-culture",
+          "blocking": false
+        }
+      ]
+    },
+    {
+      "candidate_id": "bronx-river-crews-community-organization",
+      "outcome": "active",
+      "reason": "Retained as a place-specific context event pending source narrowing.",
+      "related_candidate_ids": [
+        "bronx-schools-parks-community-centers-parties"
+      ],
+      "active": true,
+      "preview": {
+        "working_title": "Bronx River crews and community organization",
+        "years": "1970s",
+        "place": "Bronx River Houses",
+        "route_function": "Adds neighborhood organization, crews, and community identity to the account of sustained local practice.",
+        "decision_rationale": "The geography is useful, but no bounded event or sufficiently specific organization history is established.",
+        "review_question": "What documented activity connects Bronx River Houses to the party, crew, or organizational thesis?",
+        "source_leads": [
+          "Oral histories",
+          "Local histories",
+          "Journalism"
+        ],
+        "risk_notes": [
+          "Do not conflate crews, organizations, and residents.",
+          "Later institutional history needs sensitive review."
+        ],
+        "next_action": "Research concrete community and crew activity."
+      },
+      "context": {
+        "candidate_id": "bronx-river-crews-community-organization",
+        "agent_recommendation": "context",
+        "route_entry_role": "context",
+        "years": "1970s",
+        "place": "Bronx River Houses",
+        "working_title": "Bronx River crews and community organization",
+        "route_function": "Adds neighborhood organization, crews, and community identity to the account of sustained local practice.",
+        "decision_rationale": "The geography is useful, but no bounded event or sufficiently specific organization history is established.",
+        "review_question": "What documented activity connects Bronx River Houses to the party, crew, or organizational thesis?",
+        "source_leads": [
+          "Oral histories",
+          "Local histories",
+          "Journalism"
+        ],
+        "risk_notes": [
+          "Do not conflate crews, organizations, and residents.",
+          "Later institutional history needs sensitive review."
+        ],
+        "next_action": "Research concrete community and crew activity.",
+        "next_evidence_task": {
+          "missing_evidence": "Specific activity, organization, date, and relationship to party or crew practice.",
+          "target_claim": "Bronx River Houses was a documented site of relevant community or crew activity.",
+          "target_place": "bronx-river-houses",
+          "expected_output": "A bounded event frame or a merge recommendation."
+        }
+      },
+      "findings": [
+        {
+          "owner": "active_event",
+          "message": "Do not conflate crews, organizations, and residents.",
+          "candidate_id": "bronx-river-crews-community-organization",
+          "blocking": false
+        },
+        {
+          "owner": "active_event",
+          "message": "Later institutional history needs sensitive review.",
+          "candidate_id": "bronx-river-crews-community-organization",
+          "blocking": false
+        }
+      ]
+    },
+    {
+      "candidate_id": "blackout-1977-context-and-myth",
+      "outcome": "active",
+      "reason": "Retained as a clearly labeled context and myth event.",
+      "related_candidate_ids": [
+        "bronx-schools-parks-community-centers-parties"
+      ],
+      "active": true,
+      "preview": {
+        "working_title": "The 1977 blackout as context and myth",
+        "years": "1977",
+        "place": "New York City",
+        "route_function": "Examines urban crisis, equipment narratives, and retrospective memory without making the blackout a direct cause.",
+        "decision_rationale": "The candidate is editorially valuable as source criticism, but the draft should not convert a widely repeated story into causal history.",
+        "review_question": "What is documented about the blackout's relationship to equipment, parties, or memory?",
+        "source_leads": [
+          "PBS",
+          "Newspapers",
+          "Urban histories",
+          "Oral histories"
+        ],
+        "risk_notes": [
+          "Direct causality is unproven here.",
+          "Citywide geography does not map cleanly to Bronx practice."
+        ],
+        "next_action": "Use as contextual annotation unless comparison supports a narrower claim."
+      },
+      "context": {
+        "candidate_id": "blackout-1977-context-and-myth",
+        "agent_recommendation": "context",
+        "route_entry_role": "context",
+        "years": "1977",
+        "place": "New York City",
+        "working_title": "The 1977 blackout as context and myth",
+        "route_function": "Examines urban crisis, equipment narratives, and retrospective memory without making the blackout a direct cause.",
+        "decision_rationale": "The candidate is editorially valuable as source criticism, but the draft should not convert a widely repeated story into causal history.",
+        "review_question": "What is documented about the blackout's relationship to equipment, parties, or memory?",
+        "source_leads": [
+          "PBS",
+          "Newspapers",
+          "Urban histories",
+          "Oral histories"
+        ],
+        "risk_notes": [
+          "Direct causality is unproven here.",
+          "Citywide geography does not map cleanly to Bronx practice."
+        ],
+        "next_action": "Use as contextual annotation unless comparison supports a narrower claim.",
+        "next_evidence_task": {
+          "missing_evidence": "Compared evidence about the 1977 blackout's relationship to Bronx equipment access, parties, and later retrospective narratives.",
+          "target_claim": "The blackout shaped later explanations of hip-hop equipment and party culture without being established here as a direct cause.",
+          "target_place": "new-york-city",
+          "expected_output": "A claim-level source comparison separating documented relationships from retrospective myth and recommending contextual treatment or a narrower event."
+        }
+      },
+      "findings": [
+        {
+          "owner": "active_event",
+          "message": "Direct causality is unproven here.",
+          "candidate_id": "blackout-1977-context-and-myth",
+          "blocking": false
+        },
+        {
+          "owner": "active_event",
+          "message": "Citywide geography does not map cleanly to Bronx practice.",
+          "candidate_id": "blackout-1977-context-and-myth",
+          "blocking": false
+        }
+      ]
+    },
+    {
+      "candidate_id": "bronx-clubs-and-local-performance-circuit",
+      "outcome": "active",
+      "reason": "Retained as a context event while venue selection remains open.",
+      "related_candidate_ids": [
+        "bronx-schools-parks-community-centers-parties",
+        "rappers-delight-commercial-visibility"
+      ],
+      "active": true,
+      "preview": {
+        "working_title": "Bronx clubs and local performance circuits",
+        "years": "late 1970s-early 1980s",
+        "place": "Bronx",
+        "route_function": "Tests indoor venues, local businesses, youth access, and performance continuity alongside parks and parties.",
+        "decision_rationale": "The venue-network question is relevant, but no named club, address, or active period is supplied.",
+        "review_question": "Which venues can be documented as distinct nodes?",
+        "source_leads": [
+          "Club histories",
+          "Flyers",
+          "Oral histories",
+          "Journalism"
+        ],
+        "risk_notes": [
+          "Do not imply a continuous circuit without evidence.",
+          "Access and audience claims require sourcing."
+        ],
+        "next_action": "Research named venues; consider Disco Fever only if evidence supports it."
+      },
+      "context": {
+        "candidate_id": "bronx-clubs-and-local-performance-circuit",
+        "agent_recommendation": "context",
+        "route_entry_role": "context",
+        "years": "late 1970s-early 1980s",
+        "place": "Bronx",
+        "working_title": "Bronx clubs and local performance circuits",
+        "route_function": "Tests indoor venues, local businesses, youth access, and performance continuity alongside parks and parties.",
+        "decision_rationale": "The venue-network question is relevant, but no named club, address, or active period is supplied.",
+        "review_question": "Which venues can be documented as distinct nodes?",
+        "source_leads": [
+          "Club histories",
+          "Flyers",
+          "Oral histories",
+          "Journalism"
+        ],
+        "risk_notes": [
+          "Do not imply a continuous circuit without evidence.",
+          "Access and audience claims require sourcing."
+        ],
+        "next_action": "Research named venues; consider Disco Fever only if evidence supports it.",
+        "next_evidence_task": {
+          "missing_evidence": "Named venue, address, active years, and documented performance activity.",
+          "target_claim": "Indoor Bronx venues supplemented public-space party infrastructure.",
+          "target_place": "south-bronx",
+          "expected_output": "A named venue event or a decision to retain only route context."
+        }
+      },
+      "findings": [
+        {
+          "owner": "active_event",
+          "message": "Do not imply a continuous circuit without evidence.",
+          "candidate_id": "bronx-clubs-and-local-performance-circuit",
+          "blocking": false
+        },
+        {
+          "owner": "active_event",
+          "message": "Access and audience claims require sourcing.",
+          "candidate_id": "bronx-clubs-and-local-performance-circuit",
+          "blocking": false
+        }
+      ]
+    },
+    {
+      "candidate_id": "rappers-delight-commercial-visibility",
+      "outcome": "active",
+      "reason": "Retained as the principal recording and visibility transition.",
+      "related_candidate_ids": [
+        "mc-crew-and-party-hosting-practices",
+        "early-rap-records-and-independent-labels"
+      ],
+      "active": true,
+      "preview": {
+        "working_title": "\"Rapper's Delight\" and commercial visibility",
+        "years": "1979",
+        "place": "New York / New Jersey industry node",
+        "route_function": "Marks a transition from live local practice to recorded, mediated, and commercially visible rap.",
+        "decision_rationale": "This is a strong media-transition anchor when separated from cultural origin and framed through recording, label mediation, and public visibility.",
+        "review_question": "What local practices, performers, labels, and distribution channels can be connected to the record without treating it as a complete account?",
+        "source_leads": [
+          "Label histories",
+          "Record histories",
+          "Journalism",
+          "Interviews"
+        ],
+        "risk_notes": [
+          "Commercial visibility is not cultural origin.",
+          "New Jersey geography needs route justification."
+        ],
+        "next_action": "Confirm the New York-centered route function and external-node treatment."
+      },
+      "context": {
+        "candidate_id": "rappers-delight-commercial-visibility",
+        "agent_recommendation": "include",
+        "route_entry_role": "active",
+        "years": "1979",
+        "place": "New York / New Jersey industry node",
+        "working_title": "\"Rapper's Delight\" and commercial visibility",
+        "route_function": "Marks a transition from live local practice to recorded, mediated, and commercially visible rap.",
+        "decision_rationale": "This is a strong media-transition anchor when separated from cultural origin and framed through recording, label mediation, and public visibility.",
+        "review_question": "What local practices, performers, labels, and distribution channels can be connected to the record without treating it as a complete account?",
+        "source_leads": [
+          "Label histories",
+          "Record histories",
+          "Journalism",
+          "Interviews"
+        ],
+        "risk_notes": [
+          "Commercial visibility is not cultural origin.",
+          "New Jersey geography needs route justification."
+        ],
+        "next_action": "Confirm the New York-centered route function and external-node treatment."
+      },
+      "findings": [
+        {
+          "owner": "active_event",
+          "message": "Commercial visibility is not cultural origin.",
+          "candidate_id": "rappers-delight-commercial-visibility",
+          "blocking": false
+        },
+        {
+          "owner": "active_event",
+          "message": "New Jersey geography needs route justification.",
+          "candidate_id": "rappers-delight-commercial-visibility",
+          "blocking": false
+        }
+      ]
+    },
+    {
+      "candidate_id": "early-rap-records-and-independent-labels",
+      "outcome": "active",
+      "reason": "Retained as a context event for industry transition, not a discography.",
+      "related_candidate_ids": [
+        "rappers-delight-commercial-visibility",
+        "radio-djs-and-broadcast-circulation"
+      ],
+      "active": true,
+      "preview": {
+        "working_title": "Early rap records and independent labels",
+        "years": "1979-1982",
+        "place": "NYC / regional industry nodes",
+        "route_function": "Broadens the commercial transition from one record to recording, distribution, and label formation.",
+        "decision_rationale": "The industry question is useful but risks becoming discography. It remains contextual until one distinct circulation change is identified.",
+        "review_question": "What label or recording development adds route meaning beyond the Rapper's Delight anchor?",
+        "source_leads": [
+          "Discographies",
+          "Label histories",
+          "Newspapers",
+          "Interviews"
+        ],
+        "risk_notes": [
+          "Market-centered sources may underrepresent local practice.",
+          "Personnel and Bronx relationships require verification."
+        ],
+        "next_action": "Select one distinct transition or merge the evidence into the commercial-visibility event."
+      },
+      "context": {
+        "candidate_id": "early-rap-records-and-independent-labels",
+        "agent_recommendation": "context",
+        "route_entry_role": "context",
+        "years": "1979-1982",
+        "place": "NYC / regional industry nodes",
+        "working_title": "Early rap records and independent labels",
+        "route_function": "Broadens the commercial transition from one record to recording, distribution, and label formation.",
+        "decision_rationale": "The industry question is useful but risks becoming discography. It remains contextual until one distinct circulation change is identified.",
+        "review_question": "What label or recording development adds route meaning beyond the Rapper's Delight anchor?",
+        "source_leads": [
+          "Discographies",
+          "Label histories",
+          "Newspapers",
+          "Interviews"
+        ],
+        "risk_notes": [
+          "Market-centered sources may underrepresent local practice.",
+          "Personnel and Bronx relationships require verification."
+        ],
+        "next_action": "Select one distinct transition or merge the evidence into the commercial-visibility event.",
+        "next_evidence_task": {
+          "missing_evidence": "One distinct label, recording, distribution, or circulation development.",
+          "target_claim": "Early records changed how local rap practices circulated.",
+          "target_place": "englewood-sugar-hill-records",
+          "expected_output": "A focused industry event or a merge recommendation."
+        }
+      },
+      "findings": [
+        {
+          "owner": "active_event",
+          "message": "Market-centered sources may underrepresent local practice.",
+          "candidate_id": "early-rap-records-and-independent-labels",
+          "blocking": false
+        },
+        {
+          "owner": "active_event",
+          "message": "Personnel and Bronx relationships require verification.",
+          "candidate_id": "early-rap-records-and-independent-labels",
+          "blocking": false
+        }
+      ]
+    },
+    {
+      "candidate_id": "radio-djs-and-broadcast-circulation",
+      "outcome": "active",
+      "reason": "Retained as a context event for media circulation.",
+      "related_candidate_ids": [
+        "rappers-delight-commercial-visibility",
+        "international-tours-records-and-media-spread"
+      ],
+      "active": true,
+      "preview": {
+        "working_title": "Radio DJs and broadcast circulation",
+        "years": "late 1970s-early 1980s",
+        "place": "NYC radio sites",
+        "route_function": "Explains how local sound and recorded rap reached wider audiences through broadcast infrastructure.",
+        "decision_rationale": "Broadcast circulation is distinct and useful, but specific stations, programs, dates, and geographic logic remain open.",
+        "review_question": "Can broadcast evidence show a meaningful circulation pathway without reducing radio to a single point?",
+        "source_leads": [
+          "Broadcast archives",
+          "Oral histories",
+          "Music journalism"
+        ],
+        "risk_notes": [
+          "Broadcast reach may not map cleanly.",
+          "Station metadata and dates may be incomplete."
+        ],
+        "next_action": "Identify specific programs or broadcasts and decide on a media-node representation."
+      },
+      "context": {
+        "candidate_id": "radio-djs-and-broadcast-circulation",
+        "agent_recommendation": "context",
+        "route_entry_role": "context",
+        "years": "late 1970s-early 1980s",
+        "place": "NYC radio sites",
+        "working_title": "Radio DJs and broadcast circulation",
+        "route_function": "Explains how local sound and recorded rap reached wider audiences through broadcast infrastructure.",
+        "decision_rationale": "Broadcast circulation is distinct and useful, but specific stations, programs, dates, and geographic logic remain open.",
+        "review_question": "Can broadcast evidence show a meaningful circulation pathway without reducing radio to a single point?",
+        "source_leads": [
+          "Broadcast archives",
+          "Oral histories",
+          "Music journalism"
+        ],
+        "risk_notes": [
+          "Broadcast reach may not map cleanly.",
+          "Station metadata and dates may be incomplete."
+        ],
+        "next_action": "Identify specific programs or broadcasts and decide on a media-node representation.",
+        "next_evidence_task": {
+          "missing_evidence": "Named station, program, broadcast date, and route-relevant circulation claim.",
+          "target_claim": "Radio helped mediate movement from local practice to wider New York audiences.",
+          "target_place": "wbls-nyc-radio",
+          "expected_output": "A source-backed broadcast event or a context-only treatment."
+        }
+      },
+      "findings": [
+        {
+          "owner": "active_event",
+          "message": "Broadcast reach may not map cleanly.",
+          "candidate_id": "radio-djs-and-broadcast-circulation",
+          "blocking": false
+        },
+        {
+          "owner": "active_event",
+          "message": "Station metadata and dates may be incomplete.",
+          "candidate_id": "radio-djs-and-broadcast-circulation",
+          "blocking": false
+        }
+      ]
+    },
+    {
+      "candidate_id": "the-message-social-commentary",
+      "outcome": "omitted",
+      "reason": "Deferred to preserve the route's emergence and circulation focus.",
+      "related_candidate_ids": [
+        "rappers-delight-commercial-visibility",
+        "early-rap-records-and-independent-labels"
+      ],
+      "active": false,
+      "preview": {
+        "summary": "The record is a possible later endpoint for social commentary and representation.",
+        "significance": "It may extend the story beyond emergence, but its route fit is unresolved."
+      },
+      "context": {
+        "candidate_id": "the-message-social-commentary",
+        "agent_recommendation": "exclude",
+        "route_entry_role": "exclude",
+        "years": "1982",
+        "place": "New York City / Bronx context",
+        "working_title": "\"The Message\" and social commentary",
+        "route_function": "Tests how recorded rap articulated urban narratives and social commentary.",
+        "decision_rationale": "The candidate may belong to a later records-focused route and is not needed to complete the emergence arc.",
+        "review_question": "Does this record illuminate local practice becoming a wider form, or should it be deferred?",
+        "source_leads": [
+          "Rock Hall",
+          "Music histories",
+          "Interviews",
+          "Record documentation"
+        ],
+        "risk_notes": [
+          "One record should not represent all urban experience.",
+          "Bronx and production-context claims require verification."
+        ],
+        "next_action": "Defer to a later records-focused pass."
+      },
+      "findings": [
+        {
+          "owner": "candidate_composition",
+          "message": "One record should not represent all urban experience.",
+          "candidate_id": "the-message-social-commentary",
+          "blocking": false
+        },
+        {
+          "owner": "candidate_composition",
+          "message": "Bronx and production-context claims require verification.",
+          "candidate_id": "the-message-social-commentary",
+          "blocking": false
+        }
+      ]
+    },
+    {
+      "candidate_id": "downtown-clubs-art-and-hip-hop-exchange",
+      "outcome": "active",
+      "reason": "Retained as a context event leading into film documentation.",
+      "related_candidate_ids": [
+        "graffiti-trains-and-visual-culture",
+        "wild-style-film-documentation"
+      ],
+      "active": true,
+      "preview": {
+        "working_title": "Downtown clubs, art spaces, and hip-hop exchange",
+        "years": "early 1980s",
+        "place": "Downtown Manhattan",
+        "route_function": "Examines cross-scene circulation among Bronx practitioners, downtown venues, galleries, performers, writers, and media.",
+        "decision_rationale": "The candidate supports an exchange phase, but it needs named venues, dates, and participant links and must not frame downtown attention as validation.",
+        "review_question": "Which documented exchanges changed circulation, representation, or working relationships?",
+        "source_leads": [
+          "Art histories",
+          "Club histories",
+          "Interviews",
+          "Journalism"
+        ],
+        "risk_notes": [
+          "Named places and dates are missing.",
+          "Institutional narratives require community-source balance."
+        ],
+        "next_action": "Identify one or two source-backed exchanges."
+      },
+      "context": {
+        "candidate_id": "downtown-clubs-art-and-hip-hop-exchange",
+        "agent_recommendation": "context",
+        "route_entry_role": "context",
+        "years": "early 1980s",
+        "place": "Downtown Manhattan",
+        "working_title": "Downtown clubs, art spaces, and hip-hop exchange",
+        "route_function": "Examines cross-scene circulation among Bronx practitioners, downtown venues, galleries, performers, writers, and media.",
+        "decision_rationale": "The candidate supports an exchange phase, but it needs named venues, dates, and participant links and must not frame downtown attention as validation.",
+        "review_question": "Which documented exchanges changed circulation, representation, or working relationships?",
+        "source_leads": [
+          "Art histories",
+          "Club histories",
+          "Interviews",
+          "Journalism"
+        ],
+        "risk_notes": [
+          "Named places and dates are missing.",
+          "Institutional narratives require community-source balance."
+        ],
+        "next_action": "Identify one or two source-backed exchanges.",
+        "next_evidence_task": {
+          "missing_evidence": "Named venue, date, participants, and documented exchange.",
+          "target_claim": "Downtown venues formed one circulation path for Bronx hip-hop practices and representations.",
+          "target_place": "the-roxy-nyc",
+          "expected_output": "A source-backed exchange event with a specific place or a context-only treatment."
+        }
+      },
+      "findings": [
+        {
+          "owner": "active_event",
+          "message": "Named places and dates are missing.",
+          "candidate_id": "downtown-clubs-art-and-hip-hop-exchange",
+          "blocking": false
+        },
+        {
+          "owner": "active_event",
+          "message": "Institutional narratives require community-source balance.",
+          "candidate_id": "downtown-clubs-art-and-hip-hop-exchange",
+          "blocking": false
+        }
+      ]
+    },
+    {
+      "candidate_id": "wild-style-film-documentation",
+      "outcome": "active",
+      "reason": "Retained as the principal documentation and representation anchor.",
+      "related_candidate_ids": [
+        "downtown-clubs-art-and-hip-hop-exchange",
+        "style-wars-and-television-documentation"
+      ],
+      "active": true,
+      "preview": {
+        "working_title": "*Wild Style* and film documentation",
+        "years": "1982-1983",
+        "place": "New York City",
+        "route_function": "Shows how hip-hop practices were documented, staged, represented, and circulated through film.",
+        "decision_rationale": "It is a strong late-route media anchor connecting music, graffiti, dance, performance, and circulation, provided production and fictionalization are distinguished.",
+        "review_question": "Which production, participant, setting, and reception claims illuminate the transition from local practice to wider representation?",
+        "source_leads": [
+          "Film at Lincoln Center",
+          "Cornell Cinema",
+          "Film histories",
+          "Interviews"
+        ],
+        "risk_notes": [
+          "Separate filming locations from screening sites.",
+          "Film rights and clip availability remain unresolved."
+        ],
+        "next_action": "Verify metadata, locations, participant relationships, reception, and rights-cleared references."
+      },
+      "context": {
+        "candidate_id": "wild-style-film-documentation",
+        "agent_recommendation": "include",
+        "route_entry_role": "active",
+        "years": "1982-1983",
+        "place": "New York City",
+        "working_title": "*Wild Style* and film documentation",
+        "route_function": "Shows how hip-hop practices were documented, staged, represented, and circulated through film.",
+        "decision_rationale": "It is a strong late-route media anchor connecting music, graffiti, dance, performance, and circulation, provided production and fictionalization are distinguished.",
+        "review_question": "Which production, participant, setting, and reception claims illuminate the transition from local practice to wider representation?",
+        "source_leads": [
+          "Film at Lincoln Center",
+          "Cornell Cinema",
+          "Film histories",
+          "Interviews"
+        ],
+        "risk_notes": [
+          "Separate filming locations from screening sites.",
+          "Film rights and clip availability remain unresolved."
+        ],
+        "next_action": "Verify metadata, locations, participant relationships, reception, and rights-cleared references."
+      },
+      "findings": [
+        {
+          "owner": "active_event",
+          "message": "Separate filming locations from screening sites.",
+          "candidate_id": "wild-style-film-documentation",
+          "blocking": false
+        },
+        {
+          "owner": "active_event",
+          "message": "Film rights and clip availability remain unresolved.",
+          "candidate_id": "wild-style-film-documentation",
+          "blocking": false
+        }
+      ]
+    },
+    {
+      "candidate_id": "style-wars-and-television-documentation",
+      "outcome": "active",
+      "reason": "Retained as a context comparison for documentation and public framing.",
+      "related_candidate_ids": [
+        "wild-style-film-documentation"
+      ],
+      "active": true,
+      "preview": {
+        "working_title": "*Style Wars* and television documentation",
+        "years": "1983",
+        "place": "New York City / broadcast context",
+        "route_function": "Compares television documentation of graffiti, dance, and hip-hop communities with other forms of film circulation.",
+        "decision_rationale": "It adds a distinct broadcast and visual-culture perspective, but its music-history fit and non-duplicative relationship to Wild Style require review.",
+        "review_question": "Does the film add evidence about music-related circulation and community representation?",
+        "source_leads": [
+          "Film and broadcast sources",
+          "Interviews",
+          "Exhibition materials"
+        ],
+        "risk_notes": [
+          "Production methods and cultural focus must be distinguished.",
+          "Rights and availability require review."
+        ],
+        "next_action": "Compare its route function with Wild Style."
+      },
+      "context": {
+        "candidate_id": "style-wars-and-television-documentation",
+        "agent_recommendation": "context",
+        "route_entry_role": "context",
+        "years": "1983",
+        "place": "New York City / broadcast context",
+        "working_title": "*Style Wars* and television documentation",
+        "route_function": "Compares television documentation of graffiti, dance, and hip-hop communities with other forms of film circulation.",
+        "decision_rationale": "It adds a distinct broadcast and visual-culture perspective, but its music-history fit and non-duplicative relationship to Wild Style require review.",
+        "review_question": "Does the film add evidence about music-related circulation and community representation?",
+        "source_leads": [
+          "Film and broadcast sources",
+          "Interviews",
+          "Exhibition materials"
+        ],
+        "risk_notes": [
+          "Production methods and cultural focus must be distinguished.",
+          "Rights and availability require review."
+        ],
+        "next_action": "Compare its route function with Wild Style.",
+        "next_evidence_task": {
+          "missing_evidence": "Specific music-related scenes, participants, broadcast context, and route relevance.",
+          "target_claim": "Television documentation framed overlapping hip-hop practices differently from film.",
+          "target_place": "new-york-city",
+          "expected_output": "A non-duplicative comparison frame or omission recommendation."
+        }
+      },
+      "findings": [
+        {
+          "owner": "active_event",
+          "message": "Production methods and cultural focus must be distinguished.",
+          "candidate_id": "style-wars-and-television-documentation",
+          "blocking": false
+        },
+        {
+          "owner": "active_event",
+          "message": "Rights and availability require review.",
+          "candidate_id": "style-wars-and-television-documentation",
+          "blocking": false
+        }
+      ]
+    },
+    {
+      "candidate_id": "beat-street-breakin-and-mainstream-film",
+      "outcome": "omitted",
+      "reason": "Deferred because it extends beyond the bounded emergence arc.",
+      "related_candidate_ids": [
+        "wild-style-film-documentation",
+        "style-wars-and-television-documentation"
+      ],
+      "active": false,
+      "preview": {
+        "summary": "The film could document later mainstream visibility and breakdancing representation.",
+        "significance": "It is chronologically relevant but not necessary to establish the route's core argument."
+      },
+      "context": {
+        "candidate_id": "beat-street-breakin-and-mainstream-film",
+        "agent_recommendation": "exclude",
+        "route_entry_role": "exclude",
+        "years": "1984",
+        "place": "NYC / wider media circulation",
+        "working_title": "Mainstream film and hip-hop visibility",
+        "route_function": "Potentially extends the story from early documentation to commercial film representation.",
+        "decision_rationale": "It pulls the route toward later mainstream visibility without a distinct Bronx-centered contribution.",
+        "review_question": "Would this clarify emergence or become later expansion material?",
+        "source_leads": [
+          "Film histories",
+          "Reviews",
+          "Interviews",
+          "Media archives"
+        ],
+        "risk_notes": [
+          "Commercial representation should not stand in for local development.",
+          "Likely later expansion."
+        ],
+        "next_action": "Do not develop for the MVP event list."
+      },
+      "findings": [
+        {
+          "owner": "candidate_composition",
+          "message": "Commercial representation should not stand in for local development.",
+          "candidate_id": "beat-street-breakin-and-mainstream-film",
+          "blocking": false
+        },
+        {
+          "owner": "candidate_composition",
+          "message": "Likely later expansion.",
+          "candidate_id": "beat-street-breakin-and-mainstream-film",
+          "blocking": false
+        }
+      ]
+    },
+    {
+      "candidate_id": "international-tours-records-and-media-spread",
+      "outcome": "active",
+      "reason": "Retained as a bounded endpoint context rather than a global event.",
+      "related_candidate_ids": [
+        "radio-djs-and-broadcast-circulation",
+        "wild-style-film-documentation"
+      ],
+      "active": true,
+      "preview": {
+        "working_title": "Tours, records, and media spread hip-hop beyond New York",
+        "years": "1980s",
+        "place": "NYC / global circulation",
+        "route_function": "Provides a possible closing context for outward circulation from a New York-centered culture.",
+        "decision_rationale": "Useful as a conclusion, but too broad for a mapped MVP event unless a specific New York-origin pathway is identified.",
+        "review_question": "What New York-based tour, record, or media pathway can represent outward movement without becoming global history?",
+        "source_leads": [
+          "Music journalism",
+          "Tour histories",
+          "Broadcast sources",
+          "Oral histories"
+        ],
+        "risk_notes": [
+          "International scope exceeds the primary map focus.",
+          "Specific pathway is unresolved."
+        ],
+        "next_action": "Retain as closing context and defer mapped expansion."
+      },
+      "context": {
+        "candidate_id": "international-tours-records-and-media-spread",
+        "agent_recommendation": "context",
+        "route_entry_role": "context",
+        "years": "1980s",
+        "place": "NYC / global circulation",
+        "working_title": "Tours, records, and media spread hip-hop beyond New York",
+        "route_function": "Provides a possible closing context for outward circulation from a New York-centered culture.",
+        "decision_rationale": "Useful as a conclusion, but too broad for a mapped MVP event unless a specific New York-origin pathway is identified.",
+        "review_question": "What New York-based tour, record, or media pathway can represent outward movement without becoming global history?",
+        "source_leads": [
+          "Music journalism",
+          "Tour histories",
+          "Broadcast sources",
+          "Oral histories"
+        ],
+        "risk_notes": [
+          "International scope exceeds the primary map focus.",
+          "Specific pathway is unresolved."
+        ],
+        "next_action": "Retain as closing context and defer mapped expansion.",
+        "next_evidence_task": {
+          "missing_evidence": "A specific New York-based tour, record, or media pathway.",
+          "target_claim": "New York-centered media circulation helped carry hip-hop beyond local scenes.",
+          "target_place": "new-york-city",
+          "expected_output": "One representative circulation pathway or a route-conclusion note."
+        }
+      },
+      "findings": [
+        {
+          "owner": "active_event",
+          "message": "International scope exceeds the primary map focus.",
+          "candidate_id": "international-tours-records-and-media-spread",
+          "blocking": false
+        },
+        {
+          "owner": "active_event",
+          "message": "Specific pathway is unresolved.",
+          "candidate_id": "international-tours-records-and-media-spread",
+          "blocking": false
+        }
+      ]
+    }
+  ],
+  "phase_coverage": [
+    {
+      "phase": "Conditions before the named origin story",
+      "status": "covered",
+      "candidate_ids": [
+        "caribbean-soundsystem-context-nyc",
+        "bronx-record-and-party-culture-before-1973",
+        "kool-herc-cindy-campbell-sedgwick-party"
+      ]
+    },
+    {
+      "phase": "Practices becoming culture",
+      "status": "covered",
+      "candidate_ids": [
+        "mobile-sound-and-breakbeat-practice",
+        "bronx-schools-parks-community-centers-parties",
+        "grandmaster-flash-turntable-technique",
+        "mc-crew-and-party-hosting-practices",
+        "dance-crews-and-party-floor-culture",
+        "graffiti-trains-and-visual-culture",
+        "bronx-river-crews-community-organization"
+      ]
+    },
+    {
+      "phase": "Local practice meeting institutions",
+      "status": "narrowed",
+      "candidate_ids": [
+        "bronx-clubs-and-local-performance-circuit",
+        "rappers-delight-commercial-visibility",
+        "early-rap-records-and-independent-labels",
+        "radio-djs-and-broadcast-circulation",
+        "downtown-clubs-art-and-hip-hop-exchange",
+        "wild-style-film-documentation",
+        "style-wars-and-television-documentation"
+      ]
+    },
+    {
+      "phase": "Circulation and memory",
+      "status": "narrowed",
+      "candidate_ids": [
+        "blackout-1977-context-and-myth",
+        "wild-style-film-documentation",
+        "style-wars-and-television-documentation",
+        "international-tours-records-and-media-spread"
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "owner": "active_event",
+      "message": "Context may be better represented in route framing.",
+      "candidate_id": "caribbean-soundsystem-context-nyc",
+      "blocking": false
+    },
+    {
+      "owner": "active_event",
+      "message": "Influence and causality remain unresolved.",
+      "candidate_id": "caribbean-soundsystem-context-nyc",
+      "blocking": false
+    },
+    {
+      "owner": "active_event",
+      "message": "Earlier party culture was not one unified scene.",
+      "candidate_id": "bronx-record-and-party-culture-before-1973",
+      "blocking": false
+    },
+    {
+      "owner": "active_event",
+      "message": "Preparation or causation claims require comparison.",
+      "candidate_id": "bronx-record-and-party-culture-before-1973",
+      "blocking": false
+    },
+    {
+      "owner": "active_event",
+      "message": "Do not call it the sole birthplace of hip-hop.",
+      "candidate_id": "kool-herc-cindy-campbell-sedgwick-party",
+      "blocking": false
+    },
+    {
+      "owner": "active_event",
+      "message": "Verify Campbell's exact role.",
+      "candidate_id": "kool-herc-cindy-campbell-sedgwick-party",
+      "blocking": false
+    },
+    {
+      "owner": "active_event",
+      "message": "Retrospective memory requires comparison.",
+      "candidate_id": "kool-herc-cindy-campbell-sedgwick-party",
+      "blocking": false
+    },
+    {
+      "owner": "active_event",
+      "message": "Technical claims may become mythic.",
+      "candidate_id": "mobile-sound-and-breakbeat-practice",
+      "blocking": false
+    },
+    {
+      "owner": "active_event",
+      "message": "Do not imply one DJ or party created the whole practice.",
+      "candidate_id": "mobile-sound-and-breakbeat-practice",
+      "blocking": false
+    },
+    {
+      "owner": "active_event",
+      "message": "Regional geography is imprecise.",
+      "candidate_id": "bronx-schools-parks-community-centers-parties",
+      "blocking": false
+    },
+    {
+      "owner": "active_event",
+      "message": "A single event may overstate breadth.",
+      "candidate_id": "bronx-schools-parks-community-centers-parties",
+      "blocking": false
+    },
+    {
+      "owner": "candidate_composition",
+      "message": "Exact dates and event specificity are unresolved.",
+      "candidate_id": "cedar-park-outdoor-party-culture",
+      "blocking": false
+    },
+    {
+      "owner": "candidate_composition",
+      "message": "General association is insufficient for a place anchor.",
+      "candidate_id": "cedar-park-outdoor-party-culture",
+      "blocking": false
+    },
+    {
+      "owner": "active_event",
+      "message": "Avoid first or sole-inventor wording.",
+      "candidate_id": "grandmaster-flash-turntable-technique",
+      "blocking": false
+    },
+    {
+      "owner": "active_event",
+      "message": "Retrospective accounts may conflict.",
+      "candidate_id": "grandmaster-flash-turntable-technique",
+      "blocking": false
+    },
+    {
+      "owner": "candidate_composition",
+      "message": "High risk around first and invented language.",
+      "candidate_id": "scratching-and-dj-technique-attribution",
+      "blocking": false
+    },
+    {
+      "owner": "candidate_composition",
+      "message": "Conflicting retrospectives require comparison.",
+      "candidate_id": "scratching-and-dj-technique-attribution",
+      "blocking": false
+    },
+    {
+      "owner": "active_event",
+      "message": "Named examples and chronology remain unresolved.",
+      "candidate_id": "mc-crew-and-party-hosting-practices",
+      "blocking": false
+    },
+    {
+      "owner": "active_event",
+      "message": "Avoid generalizing from famous performers.",
+      "candidate_id": "mc-crew-and-party-hosting-practices",
+      "blocking": false
+    },
+    {
+      "owner": "active_event",
+      "message": "Film evidence may be staged or retrospective.",
+      "candidate_id": "dance-crews-and-party-floor-culture",
+      "blocking": false
+    },
+    {
+      "owner": "active_event",
+      "message": "Dance must not be decorative context.",
+      "candidate_id": "dance-crews-and-party-floor-culture",
+      "blocking": false
+    },
+    {
+      "owner": "active_event",
+      "message": "A non-point map strategy may be required.",
+      "candidate_id": "graffiti-trains-and-visual-culture",
+      "blocking": false
+    },
+    {
+      "owner": "active_event",
+      "message": "Image rights, attribution, identity, and context remain unresolved.",
+      "candidate_id": "graffiti-trains-and-visual-culture",
+      "blocking": false
+    },
+    {
+      "owner": "active_event",
+      "message": "Do not conflate crews, organizations, and residents.",
+      "candidate_id": "bronx-river-crews-community-organization",
+      "blocking": false
+    },
+    {
+      "owner": "active_event",
+      "message": "Later institutional history needs sensitive review.",
+      "candidate_id": "bronx-river-crews-community-organization",
+      "blocking": false
+    },
+    {
+      "owner": "active_event",
+      "message": "Direct causality is unproven here.",
+      "candidate_id": "blackout-1977-context-and-myth",
+      "blocking": false
+    },
+    {
+      "owner": "active_event",
+      "message": "Citywide geography does not map cleanly to Bronx practice.",
+      "candidate_id": "blackout-1977-context-and-myth",
+      "blocking": false
+    },
+    {
+      "owner": "active_event",
+      "message": "Do not imply a continuous circuit without evidence.",
+      "candidate_id": "bronx-clubs-and-local-performance-circuit",
+      "blocking": false
+    },
+    {
+      "owner": "active_event",
+      "message": "Access and audience claims require sourcing.",
+      "candidate_id": "bronx-clubs-and-local-performance-circuit",
+      "blocking": false
+    },
+    {
+      "owner": "active_event",
+      "message": "Commercial visibility is not cultural origin.",
+      "candidate_id": "rappers-delight-commercial-visibility",
+      "blocking": false
+    },
+    {
+      "owner": "active_event",
+      "message": "New Jersey geography needs route justification.",
+      "candidate_id": "rappers-delight-commercial-visibility",
+      "blocking": false
+    },
+    {
+      "owner": "active_event",
+      "message": "Market-centered sources may underrepresent local practice.",
+      "candidate_id": "early-rap-records-and-independent-labels",
+      "blocking": false
+    },
+    {
+      "owner": "active_event",
+      "message": "Personnel and Bronx relationships require verification.",
+      "candidate_id": "early-rap-records-and-independent-labels",
+      "blocking": false
+    },
+    {
+      "owner": "active_event",
+      "message": "Broadcast reach may not map cleanly.",
+      "candidate_id": "radio-djs-and-broadcast-circulation",
+      "blocking": false
+    },
+    {
+      "owner": "active_event",
+      "message": "Station metadata and dates may be incomplete.",
+      "candidate_id": "radio-djs-and-broadcast-circulation",
+      "blocking": false
+    },
+    {
+      "owner": "candidate_composition",
+      "message": "One record should not represent all urban experience.",
+      "candidate_id": "the-message-social-commentary",
+      "blocking": false
+    },
+    {
+      "owner": "candidate_composition",
+      "message": "Bronx and production-context claims require verification.",
+      "candidate_id": "the-message-social-commentary",
+      "blocking": false
+    },
+    {
+      "owner": "active_event",
+      "message": "Named places and dates are missing.",
+      "candidate_id": "downtown-clubs-art-and-hip-hop-exchange",
+      "blocking": false
+    },
+    {
+      "owner": "active_event",
+      "message": "Institutional narratives require community-source balance.",
+      "candidate_id": "downtown-clubs-art-and-hip-hop-exchange",
+      "blocking": false
+    },
+    {
+      "owner": "active_event",
+      "message": "Separate filming locations from screening sites.",
+      "candidate_id": "wild-style-film-documentation",
+      "blocking": false
+    },
+    {
+      "owner": "active_event",
+      "message": "Film rights and clip availability remain unresolved.",
+      "candidate_id": "wild-style-film-documentation",
+      "blocking": false
+    },
+    {
+      "owner": "active_event",
+      "message": "Production methods and cultural focus must be distinguished.",
+      "candidate_id": "style-wars-and-television-documentation",
+      "blocking": false
+    },
+    {
+      "owner": "active_event",
+      "message": "Rights and availability require review.",
+      "candidate_id": "style-wars-and-television-documentation",
+      "blocking": false
+    },
+    {
+      "owner": "candidate_composition",
+      "message": "Commercial representation should not stand in for local development.",
+      "candidate_id": "beat-street-breakin-and-mainstream-film",
+      "blocking": false
+    },
+    {
+      "owner": "candidate_composition",
+      "message": "Likely later expansion.",
+      "candidate_id": "beat-street-breakin-and-mainstream-film",
+      "blocking": false
+    },
+    {
+      "owner": "active_event",
+      "message": "International scope exceeds the primary map focus.",
+      "candidate_id": "international-tours-records-and-media-spread",
+      "blocking": false
+    },
+    {
+      "owner": "active_event",
+      "message": "Specific pathway is unresolved.",
+      "candidate_id": "international-tours-records-and-media-spread",
+      "blocking": false
+    },
+    {
+      "owner": "active_event",
+      "message": "The route still needs claim-level source comparison for the Sedgwick party and Cindy Campbell's precise organizing role.",
+      "candidate_id": "kool-herc-cindy-campbell-sedgwick-party",
+      "blocking": false
+    },
+    {
+      "owner": "candidate_composition",
+      "message": "Most context events use regional or citywide place representations because named dates and sites are not yet established.",
+      "candidate_id": null,
+      "blocking": false
+    },
+    {
+      "owner": "active_event",
+      "message": "DJ technique and scratching attribution must remain comparative and must not use unsupported first, invented, or sole-origin language.",
+      "candidate_id": "grandmaster-flash-turntable-technique",
+      "blocking": false
+    },
+    {
+      "owner": "active_route",
+      "message": "The commercial and media phase requires a specific route-relevant circulation argument so it does not become a discography or industry chronology.",
+      "candidate_id": "rappers-delight-commercial-visibility",
+      "blocking": false
+    },
+    {
+      "owner": "source_media",
+      "message": "Wild Style and Style Wars require separate verification of production context, locations, participants, reception, and route fit.",
+      "candidate_id": "wild-style-film-documentation",
+      "blocking": false
+    },
+    {
+      "owner": "source_media",
+      "message": "All media and image references remain research leads; rights, stability, attribution, and availability are unresolved.",
+      "candidate_id": null,
+      "blocking": false
+    },
+    {
+      "owner": "source_media",
+      "message": "Reader-facing event has no source URL.",
+      "candidate_id": "caribbean-soundsystem-context-nyc",
+      "blocking": true
+    },
+    {
+      "owner": "source_media",
+      "message": "Reader-facing event has no source URL.",
+      "candidate_id": "bronx-record-and-party-culture-before-1973",
+      "blocking": true
+    },
+    {
+      "owner": "source_media",
+      "message": "Reader-facing event has no source URL.",
+      "candidate_id": "kool-herc-cindy-campbell-sedgwick-party",
+      "blocking": true
+    },
+    {
+      "owner": "source_media",
+      "message": "Reader-facing event has no source URL.",
+      "candidate_id": "mobile-sound-and-breakbeat-practice",
+      "blocking": true
+    },
+    {
+      "owner": "source_media",
+      "message": "Reader-facing event has no source URL.",
+      "candidate_id": "bronx-schools-parks-community-centers-parties",
+      "blocking": true
+    },
+    {
+      "owner": "source_media",
+      "message": "Reader-facing event has no source URL.",
+      "candidate_id": "grandmaster-flash-turntable-technique",
+      "blocking": true
+    },
+    {
+      "owner": "source_media",
+      "message": "Reader-facing event has no source URL.",
+      "candidate_id": "mc-crew-and-party-hosting-practices",
+      "blocking": true
+    },
+    {
+      "owner": "source_media",
+      "message": "Reader-facing event has no source URL.",
+      "candidate_id": "dance-crews-and-party-floor-culture",
+      "blocking": true
+    },
+    {
+      "owner": "source_media",
+      "message": "Reader-facing event has no source URL.",
+      "candidate_id": "graffiti-trains-and-visual-culture",
+      "blocking": true
+    },
+    {
+      "owner": "source_media",
+      "message": "Reader-facing event has no source URL.",
+      "candidate_id": "bronx-river-crews-community-organization",
+      "blocking": true
+    },
+    {
+      "owner": "source_media",
+      "message": "Reader-facing event has no source URL.",
+      "candidate_id": "blackout-1977-context-and-myth",
+      "blocking": true
+    },
+    {
+      "owner": "source_media",
+      "message": "Reader-facing event has no source URL.",
+      "candidate_id": "bronx-clubs-and-local-performance-circuit",
+      "blocking": true
+    },
+    {
+      "owner": "source_media",
+      "message": "Reader-facing event has no source URL.",
+      "candidate_id": "rappers-delight-commercial-visibility",
+      "blocking": true
+    },
+    {
+      "owner": "source_media",
+      "message": "Reader-facing event has no source URL.",
+      "candidate_id": "early-rap-records-and-independent-labels",
+      "blocking": true
+    },
+    {
+      "owner": "source_media",
+      "message": "Reader-facing event has no source URL.",
+      "candidate_id": "radio-djs-and-broadcast-circulation",
+      "blocking": true
+    },
+    {
+      "owner": "source_media",
+      "message": "Reader-facing event has no source URL.",
+      "candidate_id": "downtown-clubs-art-and-hip-hop-exchange",
+      "blocking": true
+    },
+    {
+      "owner": "source_media",
+      "message": "Reader-facing event has no source URL.",
+      "candidate_id": "wild-style-film-documentation",
+      "blocking": true
+    },
+    {
+      "owner": "source_media",
+      "message": "Reader-facing event has no source URL.",
+      "candidate_id": "style-wars-and-television-documentation",
+      "blocking": true
+    },
+    {
+      "owner": "source_media",
+      "message": "Reader-facing event has no source URL.",
+      "candidate_id": "international-tours-records-and-media-spread",
+      "blocking": true
+    }
+  ],
+  "warnings": [
+    "The commercial and media phase requires a specific route-relevant circulation argument so it does not become a discography or industry chronology."
+  ],
+  "technical_errors": [
+    "Complete draft places contain duplicate ID 'south-bronx'.",
+    "Complete draft places contain duplicate ID 'south-bronx'.",
+    "Complete draft places contain duplicate ID 'south-bronx'.",
+    "Complete draft places contain duplicate ID 'south-bronx'.",
+    "Complete draft places contain duplicate ID 'south-bronx'.",
+    "Complete draft places contain duplicate ID 'south-bronx'.",
+    "Complete draft places contain duplicate ID 'south-bronx'.",
+    "Complete draft places contain duplicate ID 'south-bronx'.",
+    "Complete draft places contain duplicate ID 'englewood-sugar-hill-records'.",
+    "Complete draft places contain duplicate ID 'new-york-city'.",
+    "Complete draft places contain duplicate ID 'new-york-city'.",
+    "Complete draft places contain duplicate ID 'new-york-city'.",
+    "Complete draft places contain duplicate ID 'new-york-city'."
+  ],
+  "technical_ready": false
+}
