@@ -18,13 +18,13 @@ explicitly asks for a legacy note.
 
 This document is the normative contract for the GitHub Issue lifecycle: its
 sequence, gates, required Issue comment shapes, implementation-review
-transition, and post-commit completion. The workflow registry selects the
+transition, and post-push completion. The workflow registry selects the
 entrypoint for each kind of work. Skills and prompts provide the procedures for
 producing their assigned artifacts and must follow this lifecycle contract.
 
 In particular, `soundatlas-issue-planning` drafts and revises Intake Issues,
 Plan Updates, Detailed Plan Updates, `## Proceed to Implementation` records,
-and Implementation Reports. It does not own lifecycle ordering, post-commit
+and Implementation Reports. It does not own lifecycle ordering, post-push
 closure, or Issue-state management.
 `soundatlas-grill-me` owns the phase-aware critique procedure, Review Modes,
 Materiality routing, and interactive one-finding flow; this document owns when
@@ -82,18 +82,25 @@ bodies and may remain command arguments.
 8. Agent records `## Proceed to Implementation`, linking the exact confirmed Plan Update, and runs the readiness validator before the first repository edit.
 9. Agent implements from the validated Issue content.
 10. Agent validates the change with the relevant checks.
-11. For completed non-trivial Issue work, agent uses `soundatlas-implementation-review` to compare the accepted target, implementation, evidence, and documentation.
-12. Agent posts one combined `## Implementation Report` containing the review result.
-13. Human reviews the local diff and explicitly requests a commit when the work
-    is ready.
-14. After a successful commit, agent captures the commit hash and runs the
-    local completion gate. The gate must confirm the canonical report shape,
-    checked acceptance criteria, an `Accepted` implementation review, exactly
-    one completion comment plan, and Issue-relevant working-tree verification.
-15. Agent posts the standard completion comment only after the gate passes and
+11. When the commit-ready gate passes, agent stages only the Issue-scoped files
+    and creates a local Conventional Commit with an `Issue: #<number>` footer.
+12. For completed non-trivial Issue work, agent uses
+    `soundatlas-implementation-review` against that named local commit or an
+    explicit local commit range.
+13. Agent posts one combined `## Implementation Report` containing the review
+    result.
+14. Human reviews the committed diff and explicitly authorizes a push when the
+    work is ready.
+15. Agent pushes only the reviewed commit or reviewed integration range.
+16. After a successful push, agent captures the published commit hash and runs
+    the local completion gate. The gate must confirm the canonical report
+    shape, checked acceptance criteria, an `Accepted` implementation review,
+    exactly one completion comment plan, and Issue-relevant working-tree
+    verification.
+17. Agent posts the standard completion comment only after the gate passes and
     closes the Issue only after that comment succeeds.
-16. If any post-commit verification or GitHub operation fails, agent reports
-    the failure and leaves the Issue open when possible.
+18. If review, push, post-push verification, or a GitHub operation fails,
+    agent reports the failure and leaves the Issue open when possible.
 ```
 
 For clearly trivial, local, low-risk changes, the agent may proceed directly
@@ -467,9 +474,11 @@ current Plan and rerun readiness validation before implementation resumes.
 ## Implementation Review
 
 Use `.codex/skills/soundatlas-implementation-review` once before accepting
-completed non-trivial Issue work. Skip it for clearly trivial, local, low-risk
-changes. During implementation, use it only when drift, risk, or a new material
-constraint requires comparison before work continues.
+completed non-trivial Issue work. The review compares a named local commit or
+an explicit local commit range created after the commit-ready gate. Skip it for
+clearly trivial, local, low-risk changes. During implementation, use it only
+when drift, risk, or a new material constraint requires comparison before work
+continues.
 
 At this transition, select the review skill for the comparison, evidence
 assessment, finding classification, and routing defined by that skill. It is
@@ -530,15 +539,44 @@ checklist item, no unchecked acceptance item, and `- Verdict: Accepted` in its
 Review Result. A report with open criteria or a non-`Accepted` verdict remains
 an implementation status record, not a completion record.
 
-## Post-Commit Completion and Issue Closure
+## Commit-Ready Gate and Local Commits
 
-For completed Issue-based work, a request to commit counts as authorization to
-close the associated Issue unless the human explicitly asks to keep it open.
-The commit is only one lifecycle step; it does not by itself establish
-acceptance or authorize closure.
-Issue closure is a mandatory, ordered post-commit step:
+After implementation validation succeeds, the agent creates a local commit
+without a separate commit request only when every commit-ready condition holds:
 
-1. Capture the successful commit hash.
+- relevant validation has passed;
+- the change remains within the approved Issue scope;
+- the selected files contain no secrets, tokens, local paths, generated media,
+  or other prohibited artifacts;
+- the Git index contains only files belonging to that work package; and
+- the commit has a Conventional Commit subject and an `Issue: #<number>`
+  footer.
+
+If the index already contains unrelated staged work, the agent must not stage
+or commit into that index. It reports the conflict and leaves the existing
+staged work unchanged.
+
+A single agent or sequential work may use the current branch. Independently
+active work packages must each own a branch and worktree, with one CLI write
+owner per worktree. Other CLIs may inspect, test, or review that worktree but
+must not stage, commit, switch branches, rebase, merge, or otherwise change it.
+
+Branch integration is explicit. A fast-forward preserves the reviewed commit;
+any rebase, merge, cherry-pick, or conflict resolution that changes the
+integration range requires relevant validation and review of that resulting
+range before push. The workflow does not automate integration or conflict
+resolution.
+
+## Post-Push Completion and Issue Closure
+
+For completed Issue-based work, an explicit request to push the reviewed change
+counts as authorization to close the associated Issue unless the human
+explicitly asks to keep it open. A local commit, an `Accepted` review, or a
+push alone does not establish Issue closure.
+Issue closure is a mandatory, ordered post-push step:
+
+1. Confirm that the reviewed commit or integration range was pushed to the
+   intended remote branch, then capture its published commit hash.
 2. Run the completion gate with the report, commit hash, one planned completion
    comment, and Issue-relevant working-tree verification:
 
@@ -551,9 +589,9 @@ Issue closure is a mandatory, ordered post-commit step:
    ```
 
 3. Verify every acceptance criterion against the committed change and checks.
-4. Confirm that no Issue-relevant files remain modified or uncommitted. Unrelated
-   user-owned changes do not block closure and must not be included merely to
-   make the tree clean.
+4. Confirm that no Issue-relevant files remain modified or uncommitted.
+   Unrelated user-owned changes do not block closure and must not be included
+   merely to make the tree clean.
 5. Post the single completion comment using this format:
 
    ```md
@@ -567,17 +605,18 @@ Issue closure is a mandatory, ordered post-commit step:
 
 6. Close the Issue only after the completion comment succeeds.
 
-Do not close the Issue when the work is uncommitted, the commit is partial or
-WIP, an acceptance criterion is incomplete, the commit covers multiple Issues
-without an unambiguous mapping, or the human explicitly asks to keep the Issue
-open. If the completion comment or close operation fails, report the failure
-and leave the Issue open when possible.
+Do not push or close the Issue when the review is not `Accepted`, the work is
+uncommitted, the commit is partial or WIP, an acceptance criterion is
+incomplete, the commit covers multiple Issues without an unambiguous mapping,
+or the human explicitly asks to keep the Issue open. If the push, completion
+comment, or close operation fails, report the failure and leave the Issue open
+when possible.
 
 The completion sequence must remain distinct in the workflow record: the
-Implementation Report describes the result, the commit records the change, the
-working-tree check verifies relevant completeness, the completion comment
-provides Issue evidence, and closing the Issue records the final lifecycle
-state.
+Implementation Report describes the reviewed result, the local commit records
+the work package, the push publishes the reviewed change, the working-tree
+check verifies relevant completeness, the completion comment provides Issue
+evidence, and closing the Issue records the final lifecycle state.
 
 The safe transport rule above also applies to the standard completion comment.
 Use the generic `scripts/gh_markdown_payload.py` helper for API-only Markdown
@@ -587,8 +626,8 @@ Do not add a separate `done` label for completion.
 
 ## Commit Reference
 
-When implementation work is committed, keep the Conventional Commit subject
-clean and reference the Issue in the commit body:
+When implementation work is locally committed, keep the Conventional Commit
+subject clean and reference the Issue in the commit body:
 
 ```text
 feat(data): improve enrichment input
@@ -614,4 +653,4 @@ Plans and implementation should respect these project constraints:
   reviewed.
 - Do not store audio or video files in the repository.
 - Do not commit secrets, API keys, local paths, or generated media files.
-- Do not commit changes unless explicitly requested.
+- Do not commit changes outside the commit-ready Issue workflow.

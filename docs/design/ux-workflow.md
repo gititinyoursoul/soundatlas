@@ -315,7 +315,9 @@ fix(frontend): clarify timeline prehistory event state
 test(frontend): cover route event selection
 ```
 
-Do not commit unless explicitly requested.
+Do not create a local commit for audit or proposal-only work. For approved Issue
+implementation, follow the commit-ready and local-commit lifecycle in
+`docs/github-issue-workflow.md`.
 
 ## Stop Conditions
 

@@ -5,8 +5,8 @@ description: Review completed SoundAtlas Issue implementations against their acc
 
 # SoundAtlas Implementation Review
 
-Determine whether implemented work matches its accepted target and has enough
-evidence to proceed to human diff review.
+Determine whether a named local Issue commit or commit range matches its
+accepted target and has enough evidence to proceed to human review before push.
 
 ## Required context
 
@@ -19,7 +19,8 @@ Read the smallest available set that establishes the target and result:
 - the approved Plan Update or Detailed Plan Update, when one was required;
 - the matching `## Proceed to Implementation` record when the current workflow
   required one;
-- the actual diff and Issue-relevant working-tree state;
+- the named local commit or explicit commit range, its actual diff, and
+  Issue-relevant working-tree state;
 - validation results and other supplied evidence; and
 - current-state documentation affected by the implementation.
 
@@ -113,8 +114,9 @@ Do not use this skill to:
 
 The surrounding workflow performs authorized corrections. Grill Me handles
 material human decisions. `soundatlas-issue-planning` records the
-review result in the final Implementation Report. Human diff review and an
-explicit commit request remain separate.
+review result in the final Implementation Report. Human review of the committed
+diff and an
+explicit push request remain separate.
 
 ## Review Result
 
@@ -137,7 +139,7 @@ do not describe the implementation as accepted. Finalize the Implementation
 Report after required findings are resolved or explicitly reported as blocking.
 
 An `Accepted` result is necessary but not sufficient for Issue closure. The
-completion lifecycle must also verify the committed change, Issue-relevant
-working-tree state, and the single standard completion comment through the
-workflow gate in `docs/github-issue-workflow.md`. A commit or a posted report
-must never be treated as acceptance by itself.
+completion lifecycle must also verify that the reviewed change was pushed, its
+Issue-relevant working-tree state, and the single standard completion comment
+through the workflow gate in `docs/github-issue-workflow.md`. A local commit or
+a posted report must never be treated as acceptance by itself.

@@ -176,13 +176,32 @@ Events should contain at least:
 
 ## Git Conventions
 
-- Do not make commits without an explicit user request.
-- When work was implemented from a GitHub Issue, a user request to commit that work counts as approval to close the Issue after the commit succeeds, unless the user explicitly says to keep it open.
-- After a successful commit, capture its hash, verify all acceptance criteria, confirm that no Issue-relevant changes remain uncommitted, post the standard commit-referencing completion comment, and then close the Issue.
+- After a successful commit-ready gate, automatically stage and create a local
+  Issue-scoped commit. The gate requires relevant validation, approved-scope
+  and prohibited-artifact checks, an index containing only that work package,
+  and a Conventional Commit with an `Issue: #<number>` footer.
+- Do not stage or commit into an index that already contains unrelated staged
+  work; report it and preserve the existing index unchanged.
+- A human must explicitly authorize `git push` after reviewing the named local
+  commit or range. A push request for completed Issue work counts as approval
+  to close the associated Issue unless the human explicitly says to keep it
+  open.
+- After a successful push, capture the published commit hash, verify all
+  acceptance criteria, confirm that no Issue-relevant changes remain
+  uncommitted, post the standard commit-referencing completion comment, and
+  then close the Issue.
 - Unrelated user-owned working-tree changes do not block closure and must not be included merely to make the tree clean.
-- Do not close an Issue when work is uncommitted, the commit is partial or WIP, acceptance criteria remain incomplete, multiple Issues are ambiguously involved, or the user asks to keep the ticket open.
-- If the completion comment or close operation fails, report the failure and leave the Issue open when possible.
-- Prefer meaningful commit groups: documentation, data, backend, and frontend separately.
+- Do not push or close an Issue when review is not `Accepted`, work is
+  uncommitted, the commit is partial or WIP, acceptance criteria remain
+  incomplete, multiple Issues are ambiguously involved, or the user asks to
+  keep the ticket open.
+- If the push, completion comment, or close operation fails, report the failure
+  and leave the Issue open when possible.
+- A single agent may use the current branch. Independently active work packages
+  must have an owned branch and worktree, with one CLI write owner per worktree.
+  Integration and conflict resolution require explicit authorization; a changed
+  integration range must be validated and reviewed before push.
+- Prefer one coherent Issue work package per commit.
 - Keep local folders such as `.venv/`, `node_modules/`, `.vscode/`, and `.github/` ignored.
 
 ## Commit Messages

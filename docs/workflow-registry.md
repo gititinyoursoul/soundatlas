@@ -52,8 +52,10 @@ Request
   +-- Clearly trivial, local, and low-risk
   |     -> Direct implementation
   |     -> Relevant validation
-  |     -> Human commit request
-  |     -> Commit
+  |     -> Commit-ready gate + local commit
+  |     -> Review committed diff
+  |     -> Human push request
+  |     -> Push + completion comment + Issue closure
   |
   +-- Non-trivial work
         -> Intake Issue
@@ -67,11 +69,12 @@ Request
         -> Readiness validation
         -> Relevant execution skill
         -> Validation
+        -> Commit-ready gate + local commit
         -> soundatlas-implementation-review
         -> Combined Implementation Report
-        -> Human diff review
-        -> Human commit request
-        -> Commit + completion comment + Issue closure
+        -> Human review of committed diff
+        -> Human push request
+        -> Push + completion comment + Issue closure
 ```
 
 Concept work is conditional. Use it when explicitly requested or when planning
@@ -91,8 +94,8 @@ GitHub Issues hold the durable work record. The canonical table below maps each
 work type to its prompt or skill.
 
 Implementation review is read-only and produces a Review Result inside the
-single Implementation Report comment. Human diff review, commit authorization,
-and post-commit closure remain separate lifecycle concerns in
+single Implementation Report comment. Human review of the committed diff, push
+authorization, and post-push closure remain separate lifecycle concerns in
 `docs/github-issue-workflow.md`.
 
 ## Skill, Prompt, and Source Boundary Policy
@@ -162,7 +165,7 @@ reviewed.
 The detailed lifecycle and canonical Issue artifact shapes live in
 `docs/github-issue-workflow.md`. `soundatlas-issue-planning` owns the procedure
 for drafting and revising those artifacts, but not lifecycle ordering,
-post-commit closure, or Issue-state management.
+post-push closure, or Issue-state management.
 
 `scripts/check_issue_readiness.py` owns deterministic pre-implementation
 artifact checks. It does not decide Materiality, infer Human authorization,
@@ -173,7 +176,7 @@ For completion review, `soundatlas-implementation-review` owns comparison,
 proportional evidence assessment, finding classification, and routing. Grill Me
 owns material human decisions; implementation owns fixes;
 `soundatlas-issue-planning` owns the combined Implementation Report;
-and the human owns commit authorization. The review skill does not manage Issue
+and the human owns push authorization. The review skill does not manage Issue
 state labels.
 
 When execution documents conflict, the registry resolves the conflict only when
@@ -262,10 +265,10 @@ For an approved prompt-to-skill extraction:
   not create or broaden milestones without explicit human approval.
 - After required findings are resolved, post one Implementation Report
   containing the Review Result. Do not post a separate routine review comment.
-- After a successful commit for completed Issue work, run the local completion
-  gate, capture the hash, verify Issue-relevant completeness, post the single
-  standard completion comment, and close the Issue only after that comment
-  succeeds. Preserve the documented exceptions in
+- After a successful push for completed Issue work, run the local completion
+  gate, capture the published hash, verify Issue-relevant completeness, post
+  the single standard completion comment, and close the Issue only after that
+  comment succeeds. Preserve the documented exceptions in
   `docs/github-issue-workflow.md`.
 - End every workflow result with a short `Next step` handoff when useful.
 

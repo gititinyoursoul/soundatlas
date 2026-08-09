@@ -119,11 +119,11 @@ Changes` section instead of silently rewriting the meaning of the Issue.
    treating the report as a completion candidate. A commit alone is not an
    Accepted report or a closure decision.
 
-9. After implementation reporting, follow the post-commit lifecycle defined in
+9. After implementation reporting, follow the post-push lifecycle defined in
    `docs/github-issue-workflow.md`. This skill does not own commit
    authorization, completion comments, or Issue closure.
 
-   Post-commit completion requires the local completion gate, one standard
+   Post-push completion requires the local completion gate, one standard
    completion comment, and successful comment posting before closure. Keep an
    incomplete report or non-`Accepted` review open for correction.
 
