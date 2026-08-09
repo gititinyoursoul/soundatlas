@@ -63,6 +63,10 @@ in this Skill.
 
 ## Frontend constraints
 
+For non-trivial work, edit only named authorities and the audited direct
+consumers listed by the Plan's planned write boundary and Proceed record. Route
+any other path or material scope change to a linked Intake Issue.
+
 - Use SvelteKit, TypeScript, and Leaflet patterns already established in the app.
 - Keep the map as the primary MVP surface and use seed- or API-backed data.
 - Keep components small and domain-named, such as `MapView`, `Timeline`,

@@ -56,6 +56,14 @@ readiness review before Issue content is drafted.
    Plan Update. When Concept Work was not required, record `Concept Work: Not
    required — <decision-completeness rationale>` before technical Plan detail.
 
+   For non-trivial work, add a `## Planned Write Boundary` to the Plan Update or
+   Detailed Plan Update. Name each authoritative file exactly, define any
+   bounded derived-consistency surface and its mechanical-alignment limit, and
+   name excluded scope. Treat `AGENTS.md` as an authority, never a derived
+   consumer. Before implementation, audit the surface and list each exact
+   derived file to be changed in the matching Proceed record. Route any
+   non-boundary path or material change to a linked Intake Issue.
+
    When creating an Issue, choose exactly one approved `priority:p*` label by
    reasoning from blocking level, MVP/release impact, risk reduction, and
    urgency. Use `priority:p2` only as the neutral fallback when `p0`, `p1`, or
@@ -103,9 +111,10 @@ Changes` section instead of silently rewriting the meaning of the Issue.
 
    For non-trivial work, verify the exact latest Plan comment and record
    `## Proceed to Implementation` using the canonical Plan link, Human decision,
-   and authorized Issue scope fields. Do not infer authorization from a Grill-Me
-   `Next step`, technical readiness, or a request to inspect, plan, or "work on"
-   an Issue. Read the comment back before handing off to implementation.
+   authorized Issue scope fields, and the Plan's pre-write derived-file audit.
+   Do not infer authorization from a Grill-Me `Next step`, technical readiness,
+   or a request to inspect, plan, or "work on" an Issue. Read the comment back
+   before handing off to implementation.
 
 8. Finalize one combined Implementation Report after review.
    For completed non-trivial Issue work, require

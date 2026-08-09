@@ -24,6 +24,8 @@ Read these before editing:
   flags are present. A standalone `## Grill-Me Review` is used when the result
   is material or explicitly standalone; a clean check may be inline in the
   relevant action comment.
+- the Plan's planned write boundary and the matching Proceed record's pre-write
+  derived-file audit, when the work is non-trivial;
 - the target document and directly related references
 
 Optional context may clarify the Issue without overriding it:
@@ -87,6 +89,10 @@ references and authoritative documents before editing, but do not broaden the
 change to every document that mentions the target. Do not edit application code,
 seed data, APIs, deployment configuration, or production behavior unless the
 approved Issue explicitly includes that scope.
+
+For non-trivial work, edit only named authorities and audited direct consumers
+inside the planned write boundary. Route a file or material change outside that
+boundary to a linked Intake Issue rather than adding it to the active work.
 
 ## Process
 

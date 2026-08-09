@@ -19,6 +19,8 @@ Read the smallest available set that establishes the target and result:
 - the approved Plan Update or Detailed Plan Update, when one was required;
 - the matching `## Proceed to Implementation` record when the current workflow
   required one;
+- the Plan's planned write boundary and the Proceed record's audited derived
+  files, when the work is non-trivial;
 - the named local commit or explicit commit range, its actual diff, and
   Issue-relevant working-tree state;
 - validation results and other supplied evidence; and
@@ -89,6 +91,9 @@ Use these categories and destinations:
   approved scope or recommend a follow-up.
 - **Unrelated change:** preserve the user-owned change and exclude it from the
   Issue implementation and commit.
+- **Out-of-boundary change:** leave the path unchanged where possible and route
+  the required work to a linked Intake Issue; do not treat a direct consumer as
+  authorized unless it appears in the Proceed record's audit.
 - **Optional enhancement:** recommend follow-up work without creating an Issue
   automatically.
 - **Accepted implementation:** proceed only when no material finding remains and

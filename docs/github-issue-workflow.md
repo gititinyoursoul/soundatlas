@@ -408,6 +408,31 @@ status. Do not infer it from a Grill-Me `Next step`, technical readiness, a
 request to inspect or plan an Issue, or implementation wording that predates the
 latest Plan Update.
 
+## Planned Write Boundary
+
+Every non-trivial Plan Update or Detailed Plan Update must declare its planned
+write boundary before implementation. The boundary has three parts:
+
+1. **Named authoritative paths:** exact files whose policy, product, workflow,
+   or other source-of-truth content the Issue changes. `AGENTS.md` is always a
+   named authoritative path; it is never included only as a derived update.
+2. **Derived-consistency surface:** a bounded class of direct consumers of the
+   named authorities, with its relationship and permitted mechanical alignment
+   stated. It is not a blanket directory-edit allowance and may not introduce
+   new behavior or policy.
+3. **Excluded scope:** paths or change types that remain outside the Issue.
+
+Before the first repository edit, audit the declared derived-consistency surface
+and list each exact derived file to be changed in the matching `## Proceed to
+Implementation` record. The Human's implementation authorization covers the
+named authorities and those audited derived files only.
+
+When a newly discovered file is not a listed authority or audited direct
+consumer, leave it unchanged and create a linked Intake Issue. Do the same when
+the proposed change would add a new policy, behavior, domain, or material scope
+even if the file is inside a declared derived-consistency surface. List every
+derived file actually changed in the Implementation Report.
+
 A later Plan Update, Detailed Plan Update, Intake Revision, Concept, or
 Grill-Me decision that routes work back to Concept, Planning, or Blocked
 invalidates the earlier go-ahead. The Human must authorize the current Plan and
@@ -431,6 +456,8 @@ Implementation may proceed when:
 - For non-trivial work, the Issue contains a current `## Plan Update` or
   `## Detailed Plan Update`, followed by a matching `## Proceed to
   Implementation`.
+- The Plan declares a planned write boundary, and the matching Proceed record
+  lists the exact derived files found by its pre-write audit.
 - For risk-flagged work, the Issue also contains its required Grill-Me result.
   The result may be inline in the Plan when clean; material findings, decisions,
   blockers, and standalone sessions use `## Grill-Me Review`.

@@ -319,6 +319,10 @@ Do not create a local commit for audit or proposal-only work. For approved Issue
 implementation, follow the commit-ready and local-commit lifecycle in
 `docs/github-issue-workflow.md`.
 
+For non-trivial implementation, edit only the named authorities and audited
+direct consumers declared by the Issue's planned write boundary. Route any
+other file or material scope change to a linked Intake Issue.
+
 ## Stop Conditions
 
 Stop a UX cycle when:

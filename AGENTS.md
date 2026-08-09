@@ -201,6 +201,13 @@ Events should contain at least:
   must have an owned branch and worktree, with one CLI write owner per worktree.
   Integration and conflict resolution require explicit authorization; a changed
   integration range must be validated and reviewed before push.
+- For non-trivial work, the Plan must declare a planned write boundary: exact
+  named authoritative paths, a bounded derived-consistency surface for direct
+  mechanical alignment, and excluded scope. `AGENTS.md` is always a named
+  authority, never a derived update. The Proceed record lists the exact derived
+  files found by the pre-write audit; implementation may edit only those files
+  and the named authorities. Leave any other path or material scope change
+  untouched and create a linked Intake Issue.
 - Prefer one coherent Issue work package per commit.
 - Keep local folders such as `.venv/`, `node_modules/`, `.vscode/`, and `.github/` ignored.
 

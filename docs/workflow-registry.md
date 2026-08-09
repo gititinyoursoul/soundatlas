@@ -162,6 +162,17 @@ reviewed.
   document under `docs/`, that document owns the concept and the Issue links to
   it without duplication.
 
+### Planned write boundaries
+
+For non-trivial implementation, the Plan names the exact authoritative paths it
+changes and declares a bounded derived-consistency surface. The matching Proceed
+record lists the exact direct consumers found by a pre-write audit. Those files
+may receive mechanical alignment only; they are not a general permission to
+edit a directory or alter behavior. `AGENTS.md` is always an explicitly named
+authority. A file or change outside this boundary remains untouched and is
+routed to a linked Intake Issue. The lifecycle contract and canonical record
+shape live in `docs/github-issue-workflow.md`.
+
 The detailed lifecycle and canonical Issue artifact shapes live in
 `docs/github-issue-workflow.md`. `soundatlas-issue-planning` owns the procedure
 for drafting and revising those artifacts, but not lifecycle ordering,

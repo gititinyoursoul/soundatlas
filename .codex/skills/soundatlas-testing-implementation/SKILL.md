@@ -57,6 +57,10 @@ the Human has authorized the latest Plan but the Proceed record is missing, use
 `soundatlas-issue-planning` to record it first. Keep deterministic artifact
 rules in the shared validator rather than duplicating them here.
 
+For non-trivial work, edit only named authorities and the audited direct
+consumers listed by the Plan's planned write boundary and Proceed record. Route
+any other path or material scope change to a linked Intake Issue.
+
 ## Process
 
 1. Read the approved Issue or focused test request and identify the exact test

@@ -74,6 +74,9 @@ in this Skill.
 - Do not introduce a database unless the approved Issue explicitly requests it.
 - Do not commit secrets, API keys, local paths, generated media, audio, or
   video.
+- For non-trivial work, edit only named authorities and the audited direct
+  consumers listed by the Plan's planned write boundary and Proceed record.
+  Route any other path or material scope change to a linked Intake Issue.
 
 ## Process
 
