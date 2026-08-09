@@ -60,8 +60,9 @@ specs/
 TODO.md
 docs/done.md
 
-# Local route editorial agent drafts
-docs/content/routes/*/*.ai-draft.*
+# Local route editorial agent drafts, raw model outputs, and renew backups
+docs/content/routes/*/*.ai-draft*
+docs/content/routes/*/*.bak
 
 # OS / editor
 .DS_Store
