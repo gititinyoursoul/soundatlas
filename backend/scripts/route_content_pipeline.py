@@ -1250,6 +1250,7 @@ def activate_complete_draft(
 ) -> list[str]:
     payload = read_json(output_path)
     normalize_reused_place_display_text(payload=payload, seed_dir=seed_dir)
+    normalize_exact_duplicate_place_decisions(payload=payload)
     source_outline = read_json(
         route_dir / manifest["agent_steps"]["complete_draft"]["inputs"][0]
     )
@@ -1384,6 +1385,45 @@ def normalize_reused_place_display_text(*, payload: dict[str, Any], seed_dir: Pa
         seed_place = seed_places_by_id.get(place.get("place_id"))
         if isinstance(seed_place, dict) and isinstance(seed_place.get("name"), str):
             place["source_place_text"] = seed_place["name"]
+
+
+def normalize_exact_duplicate_place_decisions(*, payload: dict[str, Any]) -> None:
+    """Collapse only structurally identical route-level Place decisions."""
+    places = payload.get("places")
+    if not isinstance(places, list):
+        return
+
+    decisions_by_id: dict[str, list[dict[str, Any]]] = {}
+    for place in places:
+        if not isinstance(place, dict):
+            continue
+        place_id = place.get("place_id")
+        if isinstance(place_id, str) and place_id:
+            decisions_by_id.setdefault(place_id, []).append(place)
+
+    duplicate_ids = {
+        place_id
+        for place_id, decisions in decisions_by_id.items()
+        if len(decisions) > 1
+        and all(_canonical_json(decision) == _canonical_json(decisions[0]) for decision in decisions[1:])
+    }
+    if not duplicate_ids:
+        return
+
+    seen: set[str] = set()
+    normalized: list[Any] = []
+    for place in places:
+        if not isinstance(place, dict):
+            normalized.append(place)
+            continue
+        place_id = place.get("place_id")
+        if not isinstance(place_id, str) or not place_id:
+            normalized.append(place)
+            continue
+        if place_id not in duplicate_ids or place_id not in seen:
+            normalized.append(place)
+        seen.add(place_id)
+    payload["places"] = normalized
 
 
 def validate_complete_draft(
@@ -1580,6 +1620,21 @@ def validate_complete_draft(
         errors.append("Complete draft event IDs must match active or added candidate IDs.")
 
     seed = load_seed_payloads(seed_dir)
+    place_decision_indexes: dict[str, int] = {}
+    for index, place in enumerate(places):
+        if not isinstance(place, dict):
+            continue
+        place_id = place.get("place_id")
+        if not isinstance(place_id, str) or not place_id:
+            continue
+        previous_index = place_decision_indexes.get(place_id)
+        if previous_index is not None:
+            errors.append(
+                "Complete draft places contain conflicting decisions for "
+                f"`{place_id}` at indexes {previous_index} and {index}."
+            )
+            continue
+        place_decision_indexes[place_id] = index
     new_places = drafted_places({"places": {"places": places}})
     merged = {
         "routes": seed["routes"],

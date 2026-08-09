@@ -9,6 +9,14 @@ before seed data is changed.
 The commands can call Codex CLI for editorial drafting, but they do not replace
 source review, editorial judgment, or final wording work.
 
+## Place decisions and event references
+
+The Complete Draft `places` collection records one route-level decision for each
+Place ID. Events may reference and revisit the same Place through their own
+`place_ids`. Identical repeated Place decisions are normalized during activation;
+conflicting decisions for one Place ID fail validation and leave the previous
+active draft unchanged.
+
 ## Command Shape
 
 Run commands from the repository root:

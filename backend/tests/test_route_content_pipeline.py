@@ -746,6 +746,8 @@ def test_agent_prompts_include_editorial_quality_contracts(tmp_path: Path) -> No
     assert "candidate outline is agent planning input" in complete_prompt
     assert "add, omit, merge, split, or reorder candidates" in complete_prompt
     assert "complete current-schema framing" in complete_prompt
+    assert "exactly one coherent Place decision for each `place_id`" in complete_prompt
+    assert "Events may share and revisit that Place" in complete_prompt
 
     assert "coherent editorial argument, not a chronology or checklist" in concept_prompt
     assert "story-serving headings" in concept_prompt
@@ -1490,6 +1492,71 @@ def test_complete_draft_derives_reused_place_display_text_from_seed(tmp_path: Pa
     assert "1520 Sedgwick Avenue" in (
         route_dir / "event-framing.md"
     ).read_text(encoding="utf-8")
+
+
+def test_complete_draft_normalizes_identical_place_decisions_and_allows_reuse(
+    tmp_path: Path,
+) -> None:
+    content_root, seed_dir = write_pipeline_fixture(tmp_path)
+    route_dir = content_root / ROUTE_ID
+    (route_dir / "candidate-outline.json").write_text(
+        build_complete_draft_outline_json(), encoding="utf-8"
+    )
+    draft = json.loads(build_complete_draft_json())
+    draft["places"].append(dict(draft["places"][0]))
+    fake_codex = write_fake_codex(tmp_path, output=json.dumps(draft))
+
+    assert main(
+        [
+            "--content-root", str(content_root), "--seed-dir", str(seed_dir),
+            "agent", "--route-id", ROUTE_ID, "--step", "complete_draft",
+            "--codex-command", str(fake_codex),
+        ]
+    ) == 0
+
+    active = json.loads((route_dir / "complete-draft.json").read_text(encoding="utf-8"))
+    assert active["places"] == [draft["places"][0]]
+    assert [event["place_ids"] for event in active["events"]] == [
+        ["1520-sedgwick-avenue"],
+        ["1520-sedgwick-avenue"],
+    ]
+
+
+def test_conflicting_complete_draft_place_decisions_preserve_active_outputs(
+    tmp_path: Path,
+) -> None:
+    content_root, seed_dir = write_pipeline_fixture(tmp_path)
+    route_dir = content_root / ROUTE_ID
+    (route_dir / "candidate-outline.json").write_text(
+        build_complete_draft_outline_json(), encoding="utf-8"
+    )
+    valid_codex = write_fake_codex(tmp_path / "valid", output=build_complete_draft_json())
+    command = [
+        "--content-root", str(content_root), "--seed-dir", str(seed_dir),
+        "agent", "--route-id", ROUTE_ID, "--step", "complete_draft",
+    ]
+    assert main([*command, "--codex-command", str(valid_codex)]) == 0
+    active_before = (route_dir / "complete-draft.json").read_text(encoding="utf-8")
+    review_before = (route_dir / "route-review.json").read_text(encoding="utf-8")
+
+    conflicting = json.loads(build_complete_draft_json())
+    conflicting["places"].append(
+        {
+            **conflicting["places"][0],
+            "source_place_text": "A conflicting event-level description",
+        }
+    )
+    fake_codex = write_fake_codex_sequence(tmp_path, [json.dumps(conflicting)])
+
+    assert main([*command, "--codex-command", str(fake_codex), "--renew"]) == 2
+    assert (route_dir / "complete-draft.json").read_text(encoding="utf-8") == active_before
+    assert (route_dir / "route-review.json").read_text(encoding="utf-8") == review_before
+    metadata = json.loads(
+        (route_dir / "complete_draft-run.ai-draft.json").read_text(encoding="utf-8")
+    )
+    assert metadata["repair"]["attempted"] is False
+    assert metadata["repair"]["eligible"] is False
+    assert "conflicting decisions" in metadata["validation"]
 
 
 def test_complete_draft_repairs_one_patchable_model_output(tmp_path: Path) -> None:
