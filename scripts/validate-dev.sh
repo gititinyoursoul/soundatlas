@@ -25,9 +25,7 @@ run_section() {
   "$@"
 }
 
-run_section "Frontend lint" bash -c "cd \"$FRONTEND_DIR\" && npm run lint"
-run_section "Frontend check" bash -c "cd \"$FRONTEND_DIR\" && npm run check"
-run_section "Frontend tests" bash -c "cd \"$FRONTEND_DIR\" && npm run test"
+run_section "Frontend validation" bash -c "cd \"$FRONTEND_DIR\" && npm run validate"
 run_section "Backend lint" bash -c "cd \"$BACKEND_DIR\" && uv run ruff check ."
 run_section "Backend tests" bash -c "cd \"$BACKEND_DIR\" && uv run pytest"
 

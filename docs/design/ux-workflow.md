@@ -245,15 +245,14 @@ If the pass changes shared state, filtering, API behavior, or interaction logic,
 For frontend changes, run:
 
 ```bash
-npm run lint
-npm test
-npm run check
+npm run validate
 ```
 
-For larger visual, layout, or build-impacting changes, also run:
+For larger visual, layout, or build-impacting changes, run the release-level
+validation instead:
 
 ```bash
-npm run build
+npm run validate:release
 ```
 
 For active local frontend test development, use:
@@ -329,7 +328,7 @@ Stop a UX cycle when:
 
 - The planned pass is implemented.
 - Acceptance criteria pass.
-- `npm run lint`, `npm run test`, and `npm run check` pass for frontend changes.
+- `npm run validate` passes for frontend changes.
 - Screenshot critique shows no high-impact issue that belongs in the same pass.
 - Remaining issues can be captured as follow-up work.
 

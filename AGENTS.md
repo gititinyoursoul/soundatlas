@@ -230,7 +230,7 @@ Events should contain at least:
 ## Working Defaults
 
 - Prefer small, reviewable changes over large jumps
-- When frontend code changes, run `npm run lint`, `npm run check`, and relevant tests; for larger changes, also run `npm run build`
+- When frontend code changes, run `npm run validate`; for larger changes, run `npm run validate:release` instead
 - When backend code changes, run `uv run ruff check .`, `uv run pyright`, and `uv run pytest`
 - When data or seed files change, check the JSON structure and references
 - When new work packages arise, create or update the relevant GitHub Issue rather than `TODO.md`

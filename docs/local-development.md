@@ -86,10 +86,11 @@ uv run pytest
 Run frontend checks from `frontend/`:
 
 ```sh
-npm run lint
-npm run check
-npm run test
+npm run validate
 ```
+
+For larger frontend changes that also need a production build, run
+`npm run validate:release` instead.
 
 Optional coverage reports:
 

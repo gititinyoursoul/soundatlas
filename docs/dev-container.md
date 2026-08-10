@@ -357,9 +357,7 @@ The helper runs the same checks as the `test` job in
 `.github/workflows/pages-deploy.yml`, from the directories expected by each tool:
 
 ```text
-frontend/: npm run lint
-frontend/: npm run check
-frontend/: npm run test
+frontend/: npm run validate
 backend/:  uv run ruff check .
 backend/:  uv run pytest
 ```
@@ -383,10 +381,11 @@ Run frontend checks from the workspace container:
 
 ```sh
 cd /workspace/frontend
-npm run lint
-npm run check
-npm run test
+npm run validate
 ```
+
+For larger frontend changes that also need a production build, run
+`npm run validate:release` instead.
 
 `uv run pyright` and the coverage commands below are useful additional local
 quality checks, but they are not part of the default CI-parity validation path.

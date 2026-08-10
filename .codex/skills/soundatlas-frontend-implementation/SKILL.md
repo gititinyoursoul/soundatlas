@@ -121,15 +121,13 @@ Run the narrowest relevant checks first:
 
 ```sh
 cd frontend
-npm run lint
-npm run check
-npm test
+npm run validate
 ```
 
-For larger frontend changes, also run:
+For larger frontend changes, run the release-level validation instead:
 
 ```sh
-npm run build
+npm run validate:release
 ```
 
 Use screenshot or browser checks when the approved Issue requires them. If a

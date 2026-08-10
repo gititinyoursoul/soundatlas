@@ -14,10 +14,12 @@
     "format": "prettier --write \"src/**/*.{svelte,ts,js,css}\" \"scripts/**/*.mjs\" \"*.{js,ts,json}\"",
     "format:check": "prettier --check \"src/**/*.{svelte,ts,js,css}\" \"scripts/**/*.mjs\" \"*.{js,ts,json}\"",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-    "test": "vitest run && npm run test:legacy-css",
-    "test:legacy-css": "node --test scripts/check-legacy-component-css.test.mjs",
+    "test": "vitest run && npm run test:legacy-css-checker",
+    "test:legacy-css-checker": "node --test scripts/check-legacy-component-css.test.mjs",
     "test:coverage": "vitest run --coverage",
     "test:watch": "vitest",
+    "validate": "npm run lint && npm run check:legacy-css && npm run check && npm test",
+    "validate:release": "npm run validate && npm run build",
     "capture:drawer": "node scripts/capture-drawer-screenshots.mjs"
   },
   "dependencies": {
