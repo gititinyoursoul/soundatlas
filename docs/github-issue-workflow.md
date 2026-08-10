@@ -259,6 +259,17 @@ Recommended label families are:
 - `priority:p3`
 - `blocked`
 
+The approved workflow status label `status:implemented-local` marks an accepted
+implementation that has a reviewed local commit or commit range but has not yet
+been pushed. Apply it only after the combined `## Implementation Report` has an
+`Accepted` Review Result and the named local commit or range has been reviewed.
+It is a visible, nonterminal summary: the Issue remains open, push
+authorization remains explicit, and the label does not replace the report or
+completion evidence. Remove or replace it when corrective work invalidates the
+accepted local result. Remove it during successful post-push completion before
+closing the Issue. Do not apply it merely because coding or a local commit has
+started.
+
 When Codex creates an Issue, it should assign exactly one approved priority
 label unless the human explicitly asks not to. Choose the priority by reasoning
 from blocking level, MVP or release impact, risk reduction, and urgency. Use
@@ -679,6 +690,11 @@ Issue closure is a mandatory, ordered post-push step:
 
 6. Close the Issue only after the completion comment succeeds.
 
+As part of this successful post-push completion, remove
+`status:implemented-local` before closing the Issue. If the completion comment
+or close operation fails, leave the Issue open and preserve the label unless
+the local result is no longer valid.
+
 Do not push or close the Issue when the review is not `Accepted`, the work is
 uncommitted, the commit is partial or WIP, an acceptance criterion is
 incomplete, the commit covers multiple Issues without an unambiguous mapping,
@@ -696,7 +712,9 @@ The safe transport rule above also applies to the standard completion comment.
 Use the generic `scripts/gh_markdown_payload.py` helper for API-only Markdown
 payloads.
 
-Do not add a separate `done` label for completion.
+Do not add a separate `done` label for completion. `status:implemented-local`
+is the approved pre-push marker; GitHub’s closed state remains the terminal
+completion state.
 
 ## Commit Reference
 

@@ -107,6 +107,14 @@ single Implementation Report comment. Human review of the committed diff, push
 authorization, and post-push closure remain separate lifecycle concerns in
 `docs/github-issue-workflow.md`.
 
+The approved `status:implemented-local` label is a nonterminal Issue-list
+summary for an `Accepted` Implementation Report whose reviewed local commit or
+range is awaiting push. It must not be used as a substitute for the report,
+explicit push authorization, completion evidence, or Issue closure. Remove or
+replace it when corrective work invalidates the local result, and clear it
+during successful post-push completion before closing the Issue. Existing
+Issues are not migrated automatically.
+
 ## Skill, Prompt, and Source Boundary Policy
 
 This section is authoritative for repository-wide entrypoint selection and
@@ -297,6 +305,9 @@ For an approved prompt-to-skill extraction:
   the single standard completion comment, and close the Issue only after that
   comment succeeds. Preserve the documented exceptions in
   `docs/github-issue-workflow.md`.
+- Use `status:implemented-local` only after the accepted implementation review
+  and named local commit/range review; do not introduce a separate `done`
+  label.
 - End every workflow result with a short `Next step` handoff when useful.
 
 ## Canonical Workflow Registry

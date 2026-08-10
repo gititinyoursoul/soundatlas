@@ -186,6 +186,12 @@ Events should contain at least:
   commit or range. A push request for completed Issue work counts as approval
   to close the associated Issue unless the human explicitly says to keep it
   open.
+- After an `Accepted` Implementation Report and review of the named local
+  commit or range, Codex may apply the approved `status:implemented-local`
+  label while the Issue awaits push. Remove or replace it if corrective work
+  invalidates the local result, and remove it during successful post-push
+  completion before closing the Issue. The label does not replace Issue
+  comments, push authorization, completion evidence, or the closed state.
 - After a successful push, capture the published commit hash, verify all
   acceptance criteria, confirm that no Issue-relevant changes remain
   uncommitted, post the standard commit-referencing completion comment, and
