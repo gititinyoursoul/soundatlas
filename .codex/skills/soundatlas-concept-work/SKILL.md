@@ -1,6 +1,6 @@
 ---
 name: soundatlas-concept-work
-description: Synthesize confirmed SoundAtlas product, workflow, editorial, data, or architectural decisions into a concise five-part concept and record it in the originating GitHub Issue or an approved docs source. Use when the user explicitly requests concept work or a Grill-Me check finds that implementation planning would otherwise invent material target behavior, runtime responsibilities, boundaries, or ownership; skip clear, local, low-risk work.
+description: Synthesize confirmed SoundAtlas product, workflow, editorial, data, or architectural decisions into a concise five-part concept and record it in the originating GitHub Issue or an approved docs source. Use when the user explicitly requests concept work or a Grill-Me check finds that implementation planning would otherwise invent material target behavior, semantics, scope, ownership, lifecycle, responsibilities, Human/Agent authority, compatibility, or boundaries; skip clear, local, low-risk work.
 ---
 
 # SoundAtlas Concept Work
@@ -27,8 +27,9 @@ human to answer them.
 
 1. Confirm that concept work is needed.
    Use this skill when requested explicitly or when planning would otherwise
-   have to invent material target behavior, runtime responsibilities,
-   boundaries, or ownership. Skip it for clear, local, low-risk work.
+   have to invent material target behavior, semantics, scope, ownership,
+   lifecycle, responsibilities, Human/Agent authority, compatibility, or
+   boundaries. Skip it for clear, local, low-risk work.
 2. Check decision readiness.
    Use only human-confirmed material decisions. If a material decision remains
    unclear, return to `soundatlas-grill-me` and do not silently resolve it.
@@ -62,9 +63,11 @@ Apply these meanings:
 - **Target behavior:** State the outcome the system should provide.
 - **Scope and non-goals:** State what is included and deliberately excluded.
 - **Runtime responsibilities:** State what the running system must do, including
-  material triggers, outcomes, state changes, and failure behavior. Describe
-  behavior without choosing components, files, schemas, or services unless an
-  accepted constraint requires that choice.
+  material triggers, outcomes, state changes, and failure behavior needed to
+  define the intended behavior. Do not choose Design or Implementation
+  mechanisms. When an accepted constraint exposes a material conceptual
+  consequence, state that consequence and defer the satisfying mechanism to
+  Planning.
 - **Boundaries and ownership:** State who or what is responsible, which human
   decisions remain human, which source is authoritative, and where each
   responsibility stops. Do not repeat runtime behavior.
@@ -93,13 +96,17 @@ state.
 ## Planning boundary
 
 A concept is ready for planning when its material decisions are confirmed and
-its unresolved section contains no decision that would force planning to invent
-target behavior.
+Planning can choose representations and implementation mechanisms without
+inventing material target behavior, semantics, ownership, lifecycle,
+responsibilities, Human/Agent authority, compatibility, boundaries, or MVP
+scope. Remaining Design or Implementation ambiguity does not make the Concept
+incomplete.
 
 Use `soundatlas-issue-planning` for implementation slices, sequencing,
 validation, and Plan Updates. Require the plan to reference the accepted concept
 instead of repeating it. Return to concept work if planning exposes a missing or
-contradictory target decision.
+contradictory material target decision, not merely a choice between technical
+representations or mechanisms.
 
 Do not create implementation tasks, code, application changes, a mandatory
 concept stage, a concept registry, or a separate approval status from this

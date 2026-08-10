@@ -42,8 +42,10 @@ Grill Me challenges the active artifact but does not own it:
   completed Grill-Me record.
 
 Concept Work remains conditional. Do not require it when an Intake is already
-decision-complete and Planning would not have to invent material target
-behavior, runtime responsibilities, Boundaries, or Ownership.
+decision-complete and Planning can choose Design and Implementation mechanisms
+without inventing material target behavior, semantics, scope, Ownership,
+lifecycle, responsibilities, Human/Agent authority, compatibility, or
+Boundaries.
 
 A Grill-Me `Next step` routes the reviewed artifact; it does not confirm a Plan
 or authorize implementation. The separate lifecycle record in
@@ -55,13 +57,16 @@ or authorize implementation. The separate lifecycle record in
 2. Inspect relevant repository evidence before forming findings.
 3. Separate observed facts, assumptions, solution hypotheses, `Unknown`,
    `Evidence Gap`, recommendations, and Human Decisions.
-4. Apply the shared checks and only the Mode-Specific Focus appropriate to the
+4. Classify each concern for relevance to the active phase before judging its
+   severity or Materiality. Abstract a later-stage concern to the current
+   phase only when it exposes a material gap owned by that phase.
+5. Apply the shared checks and only the Mode-Specific Focus appropriate to the
    active stage.
-5. Classify each finding by severity and Materiality. Route gaps and decisions
-   without silently resolving them in the wrong stage.
-6. Continue immediately after a clean lightweight check. Use the one-finding
+6. Classify each eligible finding by severity and Materiality. Route gaps and
+   decisions without silently resolving them in the wrong stage.
+7. Continue immediately after a clean lightweight check. Use the one-finding
    flow when a material Human Decision is required.
-7. Return the result to the owning workflow artifact. Do not modify that
+8. Return the result to the owning workflow artifact. Do not modify that
    artifact from Grill Me alone.
 
 ## Shared checks
@@ -125,14 +130,58 @@ Challenge:
 
 - explicit target behavior;
 - scope and non-goals;
-- complete runtime responsibilities;
+- material runtime responsibilities required to define the intended behavior;
 - Boundaries and Ownership;
 - conflicts with normative sources;
 - lean MVP fit; and
-- unresolved decisions that would force Planning to invent behavior.
+- unresolved decisions that would force Planning to invent material target
+  behavior, semantics, Ownership, lifecycle, responsibilities, Human/Agent
+  authority, compatibility, Boundaries, or externally observable behavior.
 
-Do not choose implementation details unless an accepted constraint requires
-one.
+Before presenting a Concept finding, classify the concern internally:
+
+- **Concept:** changes material target behavior, semantics, scope, Ownership,
+  lifecycle, responsibilities, Human/Agent authority, compatibility, or
+  architectural Boundaries;
+- **Design:** chooses how an accepted Concept is represented or achieved; or
+- **Implementation:** chooses concrete schemas, fields, cardinality, enums,
+  algorithms, normalization, storage, APIs, modules, files, migrations, or
+  execution mechanics.
+
+Present only Concept concerns. When a Design or Implementation concern reveals
+a conceptual gap, state the underlying requirement without prescribing the
+mechanism that satisfies it. Ask: could multiple materially different
+technical designs satisfy this requirement without changing the intended
+product or workflow behavior? If yes, keep the requirement in Concept and
+defer the representation or mechanism to Planning.
+
+Do not choose Design or Implementation details. When an accepted constraint
+exposes a material conceptual consequence, surface that consequence and defer
+the mechanism that satisfies it to Planning.
+
+A Concept is complete when Planning can choose technical representations and
+implementation mechanisms without inventing material target behavior,
+semantics, Ownership, lifecycle, responsibilities, Human/Agent authority,
+compatibility, Boundaries, or MVP scope. Remaining Design or Implementation
+ambiguity is not evidence that the Concept is incomplete. End Concept Grill
+when no material Concept finding remains.
+
+Before reusing an existing Concept for Planning or renewed implementation,
+perform focused Concept revalidation when:
+
+- the Human reports that the same conceptual problem continues;
+- a later decision changes material target behavior, semantics, scope,
+  Ownership, lifecycle, responsibilities, failure behavior, compatibility, or
+  Boundaries;
+- repeated fixes within one responsibility boundary suggest that the boundary
+  itself is underspecified; or
+- downstream rejection may indicate semantic or stage-boundary drift.
+
+Distinguish a clear local implementation omission from evidence that the
+Concept may be insufficient. Revalidation concludes either that the existing
+Concept remains sufficient, with evidence, or that clarification and Concept
+Work are required. Use the existing Grill-Me recording route; do not introduce
+a new stage, status, or approval gate.
 
 ### Plan Grill
 
@@ -208,6 +257,11 @@ First inspect discoverable evidence. Then route by Materiality:
 Do not convert missing evidence into an invented answer, recommendation, or
 confirmed decision.
 
+For Concept Grill, a material change to data concerns its meaning, Ownership,
+or required representational capability. Concrete schema shape, cardinality,
+normalization, fields, and storage remain Design or Implementation concerns
+unless they expose one of those conceptual consequences.
+
 ## Lightweight and interactive review
 
 Apply a lightweight Grill-Me check at the transitions required by
@@ -251,6 +305,11 @@ Recommendation: <recommended option and reason>
 Include options only for materially different choices, and always recommend one
 when options are present. Do not describe a material decision as closed until
 the Human confirms, defers, rejects, or blocks it.
+
+In Concept Grill, recommendations and options must remain at the Concept level.
+If the only remaining alternatives are technical representations or
+implementation mechanisms, route them to Planning instead of opening a Human
+Concept decision.
 
 ## Recording and handoff
 

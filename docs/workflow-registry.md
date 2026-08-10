@@ -23,17 +23,24 @@ All multiline GitHub Markdown body transport follows the safe file/stdin rule
 in `docs/github-issue-workflow.md`; the generic helper is
 `scripts/gh_markdown_payload.py`.
 
-`soundatlas-grill-me` owns Review Mode selection, Phase Boundaries, Materiality
-routing, and the interactive one-finding flow. It may briefly indicate whether
-material findings are present and, when useful, give an approximate count. The
-count is optional and never a target. Material findings are presented one at a
-time with a recommendation and pause for Human confirmation.
+`soundatlas-grill-me` owns Review Mode selection, Phase Boundaries, concern
+relevance before Materiality, Concept revalidation and completion, and the
+interactive one-finding flow. It may briefly indicate whether material findings
+are present and, when useful, give an approximate count. The count is optional
+and never a target. Material findings are presented one at a time with a
+recommendation and pause for Human confirmation. Its Concept Grill procedure
+owns the detailed Concept/Design/Implementation classification and abstraction
+rules; other workflow sources route to that procedure without duplicating it.
 
 At the agreed workflow transitions, first apply a lightweight Grill-Me check.
 Continue without an interactive session when there is no material finding. If
-planning would otherwise invent material target behavior, runtime
-responsibilities, boundaries, or ownership, resolve material decisions through
-Grill Me and then use `soundatlas-concept-work` to record the concept.
+planning would otherwise invent material target behavior, semantics, scope,
+ownership, lifecycle, responsibilities, Human/Agent authority, compatibility,
+or boundaries, resolve material decisions through Grill Me and then use
+`soundatlas-concept-work` to record the concept. Before reusing an existing
+Concept, invoke focused revalidation only when the triggers defined by Grill Me
+are present; preserve the conclusion through the existing Grill-Me record
+route.
 Before accepting completed non-trivial Issue work, use
 `soundatlas-implementation-review`; return only material human decisions to
 Grill Me.
@@ -78,9 +85,11 @@ Request
 ```
 
 Concept work is conditional. Use it when explicitly requested or when planning
-would otherwise have to invent material target behavior, runtime
-responsibilities, boundaries, or ownership; otherwise skip it. The plan
-references an accepted concept rather than copying it.
+would otherwise have to invent material target behavior, semantics, scope,
+ownership, lifecycle, responsibilities, Human/Agent authority, compatibility,
+or boundaries; otherwise skip it. The plan references an accepted concept
+rather than copying it. Technical representation choices alone do not make a
+Concept incomplete.
 
 "Automatic" means the agent is instructed to perform the lightweight checks
 and may select a skill implicitly. For example, Grill-Me, Concept Work, and
@@ -236,10 +245,15 @@ For an approved prompt-to-skill extraction:
   concept or broad Plan Update, when implementation reveals drift or new
   constraints, and before accepting completed implementation. Continue without
   pausing when no material finding exists.
+- Before a Plan or renewed implementation reuses an existing Concept, route
+  through focused Concept revalidation only when Grill Me identifies a defined
+  trigger. Reuse the existing Grill-Me record for the conclusion; do not add a
+  lifecycle status or make the readiness script infer semantic sufficiency.
 - Use `soundatlas-concept-work` when requested explicitly or when a Grill-Me
   check finds that implementation planning would otherwise invent material
-  target behavior, runtime responsibilities, boundaries, or ownership. Skip it
-  for clear, local, low-risk work.
+  target behavior, semantics, scope, ownership, lifecycle, responsibilities,
+  Human/Agent authority, compatibility, or boundaries. Skip it for clear,
+  local, low-risk work.
 - Use `soundatlas-implementation-review` before accepting completed non-trivial
   Issue work. Skip clearly trivial, local, low-risk changes. During
   implementation, use it only for drift, risk, or a new material constraint.

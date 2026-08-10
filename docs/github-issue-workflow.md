@@ -76,7 +76,7 @@ bodies and may remain command arguments.
 2. Agent inspects the repo before asking questions when local context can answer them.
 3. Agent creates an Intake Issue containing only Task, Context, and Acceptance Criteria.
 4. Agent performs a lightweight Grill-Me check and runs the interactive review when a material finding needs human confirmation.
-5. If planning would otherwise invent material target behavior, runtime responsibilities, boundaries, or ownership, the agent uses `soundatlas-concept-work` and records an `## Concept` comment or linked authoritative document.
+5. If planning would otherwise invent material target behavior, semantics, scope, ownership, lifecycle, responsibilities, Human/Agent authority, compatibility, or boundaries, the agent uses `soundatlas-concept-work` and records an `## Concept` comment or linked authoritative document.
 6. Agent adds a `## Plan Update` or `## Detailed Plan Update` after required decisions are confirmed. The plan references its accepted Concept or records why Concept Work was not required.
 7. Human starts implementation with explicit wording such as "implement issue #<number>". This confirms the latest Plan Update and authorizes only its recorded scope.
 8. Agent records `## Proceed to Implementation`, linking the exact confirmed Plan Update, and runs the readiness validator before the first repository edit.
@@ -184,6 +184,22 @@ If no material finding exists, continue without starting an interactive review
 or adding an approval step. If a material finding needs human confirmation, use
 the one-finding flow in `soundatlas-grill-me`.
 
+Before a Plan or renewed implementation reuses an existing Concept, run a
+focused Concept revalidation when the Human reports a continuing conceptual
+problem; a later decision changes material target behavior, semantics, scope,
+ownership, lifecycle, responsibilities, failure behavior, compatibility, or
+boundaries; repeated fixes suggest an underspecified responsibility boundary;
+or downstream rejection may indicate semantic drift. A clear local
+implementation omission does not trigger Concept revalidation when the accepted
+target is already unambiguous.
+
+The revalidation conclusion is either that the existing Concept remains
+sufficient, with supporting evidence, or that clarification and Concept Work
+are required. Preserve a material or standalone conclusion in the existing
+`## Grill-Me Review` record; a clean sufficiency conclusion may be recorded
+inline with the next action when useful. This is a conditional route, not a new
+stage, status, Human approval gate, or readiness-script responsibility.
+
 At the completed-implementation transition, the lightweight check selects
 `soundatlas-implementation-review` for non-trivial Issue work. Grill Me becomes
 interactive only when the review returns a material human decision.
@@ -273,9 +289,10 @@ Priority meanings:
 
 Use `.codex/skills/soundatlas-concept-work` when the human requests concept work
 or a Grill-Me check finds that implementation planning would otherwise have to
-invent material target behavior, runtime responsibilities, boundaries, or
-ownership. Concept work is optional and repeatable, not a mandatory stage. Skip
-it for clear, local, low-risk work.
+invent material target behavior, semantics, scope, ownership, lifecycle,
+material responsibilities, Human/Agent authority, compatibility, or boundaries.
+Concept work is optional and repeatable, not a mandatory stage. Skip it for
+clear, local, low-risk work.
 
 Grill Me challenges assumptions and obtains human confirmation. Concept work
 synthesizes the confirmed target. Implementation planning turns that target
@@ -297,10 +314,12 @@ Use this minimum concept shape:
 ### Unresolved decisions
 ```
 
-Runtime responsibilities describe what the running system must do. Boundaries
-and ownership describe responsibility, authority, and where each responsibility
-stops. Do not choose components, files, schemas, or services unless an accepted
-constraint requires the choice.
+Runtime responsibilities describe the material triggers, outcomes, state
+changes, and failure behavior needed to define the intended behavior.
+Boundaries and ownership describe responsibility, authority, and where each
+responsibility stops. Do not choose Design or Implementation mechanisms. When
+an accepted constraint exposes a material conceptual consequence, state that
+consequence and defer the satisfying mechanism to Planning.
 
 Record the concept as an `## Concept` comment on the originating Issue by
 default. Use one authoritative document under `docs/` instead when the concept
@@ -310,8 +329,11 @@ human confirmation before creating or changing that document. Link it from the
 Issue rather than duplicating it.
 
 Concept work is ready for planning when material decisions are confirmed and
-no unresolved decision would force planning to invent target behavior. It does
-not add a separate approval status.
+Planning can choose representations and mechanisms without inventing material
+target behavior, semantics, ownership, lifecycle, responsibilities, Human/Agent
+authority, compatibility, boundaries, or MVP scope. Remaining Design or
+Implementation ambiguity does not make the Concept incomplete. Concept work
+does not add a separate approval status.
 
 ## Plan Update
 
@@ -370,8 +392,15 @@ Rules:
 - Reference an accepted `## Concept` comment or authoritative concept document
   when one exists; otherwise record the concise Concept-not-required rationale.
   Do not copy a Concept into the Plan Update.
+- Before reusing an existing Concept, check the focused revalidation triggers
+  in the Grill-Me section. When a trigger is present, require the recorded
+  conclusion before drafting the Plan; otherwise continue without adding a
+  gate.
 - If planning exposes a missing or contradictory material target decision,
   return to Grill Me and concept work instead of resolving it in the plan.
+- Treat concrete representation, schema, cardinality, normalization, storage,
+  algorithm, API, module, file, migration, sequencing, and validation choices
+  as normal Planning work when the accepted target semantics remain unchanged.
 - For risk-flagged work, add the Plan Update only after the Issue contains a
   recorded Grill-Me result with required decisions confirmed. Use a standalone
   `## Grill-Me Review` when the result contains a material finding, decision,
@@ -381,10 +410,12 @@ Rules:
   Do not silently rewrite the meaning of the Issue.
 - Use `Requirements` only when complex product, API, data, security, or workflow
   rules would otherwise be unclear.
-- Stop for approval when open questions affect product intent, data shape,
-  security, privacy, external API behavior, generated media review boundaries,
-  historically sensitive claims, irreversible workflow behavior, or production
-  stability.
+- Stop for approval when open questions affect product intent, conceptual data
+  meaning or required capability, security, privacy, external API behavior,
+  generated media review boundaries, historically sensitive claims,
+  irreversible workflow behavior, or production stability. Concrete data-shape
+  choices remain Planning work when accepted semantics and Human-owned
+  boundaries stay unchanged.
 - For mechanical readiness, `## Open Questions` must start with `None` or each
   remaining item must say `Deferred by human` and `non-blocking`. Do not use
   either marker to hide a material unresolved decision.
@@ -503,6 +534,11 @@ implementation reveals missing behavior, the agent should:
 If drift produces a new Plan, Intake Revision, Concept, or blocking Grill-Me
 decision, the existing go-ahead is invalid. Record a new go-ahead for the
 current Plan and rerun readiness validation before implementation resumes.
+
+When a defect is a clear local omission against an unambiguous accepted
+Concept, keep it on the implementation-fix route. When the evidence matches a
+focused Concept-revalidation trigger, establish Concept sufficiency or route to
+Concept Work before producing a replacement Plan or resuming implementation.
 
 ## Implementation Review
 

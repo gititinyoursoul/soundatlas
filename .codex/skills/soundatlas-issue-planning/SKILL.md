@@ -30,9 +30,13 @@ readiness review before Issue content is drafted.
    before blocking on user input.
 
    Perform the lightweight Grill-Me check defined by repository guidance. If
-   planning would otherwise have to invent material target behavior, runtime
-   responsibilities, boundaries, or ownership, return to Grill Me and
-   `soundatlas-concept-work` before drafting a plan.
+   planning would otherwise have to invent material target behavior, semantics,
+   scope, ownership, lifecycle, responsibilities, Human/Agent authority,
+   compatibility, or boundaries, return to Grill Me and
+   `soundatlas-concept-work` before drafting a plan. When reusing an existing
+   Concept, check the focused revalidation triggers owned by Grill Me first. If
+   a trigger is present, require a sufficiency or revision conclusion before
+   drafting; otherwise continue without adding a gate.
 
 3. Separate intake from planning.
    When creating an Issue, use only the Intake shape: Task, Context, and
@@ -55,6 +59,10 @@ readiness review before Issue content is drafted.
    and ownership, and resolved decisions. Do not copy the concept into the
    Plan Update. When Concept Work was not required, record `Concept Work: Not
    required — <decision-completeness rationale>` before technical Plan detail.
+   Treat deferred Design and Implementation choices as normal planning work
+   when they do not change the accepted target semantics. Return to Concept
+   only when planning exposes a missing or contradictory material target
+   decision.
 
    For non-trivial work, add a `## Planned Write Boundary` to the Plan Update or
    Detailed Plan Update. Name each authoritative file exactly, define any
@@ -90,9 +98,12 @@ readiness review before Issue content is drafted.
    lifecycle document permits that exception; workflow changes remain gated
    there.
    Make assumptions for low-risk implementation details. Stop for approval when
-   uncertainty affects product intent, data shape, security, privacy, external
-   API behavior, generated media review boundaries, historically sensitive
-   claims, irreversible workflow behavior, or production stability.
+   uncertainty affects product intent, conceptual data meaning or required
+   capability, security, privacy, external API behavior, generated media review
+   boundaries, historically sensitive claims, irreversible workflow behavior,
+   or production stability. Concrete schema shape, fields, cardinality,
+   normalization, and storage remain planning choices when they do not change
+   those semantics or another Human-owned boundary.
 
    Treat a material Grill-Me record as complete only when it contains a
    `Stage`, an explicit `Decision` for every material `Finding`, and a `Next
@@ -173,6 +184,10 @@ API, data, security, or workflow rules would otherwise be unclear.
   review skill performs the comparison; this skill records the result.
 - Do not fill a missing or contradictory material concept decision inside a
   Plan Update. Return it to Grill Me and concept work.
+- Do not treat unresolved Design or Implementation representation choices as
+  evidence that the Concept is incomplete. Resolve them in Planning when
+  multiple mechanisms can satisfy the accepted requirement without changing
+  intended product or workflow behavior.
 - Before producing a Plan Update for risk-flagged work, verify that the
   completed Grill-Me comment itself contains `Stage`, every material `Finding`
   with its `Decision`, and `Next step`. Do not treat a statement inside the
