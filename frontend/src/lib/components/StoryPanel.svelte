@@ -314,7 +314,10 @@
       <div class="header-top">
         <div class="title-block">
           {#if editorialMode && editorialRole === 'context'}
-            <span class="context-badge">Route context</span>
+            <span
+              class="w-fit rounded-full border border-[#b8c8e4] px-[0.42rem] py-[0.16rem] text-[0.68rem] font-bold uppercase tracking-[0.03em] text-[#2454d6]"
+              >Route context</span
+            >
           {/if}
           <h2>{event.title}</h2>
           <p class="event-meta-line">
@@ -730,18 +733,6 @@
     display: grid;
     gap: 0.18rem;
     min-width: 0;
-  }
-
-  .context-badge {
-    width: fit-content;
-    padding: 0.16rem 0.42rem;
-    border: 1px solid #b8c8e4;
-    border-radius: 999px;
-    color: #2454d6;
-    font-size: 0.68rem;
-    font-weight: 700;
-    letter-spacing: 0.03em;
-    text-transform: uppercase;
   }
 
   .title-block h2,
