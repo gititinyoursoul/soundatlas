@@ -1,11 +1,11 @@
 import { render } from 'svelte/server';
 import { describe, expect, it } from 'vitest';
-import type { InactiveCandidateProjection } from '$lib/data/editorial-review';
+import type { ConsideredCandidateProjection } from '$lib/data/editorial-review';
 import InactiveCandidatePanel from './InactiveCandidatePanel.svelte';
 
 function candidate(
-  overrides: Partial<InactiveCandidateProjection> = {}
-): InactiveCandidateProjection {
+  overrides: Partial<ConsideredCandidateProjection> = {}
+): ConsideredCandidateProjection {
   return {
     title: 'Outline context event',
     summary: 'Context that remains reviewable.',
@@ -45,7 +45,7 @@ describe('InactiveCandidatePanel', () => {
       props: { candidate: candidate() }
     });
 
-    expect(body).toContain('Inactive candidate · Not in current route');
+    expect(body).toContain('Other considered candidate · Not in current route');
     expect(body).toContain('Outline context event');
     expect(body).toContain('Context that remains reviewable.');
     expect(body).toContain('Covered by the active route sequence.');

@@ -19,8 +19,8 @@
   import { filterEvents } from '$lib/data/filters';
   import {
     projectRouteReview,
-    projectInactiveCandidates,
-    type InactiveCandidateProjection,
+    projectConsideredCandidates,
+    type ConsideredCandidateProjection,
     type EditorialProjection
   } from '$lib/data/editorial-review';
   import {
@@ -41,7 +41,7 @@
     ReviewAction,
     ReviewQueueItem,
     RouteReviewProposal,
-    RouteReviewResult,
+    RouteEditorialReview,
     RoutePublicationResult,
     RoutePublicationSummary,
     Route,
@@ -68,10 +68,10 @@
   let reviewErrorMessage: string | null = null;
   let selectedInspectorTab: 'story' | 'media' | 'related' = 'story';
   let selectedPreviewUrl: string | null = null;
-  let routeReview: RouteReviewResult | null = null;
+  let routeReview: RouteEditorialReview | null = null;
   let editorialProjections: EditorialProjection[] = [];
-  let inactiveCandidateProjections: InactiveCandidateProjection[] = [];
-  let selectedInactiveCandidateId: string | null = null;
+  let consideredCandidateProjections: ConsideredCandidateProjection[] = [];
+  let selectedConsideredCandidateId: string | null = null;
   let editorialErrorMessage: string | null = null;
   let editorialSavingCandidateId: string | null = null;
   let editorialActionError: string | null = null;
@@ -108,10 +108,10 @@
         )
     : publicRouteEvents;
   $: reviewProposals = routeReview?.proposals ?? [];
-  $: selectedInactiveCandidate =
-    inactiveCandidateProjections.find(
+  $: selectedConsideredCandidate =
+    consideredCandidateProjections.find(
       (candidate) =>
-        candidate.account.candidate_id === selectedInactiveCandidateId
+        candidate.account.candidate_id === selectedConsideredCandidateId
     ) ?? null;
   $: selectedProjection =
     editorialProjections.find(
@@ -180,11 +180,11 @@
     selectedEvent,
     selectedPlaceId
   );
-  $: inactiveCandidatePlaceId = selectedInactiveCandidate
-    ? resolveCandidatePlaceId(selectedInactiveCandidate, activePlaces)
+  $: consideredCandidatePlaceId = selectedConsideredCandidate
+    ? resolveCandidatePlaceId(selectedConsideredCandidate, activePlaces)
     : null;
-  $: inactiveCandidateRange = selectedInactiveCandidate
-    ? resolveCandidateRange(selectedInactiveCandidate)
+  $: consideredCandidateRange = selectedConsideredCandidate
+    ? resolveCandidateRange(selectedConsideredCandidate)
     : null;
   $: selectedEventIndex = selectedEvent
     ? routeEvents.findIndex((event) => event.id === selectedEvent.id)
@@ -247,7 +247,7 @@
         routeReview = review;
         publicationSummary = publication;
         editorialProjections = projectRouteReview(routeReview);
-        inactiveCandidateProjections = projectInactiveCandidates(routeReview);
+        consideredCandidateProjections = projectConsideredCandidates(routeReview);
       }
 
       if (!IS_EDITORIAL_MODE) {
@@ -297,22 +297,22 @@
           ?.event ?? null)
       : (events.find((event) => event.id === eventId) ?? null);
     selectedEventId = eventId;
-    selectedInactiveCandidateId = null;
+    selectedConsideredCandidateId = null;
     selectedPlaceId = resolveFocusedPlaceId(nextEvent, selectedPlaceId);
     selectedInspectorTab = 'story';
     selectedPreviewUrl = null;
   }
 
-  function selectInactiveCandidate(
-    candidate: InactiveCandidateProjection
+  function selectConsideredCandidate(
+    candidate: ConsideredCandidateProjection
   ): void {
-    selectedInactiveCandidateId = candidate.account.candidate_id;
+    selectedConsideredCandidateId = candidate.account.candidate_id;
     selectedInspectorTab = 'story';
     selectedPreviewUrl = null;
   }
 
   function resolveCandidatePlaceId(
-    candidate: InactiveCandidateProjection,
+    candidate: ConsideredCandidateProjection,
     availablePlaces: Place[]
   ): string | null {
     const explicitPlaceId = candidate.account.context.place_id;
@@ -331,7 +331,7 @@
   }
 
   function resolveCandidateRange(
-    candidate: InactiveCandidateProjection
+    candidate: ConsideredCandidateProjection
   ): { start: number; end: number } | null {
     const context = candidate.account.context;
     const start = numericYear(context.year_start);
@@ -358,7 +358,7 @@
 
     selectedRouteId = event.route_id;
     selectedEventId = event.id;
-    selectedInactiveCandidateId = null;
+    selectedConsideredCandidateId = null;
     selectedPlaceId = placeId;
     selectedInspectorTab = 'story';
     selectedPreviewUrl = null;
@@ -384,8 +384,8 @@
     if (IS_EDITORIAL_MODE) {
       routeReview = null;
       editorialProjections = [];
-      inactiveCandidateProjections = [];
-      selectedInactiveCandidateId = null;
+      consideredCandidateProjections = [];
+      selectedConsideredCandidateId = null;
       editorialErrorMessage = null;
       publicationSummary = null;
       publicationError = null;
@@ -401,14 +401,14 @@
       routeReview = review;
       publicationSummary = await loadRoutePublication(routeId);
       editorialProjections = projectRouteReview(review);
-      inactiveCandidateProjections = projectInactiveCandidates(review);
+      consideredCandidateProjections = projectConsideredCandidates(review);
       selectedEventId = review.proposals[0]?.candidate_id ?? null;
     } catch (error) {
       if (selectedRouteId !== routeId) return;
       routeReview = null;
       publicationSummary = null;
       editorialProjections = [];
-      inactiveCandidateProjections = [];
+      consideredCandidateProjections = [];
       editorialErrorMessage =
         error instanceof Error
           ? `Editorial review unavailable: ${error.message}`
@@ -432,7 +432,7 @@
       );
       routeReview = updated;
       editorialProjections = projectRouteReview(updated);
-      inactiveCandidateProjections = projectInactiveCandidates(updated);
+      consideredCandidateProjections = projectConsideredCandidates(updated);
       publicationSummary = await loadRoutePublication(selectedRouteId);
     } catch (error) {
       editorialActionError =
@@ -672,7 +672,7 @@
     showEditorialReview={IS_EDITORIAL_MODE}
     editorialProposalCount={reviewProposals.length}
     editorialProposals={reviewProposals}
-    editorialInactiveCandidates={inactiveCandidateProjections}
+    editorialConsideredCandidates={consideredCandidateProjections}
     {editorialErrorMessage}
     {publicationSummary}
     {publicationSaving}
@@ -686,7 +686,7 @@
     onSelectRoute={selectRoute}
     onSelectReviewItem={selectReviewItem}
     onSelectEditorialProposal={(proposal) => selectEvent(proposal.candidate_id)}
-    onSelectInactiveCandidate={selectInactiveCandidate}
+    onSelectConsideredCandidate={selectConsideredCandidate}
     onPublishRoute={publishSelectedRoute}
     onReviewQueueItem={reviewQueueItem}
   />
@@ -768,7 +768,7 @@
             {selectedRouteId}
             selectedEventId={activeSelectedEventId}
             selectedPlaceId={activeSelectedPlaceId}
-            contextPlaceId={inactiveCandidatePlaceId}
+            contextPlaceId={consideredCandidatePlaceId}
             {selectedPlace}
             {selectedRoute}
             {selectedPlaceEventCount}
@@ -781,15 +781,15 @@
         <Timeline
           routeStartYear={timelineStartYear}
           routeEndYear={timelineEndYear}
-          eventStartYear={selectedInactiveCandidate
-            ? (inactiveCandidateRange?.start ?? null)
+          eventStartYear={selectedConsideredCandidate
+            ? (consideredCandidateRange?.start ?? null)
             : IS_EDITORIAL_MODE
               ? selectedProjection?.renderOnTimeline
                 ? (selectedEvent?.year_start ?? null)
                 : null
               : (selectedEvent?.year_start ?? null)}
-          eventEndYear={selectedInactiveCandidate
-            ? (inactiveCandidateRange?.end ?? null)
+          eventEndYear={selectedConsideredCandidate
+            ? (consideredCandidateRange?.end ?? null)
             : IS_EDITORIAL_MODE
               ? selectedProjection?.renderOnTimeline
                 ? (selectedEvent?.year_end ?? null)
@@ -809,8 +809,8 @@
       aria-label="Event inspector"
       on:focusin={markStoryNavigationActive}
     >
-      {#if selectedInactiveCandidate}
-        <InactiveCandidatePanel candidate={selectedInactiveCandidate} />
+      {#if selectedConsideredCandidate}
+        <InactiveCandidatePanel candidate={selectedConsideredCandidate} />
       {:else}
         <StoryPanel
           event={selectedEvent}

@@ -1,13 +1,13 @@
 <script lang="ts">
-  import type { InactiveCandidateProjection } from '$lib/data/editorial-review';
+  import type { ConsideredCandidateProjection } from '$lib/data/editorial-review';
 
-  export let candidates: InactiveCandidateProjection[] = [];
+  export let candidates: ConsideredCandidateProjection[] = [];
   export let onSelect: (
-    candidate: InactiveCandidateProjection
+    candidate: ConsideredCandidateProjection
   ) => void = () => {};
 </script>
 
-<div class="grid" aria-label="Inactive route candidates">
+<div class="grid" aria-label="Other considered route candidates">
   {#each candidates as candidate (candidate.account.candidate_id)}
     <button
       type="button"

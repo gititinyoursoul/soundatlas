@@ -17,12 +17,12 @@
     class="publication-panel"
     aria-labelledby="route-publication-heading"
   >
-    <h3 id="route-publication-heading">Route readiness</h3>
+    <h3 id="route-publication-heading">Publication blocking checks</h3>
 
     <div class:ready={summary.technical_ready} class="readiness" role="status">
       <strong
         >{summary.technical_ready
-          ? 'Technically ready'
+          ? 'Publication checks clear'
           : 'Publication blocked'}</strong
       >
     </div>

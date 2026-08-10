@@ -119,7 +119,7 @@ class RouteReviewPlace(BaseModel):
     place: Place
 
 
-class RouteReviewResult(BaseModel):
+class RouteEditorialReview(BaseModel):
     route_id: str
     revision_id: str
     source: str = EVENT_LIST_FILENAME
@@ -133,6 +133,10 @@ class RouteReviewResult(BaseModel):
     warnings: list[str] = Field(default_factory=list)
     technical_errors: list[str] = Field(default_factory=list)
     technical_ready: bool
+
+
+class RouteReviewResult(RouteEditorialReview):
+    """Compatibility response model retaining the established OpenAPI schema name."""
 
 
 class RouteReviewStateUpdate(BaseModel):
@@ -172,12 +176,12 @@ class RouteReviewRepository:
         self._content_root = content_root
         self._seed_dir = seed_dir
 
-    def get(self, route_id: str) -> RouteReviewResult:
+    def get(self, route_id: str) -> RouteEditorialReview:
         path = self._review_path(route_id)
         if not path.exists():
             raise RouteReviewNotFoundError(f"Route review '{route_id}' not found")
         try:
-            result = RouteReviewResult.model_validate_json(path.read_text(encoding="utf-8"))
+            result = RouteEditorialReview.model_validate_json(path.read_text(encoding="utf-8"))
         except (OSError, ValueError) as exc:
             raise RouteReviewError(f"Route review '{route_id}' is invalid") from exc
         complete_draft = self._optional_complete_draft(route_id)
@@ -192,7 +196,7 @@ class RouteReviewRepository:
             return self._build_current(route_id, result)
         return result
 
-    def refresh(self, route_id: str) -> RouteReviewResult:
+    def refresh(self, route_id: str) -> RouteEditorialReview:
         previous = self._optional_review(route_id)
         result = self._build_current(route_id, previous)
         self._write(result)
@@ -202,7 +206,7 @@ class RouteReviewRepository:
         self,
         route_id: str,
         complete_draft: dict[str, Any],
-    ) -> RouteReviewResult:
+    ) -> RouteEditorialReview:
         """Build, but do not write, the review bound to an exact complete draft."""
         return self._build_current(
             route_id,
@@ -255,7 +259,7 @@ class RouteReviewRepository:
         route_id: str,
         candidate_id: str,
         update: RouteReviewStateUpdate,
-    ) -> RouteReviewResult:
+    ) -> RouteEditorialReview:
         result = self.get(route_id)
         if result.revision_id != update.revision_id:
             raise RouteReviewConflictError(
@@ -326,10 +330,10 @@ class RouteReviewRepository:
     def _build_current(
         self,
         route_id: str,
-        previous: RouteReviewResult | None,
+        previous: RouteEditorialReview | None,
         complete_draft: dict[str, Any] | None = None,
         initial_states: dict[str, EditorialState] | None = None,
-    ) -> RouteReviewResult:
+    ) -> RouteEditorialReview:
         complete_draft = complete_draft or self._optional_complete_draft(route_id)
         source = complete_draft or self._read_event_list(route_id)
         return build_route_review(
@@ -358,13 +362,13 @@ class RouteReviewRepository:
             if isinstance(item, dict) and isinstance(item.get("id"), str)
         }
 
-    def _optional_review(self, route_id: str) -> RouteReviewResult | None:
+    def _optional_review(self, route_id: str) -> RouteEditorialReview | None:
         try:
             return self.get(route_id)
         except RouteReviewNotFoundError:
             return None
 
-    def _write(self, result: RouteReviewResult) -> None:
+    def _write(self, result: RouteEditorialReview) -> None:
         path = self._review_path(result.route_id)
         path.parent.mkdir(parents=True, exist_ok=True)
         temporary_path = path.with_name(f".{path.name}.tmp")
@@ -389,11 +393,11 @@ def build_route_review(
     *,
     route_id: str,
     event_list: dict[str, Any],
-    previous: RouteReviewResult | None,
+    previous: RouteEditorialReview | None,
     initial_states: dict[str, EditorialState] | None = None,
     complete_draft: dict[str, Any] | None = None,
     seed_places: dict[str, dict[str, Any]] | None = None,
-) -> RouteReviewResult:
+) -> RouteEditorialReview:
     candidates = _candidate_objects(event_list)
     candidate_accounts = _candidate_accounts(candidates)
     active_accounts = [account for account in candidate_accounts if account.active]
@@ -502,7 +506,7 @@ def build_route_review(
             continue
         dormant.append(prior.model_copy(update={"active": False, "included": False}))
 
-    result = RouteReviewResult(
+    result = RouteEditorialReview(
         route_id=route_id,
         revision_id="",
         source=(
@@ -890,7 +894,7 @@ def _technical_ready(
     )
 
 
-def _revision_id(result: RouteReviewResult) -> str:
+def _revision_id(result: RouteEditorialReview) -> str:
     payload = result.model_dump(exclude={"revision_id"})
     return hashlib.sha256(_canonical_json(payload).encode("utf-8")).hexdigest()
 

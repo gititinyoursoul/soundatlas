@@ -2,7 +2,7 @@ import type {
   Event,
   RouteReviewCandidateAccount,
   RouteReviewProposal,
-  RouteReviewResult
+  RouteEditorialReview
 } from '$lib/types/soundatlas';
 
 export type EditorialProjection = {
@@ -15,7 +15,7 @@ export type EditorialProjection = {
   warnings: string[];
 };
 
-export type InactiveCandidateProjection = {
+export type ConsideredCandidateProjection = {
   account: RouteReviewCandidateAccount;
   title: string;
   summary: string | null;
@@ -25,16 +25,16 @@ export type InactiveCandidateProjection = {
 };
 
 export function projectRouteReview(
-  review: RouteReviewResult
+  review: RouteEditorialReview
 ): EditorialProjection[] {
   return review.proposals
     .filter((proposal) => proposal.active)
     .map(projectProposal);
 }
 
-export function projectInactiveCandidates(
-  review: RouteReviewResult
-): InactiveCandidateProjection[] {
+export function projectConsideredCandidates(
+  review: RouteEditorialReview
+): ConsideredCandidateProjection[] {
   return review.candidate_accounts
     .filter((account) => !account.active)
     .map((account) => ({

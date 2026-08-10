@@ -567,7 +567,7 @@ def test_status_does_not_mark_legacy_outputs_stale_when_complete_draft_is_active
         == 0
     )
     output = capsys.readouterr().out
-    assert "Active complete draft" in output
+    assert "Selected generated route result" in output
     assert "accepted-events gate does not block the active complete-draft path" in output
     assert "stale downstream artifacts" not in output
 
@@ -1238,7 +1238,7 @@ def test_review_command_migrates_legacy_state_and_status_separates_paths(
     )
     status_output = capsys.readouterr().out
     assert "Accepted-events gate (legacy compatibility)" in status_output
-    assert "Private route review" in status_output
+    assert "Route editorial review" in status_output
     assert "states: draft=1, approved=0, dont_use=0" in status_output
 
 
@@ -1618,7 +1618,7 @@ def test_complete_draft_correction_prompt_preserves_outline_and_composition_targ
     )
 
     assert 'Return only a JSON object shaped as {"patches"' in prompt
-    assert "original complete draft remains authoritative" in prompt
+    assert "original generated route result remains authoritative" in prompt
     assert "Do not remove Candidates" not in prompt
     assert "image_links" in prompt
     assert "## Candidate outline authority" in prompt

@@ -348,6 +348,25 @@ def test_editorial_api_rejects_invalid_route_ids(tmp_path: Path) -> None:
     assert response.status_code == 400
 
 
+def test_editorial_review_openapi_keeps_compatibility_schema_name(tmp_path: Path) -> None:
+    repository = write_review_fixture(tmp_path)
+    repository.refresh(ROUTE_ID)
+    client = TestClient(
+        create_app(
+            SeedRepository([], [], [], []),
+            route_review_repository=repository,
+        )
+    )
+
+    schema = client.get("/openapi.json").json()
+    response_schema = schema["paths"]["/editorial/routes/{route_id}/review"]["get"][
+        "responses"
+    ]["200"]["content"]["application/json"]["schema"]
+
+    assert response_schema == {"$ref": "#/components/schemas/RouteReviewResult"}
+    assert "RouteEditorialReview" not in schema["components"]["schemas"]
+
+
 def test_legacy_migration_is_explicit_and_does_not_use_agent_decisions(tmp_path: Path) -> None:
     repository = write_review_fixture(tmp_path, include_second=True)
     event_list_path = tmp_path / ROUTE_ID / "event-list.json"

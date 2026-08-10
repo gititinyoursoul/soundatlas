@@ -1,7 +1,7 @@
 <script lang="ts">
-  import type { InactiveCandidateProjection } from '$lib/data/editorial-review';
+  import type { ConsideredCandidateProjection } from '$lib/data/editorial-review';
 
-  export let candidate: InactiveCandidateProjection | null = null;
+  export let candidate: ConsideredCandidateProjection | null = null;
 
   $: account = candidate?.account ?? null;
   $: context = account?.context ?? {};
@@ -37,14 +37,14 @@
 
 <aside
   class="grid h-full content-start gap-5 overflow-y-auto bg-white p-5 text-[#314151]"
-  aria-label="Inactive candidate details"
+  aria-label="Considered candidate details"
 >
   {#if candidate && account}
     <header class="grid gap-2 border-b border-[#d9e0e7] pb-4">
       <p
         class="m-0 text-xs font-extrabold uppercase tracking-[0.14em] text-[#78510c]"
       >
-        Inactive candidate · Not in current route
+        Other considered candidate · Not in current route
       </p>
       <h2 class="m-0 text-xl leading-tight">{candidate.title}</h2>
       <p class="m-0 text-sm text-[#536170]">

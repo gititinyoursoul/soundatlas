@@ -237,7 +237,7 @@ export type RouteReviewCandidateAccount = {
   findings: RouteReviewFinding[];
 };
 
-export type RouteReviewResult = {
+export type RouteEditorialReview = {
   route_id: string;
   revision_id: string;
   source: string;

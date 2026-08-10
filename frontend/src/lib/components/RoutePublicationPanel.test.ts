@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import RoutePublicationPanel from './RoutePublicationPanel.svelte';
 
 describe('RoutePublicationPanel', () => {
-  it('labels route readiness and separates non-blocking warnings', () => {
+  it('labels publication blocking checks and separates non-blocking warnings', () => {
     const { body } = render(RoutePublicationPanel, {
       props: {
         summary: {
@@ -31,8 +31,8 @@ describe('RoutePublicationPanel', () => {
       }
     });
 
-    expect(body).toContain('Route readiness');
-    expect(body).toContain('Technically ready');
+    expect(body).toContain('Publication blocking checks');
+    expect(body).toContain('Publication checks clear');
     expect(body).toContain('1 included · 1 excluded');
     expect(body).toContain('1 event warning');
     expect(body).toContain('1 route warning');

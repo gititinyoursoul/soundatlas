@@ -8,11 +8,11 @@ from pydantic import BaseModel, Field
 
 from app.config import DEFAULT_CONTENT_ROOT, DEFAULT_SEED_DIR
 from app.route_review import (
+    RouteEditorialReview,
     RouteReviewError,
     RouteReviewNotFoundError,
     RouteReviewProposal,
     RouteReviewRepository,
-    RouteReviewResult,
 )
 from app.schemas import Connection, Event, Place, Route
 from app.seed_repository import SeedRepository
@@ -118,7 +118,7 @@ class RoutePublicationRepository:
         return RoutePublicationResult(**summary.model_dump(), published=True)
 
     def _build_payload(
-        self, review: RouteReviewResult
+        self, review: RouteEditorialReview
     ) -> tuple[dict[str, dict[str, Any]], PublicationFindings]:
         findings = PublicationFindings(
             route_warnings=list(review.warnings),
@@ -193,7 +193,7 @@ class RoutePublicationRepository:
         findings.route_technical_errors.extend(self._validate_payload(payload))
         return payload, findings
 
-    def _get_review(self, route_id: str) -> RouteReviewResult:
+    def _get_review(self, route_id: str) -> RouteEditorialReview:
         try:
             return self._review_repository.get(route_id)
         except RouteReviewNotFoundError as exc:
@@ -203,7 +203,7 @@ class RoutePublicationRepository:
 
     def _summary(
         self,
-        review: RouteReviewResult,
+        review: RouteEditorialReview,
         findings: PublicationFindings,
     ) -> RoutePublicationSummary:
         included = [
@@ -242,7 +242,7 @@ class RoutePublicationRepository:
         self,
         payload: dict[str, dict[str, Any]],
         route_id: str,
-        review: RouteReviewResult,
+        review: RouteEditorialReview,
     ) -> None:
         files = {
             "places.json": payload["places"],

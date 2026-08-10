@@ -10,7 +10,7 @@
   import Icon from './Icon.svelte';
   import EditorialEventList from './EditorialEventList.svelte';
   import InactiveCandidateList from './InactiveCandidateList.svelte';
-  import type { InactiveCandidateProjection } from '$lib/data/editorial-review';
+  import type { ConsideredCandidateProjection } from '$lib/data/editorial-review';
   import RoutePublicationPanel from './RoutePublicationPanel.svelte';
 
   type DrawerVariant = 'expanded' | 'collapsed';
@@ -55,7 +55,7 @@
   export let showEditorialReview = false;
   export let editorialProposalCount = 0;
   export let editorialProposals: RouteReviewProposal[] = [];
-  export let editorialInactiveCandidates: InactiveCandidateProjection[] = [];
+  export let editorialConsideredCandidates: ConsideredCandidateProjection[] = [];
   export let editorialErrorMessage: string | null = null;
   export let publicationSummary: RoutePublicationSummary | null = null;
   export let publicationSaving = false;
@@ -75,8 +75,8 @@
   export let onSelectEditorialProposal: (
     proposal: RouteReviewProposal
   ) => void = () => {};
-  export let onSelectInactiveCandidate: (
-    candidate: InactiveCandidateProjection
+  export let onSelectConsideredCandidate: (
+    candidate: ConsideredCandidateProjection
   ) => void = () => {};
   export let onPublishRoute: () => void = () => {};
 
@@ -378,7 +378,7 @@
                 bind:this={panelHeadingElement}
                 tabindex="-1"
               >
-                Choose active route
+                Choose selected route
               </h2>
             </div>
 
@@ -443,9 +443,9 @@
                 Route review
               </h2>
               <p>
-                {editorialProposalCount + editorialInactiveCandidates.length}
-                candidates · {editorialProposalCount} active ·
-                {editorialInactiveCandidates.length} inactive
+                {editorialProposalCount + editorialConsideredCandidates.length}
+                candidates · {editorialProposalCount} route events ·
+                {editorialConsideredCandidates.length} considered
               </p>
             </div>
             <RoutePublicationPanel
@@ -460,7 +460,7 @@
                 <Icon name="warning" />
                 <p>{editorialErrorMessage}</p>
               </div>
-            {:else if editorialProposals.length === 0 && editorialInactiveCandidates.length === 0}
+            {:else if editorialProposals.length === 0 && editorialConsideredCandidates.length === 0}
               <div class="section-empty">
                 <Icon name="circle" /><span>No review candidates loaded.</span>
               </div>
@@ -469,22 +469,22 @@
                 <h3
                   class="mb-1 mt-4 text-sm font-extrabold uppercase tracking-wide text-[#536170]"
                 >
-                  Active route events
+                  Route events
                 </h3>
                 <EditorialEventList
                   proposals={editorialProposals}
                   onSelect={onSelectEditorialProposal}
                 />
               {/if}
-              {#if editorialInactiveCandidates.length > 0}
+              {#if editorialConsideredCandidates.length > 0}
                 <h3
                   class="mb-1 mt-5 text-sm font-extrabold uppercase tracking-wide text-[#536170]"
                 >
-                  Inactive candidates
+                  Other considered candidates
                 </h3>
                 <InactiveCandidateList
-                  candidates={editorialInactiveCandidates}
-                  onSelect={onSelectInactiveCandidate}
+                  candidates={editorialConsideredCandidates}
+                  onSelect={onSelectConsideredCandidate}
                 />
               {/if}
             {/if}

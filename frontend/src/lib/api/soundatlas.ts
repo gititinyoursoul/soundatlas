@@ -8,7 +8,7 @@ import type {
   Route,
   RoutePublicationResult,
   RoutePublicationSummary,
-  RouteReviewResult,
+  RouteEditorialReview,
   SoundAtlasData
 } from '$lib/types/soundatlas';
 import { base } from '$app/paths';
@@ -107,8 +107,8 @@ export async function reviewEventLink(
 export async function loadRouteReview(
   routeId: string,
   fetcher: typeof fetch = fetch
-): Promise<RouteReviewResult> {
-  return requestJson<RouteReviewResult>(
+): Promise<RouteEditorialReview> {
+  return requestJson<RouteEditorialReview>(
     `/editorial/routes/${encodeURIComponent(routeId)}/review`,
     fetcher
   );
@@ -120,7 +120,7 @@ export async function updateRouteReviewState(
   revisionId: string,
   editorialState: EditorialState,
   fetcher: typeof fetch = fetch
-): Promise<RouteReviewResult> {
+): Promise<RouteEditorialReview> {
   const response = await fetcher(
     `${API_BASE_URL}/editorial/routes/${encodeURIComponent(routeId)}/review/events/${encodeURIComponent(candidateId)}`,
     {
@@ -139,7 +139,7 @@ export async function updateRouteReviewState(
     );
   }
 
-  return (await response.json()) as RouteReviewResult;
+  return (await response.json()) as RouteEditorialReview;
 }
 
 export async function loadRoutePublication(

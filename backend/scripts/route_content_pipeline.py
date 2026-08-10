@@ -674,7 +674,7 @@ def run_step(
             "status": "blocked",
             "outputs": [],
             "errors": [
-                "Active complete draft is the content authority; use its generated views instead."
+                "The selected generated route result is the content authority; use its generated views instead."
             ],
         }
     if step == "event_list":
@@ -763,7 +763,7 @@ def run_agent_step(
         and not dry_run
     ):
         raise ValueError(
-            "Active complete draft is the content authority; secondary agent steps cannot overwrite its views."
+            "The selected generated route result is the content authority; secondary agent steps cannot overwrite its views."
         )
     agent_step = manifest["agent_steps"][step]
     prompt_path = route_dir / agent_step["prompt"]
@@ -1213,9 +1213,9 @@ def build_complete_draft_correction_prompt(
             "# SoundAtlas Agent Step: complete_draft correction patch",
             "",
             "Return only a JSON object shaped as {\"patches\": {\"candidate-id\": {\"preview\": {\"summary\": \"...\"}}}}.",
-            "Patch only the explicitly allowed paths listed below; never return a complete draft.",
+            "Patch only the explicitly allowed paths listed below; never return a generated route result.",
             "Do not invent source URLs or historical claims, change Human editorial state, approve media, publish, or write seed data.",
-            "The original complete draft remains authoritative for every field not explicitly patched.",
+            "The original generated route result remains authoritative for every field not explicitly patched.",
             "Use only the existing Candidate IDs and preserve all composition, sequence, Event, Place, Finding, metadata, warning, and technical-error content.",
             "Return no wrapper commentary and no keys other than `patches`.",
             "",
@@ -1728,7 +1728,7 @@ def validate_regeneration(
         errors.append("Selective regeneration must include every requested candidate ID.")
     active_path = route_dir / manifest["steps"]["complete_draft"]["json"]
     if not active_path.exists():
-        return ["Selective regeneration requires an active complete draft."]
+        return ["Selective regeneration requires a selected generated route result."]
     prior = read_json(active_path)
     prior_events = {
         item.get("id"): item
@@ -1804,7 +1804,7 @@ def format_complete_draft_markdown(payload: dict[str, Any]) -> str:
         "",
         f"Source outline: `{payload['_meta']['source_outline']}`",
         "",
-        "This complete draft is generated content for private editorial review. It is not approved or publication-ready.",
+        "This generated route result is working content for route editorial review. It is not approved or publication-ready.",
         "",
         "## Sequence",
         "",
@@ -1857,7 +1857,7 @@ def build_agent_prompt(
             "## Revision request",
             json.dumps(revision_request, indent=2, ensure_ascii=False),
             "",
-            "## Current complete draft",
+            "## Current generated route result",
             (route_dir / active_output).read_text(encoding="utf-8"),
             "",
         ]
@@ -3320,7 +3320,7 @@ def format_status(
         lines.append(f"- {step_name}:{input_detail} outputs={output_status or 'none'}")
     complete_step = manifest.get("agent_steps", {}).get("complete_draft", {})
     active_complete_output = complete_step.get("active_output", "complete-draft.json")
-    lines.extend(["", "Active complete draft"])
+    lines.extend(["", "Selected generated route result"])
     if (route_dir / active_complete_output).exists():
         lines.append(f"- present: {active_complete_output}")
         lines.append(
@@ -3340,7 +3340,7 @@ def format_status(
                 lines.append("- stale downstream artifacts: " + ", ".join(stale_outputs))
     else:
         lines.append("- passed")
-    lines.extend(["", "Private route review"])
+    lines.extend(["", "Route editorial review"])
     if review_repository is None:
         review_repository = RouteReviewRepository(route_dir.parent)
     try:
@@ -3367,7 +3367,7 @@ def format_status(
                 f"- dormant decisions: {len(review.dormant_proposals)}",
                 f"- editorial warnings: {warnings}",
                 f"- technical errors: {errors}",
-                f"- technical readiness: {'ready' if review.technical_ready else 'blocked'}",
+                f"- publication blocking checks: {'clear' if review.technical_ready else 'blocked'}",
             ]
         )
     lines.extend(["", "Agent steps"])
@@ -3391,7 +3391,7 @@ def format_review_summary(result: dict[str, Any]) -> str:
     )
     return "\n".join(
         [
-            "Private route review refreshed",
+            "Route editorial review refreshed",
             f"Route: {result['route_id']}",
             f"Revision: {result['revision_id']}",
             f"Generated proposals: {len(proposals)}",
@@ -3399,7 +3399,7 @@ def format_review_summary(result: dict[str, Any]) -> str:
             f"Dormant decisions: {len(result['dormant_proposals'])}",
             f"Editorial warnings: {warnings}",
             f"Technical errors: {errors}",
-            f"Technical readiness: {'ready' if result['technical_ready'] else 'blocked'}",
+            f"Publication blocking checks: {'clear' if result['technical_ready'] else 'blocked'}",
         ]
     )
 

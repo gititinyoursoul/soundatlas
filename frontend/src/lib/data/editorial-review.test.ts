@@ -2,10 +2,10 @@ import { describe, expect, it } from 'vitest';
 import { makeEvent } from '$lib/test/fixtures';
 import type {
   RouteReviewProposal,
-  RouteReviewResult
+  RouteEditorialReview
 } from '$lib/types/soundatlas';
 import {
-  projectInactiveCandidates,
+  projectConsideredCandidates,
   projectRouteReview
 } from './editorial-review';
 
@@ -35,8 +35,8 @@ function makeProposal(
 }
 
 function makeReview(
-  overrides: Partial<RouteReviewResult> = {}
-): RouteReviewResult {
+  overrides: Partial<RouteEditorialReview> = {}
+): RouteEditorialReview {
   return {
     route_id: 'birth-of-hip-hop',
     revision_id: 'revision-1',
@@ -129,7 +129,7 @@ describe('editorial review projection', () => {
   });
 
   it('projects inactive candidate context without creating an event', () => {
-    const [candidate] = projectInactiveCandidates(
+    const [candidate] = projectConsideredCandidates(
       makeReview({
         candidate_accounts: [
           {

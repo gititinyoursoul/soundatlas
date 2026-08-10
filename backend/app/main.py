@@ -13,6 +13,7 @@ from app.route_publication import (
     RoutePublicationValidationError,
 )
 from app.route_review import (
+    RouteEditorialReview,
     RouteReviewConflictError,
     RouteReviewError,
     RouteReviewNotFoundError,
@@ -50,7 +51,7 @@ def create_app(
     api = FastAPI(
         title="SoundAtlas API",
         version="0.1.0",
-        description="Seed-backed public data and private route review for the SoundAtlas MVP.",
+        description="Seed-backed public data and route editorial review for the SoundAtlas MVP.",
     )
 
     api.add_middleware(
@@ -200,7 +201,7 @@ def create_app(
     def get_route_review(
         route_id: str,
         review_repository: RouteReviewRepository = Depends(get_route_review_repository),
-    ) -> RouteReviewResult:
+    ) -> RouteEditorialReview:
         try:
             return review_repository.get(route_id)
         except RouteReviewNotFoundError as exc:
@@ -222,7 +223,7 @@ def create_app(
         candidate_id: str,
         request: RouteReviewStateUpdate,
         review_repository: RouteReviewRepository = Depends(get_route_review_repository),
-    ) -> RouteReviewResult:
+    ) -> RouteEditorialReview:
         try:
             return review_repository.update_state(route_id, candidate_id, request)
         except RouteReviewNotFoundError as exc:
