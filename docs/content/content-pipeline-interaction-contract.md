@@ -31,7 +31,7 @@ CLI generates or regenerates one route result
   -> validated content becomes canonical seed data
 ```
 
-The focused review and publication slices are implemented. The private review
+The focused review and publication slices are implemented. The route editorial review
 revision binds the seed-shaped event, place, and connection content generated
 in `complete-draft.json`; publication consumes that bound content rather than
 rereading independently mutable framing files.
@@ -205,7 +205,7 @@ The interaction satisfies this contract when:
 
 - one generated route result can be inspected through the coordinated explorer
   without reading raw structured files;
-- every proposed event has a private Draft, Approved, or Don’t use state and
+- every proposed event has a route-scoped Draft, Approved, or Don’t use state and
   generated proposals default to Draft;
 - every Candidate considered for the Route has a reviewable composition outcome,
   Reason, Context, and owned findings; other considered candidates have no editorial

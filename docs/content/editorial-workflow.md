@@ -154,7 +154,7 @@ For new route work, keep route-specific editorial artifacts under
    should minimize human effort by showing overview counts, overlap-cluster
    recommendations, merge targets, `maybe` items, and then the full candidate
    appendix.
-9. `route-review.json`: authoritative private Human-state record bound to one
+9. `route-review.json`: authoritative route-scoped Human-state record bound to one
    exact generated route result. It keeps Draft, Approved, and Don’t use only on route
    events; other considered candidates retain their composition account and findings but
    do not receive editorial state. It preserves minimal dormant decisions across
@@ -166,7 +166,7 @@ inactive Candidate is read-only: its generated Content, composition account,
 findings, and resolved place/time context are shown without adding it to the
 active Route, publication payload, or public explorer. A disagreement is a
 revision request through #85, not an inactive-Candidate state or direct edit.
-10. `route-publication.json`: minimal private record of the exact revision and
+10. `route-publication.json`: minimal route-scoped record of the exact revision and
    event/connection membership most recently promoted to canonical seed data.
    It protects the published result from later route-review refreshes; it is not
    a run archive or publication history.
