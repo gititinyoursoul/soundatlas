@@ -17,7 +17,7 @@ through raw Markdown or JSON files.
 The route pipeline currently produces a candidate outline and one complete
 reviewable route-folder draft. `accepted-events.json` remains available as a
 deterministic compatibility handoff, but it is no longer required before the
-active complete draft or private route review is created.
+active generated route result or route editorial review is created.
 
 The target MVP interaction is:
 
@@ -26,9 +26,9 @@ CLI generates or regenerates one route result
   -> editor opens that result in editorial review mode
   -> editor explores it through the map, timeline, and StoryPanel
   -> editor may set each event to Draft, Approved, or Don’t use
-  -> editor inspects warnings and technical readiness
+  -> editor inspects warnings and publication blocking checks
   -> editor publishes the exact Draft-plus-Approved route result
-  -> validated content becomes canonical runtime data
+  -> validated content becomes canonical seed data
 ```
 
 The focused review and publication slices are implemented. The private review
@@ -69,10 +69,10 @@ The surface must:
 
 - identify the route result under review;
 - keep map, timeline, and StoryPanel selection coordinated;
-- show every proposed event with its current private editorial state;
+- show every proposed event with its current route-scoped editorial state;
 - show agent recommendations and rationales as advisory information;
 - keep relevant event and route warnings visible;
-- distinguish technical readiness from editorial warnings; and
+- distinguish publication blocking checks from editorial warnings; and
 - provide one route-level Publish action when technical validation permits it.
 
 The StoryPanel uses the same reader-facing event shape and presentation in
@@ -93,7 +93,7 @@ The first MVP surface is read-only apart from editorial-state controls. Content
 corrections continue through the existing Codex or CLI workflow. Direct field
 editing and revision requests are not part of this initial interaction.
 
-## Private Editorial States
+## Route-Scoped Editorial States
 
 Each proposed event has one route-scoped human editorial state:
 
@@ -112,7 +112,7 @@ control. Don’t use events do not appear in the published route.
 
 ## State Separation
 
-Private editorial state must remain distinct from:
+Route-scoped editorial state must remain distinct from:
 
 - agent `keep`, `maybe`, `merge`, or `reject` recommendations and merge targets;
 - the existing seed `review_status` compatibility field;
@@ -140,7 +140,7 @@ reviewed result and makes the separate explicit Publication decision.
 
 Structurally invalid data and failed or unresolved references are technical
 errors. They are not editorial decisions and may prevent publication when the
-system cannot safely produce canonical runtime data.
+system cannot safely produce canonical seed data.
 
 Neither warnings nor successful validation constitute human approval.
 
@@ -149,10 +149,10 @@ Neither warnings nor successful validation constitute human approval.
 Publish is one explicit, human-only route decision over the exact result shown
 in editorial review. The publication summary must identify the route result,
 list the Draft and Approved events that will be included, show excluded Don’t
-use counts, preserve visible warnings, and report technical readiness.
+use counts, preserve visible warnings, and report publication blocking checks.
 
 After the decision, the system validates and promotes that exact
-Draft-plus-Approved result into canonical runtime data. Publication:
+Draft-plus-Approved result into canonical seed data. Publication:
 
 - excludes Don’t use events without deleting their editorial records;
 - preserves the current Draft or Approved state internally;
@@ -208,7 +208,7 @@ The interaction satisfies this contract when:
 - every proposed event has a private Draft, Approved, or Don’t use state and
   generated proposals default to Draft;
 - every Candidate considered for the Route has a reviewable composition outcome,
-  Reason, Context, and owned findings; inactive Candidates have no editorial
+  Reason, Context, and owned findings; other considered candidates have no editorial
   state;
 - Draft and Approved events are included, while Don’t use events are excluded
   without deletion;

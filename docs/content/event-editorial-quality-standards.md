@@ -14,7 +14,7 @@ define runtime presentation, or add publication gates.
 
 `content-pipeline-interaction-contract.md` owns the target human-review
 interaction. Editorial checks in this document produce revisions or visible
-warnings; they do not set the private Draft, Approved, or Don’t use route state
+warnings; they do not set the route-scoped Draft, Approved, or Don’t use route state
 and do not authorize route publication.
 
 ## The Event As A Self-Contained Chapter
@@ -114,7 +114,7 @@ final-reviewed event records.
 - any transition associated with publication belongs to the applicable
   human-controlled route review flow, not to this quality checklist
 
-This seed compatibility field is not the private route-scoped Draft, Approved,
+This seed compatibility field is not the route-scoped Draft, Approved,
 or Don’t use state defined by the interaction contract. It does not determine
 whether an event is included in a published route and is not a public-facing
 editorial badge.
@@ -210,7 +210,7 @@ in one or two sentences without repeating the summary.
 
 ## Candidate Recommendations, Route State, And Seed Review Status
 
-Candidate recommendations, the target private route-review state, and seed
+Candidate recommendations, the target route editorial review state, and seed
 `review_status` are separate layers.
 
 Current candidate recommendations:

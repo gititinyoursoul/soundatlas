@@ -97,7 +97,7 @@ dossier, then may add, omit, merge, split, or reorder proposals before
 materializing one validated active result. It records an outcome, Reason,
 relationships, review Context, phase coverage, and owned findings for every
 outline Candidate and every addition. Only active and added Candidates become
-Events; inactive Candidates remain reviewable without becoming editorial state.
+Events; other considered candidates remain reviewable without becoming editorial state.
 
 The complete-draft step does not require `accepted-events.json`. It validates
 the same output contract named in its prompt, permits JSON-envelope
@@ -218,7 +218,7 @@ the route as seed-ready.
 
 The accepted-events gate is a legacy compatibility path for the deterministic
 `run` and `promote` commands. It is not required by the active `complete_draft`
-path and is not the authority for the private Draft, Approved, and Don’t use
+path and is not the authority for the route-scoped Draft, Approved, and Don’t use
 state described below.
 
 Run one step:
@@ -240,9 +240,9 @@ Create a deterministic variant:
 uv run --project backend python backend/scripts/route_content_pipeline.py run --route-id birth-of-hip-hop --step event_list --variant alternate-draft
 ```
 
-## Private Route Review
+## Route Editorial Review
 
-Create the first private review result from an existing event list by explicitly
+Create the first route editorial review revision from an existing event list by explicitly
 migrating its legacy human states:
 
 ```bash
@@ -345,7 +345,7 @@ The legacy deterministic downstream pipeline uses `accepted-events.json` as its
 enforcement contract. `accepted-events.md` is the companion view and is not
 parsed as the source of truth or approved separately. Treat both files as
 enrichment-ready compatibility handoff material only; `complete-draft.json`
-feeds the active route-review path, `route-review.json` owns private human
+feeds the selected route-review path, `route-review.json` owns route-scoped Human
 state, and Issue #73 owns exact-result publication.
 
 ## Verification

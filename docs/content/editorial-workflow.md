@@ -33,8 +33,8 @@ instead of reconstructing the decision from raw notes.
 `content-pipeline-interaction-contract.md` defines the normative target
 interaction for a thin editorial mode in the existing explorer. It lets the
 human inspect a generated route through the map, timeline, and StoryPanel; set
-private route-scoped Draft, Approved, or Don’t use states; inspect warnings and
-technical readiness; and publish one exact reviewed result.
+route-scoped Draft, Approved, or Don’t use states; inspect warnings and
+publication blocking checks; and publish one exact reviewed result.
 
 The workflow below remains the description of the currently implemented
 file-based pipeline. The target interaction does not replace current candidate
@@ -102,8 +102,8 @@ flowchart TD
     `docs/content/workflow-commands.md`.
 14. Keep `accepted-events.json` and `accepted-events.md` as legacy compatibility
     artifacts for the deterministic path. They are not required before complete
-    drafting and do not determine private route state.
-15. Treat the complete draft and route-review result as reviewable drafts, not
+    drafting and do not determine route-scoped editorial state.
+15. Treat the generated route result and editorial review revision as reviewable drafts, not
     publication-ready data. The legacy accepted-event handoff remains
     enrichment-ready compatibility material. AI acquires and compares Sources
     before drafting active reader-facing prose; Human publication remains the
@@ -148,15 +148,15 @@ For new route work, keep route-specific editorial artifacts under
 7. `complete-draft.json` and `complete-draft.md`: the single generated
    Content/composition authority for one validated Route revision. It contains
    the complete Candidate account, active Event/Place/Connection Content, phase
-   coverage, owned findings, technical readiness, and source-outline identity.
+   coverage, owned findings, publication blocking checks, and source-outline identity.
 8. `event-list.md` and `event-list.json`: deterministic active-Candidate views
    materialized from the complete draft for compatibility. `event-list.md`
    should minimize human effort by showing overview counts, overlap-cluster
    recommendations, merge targets, `maybe` items, and then the full candidate
    appendix.
 9. `route-review.json`: authoritative private Human-state record bound to one
-   exact complete draft. It keeps Draft, Approved, and Don’t use only on active
-   Events; inactive Candidates retain their composition account and findings but
+   exact generated route result. It keeps Draft, Approved, and Don’t use only on route
+   events; other considered candidates retain their composition account and findings but
    do not receive editorial state. It preserves minimal dormant decisions across
    refreshes.
 
@@ -167,7 +167,7 @@ findings, and resolved place/time context are shown without adding it to the
 active Route, publication payload, or public explorer. A disagreement is a
 revision request through #85, not an inactive-Candidate state or direct edit.
 10. `route-publication.json`: minimal private record of the exact revision and
-   event/connection membership most recently promoted to canonical runtime data.
+   event/connection membership most recently promoted to canonical seed data.
    It protects the published result from later route-review refreshes; it is not
    a run archive or publication history.
 11. `accepted-events.json`: legacy structured accepted-event handoff for the
@@ -193,17 +193,17 @@ The route content pipeline keeps `accepted-events.json` as a legacy
 compatibility contract for deterministic commands. The active complete draft is
 the only generated Content authority; route concept, event list, and framing
 artifacts are its deterministic views, and `route-review.json` binds that exact
-Content to private Human state. Secondary commands must not overwrite active
+Content to route-scoped Human editorial state. Secondary commands must not overwrite selected
 complete-draft views. The legacy path is retired separately through #103.
 
 The publication API is available only through API-backed editorial mode:
 
 - `GET /editorial/routes/<route-id>/publication` returns the exact revision
   summary, Draft-plus-Approved inclusion, Don’t use exclusions, warnings, and
-  technical readiness.
+  publication blocking checks.
 - `POST /editorial/routes/<route-id>/publication` accepts the active review
   revision and promotes the validated result to canonical seed data. It does
-  not commit, push, deploy, resolve warnings, or alter private editorial state.
+  not commit, push, deploy, resolve warnings, or alter route-scoped editorial state.
 
 This remains a focused publication boundary while #72 completes its review
 surface evidence and the legacy accepted-events path is retired through the
@@ -238,7 +238,7 @@ uv run --project backend python backend/scripts/route_content_pipeline.py promot
 - Minimize human input during review. Agent outputs should propose decisions,
   defaults, merge targets, overlap handling, rationales, and next questions
   before asking for human confirmation.
-- Keep generated proposals pending for private route review. Do not treat agent
+- Keep generated proposals pending for route editorial review. Do not treat agent
   `keep`, `maybe`, `merge`, or `reject` recommendations as human decisions or
   publication authorization.
 - Treat older `develop`, `context`, and `defer` candidate labels as draft

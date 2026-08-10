@@ -1,8 +1,8 @@
-# Complete Route Draft
+# Generated Route Result
 
 Source outline: `candidate-outline.json`
 
-This complete draft is generated content for private editorial review. It is not approved or publication-ready.
+This generated route result is working content for route editorial review. It is not approved or publication-ready.
 
 ## Sequence
 

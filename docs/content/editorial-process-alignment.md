@@ -12,7 +12,7 @@ route idea
 -> route brief
 -> candidate event longlist
 -> complete route draft
--> private human route review
+-> route-scoped Human editorial review
 -> source and media enrichment
 -> exact-result publication
 -> publishable event cards
@@ -41,9 +41,9 @@ SoundAtlas currently uses a route-first workflow:
    revise roster membership and sequence.
 5. `event-list.md` and `event-list.json` expose the active complete-draft
    proposals for review.
-6. `route-review.json` holds one exact private review result with the active
+6. `route-review.json` holds one exact editorial review revision with the selected
    seed-shaped event, place, and connection bundle; Draft, Approved, and Don’t
-   use state; technical readiness; and minimal dormant decisions across
+   use state; publication blocking checks; and minimal dormant decisions across
    regeneration. The editorial StoryPanel renders this event content directly,
    while candidate planning fields and findings remain separate review context.
    Event rows show warning and blocking-error counts, selected-event review
@@ -51,9 +51,9 @@ SoundAtlas currently uses a route-first workflow:
    only from included Draft or Approved events. Don’t use events remain visible
    for review without affecting those route counts.
 7. `accepted-events.json` and `accepted-events.md` remain legacy deterministic
-   handoff artifacts and do not determine private route state.
+   handoff artifacts and do not determine route-scoped editorial state.
 8. `route-concept.md`, `event-framing.*`, `place-framing.json`, and
-   `connection-framing.json` materialize the active complete draft.
+   `connection-framing.json` materialize the selected generated route result.
 9. `seed-transfer-report.md` and `validation-report.md` preview structural
    seed changes before promotion.
 10. `data/seed/` is the runtime source for the map, timeline, route switching,
@@ -99,11 +99,11 @@ provider calls, confidence hints, review priorities, quality reports, ignore
 lists, and review actions. These are useful, but they should not get ahead of
 the basic editorial decision about which events belong in a route.
 
-The route pipeline now creates a complete draft and private route-review result
+The route pipeline now creates a generated route result and route editorial review revision
 without requiring the legacy accepted-events gate. The deterministic accepted-
 events path remains available for compatibility. The target interaction reduces
 the remaining editorial friction by letting the editor inspect the route visually
-and set private route state without reviewing raw structured files.
+and set route-scoped editorial state without reviewing raw structured files.
 
 The current seed `review_status` values, `draft` and `reviewed`, are too broad
 for the full editorial lifecycle. They remain compatibility data and link-review
@@ -186,9 +186,9 @@ route input
 -> CLI complete route draft
 -> visual review in the existing explorer
 -> human state: Draft / Approved / Don’t use
--> warnings and technical readiness
+-> warnings and publication blocking checks
 -> publish the exact Draft-plus-Approved result
--> canonical runtime data
+-> canonical seed data
 ```
 
 Include:
@@ -242,7 +242,7 @@ Explorer editorial review
   |-- Don’t use --> exclude without deletion
   |
   v
-Warnings and technical readiness
+Warnings and publication blocking checks
   |
   v
 Publish exact reviewed result
