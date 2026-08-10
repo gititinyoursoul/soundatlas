@@ -170,8 +170,10 @@ record lists the exact direct consumers found by a pre-write audit. Those files
 may receive mechanical alignment only; they are not a general permission to
 edit a directory or alter behavior. `AGENTS.md` is always an explicitly named
 authority. A file or change outside this boundary remains untouched and is
-routed to a linked Intake Issue. The lifecycle contract and canonical record
-shape live in `docs/github-issue-workflow.md`.
+routed to a linked Intake Issue. Apply the declared boundary in one combined
+repository-edit request when practical. Environment confirmation prompts remain
+independent safeguards. The lifecycle contract and canonical record shape live
+in `docs/github-issue-workflow.md`.
 
 The detailed lifecycle and canonical Issue artifact shapes live in
 `docs/github-issue-workflow.md`. `soundatlas-issue-planning` owns the procedure

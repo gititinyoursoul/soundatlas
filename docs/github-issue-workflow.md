@@ -427,6 +427,12 @@ and list each exact derived file to be changed in the matching `## Proceed to
 Implementation` record. The Human's implementation authorization covers the
 named authorities and those audited derived files only.
 
+After that audit, apply the named-authority and audited derived-file changes in
+one combined repository-edit request when practical. Do not split those already
+authorized files into separate requests merely because they belong to different
+surfaces. A later request is justified only when the first attempt failed
+without applying changes or when new work must be routed outside the boundary.
+
 When a newly discovered file is not a listed authority or audited direct
 consumer, leave it unchanged and create a linked Intake Issue. Do the same when
 the proposed change would add a new policy, behavior, domain, or material scope
@@ -578,6 +584,11 @@ without a separate commit request only when every commit-ready condition holds:
 - the Git index contains only files belonging to that work package; and
 - the commit has a Conventional Commit subject and an `Issue: #<number>`
   footer.
+
+This removes an additional project-workflow request; it does not override a
+filesystem sandbox, Git credential, or application-level confirmation. A prompt
+from those controls is an execution-environment approval, not a new Issue or
+review gate.
 
 If the index already contains unrelated staged work, the agent must not stage
 or commit into that index. It reports the conflict and leaves the existing

@@ -93,6 +93,8 @@ approved Issue explicitly includes that scope.
 For non-trivial work, edit only named authorities and audited direct consumers
 inside the planned write boundary. Route a file or material change outside that
 boundary to a linked Intake Issue rather than adding it to the active work.
+Apply the declared boundary in one combined repository-edit request when
+practical; environment confirmation prompts remain independent safeguards.
 
 ## Process
 

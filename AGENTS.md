@@ -208,6 +208,11 @@ Events should contain at least:
   files found by the pre-write audit; implementation may edit only those files
   and the named authorities. Leave any other path or material scope change
   untouched and create a linked Intake Issue.
+- Apply all named-authority and audited derived-file changes in one combined
+  repository-edit request when practical; do not split an already authorized
+  boundary by surface. This convention cannot suppress filesystem-sandbox,
+  credential, or application-level confirmation prompts. Those prompts are
+  execution-environment controls, not additional Issue approvals.
 - Prefer one coherent Issue work package per commit.
 - Keep local folders such as `.venv/`, `node_modules/`, `.vscode/`, and `.github/` ignored.
 

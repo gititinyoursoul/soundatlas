@@ -62,7 +62,9 @@ readiness review before Issue content is drafted.
    name excluded scope. Treat `AGENTS.md` as an authority, never a derived
    consumer. Before implementation, audit the surface and list each exact
    derived file to be changed in the matching Proceed record. Route any
-   non-boundary path or material change to a linked Intake Issue.
+   non-boundary path or material change to a linked Intake Issue. Plan one
+   combined repository-edit request for the declared boundary when practical;
+   do not treat environment confirmation prompts as Issue approval gates.
 
    When creating an Issue, choose exactly one approved `priority:p*` label by
    reasoning from blocking level, MVP/release impact, risk reduction, and
