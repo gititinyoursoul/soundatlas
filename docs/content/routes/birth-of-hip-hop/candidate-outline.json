@@ -17,9 +17,9 @@
         "mobile-sound-and-breakbeat-practice"
       ],
       "recommended_anchor_id": "kool-herc-cindy-campbell-sedgwick-party",
-      "recommended_action": "keep_separate",
-      "rationale": "The candidates address distinct functions: background conditions, broader Bronx practice, a documented symbolic anchor, and developing DJ technique.",
-      "review_guidance": "Keep the Sedgwick event distinct only if it is framed as an associated and contested origin point. Use the broader context candidates as supporting material unless specific dates, places, and sources justify separate mapped events."
+      "recommended_action": "merge",
+      "rationale": "Sedgwick is the only bounded Event in this cluster. Migration, pre-1973 party culture, mobile sound, and break-focused practice remain necessary framing and connect forward to the separate Flash technique Event.",
+      "review_guidance": "Keep Sedgwick distinct with symbolic-origin wording; do not publish the other research concepts as regional Event pins."
     },
     {
       "cluster_id": "community-party-infrastructure",
@@ -30,10 +30,10 @@
         "bronx-clubs-and-local-performance-circuit",
         "bronx-river-crews-community-organization"
       ],
-      "recommended_anchor_id": "bronx-schools-parks-community-centers-parties",
+      "recommended_anchor_id": "bronx-river-crews-community-organization",
       "recommended_action": "merge",
-      "rationale": "These candidates overlap as evidence of repeated community spaces and local scene infrastructure. Cedar Playground, Bronx River, and named clubs should be retained as examples only where sourceable.",
-      "review_guidance": "Do not create a regional event without identifiable places and dates. Consider merging Cedar Playground into the broader infrastructure event unless place-specific evidence supports a separate record."
+      "rationale": "The May 30, 1980 Bronx River Center flyer supplies the exact date, venue, and lineup needed to represent community party infrastructure without a borough-wide Event.",
+      "review_guidance": "Use the flyer-bounded Event; keep Cedar Playground, broader public-space, and club-network research deferred."
     },
     {
       "cluster_id": "dj-technique-attribution",
@@ -55,10 +55,10 @@
         "dance-crews-and-party-floor-culture",
         "graffiti-trains-and-visual-culture"
       ],
-      "recommended_anchor_id": "mc-crew-and-party-hosting-practices",
-      "recommended_action": "keep_separate",
-      "rationale": "The candidates represent related but distinct cultural practices. Their inclusion should depend on whether each can demonstrate a specific relationship to party space, community, movement, or media.",
-      "review_guidance": "Require representative names, dates, places, and source-backed relationships before seed transfer. Do not use dance or graffiti as decorative additions."
+      "recommended_anchor_id": "bronx-river-crews-community-organization",
+      "recommended_action": "merge",
+      "rationale": "The Bronx River flyer bounds MC and crew practice, while Wild Style later bounds dance and graffiti representation; none of the three broad practice Candidates needs a separate pin.",
+      "review_guidance": "Preserve the practices in specific Event prose and Sources rather than converting research categories into Events."
     },
     {
       "cluster_id": "record-and-broadcast-circulation",
@@ -66,12 +66,13 @@
       "member_candidate_ids": [
         "rappers-delight-commercial-visibility",
         "early-rap-records-and-independent-labels",
-        "radio-djs-and-broadcast-circulation"
+        "radio-djs-and-broadcast-circulation",
+        "planet-rock-electro-transition"
       ],
       "recommended_anchor_id": "rappers-delight-commercial-visibility",
-      "recommended_action": "keep_separate",
-      "rationale": "The record, broader label formation, and radio circulation are related transitions but make different route arguments.",
-      "review_guidance": "Use the record as a media-transition anchor, not as the culture's beginning. Retain broader industry and radio candidates only if they add distinct evidence rather than discographic chronology."
+      "recommended_action": "merge",
+      "rationale": "Rapper's Delight supplies the commercial-record transition and Planet Rock supplies a later electronic sound transition. The broad label survey merges into those anchors and radio is deferred.",
+      "review_guidance": "Keep both records only because their route functions differ; do not turn the sequence into a discography."
     },
     {
       "cluster_id": "film-and-media-documentation",
@@ -83,26 +84,27 @@
         "beat-street-breakin-and-mainstream-film"
       ],
       "recommended_anchor_id": "wild-style-film-documentation",
-      "recommended_action": "keep_separate",
-      "rationale": "The films and downtown exchange address different forms of circulation and representation, while mainstream film may be a later extension rather than a core route event.",
-      "review_guidance": "Distinguish lived practice, staged scenes, production context, reception, and institutional framing. Avoid treating downtown or commercial film as validation."
+      "recommended_action": "merge",
+      "rationale": "Wild Style supplies the first route's bounded collaboration, cross-practice representation, and film-circulation Event. The other film and downtown Candidates are deferred or supporting context.",
+      "review_guidance": "Distinguish lived practice from staged representation and avoid treating downtown or film attention as validation."
     },
     {
       "cluster_id": "outward-circulation",
       "title": "Movement beyond the New York-centered route",
       "member_candidate_ids": [
-        "international-tours-records-and-media-spread"
+        "international-tours-records-and-media-spread",
+        "planet-rock-electro-transition"
       ],
-      "recommended_anchor_id": "international-tours-records-and-media-spread",
+      "recommended_anchor_id": "planet-rock-electro-transition",
       "recommended_action": "use_as_context",
-      "rationale": "The candidate may work as an endpoint or route conclusion, but it is not presently specific enough for a mapped MVP event.",
-      "review_guidance": "Retain as a possible closing context only if it clearly explains New York-centered circulation."
+      "rationale": "Planet Rock provides a bounded outward sound-and-record circulation anchor. International touring remains route conclusion context rather than a mapped Event.",
+      "review_guidance": "Limit the Event to supported electronic and circulation claims; do not infer a complete global history."
     }
   ],
   "candidates": [
     {
       "candidate_id": "caribbean-soundsystem-context-nyc",
-      "status": "maybe",
+      "status": "merge",
       "review_state": "pending",
       "years": "ca. 1965-1973",
       "place": "Bronx / New York City",
@@ -121,11 +123,13 @@
         "Avoid simple origin-transfer language.",
         "Do not flatten Caribbean, Jamaican, Black, Latino, and Bronx community histories."
       ],
-      "next_action": "Find specific, sourceable examples and decide whether this remains context or becomes a distinct event."
+      "next_action": "Keep migration and sound-system context in the Sedgwick framing; defer a separate Event until a bounded New York occurrence is supported.",
+      "merge_target_id": "kool-herc-cindy-campbell-sedgwick-party",
+      "merge_rationale": "The context is historically necessary but does not have an honest standalone Event boundary; the Sedgwick Event can carry cautious migration and sound-system framing."
     },
     {
       "candidate_id": "bronx-record-and-party-culture-before-1973",
-      "status": "maybe",
+      "status": "merge",
       "review_state": "pending",
       "years": "late 1960s-1973",
       "place": "Bronx",
@@ -144,7 +148,9 @@
         "Avoid treating earlier party culture as a single coherent scene.",
         "Causal claims about preparation for hip-hop require comparison across sources."
       ],
-      "next_action": "Research concrete examples; otherwise retain as route context supporting the Sedgwick and party-infrastructure candidates."
+      "next_action": "Retain as pre-Sedgwick route framing rather than a regional Event pin.",
+      "merge_target_id": "kool-herc-cindy-campbell-sedgwick-party",
+      "merge_rationale": "The broader party culture prevents a single-origin story, but the current Candidate cannot support a distinct time-and-place Event."
     },
     {
       "candidate_id": "kool-herc-cindy-campbell-sedgwick-party",
@@ -157,10 +163,9 @@
       "decision_rationale": "This is the strongest named place-and-time anchor in the dossier. It supports the route thesis when presented as one important node within broader Bronx culture, with Cindy Campbell's organizing role retained and sole-birthplace language avoided.",
       "review_question": "Which exact claims about the party, its organization, and its later public-memory status are supported by contemporary or carefully compared retrospective sources?",
       "source_leads": [
-        "Interviews",
-        "Historic preservation materials",
-        "Museum timelines",
-        "Public history"
+        "https://www.congress.gov/119/crec/2025/08/02/171/134/CREC-2025-08-02-pt1-PgS5515.pdf",
+        "https://ecommons.cornell.edu/bitstreams/8e562150-1c94-4c53-b171-0e2a2086e2f5/download",
+        "https://blogs.loc.gov/music/2023/08/early-hip-hop-at-the-library-of-congress/"
       ],
       "risk_notes": [
         "Do not call it the sole birthplace of hip-hop.",
@@ -168,11 +173,11 @@
         "Verify Cindy Campbell's exact role and wording.",
         "Retrospective memory requires source comparison."
       ],
-      "next_action": "Build a claim-level source comparison and draft cautious event wording."
+      "next_action": "Draft the Event from the supported organizer, date, place, and DJ claims; frame the party as a commemorated symbolic anchor rather than a sole birthplace."
     },
     {
       "candidate_id": "mobile-sound-and-breakbeat-practice",
-      "status": "keep",
+      "status": "merge",
       "review_state": "pending",
       "years": "early-mid 1970s",
       "place": "Bronx",
@@ -190,11 +195,13 @@
         "Avoid unsupported technique claims.",
         "Do not imply one DJ or party created the whole practice."
       ],
-      "next_action": "Identify sourceable equipment, record, and party-practice examples and connect them to mapped places where possible."
+      "next_action": "Carry sound-system and break-focused practice into the Sedgwick and Grandmaster Flash Events instead of publishing a regional practice cluster.",
+      "merge_target_id": "grandmaster-flash-turntable-technique",
+      "merge_rationale": "The practice is essential explanation but lacks an independent Event boundary; the Flash technique Event gives its material development a testable route unit."
     },
     {
       "candidate_id": "bronx-schools-parks-community-centers-parties",
-      "status": "keep",
+      "status": "merge",
       "review_state": "pending",
       "years": "1970s",
       "place": "Bronx",
@@ -212,7 +219,9 @@
         "Map precision is unresolved.",
         "Avoid implying all schools, parks, or centers hosted the same kind of activity."
       ],
-      "next_action": "Identify representative locations, dates, and source-backed roles; assess whether a regional event fits the seed schema."
+      "next_action": "Use the documented Bronx River Center party as the bounded community-space Event and keep the larger infrastructure claim in route framing.",
+      "merge_target_id": "bronx-river-crews-community-organization",
+      "merge_rationale": "One exact venue, date, and lineup demonstrates the community-space function without turning a borough-wide category into a pin."
     },
     {
       "candidate_id": "cedar-park-outdoor-party-culture",
@@ -234,8 +243,8 @@
         "Do not create a place anchor from general association alone."
       ],
       "next_action": "Research place-specific evidence and, absent a distinct event, incorporate it as an example under the community-space anchor.",
-      "merge_target_id": "bronx-schools-parks-community-centers-parties",
-      "merge_rationale": "Cedar Playground currently functions as a possible example of the broader schools, parks, and community-center party infrastructure rather than a separately documented event."
+      "merge_target_id": "bronx-river-crews-community-organization",
+      "merge_rationale": "Cedar Playground remains a deferred place lead; the documented Bronx River Center party supplies the needed community-space Event boundary for the first route."
     },
     {
       "candidate_id": "grandmaster-flash-turntable-technique",
@@ -248,17 +257,16 @@
       "decision_rationale": "Useful as a named practitioner anchor if separated from broader claims about the development of DJing and from later group recording history. It gives the route a concrete sound/culture node while preserving attribution caution.",
       "review_question": "Which technique, equipment, and performance claims are independently supported, and which belong only to later retrospective accounts?",
       "source_leads": [
-        "Smithsonian",
-        "NAMM Oral History Program",
-        "Interviews",
-        "Museum articles"
+        "https://americanhistory.si.edu/blog/what-do-bronx-silicon-valley-and-colorado-college-town-have-common",
+        "https://freshairarchive.org/segments/dj-and-hip-hop-forefather-grandmaster-flash-0",
+        "https://americanhistory.si.edu/press/releases/african-american-history-highlights-national-museum-american-history"
       ],
       "risk_notes": [
         "Separate technique claims from group history and later recording history.",
         "Use source-specific attribution.",
         "Avoid first or sole-inventor wording."
       ],
-      "next_action": "Compare institutional and interview sources, then define one narrow, sourceable technique claim."
+      "next_action": "Draft a mid-to-late-1970s Bronx technique period around quick-mixing, cueing, and repeated breaks; avoid a single first-performance or scratching-invention claim."
     },
     {
       "candidate_id": "scratching-and-dj-technique-attribution",
@@ -286,7 +294,7 @@
     },
     {
       "candidate_id": "mc-crew-and-party-hosting-practices",
-      "status": "keep",
+      "status": "merge",
       "review_state": "pending",
       "years": "1970s",
       "place": "Bronx",
@@ -305,11 +313,13 @@
         "Candidate examples and chronology are unresolved.",
         "Do not generalize from famous performers to all local practice."
       ],
-      "next_action": "Identify representative, sourceable examples and define the relationship to party spaces and DJ practice."
+      "next_action": "Use the named DJ and MC lineup on the May 30, 1980 Bronx River Center flyer as the bounded example.",
+      "merge_target_id": "bronx-river-crews-community-organization",
+      "merge_rationale": "The exact flyer supports a representative multi-performer party without publishing a decade-wide MC practice cluster as an Event."
     },
     {
       "candidate_id": "dance-crews-and-party-floor-culture",
-      "status": "maybe",
+      "status": "merge",
       "review_state": "pending",
       "years": "1970s-early 1980s",
       "place": "Bronx / New York City",
@@ -327,11 +337,13 @@
         "Avoid treating dance as secondary illustration.",
         "Film evidence may be staged or retrospective."
       ],
-      "next_action": "Find a source-backed place-and-time anchor or retain this as cultural context."
+      "next_action": "Carry dance response into the Flash technique Event and Rock Steady Crew's film participation into Wild Style.",
+      "merge_target_id": "wild-style-film-documentation",
+      "merge_rationale": "Wild Style supplies a bounded representation of dance alongside DJing, MCing, and graffiti; a separate regional dance pin is not yet supported."
     },
     {
       "candidate_id": "graffiti-trains-and-visual-culture",
-      "status": "maybe",
+      "status": "merge",
       "review_state": "pending",
       "years": "1970s-early 1980s",
       "place": "Bronx / NYC subway network",
@@ -349,33 +361,13 @@
         "Avoid reducing graffiti to decoration.",
         "Rights, attribution, identity, and context for images remain unresolved."
       ],
-      "next_action": "Identify a specific documented relationship, place, or media transition; otherwise use as route context."
-    },
-    {
-      "candidate_id": "bronx-river-crews-community-organization",
-      "status": "maybe",
-      "review_state": "pending",
-      "years": "1970s",
-      "place": "Bronx River Houses",
-      "working_title": "Bronx River crews and community organization",
-      "route_function": "Adds neighborhood organization, crews, and community identity to the account of how local practice was sustained.",
-      "decision_rationale": "The candidate could provide valuable community-centered geography, but the dossier does not yet identify a specific event or sufficiently bounded organization history.",
-      "review_question": "What documented activity connects Bronx River Houses to the route's party, crew, or organizational thesis?",
-      "source_leads": [
-        "Oral histories",
-        "Local histories",
-        "Journalism"
-      ],
-      "risk_notes": [
-        "Sensitive review is needed for later institutional history.",
-        "Avoid conflating crews, organizations, and residents.",
-        "Place association must be source-specific."
-      ],
-      "next_action": "Research concrete community and crew activity; consider merging with the community-space anchor if no distinct event emerges."
+      "next_action": "Represent graffiti through Wild Style's specific semi-documentary film boundary; defer a networked graffiti Event.",
+      "merge_target_id": "wild-style-film-documentation",
+      "merge_rationale": "The broad subway-network practice lacks a point Event, while Wild Style gives visual culture a distinct representation and circulation role."
     },
     {
       "candidate_id": "blackout-1977-context-and-myth",
-      "status": "maybe",
+      "status": "reject",
       "review_state": "pending",
       "years": "1977",
       "place": "New York City",
@@ -394,11 +386,11 @@
         "Retrospective narratives may overstate the event's role.",
         "Citywide geography may not map cleanly to the Bronx route."
       ],
-      "next_action": "Use as contextual annotation unless source comparison supports a narrower event."
+      "next_action": "Keep the blackout as a cautionary route risk; defer it as an Event because its causal role and citywide map unit are not needed for the first coherent route."
     },
     {
       "candidate_id": "bronx-clubs-and-local-performance-circuit",
-      "status": "maybe",
+      "status": "merge",
       "review_state": "pending",
       "years": "late 1970s-early 1980s",
       "place": "Bronx",
@@ -417,7 +409,9 @@
         "Avoid implying a continuous circuit without evidence.",
         "Access and audience claims require sourcing."
       ],
-      "next_action": "Identify specific venues and dates; otherwise retain as supporting context."
+      "next_action": "Use Bronx River Center as the first bounded venue example and defer a comprehensive club circuit.",
+      "merge_target_id": "bronx-river-crews-community-organization",
+      "merge_rationale": "A specific dated party is sufficient to show local venue infrastructure; the generalized circuit does not need its own pin."
     },
     {
       "candidate_id": "rappers-delight-commercial-visibility",
@@ -430,21 +424,42 @@
       "decision_rationale": "This is a strong media-transition anchor and a useful endpoint for the local-practice phase. It should be explicitly separated from cultural origin and framed through recording, label mediation, and public visibility.",
       "review_question": "What local practices, performers, labels, and distribution channels can be connected to the record without treating it as a complete account of early hip-hop?",
       "source_leads": [
-        "Label histories",
-        "Record histories",
-        "Journalism",
-        "Interviews"
+        "https://americanhistory.si.edu/collections/object/nmah_1320076",
+        "https://www.loc.gov/programs/national-recording-preservation-board/recording-registry/descriptions-and-essays/african-americans-on-the-recording-registry/",
+        "https://womenshistory.si.edu/blog/curator-meredith-holmgren-elevates-american-women-music"
       ],
       "risk_notes": [
         "Commercial visibility is not cultural origin.",
         "New Jersey industry geography needs justification within a New York-centered route.",
         "Verify release, personnel, and mediation claims."
       ],
-      "next_action": "Confirm a source-backed New York-centered route function and define the external-node treatment."
+      "next_action": "Draft the Englewood recording-industry transition, Sylvia Robinson's production role, and wider visibility without a disputed first-record claim."
+    },
+    {
+      "candidate_id": "bronx-river-crews-community-organization",
+      "status": "keep",
+      "review_state": "pending",
+      "years": "1980",
+      "place": "Bronx River Center, 1619 East 174th Street",
+      "working_title": "A Bronx River Center flyer documents a working party scene",
+      "route_function": "Provides one exact community-space party with a multi-DJ and multi-MC lineup after rap recording had begun to circulate.",
+      "decision_rationale": "The May 30, 1980 Cornell flyer supplies the date, place, and performers that the broader organization Candidate lacked. It demonstrates a collective local party network without generalizing to every resident or institution.",
+      "review_question": "Does the flyer-based wording stay within what a scheduled-event artifact can establish?",
+      "source_leads": [
+        "https://digital.library.cornell.edu/catalog/ss%3A1335161",
+        "https://archives.library.cornell.edu/repositories/2/archival_objects/701597",
+        "https://rmc.library.cornell.edu/EAD/htmldocs/RMM08094.html"
+      ],
+      "risk_notes": [
+        "A flyer establishes a scheduled event and lineup, not audience experience or every performance detail.",
+        "Avoid conflating performers, organizations, and residents.",
+        "Later allegations concerning Afrika Bambaataa require Human sensitivity review and non-celebratory framing."
+      ],
+      "next_action": "Draft only the date, venue, named lineup, and route function established by the Cornell records."
     },
     {
       "candidate_id": "early-rap-records-and-independent-labels",
-      "status": "maybe",
+      "status": "merge",
       "review_state": "pending",
       "years": "1979-1982",
       "place": "NYC / regional industry nodes",
@@ -463,11 +478,13 @@
         "Market-centered sources may underrepresent local practice.",
         "Verify dates, personnel, and relationship to Bronx scenes."
       ],
-      "next_action": "Select one distinct industry transition or merge its evidence into the commercial-visibility event."
+      "next_action": "Replace the broad discography with the specific 1982 Planet Rock sound transition.",
+      "merge_target_id": "planet-rock-electro-transition",
+      "merge_rationale": "Planet Rock adds a distinct electronic sound-development role after Rapper's Delight without requiring an industry survey."
     },
     {
       "candidate_id": "radio-djs-and-broadcast-circulation",
-      "status": "maybe",
+      "status": "reject",
       "review_state": "pending",
       "years": "late 1970s-early 1980s",
       "place": "NYC radio sites",
@@ -485,11 +502,11 @@
         "Station metadata and dates may be incomplete.",
         "Media framing may distort community priorities."
       ],
-      "next_action": "Identify specific programs or broadcasts and decide whether the route needs a media-node or context representation."
+      "next_action": "Defer radio research; records and film already establish wider circulation for the first cohort."
     },
     {
       "candidate_id": "the-message-social-commentary",
-      "status": "maybe",
+      "status": "reject",
       "review_state": "pending",
       "years": "1982",
       "place": "New York City / Bronx context",
@@ -508,11 +525,11 @@
         "Avoid treating one record as representative of all urban experience.",
         "Verify Bronx and production-context claims."
       ],
-      "next_action": "Make an explicit route-fit decision after the core event sequence is bounded."
+      "next_action": "Defer to a records or lyrical-history pass; it does not fill a material gap in the route's party-to-wider-form thesis."
     },
     {
       "candidate_id": "downtown-clubs-art-and-hip-hop-exchange",
-      "status": "maybe",
+      "status": "merge",
       "review_state": "pending",
       "years": "early 1980s",
       "place": "Downtown Manhattan",
@@ -531,7 +548,9 @@
         "Avoid validation-by-downtown framing.",
         "Institutional narratives must be balanced with community sources."
       ],
-      "next_action": "Identify one or two source-backed exchanges and assess whether they justify a mapped event."
+      "next_action": "Carry the cross-scene exchange into Wild Style's documented collaboration and production history.",
+      "merge_target_id": "wild-style-film-documentation",
+      "merge_rationale": "Wild Style supplies a bounded collaboration and circulation Event without turning downtown attention into cultural validation."
     },
     {
       "candidate_id": "wild-style-film-documentation",
@@ -544,21 +563,20 @@
       "decision_rationale": "This is a strong late-route media anchor because it connects music, graffiti, dance, performance, and circulation. Its inclusion must distinguish documentary value from fictionalization and staging.",
       "review_question": "Which parts of the film's production, participants, settings, and reception directly illuminate the route's transition from local practice to wider representation?",
       "source_leads": [
-        "Film at Lincoln Center",
-        "Cornell Cinema",
-        "Film histories",
-        "Interviews"
+        "https://www.moma.org/calendar/events/3762",
+        "https://www.filmlinc.org/films/wild-style/",
+        "https://www.walkerart.org/reader/in-which-hip-hop-ends-up-saving-itself-on-charlie-ahearns-wild-style/"
       ],
       "risk_notes": [
         "Separate filming locations from screening and reception sites.",
         "Distinguish documentation from fictionalized or staged scenes.",
         "Film rights and clip availability remain unresolved."
       ],
-      "next_action": "Verify film metadata, relevant locations, participant relationships, and suitable rights-cleared external references."
+      "next_action": "Draft a 1981-1983 production-and-release Event that distinguishes semi-documentary representation from transparent historical documentation."
     },
     {
       "candidate_id": "style-wars-and-television-documentation",
-      "status": "maybe",
+      "status": "reject",
       "review_state": "pending",
       "years": "1983",
       "place": "New York City / broadcast context",
@@ -576,7 +594,7 @@
         "Distinguish production methods and cultural focus.",
         "Rights and availability require review."
       ],
-      "next_action": "Compare its route function with Wild Style and retain only if it contributes a non-duplicative media perspective."
+      "next_action": "Defer comparative television research; Wild Style supplies the first route's bounded visual-circulation role."
     },
     {
       "candidate_id": "beat-street-breakin-and-mainstream-film",
@@ -603,7 +621,7 @@
     },
     {
       "candidate_id": "international-tours-records-and-media-spread",
-      "status": "maybe",
+      "status": "reject",
       "review_state": "pending",
       "years": "1980s",
       "place": "NYC / global circulation",
@@ -622,7 +640,29 @@
         "Likely better as route conclusion than map event.",
         "International scope requires careful boundary control."
       ],
-      "next_action": "Retain as possible closing context and defer mapped event development."
+      "next_action": "Keep outward spread in the route conclusion; defer a global mapped Event because Planet Rock and Wild Style already establish circulation."
+    },
+    {
+      "candidate_id": "planet-rock-electro-transition",
+      "status": "keep",
+      "review_state": "pending",
+      "years": "1982",
+      "place": "New York City",
+      "working_title": "Planet Rock opens an electro-funk recording transition",
+      "route_function": "Shows how a Bronx-rooted DJ and MC culture was rebuilt through electronic production and circulated as a new sound rather than merely reproduced on record.",
+      "decision_rationale": "The original broad early-records Candidate did not supply a distinct Event role after Rapper's Delight. Planet Rock provides a bounded 1982 collaboration and a material sound-development transition before film circulation.",
+      "review_question": "Can the Event credit the Soulsonic Force, Arthur Baker, John Robie, and the record's source materials while avoiding celebratory biography and unsupported global-causality claims?",
+      "source_leads": [
+        "https://www.arts.gov/stories/other/afrika-bambaataa-renegade-funk",
+        "https://folkways.si.edu/smithsonian-anthology-of-hip-hop-and-rap-intl",
+        "https://daily.redbullmusicacademy.com/2018/01/arthur-baker-interview/"
+      ],
+      "risk_notes": [
+        "Credit the record's multiple performers, writers, and producers.",
+        "Limit influence claims to the supported electronic and circulation transition.",
+        "Later sexual-abuse allegations concerning Afrika Bambaataa require Human sensitivity review and non-celebratory framing."
+      ],
+      "next_action": "Draft the 1982 record collaboration as a sound and circulation Event, not as an unqualified biography or sole origin of electro."
     }
   ]
 }

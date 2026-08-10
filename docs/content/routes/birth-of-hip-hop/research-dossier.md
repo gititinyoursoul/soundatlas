@@ -183,6 +183,48 @@ Use these as research candidates before deciding which relationships belong in
 | Label histories, discographies, and music journalism | Secondary / industry | Early rap records, labels, release dates, commercial visibility. | Useful but can be market-centered. | Verify dates, personnel, chart claims, and relationship to local practice. |
 | Urban history sources and city reports | Secondary / primary government | Bronx disinvestment, housing, fires, public services, blackout context. | Strong for context; not automatically evidence for hip-hop claims. | Keep causal language cautious. |
 
+### Fast-path evidence resolution for Issue #150
+
+The first complete-route evidence pass uses broad sources to test the route
+structure, then resolves only the claims needed by the proposed Event cohort.
+The detailed Candidate account, claim tests, and deferral decisions live in
+[`cohort-evidence-review.md`](cohort-evidence-review.md). These findings remain
+Agent recommendations for Human editorial and Source review.
+
+Broad orientation sources:
+
+- [National Museum of American History: Bronx invention and DJ
+  techniques](https://americanhistory.si.edu/blog/what-do-bronx-silicon-valley-and-colorado-college-town-have-common)
+  supports a route centered on material practice and several DJs rather than a
+  single origin act.
+- [Smithsonian catalog record for *Yes Yes Y'all*](https://www.si.edu/object/yes-yes-yall-experience-music-project-oral-history-hip-hops-first-decade-jim-fricke-charlie-ahearn%3Asiris_sil_714782)
+  describes an oral-history arc from Bronx DJ and B-boy culture through MC
+  crews, commercialization, clubs, and wider circulation.
+- [National Museum of American History on Latino participation](https://americanhistory.si.edu/explore/stories/sazon-hip-hop)
+  supports keeping Black, Caribbean, and Latino practitioners within the same
+  Bronx history without assigning one community a single causal role.
+- [Cornell's Afrika Bambaataa archive guide](https://rmc.library.cornell.edu/EAD/htmldocs/RMM08094.html)
+  documents a dense Bronx party infrastructure through preserved flyers while
+  also warning that scrapbook order is not reliable chronology.
+
+Resolved Event evidence:
+
+| Proposed Event | Core claim support | Boundary and Source limits |
+| --- | --- | --- |
+| Cindy Campbell's back-to-school party at 1520 Sedgwick, 1973 | [Congressional Record](https://www.congress.gov/119/crec/2025/08/02/171/134/CREC-2025-08-02-pt1-PgS5515.pdf); [Cornell dissertation drawing on Campbell interviews](https://ecommons.cornell.edu/bitstreams/8e562150-1c94-4c53-b171-0e2a2086e2f5/download) | Supports the organizer, date, place, admission-party frame, and Kool Herc's DJ role. It does not justify calling the party hip-hop's sole creation point. |
+| Grandmaster Flash develops Quick Mix technique in the Bronx, mid-to-late 1970s | [National Museum of American History](https://americanhistory.si.edu/blog/what-do-bronx-silicon-valley-and-colorado-college-town-have-common); [Fresh Air interview archive](https://freshairarchive.org/segments/dj-and-hip-hop-forefather-grandmaster-flash-0) | Supports Flash's quick-mixing, record manipulation, cueing, and break-blending as a technical development. The Event uses a Bronx range rather than an unsupported single performance or sole-inventor claim. |
+| A documented Bronx River Center party, May 30, 1980 | [Cornell flyer record](https://digital.library.cornell.edu/catalog/ss%3A1335161); [Cornell archive item description](https://archives.library.cornell.edu/repositories/2/archival_objects/701597) | The flyer supports the date, venue, and named DJ/MC lineup. It demonstrates one concrete party network, not every Bronx River organization or resident. |
+| *Rapper's Delight* becomes a recording-industry transition, 1979 | [Smithsonian object record](https://americanhistory.si.edu/collections/object/nmah_1320076); [Library of Congress registry description](https://www.loc.gov/programs/national-recording-preservation-board/recording-registry/descriptions-and-essays/african-americans-on-the-recording-registry/); [Smithsonian Women's History Museum on Sylvia Robinson](https://womenshistory.si.edu/blog/curator-meredith-holmgren-elevates-american-women-music) | Supports the year, Englewood industry node, Sugarhill Gang, Sugar Hill Records, Sylvia Robinson's production role, and the record's wider visibility. It is framed as mediation and circulation, not cultural origin or the first rap performance. |
+| *Planet Rock* establishes an electro-funk recording transition, 1982 | [National Endowment for the Arts interview](https://www.arts.gov/stories/other/afrika-bambaataa-renegade-funk); [Smithsonian Folkways anthology](https://folkways.si.edu/smithsonian-anthology-of-hip-hop-and-rap-intl) | Supports the 1982 collaboration, its mixed musical sources, electronic production, and circulation significance. The Event is about the record and collaborators; it does not turn disputed institutional or biographical claims into route facts. Later abuse allegations concerning Afrika Bambaataa remain a Human sensitivity-review issue rather than being erased by celebratory institutional sources. |
+| *Wild Style* represents and circulates an early hip-hop scene, 1981-1983 | [MoMA film record](https://www.moma.org/calendar/events/3762); [Film at Lincoln Center](https://www.filmlinc.org/films/wild-style/); [Walker Art Center production history](https://www.walkerart.org/reader/in-which-hip-hop-ends-up-saving-itself-on-charlie-ahearns-wild-style/) | Supports production beginning in 1981, the 1983 release, South Bronx setting, collaboration, named practitioners, and the film's mix of fiction and scene documentation. The Event does not treat staged scenes as transparent evidence of every earlier practice. |
+
+Research stopped at this evidence floor because these six anchors collectively
+explain origin memory, DJ technique, community party infrastructure, recorded
+commercial circulation, electronic sound development, and film
+representation. Broad conditions, the 1977 blackout, additional clubs, radio,
+separate dance and graffiti histories, further records, and global touring
+remain contextual or deferred unless Human review finds a material gap.
+
 ## Media Source Research
 
 Do not add generated or unreviewed media links directly to seed data from this
