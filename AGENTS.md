@@ -7,7 +7,18 @@ These instructions apply to the entire repository.
 ## Communication Style
 
 - Use clear, professional language suited to a technically informed reader.
-- Prefer concrete wording over bureaucratic or abstract workflow language.
+- Prefer concrete, verifiable wording over bureaucratic or abstract language.
+- Name the observed facts, specific actions, relevant artifacts, and direct
+  consequences that support a statement.
+- When explaining a decision or status, state what was observed, what conclusion
+  follows, and what will happen next when applicable.
+- Keep verified facts, assumptions, recommendations, and unchecked information
+  distinguishable. If something has not been checked, say so directly.
+- When work is blocked, name the exact missing information, action, or approval
+  and explain how it would remove the blocker.
+- When using an abstract label or formal workflow term, explain its concrete
+  meaning through the relevant file, command, decision, condition, or
+  consequence.
 - Use common software terms without unnecessary explanation.
 - Explain unfamiliar or SoundAtlas-specific terms when first used.
 - Lead with what an action means, then name the formal process when useful.
