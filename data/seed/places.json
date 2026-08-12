@@ -20,31 +20,106 @@
         "type": "Polygon",
         "coordinates": [
           [
-            [-73.9195, 40.8564],
-            [-73.9, 40.852],
-            [-73.88, 40.849],
-            [-73.868, 40.847],
-            [-73.874, 40.838],
-            [-73.8785, 40.8255],
-            [-73.878, 40.815],
-            [-73.871, 40.8065],
-            [-73.8585, 40.802],
-            [-73.852751919912, 40.799825050778],
-            [-73.862928, 40.797265],
-            [-73.868350426088, 40.792342147554],
-            [-73.890459134842, 40.790269456109],
-            [-73.912528, 40.796118],
-            [-73.919896, 40.799392],
-            [-73.922663, 40.802119],
-            [-73.927663, 40.802399],
-            [-73.932364, 40.808519],
-            [-73.932857, 40.810327],
-            [-73.932828, 40.823366],
-            [-73.933763, 40.831686],
-            [-73.933247, 40.835632],
-            [-73.927091, 40.847353],
-            [-73.920137719979, 40.856507739027],
-            [-73.9195, 40.8564]
+            [
+              -73.9195,
+              40.8564
+            ],
+            [
+              -73.9,
+              40.852
+            ],
+            [
+              -73.88,
+              40.849
+            ],
+            [
+              -73.868,
+              40.847
+            ],
+            [
+              -73.874,
+              40.838
+            ],
+            [
+              -73.8785,
+              40.8255
+            ],
+            [
+              -73.878,
+              40.815
+            ],
+            [
+              -73.871,
+              40.8065
+            ],
+            [
+              -73.8585,
+              40.802
+            ],
+            [
+              -73.852751919912,
+              40.799825050778
+            ],
+            [
+              -73.862928,
+              40.797265
+            ],
+            [
+              -73.868350426088,
+              40.792342147554
+            ],
+            [
+              -73.890459134842,
+              40.790269456109
+            ],
+            [
+              -73.912528,
+              40.796118
+            ],
+            [
+              -73.919896,
+              40.799392
+            ],
+            [
+              -73.922663,
+              40.802119
+            ],
+            [
+              -73.927663,
+              40.802399
+            ],
+            [
+              -73.932364,
+              40.808519
+            ],
+            [
+              -73.932857,
+              40.810327
+            ],
+            [
+              -73.932828,
+              40.823366
+            ],
+            [
+              -73.933763,
+              40.831686
+            ],
+            [
+              -73.933247,
+              40.835632
+            ],
+            [
+              -73.927091,
+              40.847353
+            ],
+            [
+              -73.920137719979,
+              40.856507739027
+            ],
+            [
+              -73.9195,
+              40.8564
+            ]
           ]
         ]
       },
@@ -94,22 +169,70 @@
         "type": "Polygon",
         "coordinates": [
           [
-            [-73.91813, 40.854744],
-            [-73.917742, 40.854651],
-            [-73.917643, 40.854754],
-            [-73.917447, 40.854739],
-            [-73.917084, 40.854648],
-            [-73.916995, 40.854792],
-            [-73.917013, 40.854834],
-            [-73.91716, 40.854888],
-            [-73.916893, 40.855328],
-            [-73.916846, 40.85544],
-            [-73.916832, 40.85552],
-            [-73.916857, 40.85559],
-            [-73.916933, 40.85568],
-            [-73.91709, 40.855754],
-            [-73.91721, 40.855739],
-            [-73.91813, 40.854744]
+            [
+              -73.91813,
+              40.854744
+            ],
+            [
+              -73.917742,
+              40.854651
+            ],
+            [
+              -73.917643,
+              40.854754
+            ],
+            [
+              -73.917447,
+              40.854739
+            ],
+            [
+              -73.917084,
+              40.854648
+            ],
+            [
+              -73.916995,
+              40.854792
+            ],
+            [
+              -73.917013,
+              40.854834
+            ],
+            [
+              -73.91716,
+              40.854888
+            ],
+            [
+              -73.916893,
+              40.855328
+            ],
+            [
+              -73.916846,
+              40.85544
+            ],
+            [
+              -73.916832,
+              40.85552
+            ],
+            [
+              -73.916857,
+              40.85559
+            ],
+            [
+              -73.916933,
+              40.85568
+            ],
+            [
+              -73.91709,
+              40.855754
+            ],
+            [
+              -73.91721,
+              40.855739
+            ],
+            [
+              -73.91813,
+              40.854744
+            ]
           ]
         ]
       },
@@ -178,12 +301,12 @@
       "name": "The Loft",
       "borough": "Manhattan",
       "place_type": "club",
-      "latitude": 40.7264,
-      "longitude": -73.9961,
-      "summary": "David Mancuso's private party space on Broadway, central to early New York disco and sound-system culture.",
+      "latitude": 40.726871,
+      "longitude": -73.995882,
+      "summary": "David Mancuso's private party space at 645–647 Broadway, organized around recorded music, careful sound, dancing, and community.",
       "review_status": "draft",
       "source_urls": [
-        "https://en.wikipedia.org/wiki/The_Loft_(New_York_City)"
+        "https://www.nyclgbtsites.org/site/david-mancuso-residence-the-loft/"
       ]
     },
     {
@@ -191,11 +314,13 @@
       "name": "The Gallery",
       "borough": "Manhattan",
       "place_type": "club",
-      "latitude": 40.7246,
-      "longitude": -74.0018,
-      "summary": "An early disco club context around Nicky Siano, important for DJ dramaturgy and club infrastructure.",
+      "latitude": 40.725396,
+      "longitude": -73.997378,
+      "summary": "The Gallery's 172 Mercer Street location, where Nicky Siano coordinated DJ performance, sound, lighting, and crowd response.",
       "review_status": "draft",
-      "source_urls": []
+      "source_urls": [
+        "https://www.nyclgbtsites.org/site/the-gallery/"
+      ]
     },
     {
       "id": "studio-54",
@@ -215,12 +340,12 @@
       "name": "Paradise Garage",
       "borough": "Manhattan",
       "place_type": "club",
-      "latitude": 40.7277,
-      "longitude": -74.0065,
-      "summary": "A King Street club closely tied to Larry Levan, queer club culture, sound-system design, and garage sound.",
+      "latitude": 40.727611,
+      "longitude": -74.006388,
+      "summary": "The 84 King Street club built around music, dancing, Larry Levan's DJ practice, purpose-designed sound, and a largely minority membership.",
       "review_status": "draft",
       "source_urls": [
-        "https://en.wikipedia.org/wiki/Paradise_Garage"
+        "https://www.nyclgbtsites.org/site/paradise-garage/"
       ]
     },
     {
@@ -405,16 +530,46 @@
         "type": "Polygon",
         "coordinates": [
           [
-            [-73.957, 40.7847],
-            [-73.952, 40.795],
-            [-73.947, 40.807],
-            [-73.939, 40.82],
-            [-73.929, 40.819],
-            [-73.925, 40.811],
-            [-73.93, 40.799],
-            [-73.936, 40.789],
-            [-73.945, 40.784],
-            [-73.957, 40.7847]
+            [
+              -73.957,
+              40.7847
+            ],
+            [
+              -73.952,
+              40.795
+            ],
+            [
+              -73.947,
+              40.807
+            ],
+            [
+              -73.939,
+              40.82
+            ],
+            [
+              -73.929,
+              40.819
+            ],
+            [
+              -73.925,
+              40.811
+            ],
+            [
+              -73.93,
+              40.799
+            ],
+            [
+              -73.936,
+              40.789
+            ],
+            [
+              -73.945,
+              40.784
+            ],
+            [
+              -73.957,
+              40.7847
+            ]
           ]
         ]
       },
@@ -576,6 +731,65 @@
       "source_urls": [
         "https://en.wikipedia.org/wiki/Roulette_Intermedium"
       ]
+    },
+    {
+      "content_review_status": "draft",
+      "id": "leviticus",
+      "name": "Leviticus",
+      "borough": "Manhattan",
+      "place_type": "club",
+      "latitude": 40.748883,
+      "longitude": -73.987109,
+      "summary": "A West 33rd Street club associated with the Best of Friends and Black disco nightlife by late 1974.",
+      "source_urls": [
+        "https://retrocdn.net/images/5/5c/CashBox_US_1974-12-28.pdf",
+        "https://americanhistory.si.edu/collections/archival-collection/sova-nmah-ac-1614"
+      ],
+      "geometry": null,
+      "geometry_precision": null,
+      "geometry_source_type": null,
+      "geometry_source_url": null,
+      "geometry_source_note": null,
+      "geometry_license": null
+    },
+    {
+      "content_review_status": "draft",
+      "id": "new-york-record-pool-prince-street",
+      "name": "New York Record Pool",
+      "borough": "Manhattan",
+      "place_type": "record_pool",
+      "latitude": 40.724911,
+      "longitude": -73.998685,
+      "summary": "The Prince Street base of the New York Record Pool, organized in 1975 to connect participating DJs with promotional records and record-company feedback.",
+      "source_urls": [
+        "https://www.worldradiohistory.com/Archive-All-Music/Record-World/70s/RW-1975-07-12.pdf",
+        "https://www.timlawrence.info/articles2/2013/7/16/disco-in-encyclopedia-of-popular-music-of-the-world-volume-8-genres-north-america-eds-john-shepherd-and-david-horn-london-continuum-2012-180-86"
+      ],
+      "geometry": null,
+      "geometry_precision": null,
+      "geometry_source_type": null,
+      "geometry_source_url": null,
+      "geometry_source_note": null,
+      "geometry_license": null
+    },
+    {
+      "content_review_status": "draft",
+      "id": "st-marys-recreation-center",
+      "name": "St. Mary's Recreation Center",
+      "borough": "Bronx",
+      "place_type": "community_center",
+      "latitude": 40.811496,
+      "longitude": -73.914094,
+      "summary": "A South Bronx recreation center that became an important Latin Hustle incubator beginning in summer 1974.",
+      "source_urls": [
+        "https://bronxhistoricalsociety.org/dance/2"
+      ],
+      "geometry": null,
+      "geometry_precision": null,
+      "geometry_source_type": null,
+      "geometry_source_url": null,
+      "geometry_source_note": null,
+      "geometry_license": null
     }
   ]
 }

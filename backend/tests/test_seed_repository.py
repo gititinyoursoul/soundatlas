@@ -10,14 +10,18 @@ def test_seed_repository_loads_routes_places_events_and_connections() -> None:
     assert route_ids == {
         "birth-of-hip-hop",
         "disco-to-dance-music",
+        "new-york-builds-the-dance-floor",
         "punk-new-wave-downtown",
         "salsa-latin-new-york",
         "downtown-experiment-no-wave-loft-jazz",
     }
-    assert len(repository.list_places()) == 38
-    assert len(repository.list_events()) == 60
+    assert len(repository.list_places()) == 41
+    assert len(repository.list_events()) == 66
     assert len(repository.list_connections()) == 57
-    assert {route.creator for route in repository.list_routes()} == {"gpt-5.5"}
+    assert {route.creator for route in repository.list_routes()} == {
+        "SoundAtlas",
+        "gpt-5.5",
+    }
     for event in repository.list_events():
         assert event.place_ids
         assert event.default_place_id in event.place_ids

@@ -415,14 +415,9 @@
         >
           <section class="story-reading">
             <div class="story-copy">
-              <h3>What happened</h3>
               <p>{event.summary}</p>
-            </div>
-
-            <aside class="significance-note" aria-label="Why it matters">
-              <h3>Why it matters</h3>
               <p>{event.significance}</p>
-            </aside>
+            </div>
           </section>
 
           <section class="event-places" aria-labelledby="event-places-title">
@@ -912,13 +907,6 @@
     gap: 0.45rem;
   }
 
-  .significance-note {
-    display: grid;
-    gap: 0.35rem;
-    padding-top: 0.7rem;
-    border-top: 1px solid #e0e6ec;
-  }
-
   .story-sources {
     display: grid;
     gap: 0.4rem;
@@ -1007,8 +995,6 @@
   }
 
   .detail-block h3,
-  .story-copy h3,
-  .significance-note h3,
   .story-sources h3,
   .event-places > h3 {
     margin: 0;
@@ -1021,7 +1007,6 @@
 
   .detail-block p,
   .story-copy p,
-  .significance-note p,
   .empty-inline,
   li,
   a {
@@ -1035,11 +1020,6 @@
     color: #314151;
     font-size: 0.94rem;
     line-height: 1.52;
-  }
-
-  .significance-note p {
-    color: #536170;
-    font-size: 0.88rem;
   }
 
   .connection-list,

@@ -63,7 +63,8 @@ describe('StoryPanel spatial access', () => {
     const event = makeEvent({
       id: 'review-event',
       title: 'Exact generated title',
-      summary: 'Exact generated summary'
+      summary: 'Exact generated summary',
+      significance: 'Exact generated significance'
     });
     const { body } = render(StoryPanel, {
       props: {
@@ -89,9 +90,12 @@ describe('StoryPanel spatial access', () => {
 
     expect(body).toContain('Exact generated title');
     expect(body).toContain('Exact generated summary');
+    expect(body).toContain('Exact generated significance');
     expect(body.indexOf('Exact generated summary')).toBeLessThan(
       body.indexOf('Event review')
     );
+    expect(body).not.toContain('What happened');
+    expect(body).not.toContain('Why it matters');
     expect(body).not.toContain('Planning-only title');
     expect(body).not.toContain('Publish exact reviewed route');
   });

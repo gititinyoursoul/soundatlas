@@ -66,6 +66,37 @@
       ]
     },
     {
+      "id": "new-york-builds-the-dance-floor",
+      "title": "New York Builds the Dance Floor",
+      "color": "#d1495b",
+      "creator": "SoundAtlas",
+      "year_start": 1970,
+      "year_end": 1978,
+      "summary": "How private parties, Black nightlife, Puerto Rican social dance, DJ-led clubs, and record networks changed what a dance floor could be.",
+      "thesis": "Disco did not begin in one nightclub or move through one simple lineage; different New Yorkers changed the relationships among records, sound, DJs, dancers, and social space.",
+      "tags": [
+        "disco",
+        "dance-floor",
+        "dj-culture",
+        "black-nightlife",
+        "latin-hustle",
+        "queer-club-culture",
+        "sound-system",
+        "record-pool",
+        "bronx",
+        "manhattan"
+      ],
+      "review_status": "draft",
+      "source_urls": [
+        "https://www.nyclgbtsites.org/site/david-mancuso-residence-the-loft/",
+        "https://americanhistory.si.edu/collections/archival-collection/sova-nmah-ac-1614",
+        "https://bronxhistoricalsociety.org/dance/2",
+        "https://www.nyclgbtsites.org/site/the-gallery/",
+        "https://www.worldradiohistory.com/Archive-All-Music/Record-World/70s/RW-1975-07-12.pdf",
+        "https://www.nyclgbtsites.org/site/paradise-garage/"
+      ]
+    },
+    {
       "id": "punk-new-wave-downtown",
       "title": "Punk & New Wave Downtown",
       "color": "#7b2cbf",
