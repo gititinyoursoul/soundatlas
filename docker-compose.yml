@@ -31,9 +31,6 @@ services:
         source: ./README.md
         target: /workspace/README.md
       - type: bind
-        source: ./TODO.md
-        target: /workspace/TODO.md
-      - type: bind
         source: ./.env.example
         target: /workspace/.env.example
         read_only: true
