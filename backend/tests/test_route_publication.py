@@ -51,8 +51,24 @@ def test_publication_summary_and_publish_filter_exact_review_result(tmp_path: Pa
     )
     assert published.status_code == 200
     assert published.json()["published"] is True
-    events = json.loads((seed_dir / "events.json").read_text(encoding="utf-8"))["events"]
-    assert [event["id"] for event in events] == ["event-one"]
+    places_payload = json.loads((seed_dir / "places.json").read_text(encoding="utf-8"))
+    events_payload = json.loads((seed_dir / "events.json").read_text(encoding="utf-8"))
+    connections_payload = json.loads(
+        (seed_dir / "connections.json").read_text(encoding="utf-8")
+    )
+    assert [event["id"] for event in events_payload["events"]] == ["event-one"]
+    assert places_payload["_meta"] == {"schema_version": 2}
+    assert places_payload["place_notes"] == ["Keep place metadata."]
+    assert events_payload["_meta"] == {"schema_version": 2}
+    assert events_payload["ignored_links"] == [
+        {
+            "event_id": "event-two",
+            "kind": "media",
+            "values": ["https://example.org/ignored"],
+        }
+    ]
+    assert connections_payload["_meta"] == {"schema_version": 1}
+    assert connections_payload["connection_notes"] == {"status": "preserve"}
     assert (
         json.loads(
             (content_root / ROUTE_ID / "route-publication.json").read_text(encoding="utf-8")
@@ -299,10 +315,34 @@ def write_publication_fixture(content_root: Path, seed_dir: Path) -> None:
     write_json(seed_dir / "routes.json", {"routes": [route()]})
     write_json(
         seed_dir / "places.json",
-        {"places": [place("place-one", "Place One"), place("place-two", "Place Two")]},
+        {
+            "_meta": {"schema_version": 2},
+            "places": [place("place-one", "Place One"), place("place-two", "Place Two")],
+            "place_notes": ["Keep place metadata."],
+        },
     )
-    write_json(seed_dir / "events.json", {"events": [event("event-two", "place-two", "Old event")]})
-    write_json(seed_dir / "connections.json", {"connections": []})
+    write_json(
+        seed_dir / "events.json",
+        {
+            "_meta": {"schema_version": 2},
+            "events": [event("event-two", "place-two", "Old event")],
+            "ignored_links": [
+                {
+                    "event_id": "event-two",
+                    "kind": "media",
+                    "values": ["https://example.org/ignored"],
+                }
+            ],
+        },
+    )
+    write_json(
+        seed_dir / "connections.json",
+        {
+            "_meta": {"schema_version": 1},
+            "connections": [],
+            "connection_notes": {"status": "preserve"},
+        },
+    )
 
 
 def candidate(candidate_id: str, title: str) -> dict[str, object]:

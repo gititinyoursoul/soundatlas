@@ -186,9 +186,9 @@ class RoutePublicationRepository:
         connections = list(seed["connections"].get("connections", []))
         payload = {
             "routes": seed["routes"],
-            "places": {"places": places},
-            "events": {"events": events},
-            "connections": {"connections": connections},
+            "places": {**seed["places"], "places": places},
+            "events": {**seed["events"], "events": events},
+            "connections": {**seed["connections"], "connections": connections},
         }
         findings.route_technical_errors.extend(self._validate_payload(payload))
         return payload, findings
