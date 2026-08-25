@@ -1,9 +1,5 @@
 # Route brief: New York Builds the Dance Floor
 
-## Status
-
-Agent draft for Human Editorial Review. This route is not published.
-
 ## Route identity
 
 - Route ID: `new-york-builds-the-dance-floor`
