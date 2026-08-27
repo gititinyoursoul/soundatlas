@@ -125,6 +125,32 @@ flowchart TD
 23. Use `prompts/curate-seed-data.md` when the main task is to add or revise
     JSON seed records directly.
 
+## Experimental Route-Authoring Path
+
+The parallel experimental path uses the
+`soundatlas-experimental-route-authoring` Skill for approved, multi-stage
+research runs. It does not replace the current route content pipeline or
+`prompts/create-route.md`.
+
+Shared `baseline-1` stage guidance lives in the Skill. A research run stores
+only its run brief and numbered, route-specific outputs under:
+
+```text
+docs/content/route-experiments/<experiment-id>/versions/<version-id>/
+```
+
+One research run produces one authoring-only route version. A checkpointed or
+stopped version remains process evidence; continuing an accepted checkpoint
+uses the same version, while a material restart uses a new version. Steps 01
+and 02 are conditional on the run's declared starting point, and every skipped
+stage records its reason.
+
+Experimental outputs are not generated route authority, Human editorial state,
+canonical seed data, or publication records. Only a Human-selected result may
+enter a separately approved handoff into `docs/content/routes/<route-id>/` and
+the existing structured review, validation, exact-revision, and explicit
+publication boundary.
+
 ## Route Folder Artifacts
 
 For new route work, keep route-specific editorial artifacts under

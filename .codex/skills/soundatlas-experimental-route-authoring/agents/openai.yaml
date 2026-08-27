@@ -1,0 +1,7 @@
+interface:
+  display_name: "SoundAtlas Experimental Route Authoring"
+  short_description: "Run comparable experimental route research"
+  default_prompt: "Use $soundatlas-experimental-route-authoring to execute one approved stage of a SoundAtlas experimental route run."
+
+policy:
+  allow_implicit_invocation: true
