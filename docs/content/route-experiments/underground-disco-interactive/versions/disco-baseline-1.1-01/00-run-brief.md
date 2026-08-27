@@ -8,10 +8,12 @@
 - Status: `checkpointed`
 - Starting condition: `fixed-topic`
 - First executable stage: `02`
-- Current stage: `02`
-- Last completed stage: `02`
+- Current stage: `03`
+- Last completed stage: `03`
 - Started: `2026-08-27T22:29:47Z`, when the matching Proceed record was posted
 - Step 02 checkpointed: `2026-08-27`
+- Step 02 Human decision: compare Arcs A, B, and C as equal contenders
+- Step 03 checkpointed: `2026-08-27`
 
 ## Authority
 
@@ -102,16 +104,20 @@ roughly 150–220 words, but no reader-facing copy is written in this slice.
 
 ## Checkpoints and next permitted work
 
+The Human selected Arcs A, B, and C for one shared step-03 light test. The
+result is recorded in
+[`03-light-evidence-route-shape.md`](03-light-evidence-route-shape.md).
+
 Required Human checkpoint now:
 
-1. Select one arc, or authorize a bounded comparison of two or three arcs, from
-   `02-narrative-concepts.md`.
-2. Confirm or correct any material topic, community, period, or route-direction
-   boundary changed by that selection.
+1. Confirm the step-03 recommendation to advance a combined Arc A+C mechanism
+   while retaining Arc B as a mandatory corrective lens in step 04.
+2. Or require all three arcs to remain equal contenders and identify what
+   additional dancer-centered evidence would justify expanding the light test.
 
-No step-03 artifact exists yet. After the Human decision, the next permitted
-stage is step 03 in this same version. Step 05 will always create a second
-`checkpointed` stop for the Human cohort, route-length, and challenger
-deep-research decisions.
+No step-04 artifact exists yet. The evidence selected among materially
+different arcs, so step 04 may begin only after this Human direction decision.
+Step 05 will always create another `checkpointed` stop for the Human cohort,
+route-length, and challenger deep-research decisions.
 
-Stop reason: waiting for the required step-02 Human arc decision.
+Stop reason: waiting for the required step-03 Human direction decision.
