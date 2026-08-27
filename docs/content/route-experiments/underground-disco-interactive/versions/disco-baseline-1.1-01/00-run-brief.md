@@ -5,15 +5,18 @@
 - Experiment ID: `underground-disco-interactive`
 - Version ID: `disco-baseline-1.1-01`
 - Method: `baseline-1.1`
-- Status: `checkpointed`
+- Status: `in-progress`
 - Starting condition: `fixed-topic`
 - First executable stage: `02`
-- Current stage: `03`
-- Last completed stage: `03`
+- Current stage: `05`
+- Last completed stage: `04`
 - Started: `2026-08-27T22:29:47Z`, when the matching Proceed record was posted
 - Step 02 checkpointed: `2026-08-27`
 - Step 02 Human decision: compare Arcs A, B, and C as equal contenders
 - Step 03 checkpointed: `2026-08-27`
+- Step 03 Human decision: advance Arc A plus Arc C as the primary mechanism and
+  retain Arc B as a mandatory corrective lens
+- Step 04 completed: `2026-08-27`
 
 ## Authority
 
@@ -108,16 +111,16 @@ The Human selected Arcs A, B, and C for one shared step-03 light test. The
 result is recorded in
 [`03-light-evidence-route-shape.md`](03-light-evidence-route-shape.md).
 
-Required Human checkpoint now:
+The Human accepted the step-03 recommendation: Arc A plus Arc C are the primary
+mechanism, and Arc B remains a mandatory corrective lens. Step 04 is recorded
+in [`04-targeted-gap-research.md`](04-targeted-gap-research.md). It resolved or
+bounded the material gaps enough for cohort comparison, expanded the landscape
+to eight stable Candidates, and did not select the cohort.
 
-1. Confirm the step-03 recommendation to advance a combined Arc A+C mechanism
-   while retaining Arc B as a mandatory corrective lens in step 04.
-2. Or require all three arcs to remain equal contenders and identify what
-   additional dancer-centered evidence would justify expanding the light test.
+No Human decision is pending before step 05. Step 05 is the next and final
+permitted stage in the current authorized slice. It must compare minimum-core
+and enrichment/challenger cohorts, explain route-length tradeoffs, update this
+run to `checkpointed`, and stop for the Human cohort, route-length, and
+challenger deep-research decisions.
 
-No step-04 artifact exists yet. The evidence selected among materially
-different arcs, so step 04 may begin only after this Human direction decision.
-Step 05 will always create another `checkpointed` stop for the Human cohort,
-route-length, and challenger deep-research decisions.
-
-Stop reason: waiting for the required step-03 Human direction decision.
+Stop reason: `not-applicable`; the run is ready to execute step 05.
