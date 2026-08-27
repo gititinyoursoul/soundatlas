@@ -13,11 +13,22 @@ evidence, geography, and experience constraints before deep research.
 
 ## Work
 
-Build a small provisional Candidate landscape for each tested arc. Gather only
-enough reliable evidence to assess Event boundaries, place/time plausibility,
-Source availability, geographic meaning, likely map shape, and early media or
-artifact potential. Give every Candidate a provisional narrative role and
-identify what the evidence changes.
+Build one provisional landscape of approximately 5–8 Candidates across the
+active test. When comparing arcs, reuse a Candidate where it genuinely tests
+more than one arc rather than multiplying the cohort mechanically. Use a
+different total only when the run brief records why the topic or comparison
+needs it. Gather only enough reliable evidence to assess Event boundaries,
+place/time plausibility, Source availability, geographic meaning, likely map
+shape, and early media or artifact potential. Give every Candidate a stable ID,
+provisional narrative role, and initial status using the shared Candidate
+schema.
+
+Perform an actual spatial comparison using verified coordinates or existing
+product-supported place records. Record the method and inspect clusters,
+distance, movement, neighborhood contrasts, changing centers, parallel
+geographies, and surprising proximity. Do not invent coordinates. When a
+Candidate lacks defensible mappable evidence, record that as a gap rather than
+substituting generic map-potential prose.
 
 Actively test for cohort bias, decorative geography, unsupported lineage, and
 claims broader than the represented communities or places.
@@ -27,9 +38,9 @@ claims broader than the represented communities or places.
 Write `03-light-evidence-route-shape.md` with:
 
 - hypothesis or arcs tested;
-- Candidate table with boundary, minimal evidence, Sources, place/time,
-  provisional role, route value, and initial call;
-- map-shape and early-media assessment;
+- Candidate records using the shared schema;
+- spatial-comparison method, mappable evidence, and observed relationships;
+- map-shape and early-media assessment grounded in that comparison;
 - evidence that supports, reshapes, or contradicts the initial concept;
 - revised provisional thesis;
 - specific gaps and counterevidence questions for step 04; and

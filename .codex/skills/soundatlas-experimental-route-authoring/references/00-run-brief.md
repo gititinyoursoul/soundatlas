@@ -17,7 +17,7 @@ Confirm that IDs are lowercase, stable, and URL-safe. Record the starting
 condition as `open-topic`, `fixed-topic`, or `fixed-direction`. State what this
 run tests, what may vary, and what comparison evidence it should preserve.
 
-Use `baseline-1`. Do not invent a route ID for canonical publication unless the
+Use `baseline-1.1`. Do not invent a route ID for canonical publication unless the
 Human has already selected one; an experiment ID is not a public route ID.
 
 ## Output contract
@@ -25,7 +25,7 @@ Human has already selected one; an experiment ID is not a public route ID.
 Write `00-run-brief.md` with:
 
 - experiment ID and version ID;
-- method: `baseline-1`;
+- method: `baseline-1.1`;
 - status: `in-progress`, `checkpointed`, `completed`, or `stopped`;
 - declared starting condition and first executable stage;
 - topic, place, period, research question, scope, and non-goals;

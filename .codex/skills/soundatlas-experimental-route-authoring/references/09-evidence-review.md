@@ -24,9 +24,10 @@ is structural rather than claim-level, return to the owning earlier stage.
 
 ## Output contracts
 
-Write `09-evidence-audit.md` with:
+Write `09-evidence-audit.md` with one shared-schema evidence-audit record per
+material claim or passage:
 
-- claim or passage;
+- stable claim ID, exact passage, and owning Event, relationship, or section ID;
 - classification;
 - supporting or contrary Sources;
 - correction and rationale;
@@ -34,7 +35,8 @@ Write `09-evidence-audit.md` with:
 - route-level verdict.
 
 Write `09-corrected-draft.md` as the complete corrected reader-facing route,
-not a patch or list of edits.
+not a patch or list of edits. Preserve the Event and section IDs needed to trace
+each corrected passage back to its evidence-audit record.
 
 ## Human boundary and stop condition
 

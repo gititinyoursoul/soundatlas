@@ -19,6 +19,11 @@ changed the route, what merely repeated information, where Human intervention
 was required, which boundaries failed, and what work remains before the result
 could enter existing editorial review.
 
+Audit schema continuity as process evidence: record missing required fields,
+ID changes, unexplained status transitions, unresolved `unknown` values, and
+whether later stages could trace decisions back to Candidates, Events,
+relationships, sections, claims, and Sources.
+
 Do not claim cross-topic generality from one topic or use a single automated
 quality score for Human editorial judgment.
 
@@ -30,6 +35,7 @@ Write `11-run-evaluation.md` with:
 - elapsed-time evidence when available, Human decisions, retries, and stop
   points;
 - Candidate and Event counts across material checkpoints;
+- schema completeness, ID continuity, and unexplained status changes;
 - Source coverage, Evidence Gaps, representation corrections, and claim changes;
 - narrative, geographic, experience, and presentation findings;
 - work required to reach current editorial-review and publication readiness;

@@ -19,16 +19,24 @@ contrast, structural link, convergence, chronology, or interpretive synthesis.
 Separate evidence from interpretation. Test simultaneous developments and the
 historical claims implied by sequence, emphasis, marker treatment, and links.
 
+Build relationship and narrative-section records using the shared schemas.
+Compare an event-centric structure with an argument-centric structure when both
+are plausible. Group Events only when they perform related historical work;
+chronology alone is not a grouping reason. Preserve the accepted Event cohort
+while testing sections, changes of scale, and transition logic.
+
 ## Output contract
 
 Write `07-cross-event-synthesis.md` with:
 
 - unique contribution of every Event;
-- relationship classification and supporting evidence;
+- shared-schema relationship records and supporting evidence;
 - direct connections separated from synthesis;
 - parallel developments and convergence points;
 - final working thesis;
-- proposed sections, Event order, and transition logic;
+- shared-schema narrative sections with Event assignments and grouping reasons;
+- event-centric versus argument-centric assessment and selected structure;
+- confirmation that every accepted Event remains assigned exactly once;
 - visual historical claims and constraints;
 - remaining claim-level gaps; and
 - drafting-readiness verdict.

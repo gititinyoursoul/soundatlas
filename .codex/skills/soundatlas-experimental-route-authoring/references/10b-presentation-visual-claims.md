@@ -24,10 +24,12 @@ rights, stability, and availability receive Human review.
 
 ## Output contract
 
-Write `10b-presentation-visual-claims.md` with:
+Write `10b-presentation-visual-claims.md` with shared-schema presentation
+records covering:
 
 - current supported presentation using implemented capabilities;
-- section/Event map states and the claim each state communicates;
+- section/Event/relationship IDs, map states, and the claim each state
+  communicates;
 - parallel, sequential, network, contrast, and convergence treatment;
 - prohibited or unsupported visual implications;
 - media/artifact leads and unresolved approvals;

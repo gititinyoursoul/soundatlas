@@ -137,7 +137,7 @@ The parallel experimental path uses the
 research runs. It does not replace the current route content pipeline or
 `prompts/create-route.md`.
 
-Shared `baseline-1` stage guidance lives in the Skill. A research run stores
+Shared `baseline-1.1` stage guidance lives in the Skill. A research run stores
 only its run brief and numbered, route-specific outputs under:
 
 ```text

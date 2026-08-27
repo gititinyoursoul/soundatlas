@@ -12,11 +12,17 @@ Form a defensible route cohort without repeating v1's one-way compression bias.
 
 ## Work
 
-Test chronology, geography, historical mechanisms, community agency,
-transitions, redundancy, evidence risk, experience value, and route scope. Ask
-what removing each Candidate would materially weaken, but also ask whether a
-strong reserve adds historical coverage, media richness, spatial interest,
-contrast, recognition, or pacing.
+Work in two explicit passes. First establish the minimum defensible core by
+testing chronology, geography, historical mechanisms, community agency,
+transitions, redundancy, evidence risk, and route scope. Record what removing
+each Candidate would materially weaken.
+
+Then run an enrichment and challenger pass against that stable core. Ask whether
+a reserve or challenger adds historical or geographic coverage, community
+agency, contrast, recognition, musical or media richness, interactive value, or
+pacing that the core cannot supply. For each proposed addition, state its new
+value, why a core Event cannot supply it, and its route-complexity cost. It is
+valid to recommend no enrichment.
 
 Do not optimize for a fixed Event count. Use the run brief's intended length as
 an authoring hypothesis, not a quota.
@@ -26,14 +32,14 @@ an authoring hypothesis, not a quota.
 Write `05-cohort-decision.md` with:
 
 - current thesis and coverage requirements;
-- Candidate classifications: `core`, `enrichment`, `context`, `reserve`, or
-  `reject`;
+- updated Candidate records using the shared schema and classifications `core`,
+  `enrichment`, `context`, `reserve`, or `reject`;
 - unique route function, inclusion/exclusion rationale, evidence state, and
   removal consequence for every serious Candidate;
 - at least one challenger comparison when a plausible alternative exists;
 - proposed route-length options and their concrete tradeoffs;
 - geographic, representation, narrative, evidence, and experience checks;
-- proposed cohort plus retained alternatives; and
+- minimum core, 0–3 recommended enrichment additions, and retained alternatives;
 - explicit Human decisions requested.
 
 ## Human boundary and stop condition

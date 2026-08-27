@@ -19,12 +19,17 @@ infrastructure, movement, and alternative historical mechanisms. Distinguish
 participation from agency. Map new Candidates immediately and compare them with
 the existing landscape rather than accumulating them without a route function.
 
+Preserve every existing `candidate_id`. Assign a new stable ID only to a newly
+found Candidate. Record previous and revised status, the evidence that caused
+the transition, and whether the spatial comparison changes.
+
 ## Output contract
 
 Write `04-targeted-gap-research.md` with:
 
 - gap questions and search boundary;
 - new evidence and the claims it supports or challenges;
+- updated Candidate records using the shared schema, including status history;
 - added, strengthened, weakened, replaced, or removed Candidates with reasons;
 - changes to the thesis, geography, representation, and route mechanism;
 - unresolved gaps and their materiality;

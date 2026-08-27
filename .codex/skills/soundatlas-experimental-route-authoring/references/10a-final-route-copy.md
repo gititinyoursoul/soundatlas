@@ -19,12 +19,18 @@ the author-selected content depth. Preserve all evidence-aware qualifications.
 Do not move factual explanation to a presentation layer that is not actually
 guaranteed to carry it.
 
+Use the shared final-stop and narrative-section records. For every stop make
+the Event, actors, change, and route significance legible without turning the
+copy into a general place biography. Record the route-level and stop-level
+length targets derived from the run brief; if no usable target exists, request
+a Human decision instead of silently choosing a depth.
+
 ## Output contract
 
 Write `10a-final-route-copy.md` with the complete route title, introduction,
-sections, Event copy, transitions, and conclusion. Add a concise final-copy
-note identifying deliberate compression and any meaning that presentation must
-not obscure.
+shared-schema sections and final-stop records, transitions, and conclusion. Add
+a concise final-copy note identifying the applied length targets, deliberate
+compression, and any meaning that presentation must not obscure.
 
 ## Human boundary and stop condition
 

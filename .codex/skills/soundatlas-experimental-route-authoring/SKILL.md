@@ -1,11 +1,11 @@
 ---
 name: soundatlas-experimental-route-authoring
-description: Execute, resume, or evaluate one approved stage of a SoundAtlas experimental route-authoring research run using the baseline-1 contracts. Use for work under docs/content/route-experiments, including creating a run brief, running numbered research or narrative stages, recording checkpoints or stopped runs, and producing comparable route-version evidence. Do not use for the current automated route pipeline, direct seed curation, canonical route publication, or unapproved route research.
+description: Execute, resume, or evaluate one approved stage of a SoundAtlas experimental route-authoring research run using the baseline-1.1 contracts. Use for work under docs/content/route-experiments, including creating a run brief, running numbered research or narrative stages, recording checkpoints or stopped runs, and producing comparable route-version evidence. Do not use for the current automated route pipeline, direct seed curation, canonical route publication, or unapproved route research.
 ---
 
 # SoundAtlas Experimental Route Authoring
 
-Run one explicit stage of the `baseline-1` experimental method and leave a
+Run one explicit stage of the `baseline-1.1` experimental method and leave a
 durable output that another agent or conversation can resume from.
 
 ## Required context
@@ -64,13 +64,19 @@ Steps 01 and 02 are conditional. Skip either only when the run brief names the
 declared entry point and records why the skipped responsibility is already
 satisfied or outside the run.
 
+For stages 03–11, also read [Shared output schemas](references/shared-output-schemas.md).
+Use only the record types required by the active stage. Preserve stable IDs and
+explicit missing-value states across later outputs; do not rediscover or rename
+the same Candidate, Event, relationship, section, or claim silently.
+
 ## Execution workflow
 
-1. Resolve the approved experiment ID, version ID, method (`baseline-1`),
+1. Resolve the approved experiment ID, version ID, method (`baseline-1.1`),
    declared entry point, active stage, status, and write boundary from the run
    brief and Issue.
-2. Read the matching stage reference and its named inputs. Do not read later
-   outputs as hidden answers during a baseline comparison or replay.
+2. Read the matching stage reference, its named inputs, and the shared output
+   schemas for stages 03–11. Do not read later outputs as hidden answers during
+   a baseline comparison or replay.
 3. Check whether the stage is authorized, its inputs are complete, and a
    material Human decision is pending. Stop with a concrete missing-input or
    decision report when any check fails.
@@ -125,3 +131,8 @@ Every numbered output must:
   relevant;
 - record its verdict or stop condition and the next permitted stage; and
 - avoid generic `what's next` prose that duplicates this skill's routing.
+
+For every applicable schema field, write a supported value, `unknown`, or
+`not-assessed`. Never omit a required field merely because research did not
+resolve it. Keep Source references claim-specific and preserve prior IDs and
+status transitions so stage-to-stage and run-to-run comparisons remain valid.
