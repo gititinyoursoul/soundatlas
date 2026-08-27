@@ -4,7 +4,11 @@ from pathlib import Path
 
 import pytest
 
-from app.route_review import RouteReviewRepository, RouteReviewStateUpdate
+from app.route_review import (
+    RouteReviewPlaceUpdate,
+    RouteReviewRepository,
+    RouteReviewStateUpdate,
+)
 from scripts import route_content_pipeline
 from scripts.route_content_pipeline import main
 
@@ -748,6 +752,10 @@ def test_agent_prompts_include_editorial_quality_contracts(tmp_path: Path) -> No
     assert "complete current-schema framing" in complete_prompt
     assert "exactly one coherent Place decision for each `place_id`" in complete_prompt
     assert "Events may share and revisit that Place" in complete_prompt
+    assert '`contract_version: "2"`' in complete_prompt
+    assert "`reuse`, `new`, or `update`" in complete_prompt
+    assert "never claim Human approval" in complete_prompt
+    assert "Never place names, boroughs, types, summaries" in complete_prompt
 
     assert "coherent editorial argument, not a chronology or checklist" in concept_prompt
     assert "story-serving headings" in concept_prompt
@@ -1696,6 +1704,77 @@ def test_complete_draft_binds_active_review_and_blocks_legacy_steps(tmp_path: Pa
     assert (route_dir / "route-concept.md").read_bytes() == before
 
 
+def test_active_preview_and_cli_promotion_enforce_spatial_update_approval(
+    tmp_path: Path,
+) -> None:
+    content_root, seed_dir = write_pipeline_fixture(tmp_path)
+    route_dir = content_root / ROUTE_ID
+    (route_dir / "candidate-outline.json").write_text(
+        build_complete_draft_outline_json(), encoding="utf-8"
+    )
+    draft = json.loads(build_complete_draft_json())
+    draft["places"] = [
+        {
+            "decision": "update",
+            "source_place_text": "1520 Sedgwick Avenue",
+            "place_id": "1520-sedgwick-avenue",
+            "spatial_update": {"latitude": 40.846, "longitude": -73.9231},
+        }
+    ]
+    fake_codex = write_fake_codex(tmp_path / "codex", output=json.dumps(draft))
+    assert main(
+        [
+            "--content-root",
+            str(content_root),
+            "--seed-dir",
+            str(seed_dir),
+            "agent",
+            "--route-id",
+            ROUTE_ID,
+            "--step",
+            "complete_draft",
+            "--codex-command",
+            str(fake_codex),
+        ]
+    ) == 0
+    review_repository = RouteReviewRepository(content_root, seed_dir=seed_dir)
+    review = review_repository.get(ROUTE_ID)
+    manifest = route_content_pipeline.load_or_create_manifest(route_dir, ROUTE_ID)
+
+    preview = route_content_pipeline.build_seed_preview_report(
+        route_dir=route_dir,
+        seed_dir=seed_dir,
+        manifest=manifest,
+    )
+
+    assert "## Event Geography" in preview
+    assert "Update `1520-sedgwick-avenue` spatial fields" in preview
+    assert "approval required" in preview
+    assert "requires explicit Human approval" in preview
+
+    approved = review_repository.update_place_review(
+        ROUTE_ID,
+        "1520-sedgwick-avenue",
+        RouteReviewPlaceUpdate(
+            revision_id=review.revision_id,
+            spatial_update_approved=True,
+        ),
+    )
+    result = route_content_pipeline.promote_to_seed(
+        content_root=content_root,
+        seed_dir=seed_dir,
+        route_id=ROUTE_ID,
+        write=True,
+        variant=None,
+    )
+    places = json.loads((seed_dir / "places.json").read_text(encoding="utf-8"))["places"]
+
+    assert approved.technical_ready is True
+    assert "exact reviewed revision" in result
+    assert places[0]["name"] == "1520 Sedgwick Avenue"
+    assert places[0]["latitude"] == 40.846
+
+
 def test_complete_draft_activation_rolls_back_every_target_on_replace_failure(
     tmp_path: Path, monkeypatch
 ) -> None:
@@ -1865,6 +1944,7 @@ def build_complete_draft_json() -> str:
         )
     payload = {
         "_meta": {
+            "contract_version": "2",
             "route_id": ROUTE_ID,
             "source_outline": "candidate-outline.json",
             "review_status": "draft",

@@ -43,7 +43,9 @@ until Issues [#71](https://github.com/gititinyoursoul/soundatlas/issues/71),
 [#72](https://github.com/gititinyoursoul/soundatlas/issues/72), and
 [#73](https://github.com/gititinyoursoul/soundatlas/issues/73) implement its
 review-data, explorer-surface, and publication slices. Completed Issues #70 and
-#81 define and implement the current compositional geography behavior.
+#81 define and implement the current compositional geography behavior. Issue
+#82 extends the active route pipeline with artifact-based multi-place framing
+and explicit review of spatial updates to shared canonical places.
 
 ## Workflow
 
@@ -96,8 +98,9 @@ flowchart TD
     relationships, and reviewable Content/Context. It materializes one coherent
     active result before human editorial decisions.
 13. Create or refresh `route-review.json` to keep the private Draft, Approved,
-    and Don’t use state separate from agent recommendations. The complete-draft
-    step refreshes it after successful activation; existing routes may use the
+    and Don’t use state separate from agent recommendations and to hold any
+    explicit Human approval of an existing-place spatial update. The
+    complete-draft step refreshes it after successful activation; existing routes may use the
     explicit one-time legacy migration described in
     `docs/content/workflow-commands.md`.
 14. Keep `accepted-events.json` and `accepted-events.md` as legacy compatibility
@@ -114,8 +117,10 @@ flowchart TD
     accepted events into `data/seed/`.
 17. Define event titles, summaries, and significance text in editorial form
     before translating them into `data/seed/`.
-18. Use the generated seed preview and validation report to inspect draft seed
-    shape before any write into `data/seed/`.
+18. Use the generated seed preview and validation report to inspect event place
+    ordering/defaults, canonical reuse, new places, spatial before/after
+    updates, affected existing events, provenance, approval state, and blocking
+    findings before any write into `data/seed/`.
 19. Promote route drafts to seed only after event framing has been manually
     inspected.
 20. Keep contested or incomplete claims traceable through `source_urls`.
@@ -183,8 +188,10 @@ For new route work, keep route-specific editorial artifacts under
 9. `route-review.json`: authoritative route-scoped Human-state record bound to one
    exact generated route result. It keeps Draft, Approved, and Don’t use only on route
    events; other considered candidates retain their composition account and findings but
-   do not receive editorial state. It preserves minimal dormant decisions across
-   refreshes.
+   do not receive editorial state. It also keeps revision-bound approval for
+   spatial-only updates to existing canonical places and resets that approval
+   when the proposed spatial payload or canonical baseline changes. It
+   preserves minimal dormant decisions across refreshes.
 
 In editorial explorer mode, Route review reports the complete Candidate count
 with separate active Event and inactive Candidate sections. Selecting an
@@ -230,6 +237,10 @@ The publication API is available only through API-backed editorial mode:
 - `POST /editorial/routes/<route-id>/publication` accepts the active review
   revision and promotes the validated result to canonical seed data. It does
   not commit, push, deploy, resolve warnings, or alter route-scoped editorial state.
+- `PATCH /editorial/routes/<route-id>/review/places/<place-id>` accepts the
+  current revision and explicitly approves or withdraws approval for an
+  existing-place spatial update. It rejects stale revisions and does not apply
+  the seed change by itself.
 
 This remains a focused publication boundary while #72 completes its review
 surface evidence and the legacy accepted-events path is retired through the
@@ -278,6 +289,11 @@ uv run --project backend python backend/scripts/route_content_pipeline.py promot
 - Treat `route-review.json` as the authority for private route state. Treat the
   accepted-events gate as a legacy compatibility boundary; the complete-draft
   path does not require it.
+- Treat agent-supplied coordinates, geometry, and provenance as advisory route
+  artifacts. Reuse canonical places unchanged; require explicit revision-bound
+  Human approval before publishing an existing-place spatial update. Ordinary
+  route publication is sufficient for reviewed new places but never silently
+  authorizes a shared-place overwrite.
 - Use source status values only as source/claim quality signals:
   `strong`, `medium`, `weak`, `mythologized`, and `needs_review`. AI-suggested
   source statuses remain unconfirmed until human review.

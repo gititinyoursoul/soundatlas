@@ -9,6 +9,7 @@ from app.main import create_app
 from app.route_review import (
     RouteReviewConflictError,
     RouteReviewError,
+    RouteReviewPlaceUpdate,
     RouteReviewRepository,
     RouteReviewStateUpdate,
 )
@@ -108,6 +109,68 @@ def test_review_bundle_resolves_new_places_media_relationships_and_connections(
     assert result.connections[0].id == "event-one-to-event-two"
 
 
+@pytest.mark.parametrize(
+    "geometry",
+    [
+        {
+            "type": "Polygon",
+            "coordinates": [
+                [[-73.91, 40.8], [-73.9, 40.8], [-73.9, 40.81], [-73.91, 40.8]]
+            ],
+        },
+        {
+            "type": "MultiPolygon",
+            "coordinates": [
+                [
+                    [
+                        [-73.91, 40.8],
+                        [-73.9, 40.8],
+                        [-73.9, 40.81],
+                        [-73.91, 40.8],
+                    ]
+                ]
+            ],
+        },
+    ],
+)
+def test_review_accepts_new_area_places_with_complete_provenance(
+    tmp_path: Path,
+    geometry: dict[str, object],
+) -> None:
+    repository = write_review_fixture(tmp_path)
+    draft_path = tmp_path / ROUTE_ID / "complete-draft.json"
+    payload = json.loads(draft_path.read_text(encoding="utf-8"))
+    payload["events"][0].update(
+        {
+            "place_id": "new-area",
+            "place_ids": ["new-area"],
+            "default_place_id": "new-area",
+        }
+    )
+    payload["places"] = [
+        {
+            "decision": "new",
+            "place_id": "new-area",
+            "place": place("new-area")
+            | {
+                "geometry": geometry,
+                "geometry_precision": "interpretive",
+                "geometry_source_type": "external",
+                "geometry_source_url": "https://example.org/geodata",
+                "geometry_source_note": "Reviewed external boundary.",
+                "geometry_license": "ODbL-1.0",
+            },
+        }
+    ]
+    draft_path.write_text(json.dumps(payload), encoding="utf-8")
+
+    review = repository.refresh(ROUTE_ID)
+
+    assert review.technical_ready is True
+    assert review.places[0].place.geometry is not None
+    assert review.places[0].place.geometry.type == geometry["type"]
+
+
 def test_reader_facing_change_resets_approved_state_and_revision(tmp_path: Path) -> None:
     repository = write_review_fixture(tmp_path)
     first = repository.refresh(ROUTE_ID)
@@ -204,6 +267,100 @@ def test_state_updates_change_revision_and_reject_stale_writes(tmp_path: Path) -
                 editorial_state="draft",
             ),
         )
+
+
+def test_spatial_update_requires_explicit_approval_and_resets_when_changed(
+    tmp_path: Path,
+) -> None:
+    repository = write_review_fixture(tmp_path)
+    draft_path = tmp_path / ROUTE_ID / "complete-draft.json"
+    payload = json.loads(draft_path.read_text(encoding="utf-8"))
+    payload["places"] = [
+        {
+            "decision": "update",
+            "place_id": "place-one",
+            "source_place_text": "Review Place",
+            "spatial_update": {"latitude": 40.81, "longitude": -73.91},
+        }
+    ]
+    draft_path.write_text(json.dumps(payload), encoding="utf-8")
+
+    review = repository.refresh(ROUTE_ID)
+
+    assert review.places[0].decision == "update"
+    assert review.places[0].canonical_place is not None
+    assert review.places[0].place.name == "Review Place"
+    assert review.places[0].place.latitude == 40.81
+    assert review.places[0].spatial_update_approved is False
+    assert review.technical_ready is False
+
+    approved = repository.update_place_review(
+        ROUTE_ID,
+        "place-one",
+        RouteReviewPlaceUpdate(
+            revision_id=review.revision_id,
+            spatial_update_approved=True,
+        ),
+    )
+    assert approved.places[0].spatial_update_approved is True
+    assert approved.technical_ready is True
+
+    payload["places"][0]["spatial_update"]["latitude"] = 40.82
+    draft_path.write_text(json.dumps(payload), encoding="utf-8")
+    refreshed = repository.refresh(ROUTE_ID)
+
+    assert refreshed.places[0].spatial_update_approved is False
+    assert refreshed.technical_ready is False
+
+
+def test_spatial_update_rejects_non_spatial_fields_and_new_place_collisions(
+    tmp_path: Path,
+) -> None:
+    repository = write_review_fixture(tmp_path)
+    draft_path = tmp_path / ROUTE_ID / "complete-draft.json"
+    payload = json.loads(draft_path.read_text(encoding="utf-8"))
+    payload["places"] = [
+        {
+            "decision": "update",
+            "place_id": "place-one",
+            "spatial_update": {"name": "Rewritten place"},
+        }
+    ]
+    draft_path.write_text(json.dumps(payload), encoding="utf-8")
+
+    invalid_update = repository.refresh(ROUTE_ID)
+    assert any("unsupported fields: name" in error for error in invalid_update.technical_errors)
+
+    payload["places"] = [
+        {
+            "decision": "new",
+            "place_id": "place-one",
+            "place": place("place-one"),
+        }
+    ]
+    draft_path.write_text(json.dumps(payload), encoding="utf-8")
+    collision = repository.refresh(ROUTE_ID)
+
+    assert any("already exists in canonical seeds" in error for error in collision.technical_errors)
+
+    payload["events"][0].update(
+        {
+            "place_id": "new-place",
+            "place_ids": ["new-place"],
+            "default_place_id": "new-place",
+        }
+    )
+    payload["places"] = [
+        {
+            "decision": "new",
+            "place_id": "new-place",
+            "place": place("new-place") | {"latitude": 0.0, "longitude": 0.0},
+        }
+    ]
+    draft_path.write_text(json.dumps(payload), encoding="utf-8")
+    placeholder = repository.refresh(ROUTE_ID)
+
+    assert any("unresolved placeholder coordinates" in error for error in placeholder.technical_errors)
 
 
 def test_regeneration_applies_selective_carryover_and_dormant_records(tmp_path: Path) -> None:
@@ -416,6 +573,48 @@ def test_editorial_api_reads_and_updates_private_state_without_public_leak(
     assert stale.status_code == 409
     assert client.get("/routes").json() == []
     assert client.get("/events").json() == []
+
+
+def test_editorial_api_approves_only_revision_bound_existing_place_updates(
+    tmp_path: Path,
+) -> None:
+    repository = write_review_fixture(tmp_path)
+    draft_path = tmp_path / ROUTE_ID / "complete-draft.json"
+    payload = json.loads(draft_path.read_text(encoding="utf-8"))
+    payload["places"] = [
+        {
+            "decision": "update",
+            "place_id": "place-one",
+            "spatial_update": {"latitude": 40.81},
+        }
+    ]
+    draft_path.write_text(json.dumps(payload), encoding="utf-8")
+    review = repository.refresh(ROUTE_ID)
+    client = TestClient(
+        create_app(
+            SeedRepository([], [], [], []),
+            route_review_repository=repository,
+        )
+    )
+
+    response = client.patch(
+        f"/editorial/routes/{ROUTE_ID}/review/places/place-one",
+        json={
+            "revision_id": review.revision_id,
+            "spatial_update_approved": True,
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.json()["places"][0]["spatial_update_approved"] is True
+    stale = client.patch(
+        f"/editorial/routes/{ROUTE_ID}/review/places/place-one",
+        json={
+            "revision_id": review.revision_id,
+            "spatial_update_approved": False,
+        },
+    )
+    assert stale.status_code == 409
 
 
 def write_review_fixture(

@@ -9,7 +9,9 @@ This is the canonical state vocabulary for SoundAtlas editorial data.
   the pipeline step key). It is not approved or published.
 - A **route editorial review** is the route-scoped Human editorial record stored
   under the compatibility filename `route-review.json`. It is not private
-  access-controlled data; repository access remains unchanged.
+  access-controlled data; repository access remains unchanged. It also records
+  explicit Human approval for a proposed spatial update to an existing shared
+  canonical place.
 - An **editorial review revision** is one revision of that record. The API keeps
   the `RouteReviewResult` OpenAPI component as a compatibility wrapper around
   the internal `RouteEditorialReview` domain model.
@@ -31,6 +33,13 @@ This is the canonical state vocabulary for SoundAtlas editorial data.
   places, events, and enrichment links: `draft` or `reviewed`. It does not
   decide route inclusion or publication. Media and image links remain
   Human-reviewed; generated links start as `draft`.
+- A route-level Place decision is `reuse`, `new`, or `update`. `reuse` preserves
+  the canonical record, `new` proposes a complete reviewed Place, and `update`
+  may change only coordinates, geometry, geometry precision, and geometry
+  provenance. An existing-place update is not authorized by ordinary route
+  publication; its `spatial_update_approved` state is Human-owned, bound to the
+  exact route-review revision, and resets when the proposal or canonical
+  spatial baseline changes.
 - Technical validity, enrichment quality, and route publication are separate
   checks. Agents must not write Human-owned states.
 
@@ -45,4 +54,6 @@ not developed enough to add sufficient user value while adding editorial and
 runtime complexity. Existing records remain readable temporarily for
 compatibility, but new runs and publication do not depend on them. Shared
 places retain their own content-review status; route use is derived from route
-entries rather than a global place inclusion decision.
+entries rather than a global place inclusion decision. Agents may research or
+curate spatial proposals into route artifacts, but preview and publication do
+not perform live geodata retrieval.

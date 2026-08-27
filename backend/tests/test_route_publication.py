@@ -5,8 +5,16 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app.main import create_app
-from app.route_publication import RoutePublicationError, RoutePublicationRepository
-from app.route_review import RouteReviewRepository, RouteReviewStateUpdate
+from app.route_publication import (
+    RoutePublicationError,
+    RoutePublicationRepository,
+    RoutePublicationValidationError,
+)
+from app.route_review import (
+    RouteReviewPlaceUpdate,
+    RouteReviewRepository,
+    RouteReviewStateUpdate,
+)
 from app.seed_repository import SeedRepository
 
 ROUTE_ID = "review-route"
@@ -182,6 +190,54 @@ def test_publication_rejects_stale_revision_without_writing(tmp_path: Path) -> N
         == "event-two"
     )
     assert second.revision_id != first.revision_id
+
+
+def test_publication_requires_approved_current_spatial_update(tmp_path: Path) -> None:
+    content_root = tmp_path / "content"
+    seed_dir = tmp_path / "seed"
+    write_publication_fixture(content_root, seed_dir)
+    draft_path = content_root / ROUTE_ID / "complete-draft.json"
+    payload = json.loads(draft_path.read_text(encoding="utf-8"))
+    payload["places"][0] = {
+        "decision": "update",
+        "place_id": "place-one",
+        "spatial_update": {"latitude": 40.81, "longitude": -73.91},
+    }
+    draft_path.write_text(json.dumps(payload), encoding="utf-8")
+    review_repository = RouteReviewRepository(content_root, seed_dir=seed_dir)
+    review = review_repository.refresh(ROUTE_ID)
+    publication_repository = RoutePublicationRepository(
+        review_repository,
+        content_root=content_root,
+        seed_dir=seed_dir,
+    )
+
+    summary = publication_repository.summary(ROUTE_ID)
+    assert summary.technical_ready is False
+    assert "requires explicit Human approval" in summary.technical_errors[0]
+
+    approved = review_repository.update_place_review(
+        ROUTE_ID,
+        "place-one",
+        RouteReviewPlaceUpdate(
+            revision_id=review.revision_id,
+            spatial_update_approved=True,
+        ),
+    )
+    publication_repository.publish(ROUTE_ID, approved.revision_id)
+    places_payload = json.loads((seed_dir / "places.json").read_text(encoding="utf-8"))
+    updated = next(item for item in places_payload["places"] if item["id"] == "place-one")
+    assert updated["name"] == "Place One"
+    assert updated["review_status"] == "draft"
+    assert "content_review_status" not in updated
+    assert updated["latitude"] == 40.81
+    assert updated["longitude"] == -73.91
+
+    stale_payload = json.loads((seed_dir / "places.json").read_text(encoding="utf-8"))
+    stale_payload["places"][0]["latitude"] = 40.82
+    write_json(seed_dir / "places.json", stale_payload)
+    with pytest.raises(RoutePublicationValidationError, match="stale"):
+        publication_repository.publish(ROUTE_ID, approved.revision_id)
 
 
 def test_publish_uses_the_bound_review_bundle_not_framing_files(tmp_path: Path) -> None:

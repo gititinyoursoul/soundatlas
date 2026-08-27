@@ -13,6 +13,8 @@ from app.route_review import (
     RouteReviewNotFoundError,
     RouteReviewProposal,
     RouteReviewRepository,
+    spatial_place_payload,
+    spatial_place_signature,
 )
 from app.schemas import Connection, Event, Place, Route
 from app.seed_repository import SeedRepository
@@ -157,11 +159,47 @@ class RoutePublicationRepository:
         selected_place_ids = {
             place_id for event in selected_events for place_id in event.get("place_ids", [])
         }
-        new_places = [
-            item.place.model_dump(mode="json")
-            for item in review.places
-            if item.decision == "new" and item.place.id in selected_place_ids
-        ]
+        seed_places_by_id = {
+            item.get("id"): item
+            for item in seed["places"].get("places", [])
+            if isinstance(item, dict) and isinstance(item.get("id"), str)
+        }
+        changed_places: dict[str, dict[str, Any]] = {}
+        for item in review.places:
+            place_id = item.place.id
+            if place_id not in selected_place_ids or item.decision == "reuse":
+                continue
+            if item.decision == "new":
+                if place_id in seed_places_by_id:
+                    findings.route_technical_errors.append(
+                        f"New place '{place_id}' now exists in canonical seeds; refresh the review."
+                    )
+                    continue
+                changed_places[place_id] = item.place.model_dump(mode="json")
+                continue
+            current = seed_places_by_id.get(place_id)
+            if current is None:
+                findings.route_technical_errors.append(
+                    f"Updated place '{place_id}' is missing from canonical seeds."
+                )
+                continue
+            if not item.spatial_update_approved:
+                findings.route_technical_errors.append(
+                    f"Updated place '{place_id}' requires explicit Human approval."
+                )
+                continue
+            if item.canonical_spatial_signature != spatial_place_signature(current):
+                findings.route_technical_errors.append(
+                    f"Updated place '{place_id}' is stale because canonical spatial data changed."
+                )
+                continue
+            updated = dict(current)
+            for spatial_field, value in spatial_place_payload(item.place).items():
+                if value is None:
+                    updated.pop(spatial_field, None)
+                else:
+                    updated[spatial_field] = value
+            changed_places[place_id] = updated
         # Connections are deferred from the MVP. Keep legacy seed records
         # readable, but do not select or publish new relationship records.
         previous = self._read_publication_state(review.route_id)
@@ -178,9 +216,9 @@ class RoutePublicationRepository:
         places = [
             place
             for place in seed["places"].get("places", [])
-            if place.get("id") not in {item.get("id") for item in new_places}
+            if place.get("id") not in changed_places
         ]
-        places.extend(new_places)
+        places.extend(changed_places.values())
         # Preserve legacy Connection data unchanged while it is deferred from
         # the MVP publication path.
         connections = list(seed["connections"].get("connections", []))

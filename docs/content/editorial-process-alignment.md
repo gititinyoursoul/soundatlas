@@ -43,7 +43,8 @@ SoundAtlas currently uses a route-first workflow:
    proposals for review.
 6. `route-review.json` holds one exact editorial review revision with the selected
    seed-shaped event, place, and connection bundle; Draft, Approved, and Don’t
-   use state; publication blocking checks; and minimal dormant decisions across
+   use state; explicit approval for any existing-place spatial update;
+   publication blocking checks; and minimal dormant decisions across
    regeneration. The editorial StoryPanel renders this event content directly,
    while candidate planning fields and findings remain separate review context.
    Event rows show warning and blocking-error counts, selected-event review
@@ -54,8 +55,10 @@ SoundAtlas currently uses a route-first workflow:
    handoff artifacts and do not determine route-scoped editorial state.
 8. `route-concept.md`, `event-framing.*`, `place-framing.json`, and
    `connection-framing.json` materialize the selected generated route result.
-9. `seed-transfer-report.md` and `validation-report.md` preview structural
-   seed changes before promotion.
+9. `seed-transfer-report.md` and `validation-report.md` preview structural seed
+   changes, multi-place composition, canonical reuse/add/update counts,
+   spatial provenance, shared-place impact, approval state, and blocking
+   findings before promotion.
 10. `data/seed/` is the runtime source for the map, timeline, route switching,
    event inspector, sources, media links, and image links. Existing
    Connections remain readable as compatibility data but are deferred from the
@@ -148,8 +151,10 @@ remain a deterministic compatibility path.
 
 The complete-draft step creates seed-shaped event, place, and connection drafts
 for the active result before human review, while keeping all records in draft
-state and preserving warnings. Publication remains blocked by technical errors
-and still requires explicit human action.
+state and preserving warnings. Agent-retrieved or curated geodata remains in
+the artifact boundary; preview and publication make no live lookup. Publication
+remains blocked by technical errors, stale spatial baselines, and unapproved
+existing-place updates, and still requires explicit human action.
 
 Separate the working layers:
 

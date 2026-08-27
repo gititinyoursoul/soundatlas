@@ -26,6 +26,7 @@ CLI generates or regenerates one route result
   -> editor opens that result in editorial review mode
   -> editor explores it through the map, timeline, and StoryPanel
   -> editor may set each event to Draft, Approved, or Don’t use
+  -> editor explicitly approves any spatial update to an existing shared place
   -> editor inspects warnings and publication blocking checks
   -> editor publishes the exact Draft-plus-Approved route result
   -> validated content becomes canonical seed data
@@ -72,8 +73,11 @@ The surface must:
 - show every proposed event with its current route-scoped editorial state;
 - show agent recommendations and rationales as advisory information;
 - keep relevant event and route warnings visible;
-- distinguish publication blocking checks from editorial warnings; and
-- provide one route-level Publish action when technical validation permits it.
+- distinguish publication blocking checks from editorial warnings;
+- provide one route-level Publish action when technical validation permits it;
+  and
+- keep an existing canonical-place spatial update blocked until the editor
+  explicitly approves that update on the exact review revision.
 
 The StoryPanel uses the same reader-facing event shape and presentation in
 editorial and public modes, including title, dates, summary, significance,
@@ -89,7 +93,8 @@ collapsed disclosure. Don’t use events remain reviewable but do not contribute
 to publication finding counts or readiness. Missing or malformed required story
 content produces an explicit incomplete state.
 
-The first MVP surface is read-only apart from editorial-state controls. Content
+The first MVP surface is read-only apart from editorial-state controls and the
+explicit approval of an already-proposed existing-place spatial update. Content
 corrections continue through the existing Codex or CLI workflow. Direct field
 editing and revision requests are not part of this initial interaction.
 
@@ -123,7 +128,8 @@ Route-scoped editorial state must remain distinct from:
 Agent recommendations help the editor decide but never set human state,
 combine content, exclude an event, or authorize publication automatically.
 Approving an event does not approve all of its sources or media. Publishing a
-route does not convert its Draft events to Approved.
+route does not convert its Draft events to Approved and does not implicitly
+approve an update to a shared canonical place.
 
 ## Warnings And Technical Errors
 
@@ -140,7 +146,9 @@ reviewed result and makes the separate explicit Publication decision.
 
 Structurally invalid data and failed or unresolved references are technical
 errors. They are not editorial decisions and may prevent publication when the
-system cannot safely produce canonical seed data.
+system cannot safely produce canonical seed data. Missing spatial metadata or
+provenance, a stale canonical baseline, and an unapproved existing-place update
+also prevent publication.
 
 Neither warnings nor successful validation constitute human approval.
 
@@ -150,6 +158,13 @@ Publish is one explicit, human-only route decision over the exact result shown
 in editorial review. The publication summary must identify the route result,
 list the Draft and Approved events that will be included, show excluded Don’t
 use counts, preserve visible warnings, and report publication blocking checks.
+
+New-place acceptance may remain part of that exact route publication decision.
+Because an existing canonical place can affect events outside the route, its
+spatial update requires a separate explicit approval bound to the same review
+revision. Changing the proposal or canonical spatial baseline resets approval.
+Agents may populate artifact proposals from research or curation, but review
+and publication make no live geodata request.
 
 After the decision, the system validates and promotes that exact
 Draft-plus-Approved result into canonical seed data. Publication:

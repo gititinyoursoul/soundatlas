@@ -17,6 +17,7 @@ from app.route_review import (
     RouteReviewConflictError,
     RouteReviewError,
     RouteReviewNotFoundError,
+    RouteReviewPlaceUpdate,
     RouteReviewRepository,
     RouteReviewResult,
     RouteReviewStateUpdate,
@@ -226,6 +227,30 @@ def create_app(
     ) -> RouteEditorialReview:
         try:
             return review_repository.update_state(route_id, candidate_id, request)
+        except RouteReviewNotFoundError as exc:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+        except RouteReviewConflictError as exc:
+            raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc)) from exc
+        except RouteReviewValidationError as exc:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
+        except RouteReviewError as exc:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=str(exc),
+            ) from exc
+
+    @api.patch(
+        "/editorial/routes/{route_id}/review/places/{place_id}",
+        response_model=RouteReviewResult,
+    )
+    def update_route_review_place(
+        route_id: str,
+        place_id: str,
+        request: RouteReviewPlaceUpdate,
+        review_repository: RouteReviewRepository = Depends(get_route_review_repository),
+    ) -> RouteEditorialReview:
+        try:
+            return review_repository.update_place_review(route_id, place_id, request)
         except RouteReviewNotFoundError as exc:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
         except RouteReviewConflictError as exc:

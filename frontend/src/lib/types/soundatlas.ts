@@ -205,8 +205,13 @@ export type RouteReviewProposal = {
 };
 
 export type RouteReviewPlace = {
-  decision: 'reuse' | 'new';
+  decision: 'reuse' | 'new' | 'update';
   place: Place;
+  canonical_place?: Place | null;
+  canonical_spatial_signature?: string | null;
+  proposed_spatial_signature?: string | null;
+  spatial_update_approved: boolean;
+  warnings: string[];
 };
 
 export type FindingOwner =

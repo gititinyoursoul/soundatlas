@@ -15,7 +15,13 @@ BACKEND_ROOT = Path(__file__).resolve().parents[1]
 if str(BACKEND_ROOT) not in sys.path:
     sys.path.insert(0, str(BACKEND_ROOT))
 
-from app.route_review import ROUTE_REVIEW_FILENAME, RouteReviewRepository
+from app.route_publication import RoutePublicationRepository
+from app.route_review import (
+    ROUTE_REVIEW_FILENAME,
+    RouteEditorialReview,
+    RouteReviewRepository,
+    spatial_place_payload,
+)
 from app.schemas import Connection, Event, Place, Route
 from scripts.route_prompt_contracts import (
     contract_digest,
@@ -1443,6 +1449,8 @@ def validate_complete_draft(
         errors.append(f"Complete draft route_id must be `{route_id}`.")
     if metadata.get("source_outline") != source_outline:
         errors.append(f"Complete draft source_outline must be `{source_outline}`.")
+    if metadata.get("contract_version") != "2":
+        errors.append("Complete draft `_meta.contract_version` must be `2`.")
     content_review_status = metadata.get("content_review_status", metadata.get("review_status"))
     if content_review_status != "draft":
         errors.append("Complete draft `_meta.content_review_status` must be `draft`.")
@@ -1645,13 +1653,23 @@ def validate_complete_draft(
     errors.extend(validate_seed_payloads(merged))
     place_ids = {place.get("id") for place in merged["places"].get("places", [])}
     for place in places:
-        if not isinstance(place, dict) or place.get("decision") not in {"reuse", "new"}:
-            errors.append("Complete draft places must use reuse or new decisions.")
+        if not isinstance(place, dict) or place.get("decision") not in {
+            "reuse",
+            "new",
+            "update",
+        }:
+            errors.append("Complete draft places must use reuse, new, or update decisions.")
             continue
         if place.get("place_id") not in place_ids:
             errors.append(f"Complete draft place `{place.get('place_id')}` is unresolved.")
         if place.get("decision") == "new" and not isinstance(place.get("place"), dict):
             errors.append(f"Complete draft new place `{place.get('place_id')}` has no place record.")
+        if place.get("decision") == "update" and not isinstance(
+            place.get("spatial_update"), dict
+        ):
+            errors.append(
+                f"Complete draft updated place `{place.get('place_id')}` has no spatial update."
+            )
     connection_ids = [item.get("id") for item in connections if isinstance(item, dict)]
     if len(connection_ids) != len(set(connection_ids)):
         errors.append("Complete draft connections must have unique IDs.")
@@ -1900,10 +1918,21 @@ def canonical_place_catalog_json(seed_dir: Path) -> str:
     seed_places = load_seed_payloads(seed_dir)["places"].get("places", [])
     catalog = [
         {
-            "id": place["id"],
-            "name": place["name"],
-            "borough": place["borough"],
-            "place_type": place["place_type"],
+            key: place.get(key)
+            for key in (
+                "id",
+                "name",
+                "borough",
+                "place_type",
+                "latitude",
+                "longitude",
+                "geometry",
+                "geometry_precision",
+                "geometry_source_type",
+                "geometry_source_url",
+                "geometry_source_note",
+                "geometry_license",
+            )
         }
         for place in seed_places
     ]
@@ -2984,6 +3013,21 @@ def build_seed_preview_report(
     seed_dir: Path,
     manifest: dict[str, Any],
 ) -> str:
+    review_path = route_dir / ROUTE_REVIEW_FILENAME
+    complete_draft_path = route_dir / manifest["steps"]["complete_draft"]["json"]
+    if review_path.exists() and complete_draft_path.exists():
+        review_repository = RouteReviewRepository(route_dir.parent, seed_dir=seed_dir)
+        review = review_repository.get(manifest["route_id"])
+        publication_repository = RoutePublicationRepository(
+            review_repository,
+            content_root=route_dir.parent,
+            seed_dir=seed_dir,
+        )
+        return build_route_review_seed_preview_report(
+            review=review,
+            seed=load_seed_payloads(seed_dir),
+            publication_repository=publication_repository,
+        )
     seed = load_seed_payloads(seed_dir)
     drafts = load_draft_payloads(route_dir, manifest)
     gate_errors = accepted_events_gate_errors(route_dir, manifest)
@@ -3020,6 +3064,96 @@ def build_seed_preview_report(
         lines.extend(f"- {error}" for error in validation_errors)
     else:
         lines.append("- Seed preview validates against current schemas and references.")
+    lines.append("")
+    return "\n".join(lines)
+
+
+def build_route_review_seed_preview_report(
+    *,
+    review: RouteEditorialReview,
+    seed: dict[str, dict[str, Any]],
+    publication_repository: RoutePublicationRepository,
+) -> str:
+    summary = publication_repository.summary(review.route_id)
+    selected_place_ids = {
+        place_id
+        for proposal in review.proposals
+        if proposal.active and proposal.included and proposal.event is not None
+        for place_id in proposal.event.place_ids
+    }
+    seed_events = seed["events"].get("events", [])
+    lines = [
+        "# Seed Transfer Preview",
+        "",
+        f"Route: `{review.route_id}`",
+        f"Review revision: `{review.revision_id}`",
+        "",
+        "## Event Geography",
+        "",
+    ]
+    for proposal in review.proposals:
+        if not proposal.active or not proposal.included or proposal.event is None:
+            continue
+        event = proposal.event
+        lines.append(
+            f"- `{event.id}`: places {', '.join(f'`{item}`' for item in event.place_ids)}; "
+            f"default `{event.default_place_id}`; relationships {len(event.place_relationships)}."
+        )
+    lines.extend(["", "## Place Decisions", ""])
+    decisions = [item for item in review.places if item.place.id in selected_place_ids]
+    if not decisions:
+        lines.append("- None")
+    for item in decisions:
+        place_id = item.place.id
+        if item.decision == "reuse":
+            lines.append(f"- Reuse `{place_id}` unchanged.")
+        elif item.decision == "new":
+            geometry = item.place.geometry.type if item.place.geometry else "point"
+            provenance = (
+                f"; precision {item.place.geometry_precision}; provenance "
+                f"{item.place.geometry_source_type}"
+                if item.place.geometry
+                else ""
+            )
+            lines.append(
+                f"- Add `{place_id}` as {geometry} at "
+                f"{item.place.latitude}, {item.place.longitude}{provenance}."
+            )
+        else:
+            before = spatial_place_payload(item.canonical_place or item.place)
+            after = spatial_place_payload(item.place)
+            changed = [field for field in before if before[field] != after[field]]
+            impacted = sorted(
+                f"{event.get('route_id')}/{event.get('id')}"
+                for event in seed_events
+                if isinstance(event, dict)
+                and isinstance(event.get("id"), str)
+                and isinstance(event.get("route_id"), str)
+                and place_id in event.get("place_ids", [event.get("place_id")])
+            )
+            approval = "approved" if item.spatial_update_approved else "approval required"
+            provenance = (
+                f"; precision {item.place.geometry_precision}; provenance "
+                f"{item.place.geometry_source_type}"
+                if item.place.geometry
+                else ""
+            )
+            lines.append(
+                f"- Update `{place_id}` spatial fields: {', '.join(changed)}; "
+                f"{approval}{provenance}; currently referenced by {len(impacted)} event(s)"
+                + (f" ({', '.join(f'`{event_id}`' for event_id in impacted)})" if impacted else "")
+                + "."
+            )
+    lines.extend(["", "## Warnings", ""])
+    warnings = [*summary.warnings, *(warning for item in decisions for warning in item.warnings)]
+    lines.extend(f"- {warning}" for warning in dict.fromkeys(warnings))
+    if not warnings:
+        lines.append("- None")
+    lines.extend(["", "## Validation", ""])
+    if summary.technical_errors:
+        lines.extend(f"- {error}" for error in summary.technical_errors)
+    else:
+        lines.append("- Exact reviewed result is ready for seed promotion.")
     lines.append("")
     return "\n".join(lines)
 
@@ -3074,6 +3208,18 @@ def promote_to_seed(
     report = build_seed_preview_report(route_dir=route_dir, seed_dir=seed_dir, manifest=manifest)
     if not write:
         return report
+
+    review_path = route_dir / ROUTE_REVIEW_FILENAME
+    complete_draft_path = route_dir / manifest["steps"]["complete_draft"]["json"]
+    if variant is None and review_path.exists() and complete_draft_path.exists():
+        review_repository = RouteReviewRepository(content_root, seed_dir=seed_dir)
+        review = review_repository.get(route_id)
+        RoutePublicationRepository(
+            review_repository,
+            content_root=content_root,
+            seed_dir=seed_dir,
+        ).publish(route_id, review.revision_id)
+        return report + "\nSeed files written from the exact reviewed revision.\n"
 
     gate_errors = accepted_events_gate_errors(route_dir, manifest)
     if gate_errors:

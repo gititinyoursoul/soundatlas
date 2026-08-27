@@ -79,6 +79,19 @@ Seed data requirements
   route metadata, or explicit human instruction.
 - Add connections in `data/seed/connections.json`.
 - Reuse existing places when the same real-world place already exists.
+- Author every event with ordered `place_ids`, a deliberate
+  `default_place_id`, and only source-backed `place_relationships`; retain the
+  compatible `place_id` equal to the default while that runtime boundary exists.
+- Classify each route-level place proposal as `reuse`, `new`, or spatial-only
+  `update`. Reuse preserves the canonical record. New places require reviewed
+  non-placeholder coordinates and may include reviewed Polygon or MultiPolygon
+  geometry with complete conditional provenance.
+- Limit existing-place updates to coordinates, geometry, geometry precision,
+  and geometry provenance. Surface the canonical before/after difference and
+  affected references, and do not treat route publication as approval of that
+  shared-place update.
+- Store agent-retrieved or curated geodata and provenance in route artifacts;
+  do not make preview or promotion depend on a live external lookup.
 - Confirm each seed event has an accepted-event decision, inclusion rationale,
   route fit, place, year range, cautious summary, cautious significance, and
   source-risk note before seed transfer.

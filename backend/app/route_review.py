@@ -25,6 +25,17 @@ FindingOwner = Literal[
     "technical",
 ]
 
+SPATIAL_PLACE_FIELDS = (
+    "latitude",
+    "longitude",
+    "geometry",
+    "geometry_precision",
+    "geometry_source_type",
+    "geometry_source_url",
+    "geometry_source_note",
+    "geometry_license",
+)
+
 LEGACY_STATE_MAP: dict[str, EditorialState] = {
     "pending": "draft",
     "approved": "approved",
@@ -115,8 +126,13 @@ class RouteReviewCandidateAccount(BaseModel):
 
 
 class RouteReviewPlace(BaseModel):
-    decision: Literal["reuse", "new"]
+    decision: Literal["reuse", "new", "update"]
     place: Place
+    canonical_place: Place | None = None
+    canonical_spatial_signature: str | None = None
+    proposed_spatial_signature: str | None = None
+    spatial_update_approved: bool = False
+    warnings: list[str] = Field(default_factory=list)
 
 
 class RouteEditorialReview(BaseModel):
@@ -142,6 +158,11 @@ class RouteReviewResult(RouteEditorialReview):
 class RouteReviewStateUpdate(BaseModel):
     revision_id: str
     editorial_state: EditorialState
+
+
+class RouteReviewPlaceUpdate(BaseModel):
+    revision_id: str
+    spatial_update_approved: bool
 
 
 class RouteReviewError(ValueError):
@@ -283,6 +304,36 @@ class RouteReviewRepository:
         self._write(result)
         return result
 
+    def update_place_review(
+        self,
+        route_id: str,
+        place_id: str,
+        update: RouteReviewPlaceUpdate,
+    ) -> RouteEditorialReview:
+        result = self.get(route_id)
+        if result.revision_id != update.revision_id:
+            raise RouteReviewConflictError(
+                f"Route review '{route_id}' changed; reload before saving"
+            )
+        place = next((item for item in result.places if item.place.id == place_id), None)
+        if place is None:
+            raise RouteReviewNotFoundError(
+                f"Place '{place_id}' not found in route review '{route_id}'"
+            )
+        if place.decision != "update":
+            raise RouteReviewValidationError(
+                f"Place '{place_id}' is not an existing-place spatial update"
+            )
+        place.spatial_update_approved = update.spatial_update_approved
+        result.technical_ready = _technical_ready(
+            result.proposals,
+            result.technical_errors,
+            result.places,
+        )
+        result.revision_id = _revision_id(result)
+        self._write(result)
+        return result
+
     def _read_event_list(self, route_id: str) -> dict[str, Any]:
         path = self._route_dir(route_id) / EVENT_LIST_FILENAME
         try:
@@ -411,6 +462,7 @@ def build_route_review(
         complete_draft,
         seed_places or {},
         event_payloads,
+        previous.places if previous else [],
     )
     resolved_place_ids = {item.place.id for item in places}
     connections, connection_errors = _review_connections(
@@ -527,7 +579,7 @@ def build_route_review(
             if finding.owner == "active_route"
         ],
         technical_errors=route_errors,
-        technical_ready=_technical_ready(proposals, route_errors),
+        technical_ready=_technical_ready(proposals, route_errors, places),
     )
     result.revision_id = _revision_id(result)
     return result
@@ -629,6 +681,7 @@ def _review_places(
     complete_draft: dict[str, Any] | None,
     seed_places: dict[str, dict[str, Any]],
     event_payloads: dict[str, dict[str, Any]],
+    previous_places: list[RouteReviewPlace],
 ) -> tuple[list[RouteReviewPlace], list[str]]:
     if complete_draft is None:
         return [], []
@@ -661,6 +714,7 @@ def _review_places(
         elif isinstance(event.get("place_id"), str):
             referenced_place_ids.add(event["place_id"])
 
+    prior_by_id = {item.place.id: item for item in previous_places}
     places: list[RouteReviewPlace] = []
     for place_id in sorted(referenced_place_ids):
         decision = decisions.get(place_id)
@@ -673,11 +727,39 @@ def _review_places(
             if raw_place is None:
                 errors.append(f"Reused place '{place_id}' is missing from canonical seeds.")
                 continue
+            if "place" in decision or "spatial_update" in decision:
+                errors.append(
+                    f"Reused place '{place_id}' must not contain a replacement or spatial update."
+                )
+                continue
         elif decision_name == "new":
+            if place_id in seed_places:
+                errors.append(
+                    f"New place '{place_id}' already exists in canonical seeds; use reuse or update."
+                )
+                continue
             raw_place = decision.get("place")
             if not isinstance(raw_place, dict):
                 errors.append(f"New place '{place_id}' is missing its place record.")
                 continue
+        elif decision_name == "update":
+            canonical_raw = seed_places.get(place_id)
+            if canonical_raw is None:
+                errors.append(f"Updated place '{place_id}' is missing from canonical seeds.")
+                continue
+            spatial_update = decision.get("spatial_update")
+            if not isinstance(spatial_update, dict) or not spatial_update:
+                errors.append(f"Updated place '{place_id}' has no spatial update.")
+                continue
+            unsupported = sorted(set(spatial_update) - set(SPATIAL_PLACE_FIELDS))
+            if unsupported:
+                errors.append(
+                    f"Updated place '{place_id}' changes unsupported fields: "
+                    + ", ".join(unsupported)
+                    + "."
+                )
+                continue
+            raw_place = {**canonical_raw, **spatial_update}
         else:
             errors.append(
                 f"Place '{place_id}' has unsupported decision '{decision_name}'."
@@ -691,6 +773,40 @@ def _review_places(
         if place.id != place_id:
             errors.append(
                 f"Place decision '{place_id}' resolves to mismatched place '{place.id}'."
+            )
+            continue
+        if place.latitude == 0.0 and place.longitude == 0.0:
+            errors.append(f"Place '{place_id}' has unresolved placeholder coordinates.")
+            continue
+        if decision_name == "update":
+            canonical_place = Place.model_validate(seed_places[place_id])
+            canonical_signature = spatial_place_signature(canonical_place)
+            proposed_signature = spatial_place_signature(place)
+            if canonical_signature == proposed_signature:
+                errors.append(
+                    f"Updated place '{place_id}' has no material spatial difference; use reuse."
+                )
+                continue
+            prior = prior_by_id.get(place_id)
+            approved = bool(
+                prior
+                and prior.decision == "update"
+                and prior.spatial_update_approved
+                and prior.canonical_spatial_signature == canonical_signature
+                and prior.proposed_spatial_signature == proposed_signature
+            )
+            places.append(
+                RouteReviewPlace(
+                    decision="update",
+                    place=place,
+                    canonical_place=canonical_place,
+                    canonical_spatial_signature=canonical_signature,
+                    proposed_spatial_signature=proposed_signature,
+                    spatial_update_approved=approved,
+                    warnings=[
+                        "Updating this canonical place changes every event that references it."
+                    ],
+                )
             )
             continue
         places.append(RouteReviewPlace(decision=decision_name, place=place))
@@ -886,12 +1002,31 @@ def _carry_state(prior: RouteReviewProposal, signature: str) -> EditorialState:
 def _technical_ready(
     proposals: list[RouteReviewProposal],
     route_errors: list[str],
+    places: list[RouteReviewPlace] | None = None,
 ) -> bool:
-    return not route_errors and all(
+    return (
+        not route_errors
+        and all(
         not proposal.included
         or (proposal.renderable and not proposal.technical_errors)
         for proposal in proposals
+        )
+        and all(
+            place.decision != "update" or place.spatial_update_approved
+            for place in (places or [])
+        )
     )
+
+
+def spatial_place_payload(place: Place | dict[str, Any]) -> dict[str, Any]:
+    payload = place.model_dump(mode="json") if isinstance(place, Place) else place
+    return {field: payload.get(field) for field in SPATIAL_PLACE_FIELDS}
+
+
+def spatial_place_signature(place: Place | dict[str, Any]) -> str:
+    return hashlib.sha256(
+        _canonical_json(spatial_place_payload(place)).encode("utf-8")
+    ).hexdigest()
 
 
 def _revision_id(result: RouteEditorialReview) -> str:

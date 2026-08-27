@@ -274,6 +274,9 @@ The private backend boundary for the later explorer review surface is:
 - `GET /editorial/routes/<route-id>/review`
 - `PATCH /editorial/routes/<route-id>/review/events/<candidate-id>` with the
   current `revision_id` and `editorial_state`
+- `PATCH /editorial/routes/<route-id>/review/places/<place-id>` with the current
+  `revision_id` and `spatial_update_approved`; this operation is valid only for
+  an existing canonical-place `update` decision
 
 State updates create a new exact revision. A stale revision is rejected so a
 review action cannot overwrite a newer regeneration or decision. These private
@@ -314,10 +317,19 @@ Write route drafts into seed files:
 uv run --project backend python backend/scripts/route_content_pipeline.py promote --route-id birth-of-hip-hop --to-seed --write
 ```
 
-The command validates the merged seed payloads before writing. It can add or
-update drafted places, events, and connections, but it does not create the route
-metadata record in `routes.json`. `--write` refuses to write while the
-accepted-events gate is missing or blocked.
+For the active complete-draft path, preview lists ordered event places and
+defaults plus `reuse`, `new`, and spatial-only `update` decisions. It shows the
+changed spatial fields, affected canonical event references, provenance,
+warnings, approval state, and blocking validation findings. Preview and write
+consume route artifacts only and make no live geodata request.
+
+Active-path `--write` publishes the exact bound route-review revision. It reuses
+canonical places unchanged, adds reviewed new places, and applies only an
+explicitly approved existing-place spatial update. It rejects a stale baseline,
+non-spatial change, unresolved placeholder coordinates, incomplete geometry
+provenance, or missing approval. The legacy accepted-events compatibility path
+keeps its existing gate until Issue #103 removes it. Neither path creates the
+route metadata record in `routes.json`.
 
 ## Editorial Checks
 
@@ -334,7 +346,9 @@ Before seed writing, inspect:
 - the event editorial quality checks in
   `docs/content/event-editorial-quality-standards.md`
 - event titles, summaries, significance text, and source fields
-- draft place coordinates and source risks
+- place reuse/add/update recommendations, ordered event place references,
+  defaults, coordinates, optional area geometry, provenance, shared-place
+  impact, and explicit update approval
 - connection logic
 - `seed-transfer-report.md` and `validation-report.md`
 
