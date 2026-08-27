@@ -89,7 +89,8 @@ bodies and may remain command arguments.
     explicit local commit range.
 13. Agent posts one combined `## Implementation Report` containing the review
     result. When its Review Result is `Accepted` and the named reviewed local
-    commit or range exists, the agent sets Project status to `Done`.
+    commit or range exists, the agent sets Project status to `Locally
+    Implemented`.
 14. Human reviews the committed diff and explicitly authorizes a push when the
     work is ready.
 15. Agent pushes only the reviewed commit or reviewed integration range.
@@ -99,8 +100,8 @@ bodies and may remain command arguments.
     exactly one completion comment plan, and Issue-relevant working-tree
     verification.
 17. Agent posts the standard completion comment only after the gate passes and
-    closes the Issue only after that comment succeeds. Project status remains
-    `Done`.
+    sets Project status to `Done` only after that comment succeeds, then closes
+    the Issue explicitly.
 18. If review, push, post-push verification, or a GitHub operation fails,
     agent reports the failure and leaves the Issue open when possible.
 ```
@@ -273,15 +274,18 @@ Report, push-authorization, completion, or Issue-state evidence.
   required Concept, confirms a Plan when Concept Work is not required, or
   explicitly authorizes tracked trivial direct work to begin. Keep it through
   planning, implementation, validation, review, and corrective work.
-- `Done`: the combined `## Implementation Report` has an `Accepted` Review
-  Result and the named reviewed local commit or range exists. The Issue may
-  still be open and awaiting push.
+- `Locally Implemented`: the combined `## Implementation Report` has an
+  `Accepted` Review Result and the named reviewed local commit or range exists.
+  The Issue remains open and may still be awaiting push authorization.
+- `Done`: the reviewed work was pushed, post-push verification passed, and the
+  completion comment succeeded. Set this immediately before explicitly closing
+  the Issue as completed.
 
-If corrective work invalidates an accepted local result, move `Done` back to
-`In Progress`. After a successful push, post-push verification, and completion
-comment, leave the item `Done` and close the Issue. Closing an Issue may set
-`Done` as a fallback, but changing Project status to `Done` must never
-automatically close an Issue because SoundAtlas assigns `Done` before push.
+If corrective work invalidates an accepted local result, move `Locally
+Implemented` back to `In Progress`. Keep automatic `Done`-to-close behavior
+disabled so the completion comment and status transition remain ordered and
+the agent performs the explicit close only after both succeed. A closed Issue
+may be set to `Done` as a fallback when reconciling external state.
 
 When an Issue cannot be added to the Project or its status cannot be updated,
 report the specific GitHub permission or configuration failure and preserve the
@@ -708,11 +712,13 @@ Issue closure is a mandatory, ordered post-push step:
 
 6. Close the Issue only after the completion comment succeeds.
 
-As part of successful post-push completion, leave the Project item `Done` and
-close the Issue only after the completion comment succeeds. If the completion
-comment or close operation fails, leave the Issue open and keep the Project
-item `Done` unless corrective work invalidates the accepted local result; in
-that case return it to `In Progress`.
+As part of successful post-push completion, set the Project item to `Done` only
+after the completion comment succeeds, then close the Issue explicitly. If
+push, verification, or completion-comment posting fails, leave the Issue open
+and keep the Project item `Locally Implemented`. If corrective work invalidates
+the accepted local result, return it to `In Progress`. If only the final close
+operation fails after status becomes `Done`, leave the Issue open, report the
+failure, and retry closure without rewriting completion evidence.
 
 Do not push or close the Issue when the review is not `Accepted`, the work is
 uncommitted, the commit is partial or WIP, an acceptance criterion is
@@ -731,9 +737,10 @@ The safe transport rule above also applies to the standard completion comment.
 Use the generic `scripts/gh_markdown_payload.py` helper for API-only Markdown
 payloads.
 
-Do not add workflow-state labels for completion. Project Tracker `Done` is the
-approved pre-push summary, while GitHub's closed state remains the terminal
-post-push Issue state. Do not configure a `Done`-to-close automation.
+Do not add workflow-state labels for completion. Project Tracker `Locally
+Implemented` is the approved pre-push summary. Project Tracker `Done` and the
+Issue's closed-completed state are separate ordered post-push actions. Do not
+configure a `Done`-to-close automation.
 
 ## Commit Reference
 

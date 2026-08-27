@@ -171,9 +171,11 @@ Events should contain at least:
   its `Status` field as a visible summary, while Issue bodies and standardized
   comments remain authoritative: `Todo` while the Issue remains at Intake;
   `In Progress` after a required Concept is accepted, a Concept-not-required
-  Plan is confirmed, or explicitly authorized trivial direct work begins; and
-  `Done` only after an accepted Implementation Report and reviewed local commit
-  or range exist. `Done` does not authorize push or close the Issue.
+  Plan is confirmed, or explicitly authorized trivial direct work begins;
+  `Locally Implemented` after an accepted Implementation Report and reviewed
+  local commit or range exist; and `Done` only after push, post-push
+  verification, and the completion comment succeed. Project status does not
+  replace the Issue's separate open or closed state.
 - When creating a GitHub Issue, Codex should choose exactly one approved `priority:p*` label by reasoning from blocking level, MVP/release impact, risk reduction, and urgency. Use `priority:p2` only as the neutral fallback when `p0`, `p1`, or `p3` are not clearly justified, and briefly state the priority rationale.
 - When creating a GitHub Issue, Codex should inspect existing open milestones and
   assign one only when completing the Issue directly advances the outcome stated
@@ -205,11 +207,12 @@ Events should contain at least:
   to close the associated Issue unless the human explicitly says to keep it
   open.
 - After an `Accepted` Implementation Report and review of the named local
-  commit or range, set the Issue's Project Tracker status to `Done` while it
-  awaits push. If corrective work invalidates that result, return it to `In
-  Progress`. After successful post-push completion, leave the Project status
-  `Done` and close the Issue. Project status does not replace Issue comments,
-  push authorization, completion evidence, or the closed state.
+  commit or range, set the Issue's Project Tracker status to `Locally
+  Implemented` while it awaits push. If corrective work invalidates that
+  result, return it to `In Progress`. After successful push, verification, and
+  completion-comment posting, set Project status to `Done` and explicitly
+  close the Issue. Project status does not replace Issue comments, push
+  authorization, completion evidence, or the closed state.
 - After a successful push, capture the published commit hash, verify all
   acceptance criteria, confirm that no Issue-relevant changes remain
   uncommitted, post the standard commit-referencing completion comment, and
