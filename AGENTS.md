@@ -167,6 +167,13 @@ Events should contain at least:
 - `TODO.md` is a legacy backlog and should not receive new planned work unless the user explicitly asks for a legacy note.
 - If the scope changes, update `docs/mvp-concept.md` first and then create or update the relevant GitHub Issue.
 - Codex may set existing approved GitHub labels on Issues. New labels must be proposed and explicitly approved before Codex creates or uses them.
+- Track planned SoundAtlas Issues in the `Project Tracker` GitHub Project. Use
+  its `Status` field as a visible summary, while Issue bodies and standardized
+  comments remain authoritative: `Todo` while the Issue remains at Intake;
+  `In Progress` after a required Concept is accepted, a Concept-not-required
+  Plan is confirmed, or explicitly authorized trivial direct work begins; and
+  `Done` only after an accepted Implementation Report and reviewed local commit
+  or range exist. `Done` does not authorize push or close the Issue.
 - When creating a GitHub Issue, Codex should choose exactly one approved `priority:p*` label by reasoning from blocking level, MVP/release impact, risk reduction, and urgency. Use `priority:p2` only as the neutral fallback when `p0`, `p1`, or `p3` are not clearly justified, and briefly state the priority rationale.
 - When creating a GitHub Issue, Codex should inspect existing open milestones and
   assign one only when completing the Issue directly advances the outcome stated
@@ -198,11 +205,11 @@ Events should contain at least:
   to close the associated Issue unless the human explicitly says to keep it
   open.
 - After an `Accepted` Implementation Report and review of the named local
-  commit or range, Codex may apply the approved `status:implemented-local`
-  label while the Issue awaits push. Remove or replace it if corrective work
-  invalidates the local result, and remove it during successful post-push
-  completion before closing the Issue. The label does not replace Issue
-  comments, push authorization, completion evidence, or the closed state.
+  commit or range, set the Issue's Project Tracker status to `Done` while it
+  awaits push. If corrective work invalidates that result, return it to `In
+  Progress`. After successful post-push completion, leave the Project status
+  `Done` and close the Issue. Project status does not replace Issue comments,
+  push authorization, completion evidence, or the closed state.
 - After a successful push, capture the published commit hash, verify all
   acceptance criteria, confirm that no Issue-relevant changes remain
   uncommitted, post the standard commit-referencing completion comment, and

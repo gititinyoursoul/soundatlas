@@ -57,20 +57,20 @@ local readiness validator checks those artifacts but does not advance state.
 Request
   |
   +-- Clearly trivial, local, and low-risk
-  |     -> Direct implementation
+  |     -> If Issue-tracked, Project In Progress + direct implementation
   |     -> Relevant validation
   |     -> Commit-ready gate + local commit
-  |     -> Review committed diff
+  |     -> Review committed diff + Project Done when accepted
   |     -> Human push request
-  |     -> Push + completion comment + Issue closure
+  |     -> Push + completion comment + Issue closure; Project remains Done
   |
   +-- Non-trivial work
-        -> Intake Issue
+        -> Intake Issue + Project Todo
         -> Lightweight Grill-Me check
              no material finding -> continue
              material finding    -> Interactive Grill Me -> confirmed decisions
         -> Optional concept work when requested or needed
-        -> Plan Update as required
+        -> Plan Update as required + Project In Progress after Human confirmation
         -> Explicit implementation request
         -> Proceed to Implementation record
         -> Readiness validation
@@ -78,10 +78,10 @@ Request
         -> Validation
         -> Commit-ready gate + local commit
         -> soundatlas-implementation-review
-        -> Combined Implementation Report
+        -> Combined Implementation Report + Project Done when accepted
         -> Human review of committed diff
         -> Human push request
-        -> Push + completion comment + Issue closure
+        -> Push + completion comment + Issue closure; Project remains Done
 ```
 
 Concept work is conditional. Use it when explicitly requested or when planning
@@ -107,13 +107,14 @@ single Implementation Report comment. Human review of the committed diff, push
 authorization, and post-push closure remain separate lifecycle concerns in
 `docs/github-issue-workflow.md`.
 
-The approved `status:implemented-local` label is a nonterminal Issue-list
-summary for an `Accepted` Implementation Report whose reviewed local commit or
-range is awaiting push. It must not be used as a substitute for the report,
-explicit push authorization, completion evidence, or Issue closure. Remove or
-replace it when corrective work invalidates the local result, and clear it
-during successful post-push completion before closing the Issue. Existing
-Issues are not migrated automatically.
+The `Project Tracker` Status field is the visible lifecycle summary: `Todo` at
+Intake, `In Progress` after the recorded transition out of Intake, and `Done`
+after an `Accepted` Implementation Report and reviewed local commit or range.
+It must not substitute for Issue records, explicit push authorization,
+completion evidence, or Issue closure. Corrective work returns `Done` to `In
+Progress`; successful post-push completion leaves it `Done` and closes the
+Issue. Never automate Project `Done` to close an Issue because SoundAtlas uses
+`Done` before push.
 
 ## Skill, Prompt, and Source Boundary Policy
 
@@ -271,7 +272,8 @@ For an approved prompt-to-skill extraction:
   implementation-gate changes as non-trivial by default. Create or update a
   GitHub Issue before implementation.
 - Capture new planned work with `Task`, `Context`, and `Acceptance Criteria`
-  through `soundatlas-issue-planning`.
+  through `soundatlas-issue-planning`; add the Issue to `Project Tracker` with
+  status `Todo`.
 - Allow Intake Revisions with a visible `## Intake Revision` history comment;
   material revisions require Grill-Me before planning, while material expansion
   after implementation begins requires a linked Issue. See
@@ -306,9 +308,11 @@ For an approved prompt-to-skill extraction:
   the single standard completion comment, and close the Issue only after that
   comment succeeds. Preserve the documented exceptions in
   `docs/github-issue-workflow.md`.
-- Use `status:implemented-local` only after the accepted implementation review
-  and named local commit/range review; do not introduce a separate `done`
-  label.
+- Set Project status to `In Progress` at the documented transition out of
+  Intake. Set it to `Done` only after the accepted implementation review and
+  named local commit/range exist; return it to `In Progress` if corrective work
+  invalidates that result. Do not introduce workflow-state labels or automate
+  `Done` to close the Issue.
 - End every workflow result with a short `Next step` handoff when useful.
 
 ## Canonical Workflow Registry
