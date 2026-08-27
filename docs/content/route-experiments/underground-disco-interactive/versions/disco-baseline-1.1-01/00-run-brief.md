@@ -5,11 +5,11 @@
 - Experiment ID: `underground-disco-interactive`
 - Version ID: `disco-baseline-1.1-01`
 - Method: `baseline-1.1`
-- Status: `in-progress`
+- Status: `checkpointed`
 - Starting condition: `fixed-topic`
 - First executable stage: `02`
 - Current stage: `05`
-- Last completed stage: `04`
+- Last completed stage: `05`
 - Started: `2026-08-27T22:29:47Z`, when the matching Proceed record was posted
 - Step 02 checkpointed: `2026-08-27`
 - Step 02 Human decision: compare Arcs A, B, and C as equal contenders
@@ -17,6 +17,7 @@
 - Step 03 Human decision: advance Arc A plus Arc C as the primary mechanism and
   retain Arc B as a mandatory corrective lens
 - Step 04 completed: `2026-08-27`
+- Step 05 checkpointed: `2026-08-27`
 
 ## Authority
 
@@ -117,10 +118,23 @@ in [`04-targeted-gap-research.md`](04-targeted-gap-research.md). It resolved or
 bounded the material gaps enough for cohort comparison, expanded the landscape
 to eight stable Candidates, and did not select the cohort.
 
-No Human decision is pending before step 05. Step 05 is the next and final
-permitted stage in the current authorized slice. It must compare minimum-core
-and enrichment/challenger cohorts, explain route-length tradeoffs, update this
-run to `checkpointed`, and stop for the Human cohort, route-length, and
-challenger deep-research decisions.
+Step 05 is recorded in
+[`05-cohort-decision.md`](05-cohort-decision.md). It recommends a six-Event
+cohort: a five-Event minimum core plus the 1981 “Heartbeat” enrichment. Best of
+Friends remains contextual network evidence rather than a falsely bounded
+Event, and the Gallery remains the first challenger for a seven-Event option.
 
-Stop reason: `not-applicable`; the run is ready to execute step 05.
+Required Human checkpoint now:
+
+1. Choose the recommended six-Event cohort, the five-Event minimum core, the
+   seven-Event Gallery expansion, or a revision.
+2. Confirm or revise Best of Friends as context and the Gallery as reserve.
+3. Decide which selected Events or challengers should receive deep research if
+   a later Plan authorizes steps 06–11.
+
+Stage 05 is the authorized terminal stage of the current Plan. No stage 06 work
+is permitted until these decisions are recorded and a separately confirmed
+Plan and Proceed record authorize the continuation.
+
+Stop reason: waiting for the required step-05 Human cohort, route-length, and
+challenger deep-research decisions.
