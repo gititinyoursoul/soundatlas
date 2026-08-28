@@ -2,8 +2,9 @@
 
 ## Purpose
 
-Write one coherent route from the accepted synthesis rather than a collection
-of isolated Event biographies.
+Write one coherent, reader-ready route from the accepted synthesis rather than
+a collection of isolated Event biographies or an argument for why the Events
+were selected.
 
 ## Required inputs
 
@@ -29,6 +30,26 @@ unsupported causal sequence.
 Do not add new historical facts merely to improve prose. Flag any new research
 need rather than laundering it into the draft.
 
+Reader readiness is an outcome of this stage. Write for a SoundAtlas reader:
+route and Event prose should lead with documented people, place, time, action,
+change, and route stakes. Keep route-inclusion rationale, Source diagnosis, and
+research-process explanation in the narrative-function, grouping-rationale,
+and drafting-note records that need them, rather than making them the dominant
+voice of reader copy. Preserve a qualification in reader prose when omitting it
+would make the historical account misleading; do not turn every audit concern
+into a reader-facing disclaimer.
+
+Before advancing, make a lightweight reader-readiness check:
+
+- the introduction establishes the route's place, time, question, and stakes;
+- each Event passage makes its actors, documented action or change, and
+  route-specific significance legible without relying on inclusion rationale;
+- transitions explain documented influence, parallel development, contrast, or
+  convergence without using chronology as causal proof; and
+- drafting notes identify claims for step 09 separately from any passage whose
+  register must return to this stage because it reads as audit, Source, or
+  route-selection justification.
+
 ## Output contract
 
 Write `08-narrative-draft.md` with:
@@ -40,11 +61,15 @@ Write `08-narrative-draft.md` with:
 - complete Event-level reader copy;
 - transitions and conclusion;
 - visible uncertainty where required;
+- a completed reader-readiness check, including reader-visible qualifications
+  and structural register concerns returned to drafting;
 - drafting notes listing any claim or structure that needs step 09 attention;
   and
 - confirmation that every accepted Event remains present with its stable ID.
 
 ## Stop condition
 
-Advance only when the draft represents the accepted synthesis completely. A
-new material route claim returns to research or synthesis.
+Advance only when the draft represents the accepted synthesis completely and
+passes the reader-readiness check. A new material route claim returns to
+research or synthesis. A structurally audit-like or inclusion-justification
+register returns to this Narrative Draft stage before evidence review.

@@ -19,8 +19,18 @@ superlative, Event boundary, causal phrase, transition, representation claim,
 and visual implication. Classify each as `directly-supported`,
 `supported-synthesis`, `soften`, `corroborate`, or `remove-rewrite`.
 
-Do not silently correct the draft without recording the reason. If the problem
-is structural rather than claim-level, return to the owning earlier stage.
+Do not silently correct the draft without recording the reason. Preserve the
+reader-first register established in step 08 while making the smallest wording
+change that the evidence requires. Keep Source basis, correction rationale,
+and route-composition diagnosis in the evidence audit. Put a qualification in
+the corrected reader prose only when a reader needs it to avoid a misleading
+historical claim.
+
+If the problem is structural rather than claim-level, return to the owning
+earlier stage. In particular, return to step 08 when the narrative depends on
+repeated Source discussion, research-process explanation, or route-inclusion
+justification to do its narrative work; do not treat that register as a
+final-copy polish problem.
 
 ## Output contracts
 
@@ -34,6 +44,10 @@ material claim or passage:
 - unresolved materiality and owner; and
 - route-level verdict.
 
+The audit record owns the full correction rationale. It must distinguish a
+reader-visible qualification from an audit-only explanation so the corrected
+draft remains a route story rather than an evidence memorandum.
+
 Write `09-corrected-draft.md` as the complete corrected reader-facing route,
 not a patch or list of edits. Preserve the Event and section IDs needed to trace
 each corrected passage back to its evidence-audit record.
@@ -41,5 +55,6 @@ each corrected passage back to its evidence-audit record.
 ## Human boundary and stop condition
 
 Stop for Human Source, sensitivity, representation, or acceptable-uncertainty
-judgment. Advance only when remaining caveats are explicit and do not require a
-return to cohort, research, or synthesis.
+judgment. Advance only when remaining reader-visible caveats are necessary,
+explicit, and do not require a return to cohort, research, synthesis, or the
+Stage 08 reader-readiness check.
