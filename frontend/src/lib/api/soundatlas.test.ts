@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
+import { base } from '$app/paths';
 import { makeEvent, makePlace, makeRoute } from '$lib/test/fixtures';
 import {
   API_BASE_URL,
@@ -124,9 +125,18 @@ describe('SoundAtlas API client', () => {
     });
 
     expect(fetcher).toHaveBeenCalledTimes(3);
-    expect(fetcher).toHaveBeenNthCalledWith(1, '/soundatlas-data/routes.json');
-    expect(fetcher).toHaveBeenNthCalledWith(2, '/soundatlas-data/places.json');
-    expect(fetcher).toHaveBeenNthCalledWith(3, '/soundatlas-data/events.json');
+    expect(fetcher).toHaveBeenNthCalledWith(
+      1,
+      `${base}/soundatlas-data/routes.json`
+    );
+    expect(fetcher).toHaveBeenNthCalledWith(
+      2,
+      `${base}/soundatlas-data/places.json`
+    );
+    expect(fetcher).toHaveBeenNthCalledWith(
+      3,
+      `${base}/soundatlas-data/events.json`
+    );
   });
 
   it('surfaces malformed static public data', async () => {
@@ -249,7 +259,7 @@ describe('SoundAtlas API client', () => {
     );
   });
 
-  it('loads the route-navigation summary from the API', async () => {
+  it('loads the route-navigation summary for the active data mode', async () => {
     const summary = {
       routes: [
         {
@@ -268,7 +278,9 @@ describe('SoundAtlas API client', () => {
 
     await expect(loadRouteNavigation(fetcher)).resolves.toEqual(summary);
     expect(fetcher).toHaveBeenCalledWith(
-      `${API_BASE_URL}/editorial/route-navigation`
+      import.meta.env.VITE_DATA_MODE === 'static'
+        ? `${base}/soundatlas-data/route-navigation.json`
+        : `${API_BASE_URL}/editorial/route-navigation`
     );
   });
 });
