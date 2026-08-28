@@ -42,4 +42,4 @@ generated static JSON assets for the public read-only deployment. The seed
 files remain the editorial source of truth; the frontend does not replace them
 with independently authored mock data.
 
-See [runtime data flow](data-flow.md), [current frontend design](../design/current-frontend-design.md), and the [MVP concept](../mvp-concept.md).
+See [runtime data flow](data-flow.md), [current frontend design](../design/current-frontend-design.md), the [desktop UI guide](../design/desktop-ui-guide.md), and the [MVP concept](../mvp-concept.md).

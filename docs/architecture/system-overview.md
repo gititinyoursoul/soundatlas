@@ -49,4 +49,5 @@ rules remain authoritative in [`../mvp-concept.md`](../mvp-concept.md).
 - [Runtime data flow](data-flow.md)
 - [Seed data structure](../data/seed-data-structure.md)
 - [Current frontend design](../design/current-frontend-design.md)
+- [Desktop UI guide](../design/desktop-ui-guide.md)
 - [Development container](../dev-container.md)

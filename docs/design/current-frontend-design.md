@@ -4,6 +4,10 @@ This document records the current intended design concept for the SoundAtlas fro
 
 Update this document when the intended product surface, design direction, state model, or component roles change.
 
+The [desktop UI guide](desktop-ui-guide.md) is the concise desktop contract for
+shell and visual decisions. This document remains the fuller current intended
+frontend baseline, including state and interaction behavior.
+
 ## Purpose
 
 The frontend should let a user explore New York music history through place, time, and story. For the MVP, the first successful experience is understanding **Birth of Hip-Hop: Bronx 1970-1985** through a coordinated map, route sequence timeline, route switching, and selected event inspector.
@@ -27,8 +31,9 @@ This means:
 
 The approved navigation target is illustrated in
 [`persistent-route-multi-review-navigation.svg`](mockups/persistent-route-multi-review-navigation.svg).
-It is a design target, not a statement that the current frontend already
-implements published-only route filtering or a cross-route review list.
+It is a target reference for first-level route navigation, not proof of every
+runtime state. Use the route/navigation sections below and implementation
+evidence when assessing current behavior.
 
 ## Primary User Workflow
 
@@ -253,9 +258,9 @@ Embeds playable media links when available. The active admin review workflow now
 - Timeline selection has both ticks and event cards, which can feel visually busy.
 - If the horizontal event-card strip remains, selected cards should stay centered so the fallback does not feel detached from the active selection.
 - Map selected-event context is split between the compact route header, selected marker/place chrome, timeline, and inspector; it may still need a better single focal cue.
-- Mobile behavior has an implemented ordering strategy, but first-level route
-  navigation and the separate review-route list still require screenshot
-  review.
+- At narrow widths, the current drawer trigger is hidden below 900px, leaving
+  route navigation unreachable despite the intended visible trigger and direct
+  first-level access. Issue #170 owns the runtime fix and its evidence.
 - Public mode must continue to hide or gate editorial and media/image review actions.
 - Public-facing image/media browsing still needs a clearer behavior definition for fixed preview dimensions, long media lists, lazy loading, and focused image/video inspection.
 
@@ -269,6 +274,7 @@ Embeds playable media links when available. The active admin review workflow now
 
 ## Related Documents
 
+- `docs/design/desktop-ui-guide.md`
 - `docs/design/ux-workflow.md`
 - `docs/design/route-entry-spatial-presentation.md`
 - `prompts/design-ux.md`

@@ -44,7 +44,7 @@ routes, events, places, and connections to published and legacy reader routes.
 
 - Seed shape and validation: [`../data/seed-data-structure.md`](../data/seed-data-structure.md) and [`../data/seed-data-validation.md`](../data/seed-data-validation.md)
 - API schemas and endpoint behavior: [backend architecture](backend.md) and the backend application
-- UI state and rendering: [frontend architecture](frontend.md) and [current frontend design](../design/current-frontend-design.md)
+- UI state and rendering: [frontend architecture](frontend.md), [current frontend design](../design/current-frontend-design.md), and the [desktop UI guide](../design/desktop-ui-guide.md)
 - Media/image enrichment drafts: [`../enrichment/`](../enrichment/)
 
 No audio, video, or image files are stored in the repository; the MVP uses

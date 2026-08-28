@@ -31,8 +31,10 @@ It does not change route-candidate decisions.
 This document owns the target spatial presentation and interaction rules for
 heterogeneous event geography.
 
-- `docs/design/current-frontend-design.md` remains the baseline for the current
-  implemented frontend and links here for the target extension.
+- `docs/design/desktop-ui-guide.md` owns the desktop shell and visual
+  conventions that apply to this presentation.
+- `docs/design/current-frontend-design.md` remains the full current intended
+  frontend baseline; this document owns the target spatial interaction rules.
 - `docs/data/seed-data-structure.md` describes the implemented seed boundary
   and links here for the presentation rules.
 - `docs/content/routes/birth-of-hip-hop/event-list.json` remains authoritative

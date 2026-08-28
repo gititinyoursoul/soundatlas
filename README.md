@@ -1,21 +1,14 @@
 # SoundAtlas
 
-![SoundAtlas screenshot](docs/design/screenshots/drawer-closed-desktop.png)
-
 SoundAtlas is an MVP for an interactive music history app. It makes scenes
 explorable across place, time, and cultural connection with a map-first UI,
 timeline navigation, and a synchronized story panel.
 
-The current product frame is **New York 1965-1985**. The seed data currently
-covers five curated routes:
-
-- `Birth of Hip-Hop`
-- `Disco To Dance Music`
-- `Punk & New Wave Downtown`
-- `Salsa & Latin New York`
-- `Downtown Experiment / No Wave / Loft Jazz`
-
-The first vertical slice remains **Birth of Hip-Hop: Bronx 1970-1985**.
+The current product frame is **New York 1965-1985**. The first vertical slice
+remains **Birth of Hip-Hop: Bronx 1970-1985**. Route availability is discovered
+in the application's navigation; this README does not maintain a route
+catalogue. For the status and replacement process of visual evidence, see the
+[screenshot evidence policy](docs/design/screenshots/README.md).
 
 Deployed page: [gititinyoursoul.github.io/soundatlas](https://gititinyoursoul.github.io/soundatlas/)
 
