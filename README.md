@@ -61,6 +61,27 @@ Bash:
 ./scripts/start-dev.sh
 ```
 
+To start the same local stack in editorial review mode, set
+`VITE_EDITORIAL_MODE=true` when launching the startup script.
+
+PowerShell:
+
+```powershell
+$env:VITE_EDITORIAL_MODE = "true"
+.\scripts\start-dev.ps1
+```
+
+Bash:
+
+```sh
+VITE_EDITORIAL_MODE=true ./scripts/start-dev.sh
+```
+
+Editorial mode requires the local FastAPI backend and API data path; it is not
+available in the public static-data build. See the
+[`editorial workflow`](docs/content/editorial-workflow.md) for the review and
+publication process.
+
 The default frontend URL is `http://127.0.0.1:5173`; the backend health check
 is available at `http://127.0.0.1:8000/health`. See
 [`docs/local-development.md`](docs/local-development.md) for checks and
