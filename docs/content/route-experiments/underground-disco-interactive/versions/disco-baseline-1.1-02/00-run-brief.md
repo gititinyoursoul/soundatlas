@@ -9,14 +9,15 @@
 - Status: `checkpointed`
 - Starting condition: `fixed-topic`
 - First executable stage: `07`
-- Current stage: `10a`
-- Last completed stage: `10a`
+- Current stage: `10b`
+- Last completed stage: `10b`
 - Started: `2026-08-28`, when the Issue #183 Proceed record was posted
-- Required Human checkpoint: accept, correct, or reject the complete final
-  reader copy in `10a-final-route-copy.md`; this decision is mandatory before
-  step 10b or any later authoring or editorial handoff
-- Next permitted stage: Human acceptance, correction, or rejection of Step 10a
-  copy
+- Required Human checkpoint: accept, correct, or reject the visual historical
+  claims, media treatment, and presentation intent in
+  `10b-presentation-visual-claims.md`; this decision is mandatory before
+  Step 11
+- Next permitted stage: Human acceptance, correction, or rejection of Step 10b
+  presentation intent
 
 ## Authority
 
@@ -212,12 +213,15 @@ Verdict: the confirmed scope, stable IDs, fixed inherited inputs, evidence
 boundary, method changes, non-blind limitation, Human authority, and Stage 07
 entry point are explicit. No material decision blocks research execution.
 
-Steps 00, 07, 08, 09, and 10a are complete. Step 10a made the evidence-
-corrected draft into a complete reader-facing copy with route, section, and
-final-stop records. It preserves every Stage-09 qualification and makes no
-cohort, architecture, stable-ID, relationship, or material-claim change.
+Steps 00, 07, 08, 09, 10a, and 10b are complete. The Human accepted Step 10a
+copy on Issue #183. Step 10b inspected the current product and produced
+presentation records that preserve the final copy's limits: selected Event
+markers and timeline sequence are supported; cross-Event map connectors,
+animation, route playback, approved media, and historical coordinate
+provenance are not.
 
 Keep run status `checkpointed`. The Human must accept, correct, or reject
-[`10a-final-route-copy.md`](10a-final-route-copy.md) before Step 10b may run.
-Successful Step-10a validation does not approve Sources, presentation intent,
-media, rights, editorial-review state, canonical content, or publication.
+[`10b-presentation-visual-claims.md`](10b-presentation-visual-claims.md)
+before Step 11 may compare the completed route versions. Successful Step-10b
+validation does not approve Sources, media, rights, editorial-review state,
+canonical content, or publication.
