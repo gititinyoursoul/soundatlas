@@ -119,6 +119,20 @@ authorization, completion evidence, or Issue closure. Corrective work returns
 `Done` and then closes the Issue explicitly. Keep automatic `Done`-to-close
 behavior disabled so those actions remain ordered.
 
+## Git Integration Boundary
+
+`main` is the reviewed integration branch. A pending Issue range is an
+unambiguously Issue-scoped local commit or reviewed local range that has not
+been pushed or explicitly integrated. Direct non-trivial work may use `main`
+for one current Issue only while no different pending Issue range exists;
+otherwise, route the new work package to an owned Issue branch and worktree.
+
+An ahead-of-upstream `main` range is an integration range. It may contain more
+than one Issue only when the included Issues, validation, review, and human
+push authorization are named together. This adds no automatic push, pull-
+request requirement, workflow service, or clean-working-tree requirement;
+unrelated user-owned changes remain outside Issue delivery.
+
 ## Skill, Prompt, and Source Boundary Policy
 
 This section is authoritative for repository-wide entrypoint selection and
@@ -287,6 +301,9 @@ For an approved prompt-to-skill extraction:
 - Treat prompt, skill, workflow-doc, `AGENTS.md`, planning-rule, and
   implementation-gate changes as non-trivial by default. Create or update a
   GitHub Issue before implementation.
+- Before starting a new non-trivial work package, apply the Git integration
+  boundary: use direct `main` work only when no different pending Issue range
+  exists; otherwise assign the work package an owned branch and worktree.
 - Capture new planned work with `Task`, `Context`, and `Acceptance Criteria`
   through `soundatlas-issue-planning`; add the Issue to `Project Tracker` with
   status `Todo`.

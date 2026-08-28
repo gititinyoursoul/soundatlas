@@ -237,10 +237,19 @@ heading wording and order exactly when migrating reviewed content.
   keep the ticket open.
 - If the push, completion comment, or close operation fails, report the failure
   and leave the Issue open when possible.
-- A single agent may use the current branch. Independently active work packages
-  must have an owned branch and worktree, with one CLI write owner per worktree.
-  Integration and conflict resolution require explicit authorization; a changed
-  integration range must be validated and reviewed before push.
+- `main` is the reviewed integration branch. A pending Issue range is an
+  unambiguously Issue-scoped local commit or reviewed local range that has not
+  been pushed or explicitly integrated. Direct non-trivial work on `main` is
+  allowed for one current Issue only while no different pending Issue range
+  exists.
+- When a different pending Issue range exists, new non-trivial work must use an
+  owned Issue branch and worktree, with one CLI write owner per worktree.
+  Clearly trivial, local, low-risk work may still use the current branch.
+- Any `main` range ahead of its upstream is an integration range. A range that
+  includes more than one Issue must name its included Issues, validation,
+  review, and human push authorization together. Integration and conflict
+  resolution require explicit authorization; a changed integration range must
+  be validated and reviewed before push.
 - For non-trivial work, the Plan must declare a planned write boundary: exact
   named authoritative paths, a bounded derived-consistency surface for direct
   mechanical alignment, and excluded scope. `AGENTS.md` is always a named

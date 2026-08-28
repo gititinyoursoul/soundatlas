@@ -671,16 +671,24 @@ If the index already contains unrelated staged work, the agent must not stage
 or commit into that index. It reports the conflict and leaves the existing
 staged work unchanged.
 
-A single agent or sequential work may use the current branch. Independently
-active work packages must each own a branch and worktree, with one CLI write
-owner per worktree. Other CLIs may inspect, test, or review that worktree but
-must not stage, commit, switch branches, rebase, merge, or otherwise change it.
+`main` is the reviewed integration branch. A pending Issue range is an
+unambiguously Issue-scoped local commit or reviewed local range that has not
+been pushed or explicitly integrated. Direct non-trivial work may use `main`
+for one current Issue only while no different pending Issue range exists.
 
-Branch integration is explicit. A fast-forward preserves the reviewed commit;
-any rebase, merge, cherry-pick, or conflict resolution that changes the
-integration range requires relevant validation and review of that resulting
-range before push. The workflow does not automate integration or conflict
-resolution.
+When a different pending Issue range exists, new non-trivial work must use an
+owned Issue branch and worktree, with one CLI write owner per worktree. Clearly
+trivial, local, low-risk work may still use the current branch. Other CLIs may
+inspect, test, or review an owned worktree but must not stage, commit, switch
+branches, rebase, merge, or otherwise change it.
+
+Any `main` range ahead of its upstream is an integration range. Branch
+integration is explicit: a fast-forward preserves the reviewed commit; any
+rebase, merge, cherry-pick, or conflict resolution that changes the integration
+range requires relevant validation and review of that resulting range before
+push. When an integration range includes more than one Issue, name the included
+Issues, validation, review, and human push authorization together. The workflow
+does not automate integration, conflict resolution, or pushing.
 
 ## Post-Push Completion and Issue Closure
 
@@ -730,10 +738,10 @@ failure, and retry closure without rewriting completion evidence.
 
 Do not push or close the Issue when the review is not `Accepted`, the work is
 uncommitted, the commit is partial or WIP, an acceptance criterion is
-incomplete, the commit covers multiple Issues without an unambiguous mapping,
-or the human explicitly asks to keep the Issue open. If the push, completion
-comment, or close operation fails, report the failure and leave the Issue open
-when possible.
+incomplete, the commit covers multiple Issues without an explicitly named and
+reviewed integration range, or the human explicitly asks to keep the Issue
+open. If the push, completion comment, or close operation fails, report the
+failure and leave the Issue open when possible.
 
 The completion sequence must remain distinct in the workflow record: the
 Implementation Report describes the reviewed result, the local commit records
