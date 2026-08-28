@@ -74,6 +74,15 @@ readiness review before Issue content is drafted.
    combined repository-edit request for the declared boundary when practical;
    do not treat environment confirmation prompts as Issue approval gates.
 
+   For non-trivial frontend or UX work, read
+   `docs/design/desktop-ui-guide.md`,
+   `docs/design/current-frontend-design.md`, and relevant explicitly referenced
+   target mockups before drafting. Record the applicable contract rules,
+   affected interaction states, target references, and proportional desktop
+   visual evidence in the Plan. Require mobile evidence only when mobile layout
+   or interaction is affected; for non-visual changes, record why visual
+   evidence is not applicable.
+
    When creating an Issue, choose exactly one approved `priority:p*` label by
    reasoning from blocking level, MVP/release impact, risk reduction, and
    urgency. Use `priority:p2` only as the neutral fallback when `p0`, `p1`, or

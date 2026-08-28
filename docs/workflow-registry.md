@@ -182,6 +182,11 @@ reviewed.
   implementation reports. When the human selects an authoritative concept
   document under `docs/`, that document owns the concept and the Issue links to
   it without duplication.
+- `docs/design/desktop-ui-guide.md` owns the concise desktop design contract.
+  `docs/design/current-frontend-design.md` owns the fuller current intended
+  frontend baseline. A mockup is a target only when an accepted Issue or one of
+  those authorities explicitly references it; an approved screenshot is
+  observed baseline evidence rather than independent design authority.
 
 ### Planned write boundaries
 
@@ -342,7 +347,7 @@ by the agent.
 | Documentation and workflow changes      | Skill                                  | Validated latest Plan and Proceed record when non-trivial                    | Approved GitHub Issue; `.codex/skills/soundatlas-documentation-implementation/SKILL.md` | `.codex/skills/soundatlas-documentation-implementation/SKILL.md`                                                  | Documentation changes and implementation report                     |
 | Test planning and implementation        | Skill                                  | Validated latest Plan and Proceed record for non-trivial Issue work          | Approved GitHub Issue or focused scope; `.codex/skills/soundatlas-testing-implementation/SKILL.md` | `.codex/skills/soundatlas-testing-implementation/SKILL.md`                                                        | Tests and verification report                                       |
 | Experimental route-authoring runs       | Skill                                  | Approved Issue, accepted Concept, current Plan, and matching Proceed record  | Approved Issue for scope; skill for procedure; route-version artifacts under `docs/content/route-experiments/` for run state | `.codex/skills/soundatlas-experimental-route-authoring/SKILL.md` | Numbered experimental run outputs and comparison evidence           |
-| UX audit and critique                   | Prompt                                 | Inspection before implementation; Grill-Me before Issue planning when needed | `docs/design/current-frontend-design.md` and relevant audit                        | `prompts/design-ux.md`                                                                                          | Findings, UX slice, or audit                                        |
+| UX audit and critique                   | Prompt                                 | Inspection before implementation; Grill-Me before Issue planning when needed | `docs/design/desktop-ui-guide.md`, `docs/design/current-frontend-design.md`, explicitly referenced target mockups, and relevant audit | `prompts/design-ux.md` | Findings, UX slice, or audit |
 | Route editorial workflow                | Prompt plus command reference          | Grill-Me and approved Issue before broad route/seed changes                  | Route-folder artifacts and `docs/content/editorial-workflow.md`                    | `prompts/create-route.md` and `docs/content/workflow-commands.md`                                               | Route artifacts and reviewed seed proposal                          |
 | Seed data curation                      | Prompt                                 | Grill-Me and accepted-event boundary for non-trivial work                    | `docs/data/seed-data-validation.md` and accepted route artifacts                   | `prompts/curate-seed-data.md`                                                                                   | Seed changes or review proposal                                     |
 | YouTube query planning                  | Standalone prompt                      | Source/event context and human review                                        | `prompts/generate-youtube-search-queries.md` and enrichment docs                   | `prompts/generate-youtube-search-queries.md`                                                                    | Draft request plan                                                  |

@@ -443,6 +443,14 @@ Rules:
   Do not silently rewrite the meaning of the Issue.
 - Use `Requirements` only when complex product, API, data, security, or workflow
   rules would otherwise be unclear.
+- For non-trivial frontend or UX work, read
+  `docs/design/desktop-ui-guide.md`,
+  `docs/design/current-frontend-design.md`, and any explicitly referenced
+  target mockup relevant to the slice. Record the applicable contract rules,
+  affected interaction states, target references, and required desktop visual
+  evidence in the Plan. Require mobile evidence only when the change affects
+  mobile layout or interaction. If the change is non-visual, state why visual
+  evidence is not applicable.
 - Stop for approval when open questions affect product intent, conceptual data
   meaning or required capability, security, privacy, external API behavior,
   generated media review boundaries, historically sensitive claims,

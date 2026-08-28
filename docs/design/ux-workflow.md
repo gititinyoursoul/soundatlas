@@ -30,10 +30,17 @@ The default design posture is **Research Atlas with selected Story Explorer beha
 - Guided enough for a user to follow a narrative route
 - Grounded in real seed/API data, not mock-only UI
 
-Use `docs/design/current-frontend-design.md` as the baseline for the current intended frontend design. UX audits should compare the implemented app against that baseline, and design passes should update it when the intended design changes.
+Use `docs/design/desktop-ui-guide.md` as the concise desktop design contract and
+`docs/design/current-frontend-design.md` as the fuller current intended
+frontend baseline. Read both before non-trivial UX work. Treat a mockup as a
+target only when an accepted Issue or one of those documents explicitly names
+it; use approved screenshots as observed baseline evidence rather than
+independent design authority. Update the current baseline when the intended
+design changes.
 
 Design documentation is organized by purpose:
 
+- `docs/design/desktop-ui-guide.md` records the desktop rules and evidence expectations used by each change.
 - `docs/design/current-frontend-design.md` records the current intended frontend baseline.
 - `docs/design/audits/` stores dated UX audits, design explorations, and critique records.
 - `docs/design/screenshots/` stores the current approved screenshot set when screenshots should stay in Git.
@@ -45,6 +52,7 @@ Design documentation is organized by purpose:
 Follow these rules for every UX cycle:
 
 - Start with an audit before proposing broad redesigns.
+- Apply `docs/design/desktop-ui-guide.md` to the affected desktop slice.
 - Compare proposed changes against `docs/design/current-frontend-design.md`.
 - Work on one screen, workflow, or interaction slice at a time.
 - Keep each implementation pass small enough to review independently.
@@ -77,7 +85,9 @@ Before auditing or redesigning, define the exact target.
 Inputs:
 
 - Screen, component, or workflow to improve
+- Applicable rules from `docs/design/desktop-ui-guide.md`
 - Current design baseline from `docs/design/current-frontend-design.md`
+- Relevant explicitly referenced target mockups, or `None`
 - Primary user goal
 - Target viewport: desktop, mobile, or both
 - Surface type: public-facing, admin-only, or mixed
@@ -216,7 +226,13 @@ Output:
 - Affected files/components
 - State changes
 - Layout and interaction changes
+- Applicable desktop-contract rules
+- Affected default, hover, focus, selected, unavailable, loading, empty, error,
+  and authoritative-action states
+- Relevant explicitly referenced target mockups, or `None` with a reason
 - Responsive behavior
+- Required desktop visual evidence and target viewport
+- Required mobile evidence only when mobile layout or interaction changes
 - Test plan
 - Acceptance criteria
 - Risks and open questions
@@ -261,11 +277,16 @@ For active local frontend test development, use:
 npm run test:watch
 ```
 
-When possible, inspect the running app in desktop and mobile viewports before considering a UX pass complete.
+Inspect a layout-affecting desktop change at the viewports required by
+`docs/design/desktop-ui-guide.md`. Inspect mobile only when the change affects
+mobile layout or interaction. For a non-visual change, record why visual
+evidence is not applicable.
 
 ### Step 8: Critique With Screenshots
 
-After a visual pass, run the app and capture desktop and mobile screenshots where practical.
+After a visual pass, run the app and capture the planned desktop evidence.
+Capture mobile evidence only when the change affects mobile layout or
+interaction.
 
 Use the **Screenshot Critique** template in `prompts/design-ux.md`.
 
@@ -338,6 +359,7 @@ Avoid rolling multiple UX passes into one large change unless the user explicitl
 
 Use this checklist before finishing each UX pass:
 
+- Were the applicable desktop-contract rules and target references recorded?
 - Can the user immediately tell this is about music history in place and time?
 - Is the map clearly the main surface?
 - Does selecting a place or event update map, timeline, and inspector together?
@@ -355,7 +377,9 @@ Use this checklist before finishing each UX pass:
 Use this sequence:
 
 1. Define the UX target.
-2. Read `docs/design/current-frontend-design.md`.
+2. Read `docs/design/desktop-ui-guide.md`,
+   `docs/design/current-frontend-design.md`, and relevant explicitly referenced
+   target mockups.
 3. Run a no-code audit with `prompts/design-ux.md`.
 4. Save durable audit findings in `docs/design/audits/`.
 5. Choose one design direction.

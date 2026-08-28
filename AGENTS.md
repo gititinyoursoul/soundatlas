@@ -115,6 +115,12 @@ heading wording and order exactly when migrating reviewed content.
 - The map is the primary interface of the MVP.
 - Timeline, route filter, and story panel should use the same central data state.
 - Do not build UI that only works with mock data when seed data already exists.
+- For non-trivial frontend or UX planning and implementation, read
+  `docs/design/desktop-ui-guide.md`, `docs/design/current-frontend-design.md`,
+  and any explicitly referenced target mockup relevant to the slice.
+- Frontend Plans must record the applicable desktop-contract rules, affected
+  interaction states, and proportional desktop visual evidence. Require mobile
+  evidence only when the change affects mobile layout or interaction.
 
 ## Documentation
 

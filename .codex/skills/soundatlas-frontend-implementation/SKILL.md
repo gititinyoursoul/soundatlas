@@ -15,6 +15,10 @@ Read these before editing:
 - `AGENTS.md`
 - `docs/github-issue-workflow.md`
 - `docs/workflow-registry.md`
+- `docs/design/desktop-ui-guide.md` and
+  `docs/design/current-frontend-design.md` for non-trivial frontend or UX work
+- every target mockup explicitly referenced by the accepted Issue, Plan, or
+  design authorities for the affected slice
 - the approved GitHub Issue, including any recorded Grill-Me findings or
   decisions and its `## Plan Update` or `## Detailed Plan Update` when risk
   flags are present. A standalone `## Grill-Me Review` is used when the result
@@ -130,8 +134,12 @@ For larger frontend changes, run the release-level validation instead:
 npm run validate:release
 ```
 
-Use screenshot or browser checks when the approved Issue requires them. If a
-browser or screenshot environment is unavailable, report the blocker clearly.
+For layout-affecting work, run the desktop screenshot or browser checks recorded
+in the Plan and compare the affected states with the applicable desktop
+contract rules and target references. Require mobile evidence only when the
+change affects mobile layout or interaction. For non-visual work, preserve the
+Plan's reason that visual evidence is not applicable. If a required browser or
+screenshot environment is unavailable, report the blocker clearly.
 
 ## Implementation Report
 

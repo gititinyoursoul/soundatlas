@@ -27,7 +27,11 @@ Project context:
 - Timeline, route switching, and event inspector should share one central selection state.
 - Use real seed data where possible; avoid mock-only UI.
 - The visual tone should be dense, documentary, source-aware, and usable.
+- Apply `docs/design/desktop-ui-guide.md` as the desktop design contract.
 - Treat `docs/design/current-frontend-design.md` as the current intended frontend design baseline when available.
+- Treat a mockup as a target only when an accepted Issue, the desktop contract,
+  or the current design baseline explicitly names it. Treat approved
+  screenshots as observed evidence, not independent design authority.
 - Store durable UX audits, critiques, and design explorations in `docs/design/audits/`.
 - Store current approved screenshots in `docs/design/screenshots/` when they are meant to stay in Git.
 - Store visual mockups, diagrams, and supporting images in `docs/design/mockups/`.
@@ -55,7 +59,9 @@ Review the current SvelteKit frontend as a UX/product engineer.
 
 Focus on the MVP: map-first exploration of New York 1965-1985, with the first vertical slice being Birth of Hip-Hop: Bronx 1970-1985.
 
-Use `docs/design/current-frontend-design.md` as the design baseline when available.
+Use `docs/design/desktop-ui-guide.md` as the desktop contract and
+`docs/design/current-frontend-design.md` as the current intended baseline.
+Inspect relevant explicitly referenced target mockups when present.
 
 Identify the biggest usability and visual design issues. Cover:
 - Current layout structure
@@ -67,7 +73,9 @@ Identify the biggest usability and visual design issues. Cover:
 
 Ground findings in:
 - Current implementation files or components
+- Applicable rules from `docs/design/desktop-ui-guide.md`
 - `docs/design/current-frontend-design.md`
+- Relevant explicitly referenced target mockups
 - Screenshots if available
 - Real seed/API data where relevant
 
@@ -75,6 +83,7 @@ Do not make changes yet. Return:
 - Findings ordered by severity
 - Evidence for each finding
 - Gaps between implementation and current design baseline
+- Applicable desktop-contract rules and affected interaction states
 - Recommended design direction
 - Candidate UX slices
 - Suggested first UX slice
@@ -98,6 +107,8 @@ Constraints:
 - Leaflet map is primary
 - Use existing seed data
 - Respect `docs/design/current-frontend-design.md` unless the plan explicitly recommends changing the design baseline
+- Apply `docs/design/desktop-ui-guide.md`; name the applicable rules and any
+  explicitly referenced target mockup
 - Components should stay small and domain-named, such as MapView, Timeline, NavigationDrawer, RouteFilter, and StoryPanel
 - No mock-only UI
 - Dense, documentary, usable MVP style
@@ -115,6 +126,11 @@ Return:
 - Visual/layout changes
 - Responsive behavior
 - Accessibility considerations
+- Applicable desktop-contract rules
+- Affected interaction and failure states
+- Target mockups, or `None` with a reason
+- Required desktop visual evidence and viewport
+- Mobile evidence only when mobile layout or interaction is affected
 - Out of scope
 - Acceptance criteria candidates
 - Risks or open questions
