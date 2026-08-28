@@ -9,12 +9,12 @@
 - Status: `in-progress`
 - Starting condition: `fixed-topic`
 - First executable stage: `07`
-- Current stage: `00`
-- Last completed stage: `00`
+- Current stage: `07`
+- Last completed stage: `07`
 - Started: `2026-08-28`, when the Issue #183 Proceed record was posted
-- Required Human checkpoint: none before step 07; step 07 stops if synthesis
-  changes the accepted cohort or material route direction
-- Next permitted stage: `07`
+- Required Human checkpoint: none before step 08; step 07 did not change the
+  accepted cohort or material route direction
+- Next permitted stage: `08`
 
 ## Authority
 
@@ -204,14 +204,19 @@ influence. Media and image URLs remain unapproved leads. No asset may be added,
 downloaded, embedded, or treated as rights-cleared. Current product capability
 is relevant only at step 10b and cannot supply a historical claim.
 
-## Step-00 verdict and next permitted stage
+## Current checkpoint and next permitted stage
 
 Verdict: the confirmed scope, stable IDs, fixed inherited inputs, evidence
 boundary, method changes, non-blind limitation, Human authority, and Stage 07
 entry point are explicit. No material decision blocks research execution.
 
-Step 00 is complete. Keep run status `in-progress`; execute step 07 next. Stop
-at step 07 if synthesis changes the accepted cohort or material route
-direction. Successful step-00 validation is not acceptance of later reader
-copy, presentation intent, Sources, media, rights, editorial state, canonical
-content, or publication.
+Steps 00 and 07 are complete. Step 07 preserved the accepted seven-Event
+cohort and the Human-confirmed route direction, assigned every Event exactly
+once across four narrative sections, and produced exactly one complete
+narrative blueprint per Event. No material decision blocks drafting.
+
+Keep run status `in-progress`; execute step 08 next from
+[`07-cross-event-synthesis.md`](07-cross-event-synthesis.md). Successful
+step-07 validation is not acceptance of later reader copy, presentation
+intent, Sources, media, rights, editorial state, canonical content, or
+publication.
