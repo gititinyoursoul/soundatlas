@@ -20,6 +20,7 @@
     "test:watch": "vitest",
     "validate": "npm run lint && npm run check:legacy-css && npm run check && npm test",
     "validate:release": "npm run validate && npm run build",
+    "validate:pages": "VITE_DATA_MODE=static VITE_BASE_PATH=/soundatlas npm run validate:release",
     "capture:drawer": "node scripts/capture-drawer-screenshots.mjs"
   },
   "dependencies": {

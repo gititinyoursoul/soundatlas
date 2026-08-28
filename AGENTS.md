@@ -279,7 +279,8 @@ heading wording and order exactly when migrating reviewed content.
 ## Working Defaults
 
 - Prefer small, reviewable changes over large jumps
-- When frontend code changes, run `npm run validate`; for larger changes, run `npm run validate:release` instead
+- When frontend code changes, run `npm run validate`; for larger changes, run `npm run validate:release` instead. When a change can affect GitHub Pages static deployment, run `npm run validate:pages`, which uses the same static-data mode and base path as Frontend CI.
+- A failed Frontend CI run blocks Issue completion and non-corrective pushes for its delivered range. A corrective push addressing that exact failure requires a passing local `npm run validate:pages` check and explicit human push authorization; completion remains blocked until its Frontend CI run passes. A demonstrably external GitHub/CI failure may be excepted only when its run link and reason are documented in the Issue and the human explicitly authorizes the push.
 - When backend code changes, run `uv run ruff check .`, `uv run pyright`, and `uv run pytest`
 - When data or seed files change, check the JSON structure and references
 - When new work packages arise, create or update the relevant GitHub Issue rather than `TODO.md`

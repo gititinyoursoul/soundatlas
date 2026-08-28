@@ -39,9 +39,7 @@ jobs:
         working-directory: frontend
 
       - name: Validate frontend release
-        run: npm run validate:release
+        run: npm run validate:pages
         working-directory: frontend
         env:
           LEGACY_CSS_BASE_REF: ${{ github.event.pull_request.base.sha || github.event.before }}
-          VITE_DATA_MODE: static
-          VITE_BASE_PATH: /soundatlas

@@ -655,6 +655,8 @@ After implementation validation succeeds, the agent creates a local commit
 without a separate commit request only when every commit-ready condition holds:
 
 - relevant validation has passed;
+- for a delivered range that can affect GitHub Pages static deployment,
+  `npm run validate:pages` has passed locally;
 - the change remains within the approved Issue scope;
 - the selected files contain no secrets, tokens, local paths, generated media,
   or other prohibited artifacts;
@@ -670,6 +672,14 @@ review gate.
 If the index already contains unrelated staged work, the agent must not stage
 or commit into that index. It reports the conflict and leaves the existing
 staged work unchanged.
+
+A failed Frontend CI run blocks Issue completion and any non-corrective push
+for its delivered range. A corrective push that addresses that exact failure is
+allowed only after `npm run validate:pages` passes locally and the human
+explicitly authorizes the push. Completion remains blocked until the corrective
+range's Frontend CI run passes. A demonstrably external GitHub/CI failure may
+be excepted only when the Issue records the affected run link and reason and
+the human explicitly authorizes the push.
 
 `main` is the reviewed integration branch. A pending Issue range is an
 unambiguously Issue-scoped local commit or reviewed local range that has not
@@ -700,7 +710,10 @@ Issue closure is a mandatory, ordered post-push step:
 
 1. Confirm that the reviewed commit or integration range was pushed to the
    intended remote branch, then capture its published commit hash.
-2. Run the completion gate with the report, commit hash, one planned completion
+2. For a delivered range that triggers Frontend CI, confirm that its Frontend
+   CI run passed before continuing. A failed run leaves the Issue open under
+   the corrective-push and external-failure rules above.
+3. Run the completion gate with the report, commit hash, one planned completion
    comment, and Issue-relevant working-tree verification:
 
    ```sh
@@ -711,11 +724,11 @@ Issue closure is a mandatory, ordered post-push step:
      --working-tree-verified
    ```
 
-3. Verify every acceptance criterion against the committed change and checks.
-4. Confirm that no Issue-relevant files remain modified or uncommitted.
+4. Verify every acceptance criterion against the committed change and checks.
+5. Confirm that no Issue-relevant files remain modified or uncommitted.
    Unrelated user-owned changes do not block closure and must not be included
    merely to make the tree clean.
-5. Post the single completion comment using this format:
+6. Post the single completion comment using this format:
 
    ```md
    ## Completed
@@ -726,7 +739,7 @@ Issue closure is a mandatory, ordered post-push step:
    - Verification: `<checks or report reference>`
    ```
 
-6. Close the Issue only after the completion comment succeeds.
+7. Close the Issue only after the completion comment succeeds.
 
 As part of successful post-push completion, set the Project item to `Done` only
 after the completion comment succeeds, then close the Issue explicitly. If

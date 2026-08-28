@@ -387,6 +387,14 @@ npm run validate
 For larger frontend changes that also need a production build, run
 `npm run validate:release` instead.
 
+To validate the GitHub Pages deployment mode locally, run:
+
+```sh
+npm run validate:pages
+```
+
+This uses the same static-data mode and `/soundatlas` base path as Frontend CI.
+
 `uv run pyright` and the coverage commands below are useful additional local
 quality checks, but they are not part of the default CI-parity validation path.
 
