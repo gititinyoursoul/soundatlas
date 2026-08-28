@@ -168,3 +168,16 @@ Implementation review compares the accepted Issue, those recorded design
 inputs, the actual diff, and proportional runtime evidence. Visual evidence is
 not required for a non-visual frontend change when the Plan explains why it
 cannot affect presentation.
+
+## Quality-Loop Ownership
+
+This guide owns durable reusable desktop style and interaction rules. Approved
+additions or changes to those rules belong here; workflow findings, temporary
+runtime captures, and Issue-specific corrections do not.
+
+`docs/design/ux-workflow.md` owns the UI quality checklist and the
+pre-implementation/post-implementation loop. The UX prompt collects bounded
+audit and critique output, the frontend implementation skill applies planned
+evidence, and implementation review decides whether material findings block
+acceptance. Those surfaces must apply this guide rather than duplicate its
+rules.

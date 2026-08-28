@@ -107,6 +107,9 @@ Tailwind CSS is the canonical styling approach for application UI.
 ## Process
 
 1. Read the approved Issue and identify the exact frontend acceptance criteria.
+   For non-trivial user-visible work, also identify the recorded UI-quality
+   findings, applicable desktop-contract rules, planned runtime evidence, and
+   any correction required before acceptance.
 2. Inspect the existing route, components, state owner, API client, types, and
    related seed/API response shapes before editing.
 3. Define or update TypeScript types and API client behavior before wiring UI
@@ -118,6 +121,13 @@ Tailwind CSS is the canonical styling approach for application UI.
    as `<iframe />`.
 7. If an implementation reveals a missing product or high-risk decision, stop
    and update the Issue rather than silently expanding scope.
+
+For non-trivial user-visible work, inspect the changed runtime states at the
+desktop viewports recorded in the Plan. Inspect narrow screens only when mobile
+layout, reachability, input, or interaction is affected. Compare the result
+with the recorded UI-quality findings and design authorities. Correct a
+material finding within scope or route it as follow-up work; do not present it
+as accepted implementation evidence.
 
 ## Validation
 

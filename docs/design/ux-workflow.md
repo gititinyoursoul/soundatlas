@@ -63,6 +63,40 @@ Follow these rules for every UX cycle:
 - Use screenshots for visual critique after implementation.
 - Document durable findings or decisions in `docs/`.
 
+## UI Quality Loop
+
+Use this loop for non-trivial user-visible frontend work. Clearly trivial,
+local, low-risk changes remain exempt unless they affect a credible accessibility
+or reachability concern.
+
+Before implementation planning, audit the affected slice against the desktop
+contract and current intended baseline. Use this concise checklist:
+
+- information hierarchy and ownership;
+- progressive disclosure;
+- interface copy;
+- density and space use;
+- redundancy and conditional visibility;
+- signal-to-noise and semantic emphasis;
+- state and action feedback; and
+- content-versus-interface attribution.
+
+For each material finding, record the affected screen region, direct runtime or
+screenshot evidence, responsible component or data source, user impact, and
+recommended correction. Source inspection may identify a candidate finding, but
+claims about rendered hierarchy, density, copy, or interaction need
+proportional runtime evidence.
+
+The audit and Issue Plan establish the pre-implementation correction target.
+After implementation, inspect the changed states at the planned desktop
+viewports and use the screenshot critique to decide whether a material finding
+requires correction or a follow-up. Do not report non-trivial UI work as
+accepted while a material quality finding for its approved slice is unresolved.
+Narrow-screen evidence is required only when mobile layout, reachability,
+input, or interaction is affected. Keep captures temporary unless they receive
+Human approval as durable screenshot evidence; preserve historical evidence as
+described in `docs/design/screenshots/README.md`.
+
 ## Workflow Stack
 
 Use these entrypoints in this order:
@@ -123,6 +157,8 @@ Output:
 - Top visual hierarchy issues
 - Data/state-flow issues
 - Missing loading, empty, error, selected, or responsive states
+- Material UI-quality findings using the required region, evidence, owner,
+  impact, and correction format
 - Recommended design direction
 - Proposed first UX pass
 - Files and components likely affected
@@ -227,6 +263,7 @@ Output:
 - State changes
 - Layout and interaction changes
 - Applicable desktop-contract rules
+- UI-quality checklist findings and their disposition
 - Affected default, hover, focus, selected, unavailable, loading, empty, error,
   and authoritative-action states
 - Relevant explicitly referenced target mockups, or `None` with a reason
@@ -290,9 +327,10 @@ interaction.
 
 Use the **Screenshot Critique** template in `prompts/design-ux.md`.
 
-If the screenshots are meant to become the current tracked reference set, promote
-the approved files into `docs/design/screenshots/` and delete any stale files
-from that tracked folder before committing.
+If screenshots are meant to become the current tracked reference set, promote
+only the Human-approved files into `docs/design/screenshots/` and update that
+directory's evidence status. Do not delete historical files merely because a
+newer design exists.
 
 Output:
 
@@ -303,6 +341,8 @@ Output:
 - Affordance and interaction cue issues
 - Responsive issues
 - Prioritized polish items
+- Whether each material finding is corrected in the approved pass, routed to a
+  follow-up, or remains an acceptance blocker
 
 Do not implement every critique item automatically. Pick the highest-impact small item, plan it as a new pass, or stop if the pass is good enough.
 
@@ -371,6 +411,8 @@ Use this checklist before finishing each UX pass:
 - Does the responsive version preserve the exploration workflow?
 - Are admin-only controls clearly gated or marked for gating?
 - Are follow-up tasks documented when they are not part of the current pass?
+- Were material UI-quality findings evidenced, assigned to their responsible
+  component or data source, and corrected or routed before acceptance?
 
 ## Starting a New UX Cycle
 

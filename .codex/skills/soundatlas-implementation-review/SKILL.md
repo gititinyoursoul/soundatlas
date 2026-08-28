@@ -49,6 +49,9 @@ artifact. Inspect discoverable evidence before declaring it missing.
 4. Identify material claims.
    List the target behaviors, runtime responsibilities, acceptance criteria,
    non-goals, and material documentation claims the implementation must support.
+   For non-trivial user-visible frontend work, also identify the recorded
+   desktop-contract inputs, UI-quality findings, planned runtime evidence, and
+   any stated disposition of material findings.
 5. Assess evidence proportionately.
    Map each material claim to credible evidence. Use existing automated checks
    when they establish the claim. Inspect or request focused runtime,
@@ -62,6 +65,12 @@ artifact. Inspect discoverable evidence before declaring it missing.
 7. Classify and route every material finding.
 8. Produce the Review Result for the existing Implementation Report. Do not
    create a separate routine review comment.
+
+For non-trivial user-visible frontend work, treat an unresolved material
+hierarchy, copy, density, styleguide, accessibility, or interaction finding—or
+missing proportionate runtime evidence for a visual claim—as a finding that
+prevents an `Accepted` verdict. Route a fix to implementation, unsupported
+evidence to validation work, and a material target ambiguity to Grill Me.
 
 ## Evidence rules
 

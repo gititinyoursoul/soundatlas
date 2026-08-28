@@ -45,6 +45,15 @@ When reviewing or designing, focus on:
 - Source and media discoverability
 - Small, reviewable implementation steps
 
+For each material UI-quality finding, identify the affected screen region,
+direct runtime or screenshot evidence, responsible component or data source,
+user impact, and recommended correction. Check information hierarchy and
+ownership, progressive disclosure, interface copy, density and space use,
+redundancy, conditional visibility, signal-to-noise, semantic emphasis,
+state/action feedback, and content-versus-interface attribution. Treat
+screenshots as temporary evidence unless they are Human-approved as a tracked
+design reference.
+
 Do not suggest a landing page unless explicitly requested.
 Do not propose broad redesigns before auditing the current frontend.
 If the intended design changes, recommend updating `docs/design/current-frontend-design.md`.
@@ -84,6 +93,8 @@ Do not make changes yet. Return:
 - Evidence for each finding
 - Gaps between implementation and current design baseline
 - Applicable desktop-contract rules and affected interaction states
+- Material UI-quality findings with screen region, evidence, responsible owner,
+  user impact, and recommended correction
 - Recommended design direction
 - Candidate UX slices
 - Suggested first UX slice
@@ -131,6 +142,7 @@ Return:
 - Target mockups, or `None` with a reason
 - Required desktop visual evidence and viewport
 - Mobile evidence only when mobile layout or interaction is affected
+- UI-quality checklist findings and disposition before implementation planning
 - Out of scope
 - Acceptance criteria candidates
 - Risks or open questions
@@ -169,6 +181,8 @@ Return:
 - Whether `docs/design/current-frontend-design.md` should change
 - Whether the critique should be saved under `docs/design/audits/`
 - Whether supporting annotated screenshots or mockups should be saved under `docs/design/mockups/`
+- Whether each material finding is corrected in the current pass, needs a
+  follow-up, or blocks acceptance
 - Next step: usually grill the follow-up with `soundatlas-grill-me`, create
   the follow-up Issue plan with `soundatlas-issue-planning`, or update
   the design baseline with
