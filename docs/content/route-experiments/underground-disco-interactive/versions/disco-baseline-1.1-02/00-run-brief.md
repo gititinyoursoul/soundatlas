@@ -9,12 +9,12 @@
 - Status: `in-progress`
 - Starting condition: `fixed-topic`
 - First executable stage: `07`
-- Current stage: `07`
-- Last completed stage: `07`
+- Current stage: `08`
+- Last completed stage: `08`
 - Started: `2026-08-28`, when the Issue #183 Proceed record was posted
-- Required Human checkpoint: none before step 08; step 07 did not change the
-  accepted cohort or material route direction
-- Next permitted stage: `08`
+- Required Human checkpoint: none before step 09; step 08 introduced no new
+  material route claim or architecture change
+- Next permitted stage: `09`
 
 ## Authority
 
@@ -210,13 +210,14 @@ Verdict: the confirmed scope, stable IDs, fixed inherited inputs, evidence
 boundary, method changes, non-blind limitation, Human authority, and Stage 07
 entry point are explicit. No material decision blocks research execution.
 
-Steps 00 and 07 are complete. Step 07 preserved the accepted seven-Event
-cohort and the Human-confirmed route direction, assigned every Event exactly
-once across four narrative sections, and produced exactly one complete
-narrative blueprint per Event. No material decision blocks drafting.
+Steps 00, 07, and 08 are complete. Step 08 followed all seven narrative
+blueprints, produced a complete argument-centric reader draft, retained the
+four accepted section assignments and stable Event IDs, and passed its
+reader-readiness check. It introduced no new material route claim or
+architecture change.
 
-Keep run status `in-progress`; execute step 08 next from
-[`07-cross-event-synthesis.md`](07-cross-event-synthesis.md). Successful
-step-07 validation is not acceptance of later reader copy, presentation
-intent, Sources, media, rights, editorial state, canonical content, or
+Keep run status `in-progress`; execute step 09 next from
+[`08-narrative-draft.md`](08-narrative-draft.md). Successful step-08 validation
+is not Human acceptance of the reader copy and does not approve Sources,
+presentation intent, media, rights, editorial state, canonical content, or
 publication.
