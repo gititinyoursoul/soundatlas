@@ -5,11 +5,11 @@
 - Experiment ID: `underground-disco-interactive`
 - Version ID: `disco-baseline-1.1-01`
 - Method: `baseline-1.1`
-- Status: `checkpointed`
+- Status: `completed`
 - Starting condition: `fixed-topic`
 - First executable stage: `02`
-- Current stage: `10b`
-- Last completed stage: `10b`
+- Current stage: `11`
+- Last completed stage: `11`
 - Started: `2026-08-27T22:29:47Z`, when the matching Proceed record was posted
 - Step 02 checkpointed: `2026-08-27`
 - Step 02 Human decision: compare Arcs A, B, and C as equal contenders
@@ -32,6 +32,11 @@
   continuation into step 10b; Source, media, rights, canonical, editorial-
   review, and publication authority remain unapproved
 - Step 10b checkpointed: `2026-08-28`
+- Step 10b Human decision: accept the visual historical claims and presentation
+  intent for experimental continuation into step 11; keep every media lead
+  pending item-level relevance, attribution, rights, stability, availability,
+  and accessibility review
+- Step 11 completed: `2026-08-28`
 
 ## Authority
 
@@ -51,6 +56,8 @@
 - Step 10a Proceed record: [Issue comment](https://github.com/gititinyoursoul/soundatlas/issues/158#issuecomment-5452012582)
 - Step 10b Plan: [presentation and visual claims](https://github.com/gititinyoursoul/soundatlas/issues/158#issuecomment-5452216247)
 - Step 10b Proceed record: [Issue comment](https://github.com/gititinyoursoul/soundatlas/issues/158#issuecomment-5452230256)
+- Step 11 Plan: [run evaluation](https://github.com/gititinyoursoul/soundatlas/issues/158#issuecomment-5452443048)
+- Step 11 Proceed record: [Issue comment](https://github.com/gititinyoursoul/soundatlas/issues/158#issuecomment-5452474967)
 
 ## Fixed topic and test question
 
@@ -77,8 +84,9 @@ Human-selected seven Events into one evidence-bounded route argument, and
 drafts that argument as a reviewable seven-Event narrative, audits and corrects
 its material claims, refines the evidence-reviewed result into Human-accepted
 experimental final copy, and specifies evidence-bounded presentation and
-visual claims against actual product capability. The current authorized
-terminal stage is step 10b.
+visual claims against actual product capability, and evaluates the completed
+run against the immutable legacy comparison baseline. The run's terminal stage
+is step 11.
 
 The route-length hypothesis is six to nine Events. This is a comparison range,
 not a quota. A shorter or longer result is valid when step 05 explains the
@@ -139,7 +147,8 @@ media-cleared, or publication-ready.
   or enter editorial review.
 - Do not implement product, schema, workflow, pipeline, prompt, media, rights,
   or map changes.
-- Do not execute step 11 or make the final experimental-method decision.
+- Do not start the planned different-topic run, revise `baseline-1.1`, or make
+  the final cross-run experimental-method decision.
 
 ## Checkpoints and next permitted work
 
@@ -213,10 +222,21 @@ The experimental route is not runtime or canonical data, and every media lead
 remains pending relevance, attribution, rights, stability, availability, and
 accessibility review.
 
-The run is checkpointed because step 10b is the authorized terminal stage. The
-Human must accept, reject, or request correction of the visual historical
-claims, media intent, and presentation intent. Step 11 requires a separately
-confirmed Plan and matching Proceed record.
+The Human accepted the step-10b visual historical claims and presentation
+intent for experimental continuation into evaluation. This acceptance keeps
+every media lead pending and does not approve Sources, rights, canonical
+content, editorial-review state, or publication.
 
-Stop reason: step 10b completed; waiting for Human presentation and media-intent
-review.
+Step 11 is recorded in [`11-run-evaluation.md`](11-run-evaluation.md). The
+evaluation finds no blocking method failure, records one stale step-04 stage
+status as a non-blocking lifecycle finding, and recommends using
+`baseline-1.1` unchanged for the planned different-topic run before making a
+final cross-run method decision. Human qualitative assessment beyond the
+recorded workflow decisions is `not-provided`.
+
+Run outcome: `completed-with-cross-topic-validation-pending`. The experimental
+version remains non-canonical, editorially unapproved, media-uncleared, and not
+publication-ready.
+
+Stop reason: step 11 completed; Issue #158 remains open for the planned
+different-topic run and final method decision.
