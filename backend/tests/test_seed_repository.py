@@ -16,7 +16,21 @@ def test_seed_repository_loads_routes_places_events_and_connections() -> None:
         "downtown-experiment-no-wave-loft-jazz",
     }
     assert len(repository.list_places()) == 41
-    assert len(repository.list_events()) == 66
+
+    expected_event_counts = {
+        "birth-of-hip-hop": 12,
+        "disco-to-dance-music": 12,
+        "new-york-builds-the-dance-floor": 7,
+        "punk-new-wave-downtown": 12,
+        "salsa-latin-new-york": 12,
+        "downtown-experiment-no-wave-loft-jazz": 12,
+    }
+
+    for route_id, expected_count in expected_event_counts.items():
+        assert len(repository.list_events(route_id=route_id)) == expected_count
+        
+    assert len(repository.list_events()) == sum(expected_event_counts.values())
+
     assert len(repository.list_connections()) == 57
     assert {route.creator for route in repository.list_routes()} == {
         "SoundAtlas",
@@ -30,9 +44,7 @@ def test_seed_repository_loads_routes_places_events_and_connections() -> None:
         assert all(isinstance(image_link, ImageLink) for image_link in event.image_links)
 
     geometries = {
-        place.id: place
-        for place in repository.list_places()
-        if place.geometry is not None
+        place.id: place for place in repository.list_places() if place.geometry is not None
     }
     assert set(geometries) == {
         "south-bronx",
