@@ -10,6 +10,35 @@
     "generated_by": "route_content_pipeline.py",
     "active_output": "complete-draft.json"
   },
+  "route": {
+    "id": "birth-of-hip-hop",
+    "title": "Birth of Hip-Hop",
+    "color": "#e4572e",
+    "creator": "gpt-5.5",
+    "year_start": 1970,
+    "year_end": 1985,
+    "summary": "How local parties, DJ technique, Bronx communities, and media circulation turned hip-hop into a global cultural form.",
+    "thesis": "Hip-hop emerges from DJ practice, community spaces, urban conditions, and media circulation, not from a single point of origin.",
+    "tags": [
+      "dj-culture",
+      "block-party",
+      "breakbeat",
+      "bronx",
+      "club-culture",
+      "media",
+      "industry",
+      "electro",
+      "social-commentary",
+      "film",
+      "migration",
+      "urban-crisis"
+    ],
+    "review_status": "draft",
+    "source_urls": [
+      "https://americanhistory.si.edu/press/releases/hip-hop-comes-smithsonian",
+      "https://www.britannica.com/art/hip-hop"
+    ]
+  },
   "route_concept": "## Birth of Hip-Hop\n\n**Central question:** How did local Bronx party culture become a wider hip-hop cultural form between the early 1970s and the early 1980s?\n\nThis draft treats hip-hop as the result of overlapping community practices, technologies, spaces, performances, and media circuits rather than a creation attributable to one person, party, place, or crisis. It begins with the 1973 party organized by Cindy Campbell at 1520 Sedgwick Avenue, presented as a powerful symbolic origin point within an older and broader Bronx party culture. It then follows technical experimentation associated with Grandmaster Flash, the transition from live performance to commercial recording represented by \"Rapper's Delight,\" and a documented 1980 party at the Bronx River Center. The final phase examines two different forms of wider circulation: the electronic production of \"Planet Rock\" and the collaborative, partly fictionalized representation of the scene in *Wild Style*.\n\nBroad histories of migration, pre-1973 parties, MCing, dance, graffiti, clubs, radio, the 1977 blackout, and international circulation remain important framing or deferred research. They are not converted into map events where the supplied evidence does not establish an adequately bounded occurrence or honest place representation.",
   "candidates": [
     {

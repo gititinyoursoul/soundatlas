@@ -1,7 +1,38 @@
 {
   "route_id": "new-york-builds-the-dance-floor",
-  "revision_id": "ff792aef4b2de072ce987eb3d534c8fbddd6528191385f7245a54f1cf650ed16",
+  "revision_id": "f24599b48e8a83b9103b0227f3abc6bea205b06c0de44f8af44e4aa5f8aca34f",
   "source": "complete-draft.json",
+  "route": {
+    "id": "new-york-builds-the-dance-floor",
+    "title": "New York Builds the Dance Floor",
+    "color": "#d1495b",
+    "creator": "SoundAtlas",
+    "year_start": 1970,
+    "year_end": 1978,
+    "summary": "How private parties, Black nightlife, Puerto Rican social dance, DJ-led clubs, and record networks changed what a dance floor could be.",
+    "thesis": "Disco did not begin in one nightclub or move through one simple lineage; different New Yorkers changed the relationships among records, sound, DJs, dancers, and social space.",
+    "tags": [
+      "disco",
+      "dance-floor",
+      "dj-culture",
+      "black-nightlife",
+      "latin-hustle",
+      "queer-club-culture",
+      "sound-system",
+      "record-pool",
+      "bronx",
+      "manhattan"
+    ],
+    "review_status": "draft",
+    "source_urls": [
+      "https://www.nyclgbtsites.org/site/david-mancuso-residence-the-loft/",
+      "https://americanhistory.si.edu/collections/archival-collection/sova-nmah-ac-1614",
+      "https://bronxhistoricalsociety.org/dance/2",
+      "https://www.nyclgbtsites.org/site/the-gallery/",
+      "https://www.worldradiohistory.com/Archive-All-Music/Record-World/70s/RW-1975-07-12.pdf",
+      "https://www.nyclgbtsites.org/site/paradise-garage/"
+    ]
+  },
   "proposals": [
     {
       "candidate_id": "loft-room-becomes-musical-space",

@@ -1,7 +1,36 @@
 {
   "route_id": "birth-of-hip-hop",
-  "revision_id": "214dfec361e9f8514d0d1315d9fd832367a5c1b1acc5ed3c16a30c297a4de380",
+  "revision_id": "697e27feb7564e5d769b58d4a458e4f2940f5e89d1975b2d630b383aa2053c98",
   "source": "complete-draft.json",
+  "route": {
+    "id": "birth-of-hip-hop",
+    "title": "Birth of Hip-Hop",
+    "color": "#e4572e",
+    "creator": "gpt-5.5",
+    "year_start": 1970,
+    "year_end": 1985,
+    "summary": "How local parties, DJ technique, Bronx communities, and media circulation turned hip-hop into a global cultural form.",
+    "thesis": "Hip-hop emerges from DJ practice, community spaces, urban conditions, and media circulation, not from a single point of origin.",
+    "tags": [
+      "dj-culture",
+      "block-party",
+      "breakbeat",
+      "bronx",
+      "club-culture",
+      "media",
+      "industry",
+      "electro",
+      "social-commentary",
+      "film",
+      "migration",
+      "urban-crisis"
+    ],
+    "review_status": "draft",
+    "source_urls": [
+      "https://americanhistory.si.edu/press/releases/hip-hop-comes-smithsonian",
+      "https://www.britannica.com/art/hip-hop"
+    ]
+  },
   "proposals": [
     {
       "candidate_id": "kool-herc-cindy-campbell-sedgwick-party",
