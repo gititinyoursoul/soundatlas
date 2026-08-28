@@ -48,7 +48,7 @@ The current main screen is organized around:
 
 - Compact app header: product name, geographic/time scope, active route title, route years, short route context, and API/status summary
 - Navigation drawer: the only route-selection surface; it lists routes at the first level rather than opening a nested route screen
-- Two route collections in editorial mode: `Routes` for published route versions and `Routes to review` for unpublished or changed review revisions
+- Two route collections in editorial mode: `Routes` for reader baselines and `Routes to review` for unpublished or changed review revisions
 - Operational navigation: mode-specific media and route-review controls, with one active route or exact review revision at a time
 - Map: primary spatial exploration surface
 - Timeline: route sequence and selected event range
@@ -71,11 +71,12 @@ context but do not switch routes.
 
 | Mode | First-level route navigation | Mode-specific operations |
 | --- | --- | --- |
-| Public static explorer | `Routes` lists published route versions | None; editorial and media review remain unavailable |
-| API/admin explorer | `Routes` lists published route versions | Media/image review may span events from several routes |
+| Public static explorer | `Routes` lists reader baselines | None; editorial and media review remain unavailable |
+| API/admin explorer | `Routes` lists reader baselines | Media/image review may span events from several routes |
 | Editorial mode | `Routes` and `Routes to review` are separate first-level lists | Inspect and change one exact review revision; publish only that revision |
 
-`Routes` names published route versions. `Routes to review` contains only routes
+`Routes` names reader baselines: a published revision when present, otherwise
+the existing seed-backed route. `Routes to review` contains only routes
 with no published revision or a current review revision different from the
 published revision. A stable route can occur in both lists when those revisions
 differ. Neither list makes several routes active on the map or timeline, and
@@ -90,6 +91,7 @@ The main page owns the shared exploration state:
 - `events`
 - `connections`
 - `selectedRouteId`
+- `selectedRouteContext` (`reader` or `review`)
 - `selectedEventId`
 - `selectedPlaceId`
 - `isLoading`
@@ -116,10 +118,10 @@ Derived state includes:
 The navigation target introduces a distinction between three kinds of route
 state:
 
-- **Active route:** the one route or review revision controlling the map,
-  timeline, StoryPanel, detailed editorial review, and revision-bound
-  publication action.
-- **Published route list:** the first-level `Routes` navigation collection.
+- **Active route context:** the stable route ID plus either its reader baseline
+  or current review revision. This pair controls the map, timeline, StoryPanel,
+  detailed editorial review, and revision-bound publication action.
+- **Reader route list:** the first-level `Routes` navigation collection.
 - **Review route list:** the separate first-level `Routes to review` collection.
   It selects editorial work but does not own approval or publication authority.
 
@@ -139,7 +141,7 @@ Owns data loading, shared selection state, derived selected event/place/route st
 ### `NavigationDrawer`
 
 Owns first-level route selection and mode-specific operations. `Routes` lists
-published routes directly. Editorial mode adds a separately labelled `Routes to
+reader baselines directly. Editorial mode adds a separately labelled `Routes to
 review` list, whose rows select one exact review revision. No route row leads to
 a second-level route subview. Public mode does not expose restricted review
 actions; API/admin mode may expose media review; editorial mode exposes route
@@ -247,16 +249,13 @@ Embeds playable media links when available. The active admin review workflow now
 ## Known Design Gaps
 
 - The map does not yet feel dominant enough in the first viewport.
-- First-level `Routes` and `Routes to review` navigation lists are approved
-  design targets but are not yet implemented. The current frontend still uses a
-  `Routes` item followed by a nested subview and has no cross-route review list.
 - The Birth of Hip-Hop route range starts at 1970, while an early route event starts in 1967.
 - Timeline selection has both ticks and event cards, which can feel visually busy.
 - If the horizontal event-card strip remains, selected cards should stay centered so the fallback does not feel detached from the active selection.
 - Map selected-event context is split between the compact route header, selected marker/place chrome, timeline, and inspector; it may still need a better single focal cue.
 - Mobile behavior has an implemented ordering strategy, but first-level route
-  navigation and the separate review-route list still require implementation
-  and screenshot review.
+  navigation and the separate review-route list still require screenshot
+  review.
 - Public mode must continue to hide or gate editorial and media/image review actions.
 - Public-facing image/media browsing still needs a clearer behavior definition for fixed preview dimensions, long media lists, lazy loading, and focused image/video inspection.
 

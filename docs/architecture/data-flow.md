@@ -18,8 +18,8 @@ backend seed repository -> Pydantic schemas -> FastAPI endpoints
 The backend reads routes, places, events, and connections from the seed files.
 For navigation, it derives published and current-review revision membership from
 the route publication and review artifacts under `docs/content/routes/`; seed
-`review_status` is not publication evidence. Seed routes without either
-artifact remain reader-visible legacy routes until replaced. The frontend
+`review_status` is not publication evidence. Every seed route remains a
+reader baseline until replaced. The frontend
 requests the typed API responses and route-navigation summary for map, timeline,
 route, and story-panel state.
 

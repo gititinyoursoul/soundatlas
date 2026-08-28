@@ -3,6 +3,7 @@
   import type {
     RouteReviewProposal,
     RoutePublicationSummary,
+    RouteSelectionContext,
     ReviewAction,
     ReviewQueueItem,
     Route
@@ -48,12 +49,14 @@
   export let routes: Route[] = [];
   export let reviewRoutes: Route[] = [];
   export let selectedRouteId: string | null = null;
+  export let selectedRouteContext: RouteSelectionContext = 'reader';
   export let routeEventCounts: Record<string, number> = {};
   export let reviewQueueItems: ReviewQueueItem[] = [];
   export let reviewSavingItemId: string | null = null;
   export let reviewErrorMessage: string | null = null;
   export let showAdminReview = true;
   export let showEditorialReview = false;
+  export let enableEditorialActions = showEditorialReview;
   export let editorialProposalCount = 0;
   export let editorialProposals: RouteReviewProposal[] = [];
   export let editorialConsideredCandidates: ConsideredCandidateProjection[] =
@@ -68,7 +71,10 @@
   export let onClose: () => void = () => {};
   export let onToggleVariant: () => void = () => {};
   export let onSelectItem: (itemId: string) => void = () => {};
-  export let onSelectRoute: (routeId: string) => void = () => {};
+  export let onSelectRoute: (
+    routeId: string,
+    context: RouteSelectionContext
+  ) => void = () => {};
   export let onSelectReviewItem: (item: ReviewQueueItem) => void = () => {};
   export let onReviewQueueItem: (
     item: ReviewQueueItem,
@@ -120,7 +126,7 @@
     const baseSections: NavSection[] = [];
 
     const sections = [...baseSections];
-    if (includeEditorialReview) {
+    if (includeEditorialReview && enableEditorialActions) {
       sections.push({
         id: 'editorial',
         title: 'Editorial',
@@ -213,8 +219,11 @@
     panelHeadingElement?.focus();
   }
 
-  function handleRouteClick(routeId: string): void {
-    onSelectRoute(routeId);
+  function handleRouteClick(
+    routeId: string,
+    context: RouteSelectionContext = 'reader'
+  ): void {
+    onSelectRoute(routeId, context);
   }
 
   function formatReviewKind(item: ReviewQueueItem): string {
@@ -361,13 +370,15 @@
                 {#each routes as route (route.id)}
                   <button
                     type="button"
-                    class:active={selectedRouteId === route.id}
+                    class:active={selectedRouteId === route.id &&
+                      selectedRouteContext === 'reader'}
                     class="route-option"
                     style={`--route-color: ${route.color}`}
-                    aria-current={selectedRouteId === route.id
+                    aria-current={selectedRouteId === route.id &&
+                    selectedRouteContext === 'reader'
                       ? 'page'
                       : undefined}
-                    on:click={() => handleRouteClick(route.id)}
+                    on:click={() => handleRouteClick(route.id, 'reader')}
                   >
                     <span class="route-swatch" aria-hidden="true"></span>
                     <span class="route-copy">
@@ -390,7 +401,7 @@
               </div>
             {/if}
           </section>
-        {:else if activePanel === 'editorial-review' && showEditorialReview}
+        {:else if activePanel === 'editorial-review' && enableEditorialActions}
           <section
             class="review-panel"
             aria-labelledby="drawer-editorial-heading"
@@ -578,13 +589,15 @@
                 {#each routes as route (route.id)}
                   <button
                     type="button"
-                    class:active={selectedRouteId === route.id}
+                    class:active={selectedRouteId === route.id &&
+                      selectedRouteContext === 'reader'}
                     class="route-option"
                     style={`--route-color: ${route.color}`}
-                    aria-current={selectedRouteId === route.id
+                    aria-current={selectedRouteId === route.id &&
+                    selectedRouteContext === 'reader'
                       ? 'page'
                       : undefined}
-                    on:click={() => handleRouteClick(route.id)}
+                    on:click={() => handleRouteClick(route.id, 'reader')}
                   >
                     <span class="route-swatch" aria-hidden="true"></span><span
                       class="route-copy"
@@ -614,13 +627,15 @@
                   {#each reviewRoutes as route (route.id)}
                     <button
                       type="button"
-                      class:active={selectedRouteId === route.id}
+                      class:active={selectedRouteId === route.id &&
+                        selectedRouteContext === 'review'}
                       class="route-option"
                       style={`--route-color: ${route.color}`}
-                      aria-current={selectedRouteId === route.id
+                      aria-current={selectedRouteId === route.id &&
+                      selectedRouteContext === 'review'
                         ? 'page'
                         : undefined}
-                      on:click={() => handleRouteClick(route.id)}
+                      on:click={() => handleRouteClick(route.id, 'review')}
                     >
                       <span class="route-swatch" aria-hidden="true"></span><span
                         class="route-copy"

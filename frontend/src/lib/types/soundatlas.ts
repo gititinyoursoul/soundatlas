@@ -201,6 +201,7 @@ export type RouteNavigationEntry = {
 };
 
 export type RouteNavigationSummary = { routes: RouteNavigationEntry[] };
+export type RouteSelectionContext = 'reader' | 'review';
 
 export type ReviewQueueItem = {
   id: string;

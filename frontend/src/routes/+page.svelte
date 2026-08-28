@@ -46,6 +46,7 @@
     RoutePublicationResult,
     RoutePublicationSummary,
     RouteNavigationSummary,
+    RouteSelectionContext,
     Route,
     StoryConnectionItem
   } from '$lib/types/soundatlas';
@@ -56,6 +57,7 @@
   let events: Event[] = [];
   const activeConnections: Connection[] = [];
   let selectedRouteId: string | null = null;
+  let selectedRouteContext: RouteSelectionContext = 'reader';
   let selectedEventId: string | null = null;
   let selectedPlaceId: string | null = null;
   let isLoading = true;
@@ -89,27 +91,30 @@
   $: editorialEvents = editorialProjections.flatMap((item) =>
     item.event ? [item.event] : []
   );
-  $: activePlaces = IS_EDITORIAL_MODE && routeReview
-    ? routeReview.places.map((item) => item.place)
-    : places;
-  $: routeEvents = IS_EDITORIAL_MODE && routeReview
-    ? editorialProjections
-        .filter((item) => item.renderOnTimeline && item.event)
-        .flatMap((item) =>
-          item.event
-            ? [{ ...item.event, route_entry_role: item.routeEntryRole }]
-            : []
-        )
-    : publicRouteEvents;
-  $: mapEvents = IS_EDITORIAL_MODE && routeReview
-    ? editorialProjections
-        .filter((item) => item.renderOnMap && item.event)
-        .flatMap((item) =>
-          item.event
-            ? [{ ...item.event, route_entry_role: item.routeEntryRole }]
-            : []
-        )
-    : publicRouteEvents;
+  $: activePlaces =
+    IS_EDITORIAL_MODE && routeReview && selectedRouteContext === 'review'
+      ? routeReview.places.map((item) => item.place)
+      : places;
+  $: routeEvents =
+    IS_EDITORIAL_MODE && routeReview && selectedRouteContext === 'review'
+      ? editorialProjections
+          .filter((item) => item.renderOnTimeline && item.event)
+          .flatMap((item) =>
+            item.event
+              ? [{ ...item.event, route_entry_role: item.routeEntryRole }]
+              : []
+          )
+      : publicRouteEvents;
+  $: mapEvents =
+    IS_EDITORIAL_MODE && routeReview && selectedRouteContext === 'review'
+      ? editorialProjections
+          .filter((item) => item.renderOnMap && item.event)
+          .flatMap((item) =>
+            item.event
+              ? [{ ...item.event, route_entry_role: item.routeEntryRole }]
+              : []
+          )
+      : publicRouteEvents;
   $: reviewProposals = routeReview?.proposals ?? [];
   $: selectedConsideredCandidate =
     consideredCandidateProjections.find(
@@ -177,9 +182,11 @@
     selectedEventIsVisible || routeEvents.length === 0
       ? selectedEventId
       : routeEvents[0].id;
-  $: selectedEvent = IS_EDITORIAL_MODE && routeReview
-    ? (selectedProjection?.event ?? null)
-    : (routeEvents.find((event) => event.id === activeSelectedEventId) ?? null);
+  $: selectedEvent =
+    IS_EDITORIAL_MODE && routeReview && selectedRouteContext === 'review'
+      ? (selectedProjection?.event ?? null)
+      : (routeEvents.find((event) => event.id === activeSelectedEventId) ??
+        null);
   $: selectedReviewProposal = selectedProjection?.proposal ?? null;
   $: editorialContentError =
     selectedReviewProposal &&
@@ -257,20 +264,9 @@
       const initialRouteId =
         selectedRouteId ?? getInitialRouteId(selectableRoutes);
       selectedRouteId = initialRouteId;
+      selectedRouteContext = 'reader';
 
-      if (IS_EDITORIAL_MODE && initialRouteId) {
-        const [review, publication] = await Promise.all([
-          loadRouteReview(initialRouteId),
-          loadRoutePublication(initialRouteId)
-        ]);
-        routeReview = review;
-        publicationSummary = publication;
-        editorialProjections = projectRouteReview(routeReview);
-        consideredCandidateProjections =
-          projectConsideredCandidates(routeReview);
-      }
-
-      if (!IS_EDITORIAL_MODE) {
+      if (!IS_EDITORIAL_MODE || selectedRouteContext === 'reader') {
         if (
           !selectedEventId ||
           !data.events.some(
@@ -390,8 +386,12 @@
     }
   }
 
-  function selectRoute(routeId: string): void {
+  function selectRoute(
+    routeId: string,
+    context: RouteSelectionContext = 'reader'
+  ): void {
     selectedRouteId = routeId;
+    selectedRouteContext = context;
     selectedEventId = getFirstEventIdForRoute(events, routeId);
     const firstEvent =
       events.find((event) => event.id === selectedEventId) ?? null;
@@ -399,7 +399,7 @@
     activeNavigationItemId = 'routes';
     selectedInspectorTab = 'story';
     selectedPreviewUrl = null;
-    if (IS_EDITORIAL_MODE) {
+    if (IS_EDITORIAL_MODE && context === 'review') {
       routeReview = null;
       editorialProjections = [];
       consideredCandidateProjections = [];
@@ -409,20 +409,33 @@
       publicationError = null;
       publicationSuccess = false;
       void loadEditorialRoute(routeId);
+    } else if (IS_EDITORIAL_MODE) {
+      routeReview = null;
+      editorialProjections = [];
+      consideredCandidateProjections = [];
+      selectedConsideredCandidateId = null;
+      editorialErrorMessage = null;
+      publicationSummary = null;
+      publicationError = null;
+      publicationSuccess = false;
     }
   }
 
   async function loadEditorialRoute(routeId: string): Promise<void> {
     try {
       const review = await loadRouteReview(routeId);
-      if (selectedRouteId !== routeId) return;
+      if (selectedRouteId !== routeId || selectedRouteContext !== 'review')
+        return;
       routeReview = review;
       publicationSummary = await loadRoutePublication(routeId);
+      if (selectedRouteId !== routeId || selectedRouteContext !== 'review')
+        return;
       editorialProjections = projectRouteReview(review);
       consideredCandidateProjections = projectConsideredCandidates(review);
       selectedEventId = review.proposals[0]?.candidate_id ?? null;
     } catch (error) {
-      if (selectedRouteId !== routeId) return;
+      if (selectedRouteId !== routeId || selectedRouteContext !== 'review')
+        return;
       routeReview = null;
       publicationSummary = null;
       editorialProjections = [];
@@ -443,9 +456,11 @@
     const entry = routeNavigation?.routes.find(
       (candidate) => candidate.route.id === routeId
     );
-    return entry?.appears_in_routes === true &&
+    return (
+      entry?.appears_in_routes === true &&
       entry.appears_in_published_routes === false &&
-      entry.appears_in_routes_to_review === false;
+      entry.appears_in_routes_to_review === false
+    );
   }
 
   async function setEditorialState(
@@ -547,6 +562,7 @@
 
   function selectReviewItem(item: ReviewQueueItem): void {
     selectedRouteId = item.routeId;
+    selectedRouteContext = 'reader';
     selectedEventId = item.eventId;
     selectedPlaceId = resolveFocusedPlaceId(
       events.find((event) => event.id === item.eventId) ?? null,
@@ -697,12 +713,15 @@
     routes={readerRoutes}
     {reviewRoutes}
     {selectedRouteId}
+    {selectedRouteContext}
     {routeEventCounts}
     {reviewQueueItems}
     {reviewSavingItemId}
     {reviewErrorMessage}
     showAdminReview={!IS_PUBLIC_STATIC_MODE}
     showEditorialReview={IS_EDITORIAL_MODE}
+    enableEditorialActions={IS_EDITORIAL_MODE &&
+      selectedRouteContext === 'review'}
     editorialProposalCount={reviewProposals.length}
     editorialProposals={reviewProposals}
     editorialConsideredCandidates={consideredCandidateProjections}

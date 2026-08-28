@@ -34,19 +34,41 @@ describe('NavigationDrawer mode labels', () => {
     expect(publicView.body).not.toContain('Media Review');
   });
 
-  it('renders published and review routes directly in editorial navigation', () => {
+  it('renders reader and review routes directly in editorial navigation', () => {
     const { body } = render(NavigationDrawer, {
       props: {
         open: true,
         showEditorialReview: true,
-        routes: [makeRoute({ id: 'published', title: 'Published route' })],
+        routes: [makeRoute({ id: 'reader', title: 'Reader route' })],
         reviewRoutes: [makeRoute({ id: 'review', title: 'Review route' })]
       }
     });
 
     expect(body).toContain('Routes to review');
-    expect(body).toContain('Published route');
+    expect(body).toContain('Reader route');
     expect(body).toContain('Review route');
     expect(body).not.toContain('Choose selected route');
+  });
+
+  it('keeps same-id reader and review rows distinct by selection context', () => {
+    const route = makeRoute({
+      id: 'birth-of-hip-hop',
+      title: 'Birth of Hip-Hop'
+    });
+    const { body } = render(NavigationDrawer, {
+      props: {
+        open: true,
+        showEditorialReview: true,
+        enableEditorialActions: false,
+        routes: [route],
+        reviewRoutes: [route],
+        selectedRouteId: route.id,
+        selectedRouteContext: 'reader'
+      }
+    });
+
+    expect(body.match(/aria-current="page"/g)).toHaveLength(1);
+    expect(body).toContain('Routes to review');
+    expect(body).not.toContain('Route review');
   });
 });

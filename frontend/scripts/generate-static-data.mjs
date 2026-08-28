@@ -46,8 +46,7 @@ const entries = await Promise.all(
       route,
       review_revision_id,
       published_revision_id,
-      appears_in_routes:
-        published_revision_id !== null || review_revision_id === null,
+      appears_in_routes: true,
       appears_in_published_routes: published_revision_id !== null,
       appears_in_routes_to_review:
         review_revision_id !== null &&
