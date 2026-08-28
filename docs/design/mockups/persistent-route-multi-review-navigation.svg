@@ -1,0 +1,221 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1200" viewBox="0 0 1600 1200" role="img" aria-labelledby="title desc">
+  <title id="title">Persistent route selection and multi-route editorial review navigation</title>
+  <desc id="desc">Four SoundAtlas interface states showing directly visible route selection in public, API admin, editorial, and narrow-screen modes. Editorial mode shows several route review summaries while actions remain scoped to one active route revision.</desc>
+
+  <defs>
+    <style>
+      .ui { font-family: Inter, Arial, sans-serif; fill: #17202a; }
+      .label { font: 800 11px Inter, Arial, sans-serif; letter-spacing: 1.4px; fill: #6b7785; }
+      .title { font: 800 18px Inter, Arial, sans-serif; fill: #17202a; }
+      .body { font: 600 12px Inter, Arial, sans-serif; fill: #536170; }
+      .small { font: 700 10px Inter, Arial, sans-serif; fill: #6b7785; }
+      .strong { font: 800 12px Inter, Arial, sans-serif; fill: #17202a; }
+      .panel { fill: #ffffff; stroke: #cfd7df; }
+      .soft { fill: #f7f9fb; stroke: #d9e0e7; }
+      .active { fill: #fff5f1; stroke: #e4572e; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="1200" fill="#eef2f5"/>
+  <text x="40" y="42" class="label">SOUNDATLAS UX TARGET · ISSUE #161</text>
+  <text x="40" y="72" class="ui" font-size="26" font-weight="800">Routes stay visible; review context spans routes</text>
+  <text x="40" y="96" class="body">One active route drives the explorer. Editorial overview shows several routes, while decisions and publication stay revision-bound.</text>
+
+  <!-- Public explorer -->
+  <g aria-label="Public explorer state">
+    <rect x="40" y="130" width="740" height="370" rx="10" class="panel"/>
+    <text x="60" y="158" class="label">PUBLIC EXPLORER</text>
+    <text x="60" y="182" class="title">Route choice is primary exploration</text>
+
+    <rect x="60" y="200" width="700" height="54" rx="8" fill="#ffffff" stroke="#d9e0e7"/>
+    <text x="76" y="222" class="small">SOUNDATLAS · NEW YORK 1965–1985</text>
+    <rect x="76" y="230" width="126" height="18" rx="9" fill="#e4572e"/>
+    <text x="89" y="243" font-family="Inter, Arial, sans-serif" font-size="9" font-weight="800" fill="#ffffff">BIRTH OF HIP-HOP</text>
+    <rect x="208" y="230" width="104" height="18" rx="9" fill="#ffffff" stroke="#f3b300"/>
+    <text x="225" y="243" class="small">DISCO</text>
+    <rect x="318" y="230" width="104" height="18" rx="9" fill="#ffffff" stroke="#7b2cbf"/>
+    <text x="336" y="243" class="small">PUNK</text>
+    <rect x="428" y="230" width="104" height="18" rx="9" fill="#ffffff" stroke="#008f7a"/>
+    <text x="445" y="243" class="small">SALSA</text>
+    <rect x="538" y="230" width="150" height="18" rx="9" fill="#ffffff" stroke="#006d77"/>
+    <text x="553" y="243" class="small">DOWNTOWN EXPERIMENT</text>
+
+    <rect x="60" y="268" width="430" height="184" fill="#dfe9e2" stroke="#d9e0e7"/>
+    <path d="M92 407 C170 350 220 380 276 325 C350 255 406 330 470 292" fill="none" stroke="#9ab3a2" stroke-width="16" opacity=".55"/>
+    <circle cx="174" cy="366" r="10" fill="#e4572e" stroke="#ffffff" stroke-width="3"/>
+    <circle cx="286" cy="326" r="9" fill="#314151" stroke="#ffffff" stroke-width="3"/>
+    <circle cx="404" cy="308" r="9" fill="#314151" stroke="#ffffff" stroke-width="3"/>
+    <rect x="506" y="268" width="254" height="184" fill="#fbfcfd" stroke="#d9e0e7"/>
+    <text x="524" y="292" class="small">ACTIVE ROUTE</text>
+    <text x="524" y="316" class="title">Birth of Hip-Hop</text>
+    <text x="524" y="338" class="body">1970–1985 · 12 events</text>
+    <line x1="524" y1="356" x2="740" y2="356" stroke="#d9e0e7"/>
+    <text x="524" y="380" class="strong">Caribbean sound systems</text>
+    <text x="524" y="400" class="body">Map, timeline and story share</text>
+    <text x="524" y="418" class="body">this single active route.</text>
+    <text x="60" y="478" class="small">No drawer trip. No editorial or admin controls.</text>
+  </g>
+
+  <!-- API/admin -->
+  <g aria-label="API admin state">
+    <rect x="820" y="130" width="740" height="370" rx="10" class="panel"/>
+    <text x="840" y="158" class="label">API / ADMIN</text>
+    <text x="840" y="182" class="title">Same explorer navigation, separate operations</text>
+
+    <rect x="840" y="200" width="700" height="54" rx="8" fill="#ffffff" stroke="#d9e0e7"/>
+    <text x="856" y="222" class="small">ACTIVE ROUTE</text>
+    <rect x="856" y="230" width="126" height="18" rx="9" fill="#e4572e"/>
+    <text x="869" y="243" font-family="Inter, Arial, sans-serif" font-size="9" font-weight="800" fill="#ffffff">BIRTH OF HIP-HOP</text>
+    <rect x="988" y="230" width="82" height="18" rx="9" fill="#ffffff" stroke="#f3b300"/>
+    <text x="1004" y="243" class="small">DISCO</text>
+    <rect x="1076" y="230" width="82" height="18" rx="9" fill="#ffffff" stroke="#7b2cbf"/>
+    <text x="1094" y="243" class="small">PUNK</text>
+    <rect x="1398" y="214" width="126" height="26" rx="6" fill="#263746"/>
+    <text x="1416" y="232" font-family="Inter, Arial, sans-serif" font-size="10" font-weight="800" fill="#ffffff">MEDIA REVIEW · 5</text>
+
+    <rect x="840" y="268" width="430" height="184" fill="#dfe9e2" stroke="#d9e0e7"/>
+    <path d="M866 397 C940 340 1000 378 1064 318 C1130 258 1190 327 1246 290" fill="none" stroke="#9ab3a2" stroke-width="16" opacity=".55"/>
+    <circle cx="952" cy="359" r="10" fill="#e4572e" stroke="#ffffff" stroke-width="3"/>
+    <circle cx="1072" cy="317" r="9" fill="#314151" stroke="#ffffff" stroke-width="3"/>
+    <rect x="1286" y="268" width="254" height="184" fill="#fbfcfd" stroke="#d9e0e7"/>
+    <text x="1304" y="292" class="small">MEDIA REVIEW</text>
+    <text x="1304" y="316" class="title">Across all routes</text>
+    <rect x="1304" y="332" width="218" height="42" rx="6" class="soft"/>
+    <circle cx="1318" cy="353" r="5" fill="#f3b300"/>
+    <text x="1330" y="350" class="strong">Disco · Studio 54 image</text>
+    <text x="1330" y="365" class="small">Draft · open review</text>
+    <rect x="1304" y="382" width="218" height="42" rx="6" class="soft"/>
+    <circle cx="1318" cy="403" r="5" fill="#e4572e"/>
+    <text x="1330" y="400" class="strong">Hip-Hop · video link</text>
+    <text x="1330" y="415" class="small">Draft · open review</text>
+    <text x="840" y="478" class="small">Route switching remains visible; media review stays an API-only task.</text>
+  </g>
+
+  <!-- Editorial desktop -->
+  <g aria-label="Editorial multi-route state">
+    <rect x="40" y="540" width="1040" height="620" rx="10" class="panel"/>
+    <text x="60" y="570" class="label">EDITORIAL MODE · DESKTOP</text>
+    <text x="60" y="596" class="title">Several routes visible, one exact revision active</text>
+
+    <rect x="60" y="614" width="1000" height="58" rx="8" fill="#ffffff" stroke="#d9e0e7"/>
+    <text x="76" y="636" class="small">ACTIVE ROUTE</text>
+    <rect x="76" y="644" width="126" height="18" rx="9" fill="#e4572e"/>
+    <text x="89" y="657" font-family="Inter, Arial, sans-serif" font-size="9" font-weight="800" fill="#ffffff">BIRTH OF HIP-HOP</text>
+    <rect x="208" y="644" width="82" height="18" rx="9" fill="#ffffff" stroke="#f3b300"/>
+    <text x="225" y="657" class="small">DISCO</text>
+    <rect x="296" y="644" width="82" height="18" rx="9" fill="#ffffff" stroke="#7b2cbf"/>
+    <text x="314" y="657" class="small">PUNK</text>
+    <rect x="384" y="644" width="82" height="18" rx="9" fill="#ffffff" stroke="#008f7a"/>
+    <text x="401" y="657" class="small">SALSA</text>
+    <rect x="472" y="644" width="144" height="18" rx="9" fill="#ffffff" stroke="#006d77"/>
+    <text x="486" y="657" class="small">DOWNTOWN EXPERIMENT</text>
+    <rect x="914" y="629" width="128" height="28" rx="6" fill="#263746"/>
+    <text x="932" y="648" font-family="Inter, Arial, sans-serif" font-size="10" font-weight="800" fill="#ffffff">MEDIA REVIEW · 5</text>
+
+    <rect x="60" y="688" width="320" height="446" rx="8" fill="#f7f9fb" stroke="#d9e0e7"/>
+    <text x="78" y="714" class="label">ALL-ROUTES REVIEW</text>
+    <text x="78" y="738" class="body">Readiness remains visible while you work.</text>
+
+    <rect x="76" y="756" width="288" height="72" rx="7" class="active"/>
+    <rect x="76" y="756" width="5" height="72" rx="2" fill="#e4572e"/>
+    <text x="94" y="778" class="strong">Birth of Hip-Hop</text>
+    <text x="94" y="798" class="body">12 events · 2 warnings</text>
+    <rect x="272" y="770" width="76" height="20" rx="10" fill="#fff0cc"/>
+    <text x="285" y="784" class="small">REVIEWING</text>
+    <text x="94" y="816" class="small">Revision 8f31… · ready with warnings</text>
+
+    <rect x="76" y="838" width="288" height="64" rx="7" class="panel"/>
+    <rect x="76" y="838" width="5" height="64" rx="2" fill="#f3b300"/>
+    <text x="94" y="860" class="strong">Disco To Dance Music</text>
+    <text x="94" y="879" class="body">10 events · 1 blocker · 3 warnings</text>
+    <rect x="285" y="850" width="63" height="20" rx="10" fill="#fde6e4"/>
+    <text x="297" y="864" class="small">BLOCKED</text>
+
+    <rect x="76" y="912" width="288" height="64" rx="7" class="panel"/>
+    <rect x="76" y="912" width="5" height="64" rx="2" fill="#7b2cbf"/>
+    <text x="94" y="934" class="strong">Punk &amp; New Wave Downtown</text>
+    <text x="94" y="953" class="body">8 events · review incomplete</text>
+    <rect x="282" y="924" width="66" height="20" rx="10" fill="#eef1f4"/>
+    <text x="294" y="938" class="small">DRAFT</text>
+
+    <rect x="76" y="986" width="288" height="64" rx="7" class="panel"/>
+    <rect x="76" y="986" width="5" height="64" rx="2" fill="#008f7a"/>
+    <text x="94" y="1008" class="strong">Salsa &amp; Latin New York</text>
+    <text x="94" y="1027" class="body">11 events · no findings</text>
+    <rect x="281" y="998" width="67" height="20" rx="10" fill="#dcf4ea"/>
+    <text x="294" y="1012" class="small">READY</text>
+
+    <rect x="76" y="1060" width="288" height="58" rx="7" class="panel"/>
+    <rect x="76" y="1060" width="5" height="58" rx="2" fill="#006d77"/>
+    <text x="94" y="1083" class="strong">Downtown Experiment</text>
+    <text x="94" y="1102" class="body">No generated review available</text>
+
+    <rect x="396" y="688" width="340" height="446" fill="#dfe9e2" stroke="#d9e0e7"/>
+    <text x="414" y="716" class="small">ACTIVE ROUTE MAP · BIRTH OF HIP-HOP</text>
+    <path d="M420 1038 C472 970 532 1020 568 914 C606 802 670 848 714 760" fill="none" stroke="#9ab3a2" stroke-width="18" opacity=".55"/>
+    <circle cx="488" cy="975" r="10" fill="#e4572e" stroke="#ffffff" stroke-width="3"/>
+    <circle cx="570" cy="910" r="10" fill="#314151" stroke="#ffffff" stroke-width="3"/>
+    <circle cx="660" cy="836" r="10" fill="#314151" stroke="#ffffff" stroke-width="3"/>
+    <rect x="414" y="1052" width="304" height="62" rx="6" fill="#ffffff" stroke="#d9e0e7"/>
+    <text x="430" y="1075" class="small">SELECTED EVENT</text>
+    <text x="430" y="1097" class="strong">Caribbean Sound System Influences</text>
+
+    <rect x="752" y="688" width="308" height="446" fill="#fbfcfd" stroke="#d9e0e7"/>
+    <text x="770" y="716" class="label">ACTIVE ROUTE DETAIL</text>
+    <text x="770" y="744" class="title">Birth of Hip-Hop</text>
+    <text x="770" y="766" class="body">Revision 8f31… · 12 route events</text>
+    <rect x="770" y="784" width="272" height="54" rx="7" fill="#fff8e8" stroke="#f0d38b"/>
+    <text x="786" y="806" class="strong">Ready with 2 warnings</text>
+    <text x="786" y="824" class="small">No blocking errors</text>
+    <text x="770" y="868" class="small">ROUTE EVENTS</text>
+    <rect x="770" y="882" width="272" height="46" rx="6" class="soft"/>
+    <text x="786" y="902" class="strong">Caribbean sound systems</text>
+    <text x="786" y="918" class="small">Approved · 1 warning</text>
+    <rect x="770" y="936" width="272" height="46" rx="6" class="soft"/>
+    <text x="786" y="956" class="strong">Kool Herc's back-to-school jam</text>
+    <text x="786" y="972" class="small">Draft · no findings</text>
+    <rect x="770" y="1002" width="272" height="42" rx="6" fill="#263746"/>
+    <text x="830" y="1028" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="800" fill="#ffffff">PUBLISH THIS REVISION</text>
+    <text x="770" y="1070" class="small">Only Birth of Hip-Hop revision 8f31…</text>
+    <text x="770" y="1088" class="small">is affected. No bulk route action.</text>
+  </g>
+
+  <!-- Narrow screen -->
+  <g aria-label="Narrow-screen state">
+    <rect x="1120" y="540" width="440" height="620" rx="10" class="panel"/>
+    <text x="1140" y="570" class="label">NARROW SCREEN · ALL MODES</text>
+    <text x="1140" y="596" class="title">Route access never disappears</text>
+
+    <rect x="1140" y="614" width="400" height="72" rx="8" fill="#ffffff" stroke="#d9e0e7"/>
+    <text x="1156" y="636" class="small">SOUNDATLAS · ACTIVE ROUTE</text>
+    <rect x="1156" y="646" width="368" height="28" rx="6" class="active"/>
+    <circle cx="1172" cy="660" r="6" fill="#e4572e"/>
+    <text x="1186" y="664" class="strong">Birth of Hip-Hop · 1970–1985</text>
+    <path d="M1498 656 l8 8 l8 -8" fill="none" stroke="#536170" stroke-width="2"/>
+
+    <text x="1140" y="714" class="small">OTHER ROUTES · HORIZONTAL DIRECT ACCESS</text>
+    <rect x="1140" y="726" width="82" height="26" rx="13" fill="#ffffff" stroke="#f3b300"/>
+    <text x="1158" y="744" class="small">DISCO</text>
+    <rect x="1228" y="726" width="82" height="26" rx="13" fill="#ffffff" stroke="#7b2cbf"/>
+    <text x="1247" y="744" class="small">PUNK</text>
+    <rect x="1316" y="726" width="82" height="26" rx="13" fill="#ffffff" stroke="#008f7a"/>
+    <text x="1334" y="744" class="small">SALSA</text>
+    <rect x="1404" y="726" width="120" height="26" rx="13" fill="#ffffff" stroke="#006d77"/>
+    <text x="1419" y="744" class="small">DOWNTOWN</text>
+
+    <rect x="1140" y="770" width="400" height="168" fill="#dfe9e2" stroke="#d9e0e7"/>
+    <path d="M1164 912 C1224 870 1272 896 1320 830 C1362 772 1440 852 1512 794" fill="none" stroke="#9ab3a2" stroke-width="16" opacity=".55"/>
+    <circle cx="1242" cy="873" r="9" fill="#e4572e" stroke="#ffffff" stroke-width="3"/>
+    <circle cx="1360" cy="823" r="9" fill="#314151" stroke="#ffffff" stroke-width="3"/>
+
+    <rect x="1140" y="954" width="400" height="184" rx="8" fill="#f7f9fb" stroke="#d9e0e7"/>
+    <text x="1156" y="978" class="small">EDITORIAL MODE · ROUTE OVERVIEW</text>
+    <rect x="1156" y="990" width="368" height="56" rx="6" class="active"/>
+    <text x="1172" y="1012" class="strong">Birth of Hip-Hop</text>
+    <text x="1172" y="1032" class="body">Reviewing · ready with 2 warnings</text>
+    <rect x="1156" y="1054" width="368" height="56" rx="6" class="panel"/>
+    <text x="1172" y="1076" class="strong">Disco To Dance Music</text>
+    <text x="1172" y="1096" class="body">1 blocker · open route detail</text>
+    <text x="1156" y="1128" class="small">Public mode omits this review overview.</text>
+  </g>
+</svg>

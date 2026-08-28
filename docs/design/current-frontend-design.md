@@ -25,6 +25,11 @@ This means:
 - Route context should stay compact and visible above the map without duplicating the inspector.
 - The visual tone is dense, documentary, restrained, and useful.
 
+The approved navigation target is illustrated in
+[`persistent-route-multi-review-navigation.svg`](mockups/persistent-route-multi-review-navigation.svg).
+It is a design target, not a statement that the current frontend already
+implements multi-route review summaries.
+
 ## Primary User Workflow
 
 1. User opens the app.
@@ -42,18 +47,37 @@ This means:
 The current main screen is organized around:
 
 - Compact app header: product name, geographic/time scope, active route title, route years, short route context, and API/status summary
-- Desktop overlay navigation drawer: icon trigger in the header, expanded/collapsed states, route switching, compact editorial route review, admin media/image review queue, direct review actions, and dim overlay behavior
+- Persistent route selector: directly visible in the primary interface in every mode, with one active route controlling map, timeline, and story context
+- Operational navigation: mode-specific access to editorial route review and admin media/image review without owning route selection
+- Editorial all-routes overview: simultaneous route-level readiness summaries with one active route detail and no bulk approval or publication
 - Map: primary spatial exploration surface
 - Timeline: route sequence and selected event range
 - Event inspector: selected event details, navigation, sources, related events, and media
 
 The intended hierarchy is:
 
-1. Map and selected event context
+1. Active route and map context
 2. Timeline sequence
 3. Selected-event story and relationships
-4. Route switching and metadata
+4. Mode-specific review tasks
 5. Sources and media
+
+## Navigation Across Modes
+
+The route selector is an exploration control, not an administrative task. It
+must remain directly available in every mode and must not require opening the
+navigation drawer or entering a nested route subview.
+
+| Mode | Persistent primary navigation | Mode-specific operations |
+| --- | --- | --- |
+| Public static explorer | Select one active route | None; editorial and media review remain unavailable |
+| API/admin explorer | Select one active route | Media/image review may span events from several routes |
+| Editorial mode | Select one active route and retain an all-routes readiness overview | Inspect and change one route's exact review revision; publish only that selected revision |
+
+“Several routes at the same time” means that editorial route summaries remain
+visible together for orientation and work selection. It does not mean that
+several routes become active on the map or timeline, or that approval and
+publication become bulk operations.
 
 ## State Model
 
@@ -87,6 +111,15 @@ Derived state includes:
 - route event counts
 - review queue items
 
+The navigation target introduces a distinction between two kinds of route
+state:
+
+- **Active route:** the single route controlling the map, timeline, StoryPanel,
+  detailed editorial review, and revision-bound publication action.
+- **All-routes review overview:** route-level counts, warnings, blockers,
+  availability, and readiness used to choose the next route to inspect. This
+  overview does not own editorial decisions or publication authority.
+
 Map marker and polygon clicks, timeline clicks, route selection, inspector
 navigation, StoryPanel place controls, related-event clicks, and keyboard
 navigation use this shared state rather than separate local selection models.
@@ -102,7 +135,10 @@ Owns data loading, shared selection state, derived selected event/place/route st
 
 ### `NavigationDrawer`
 
-Provides the desktop-only overlay drawer for route switching and the current editorial and admin review workflows. It supports expanded and collapsed icon-only states, a real-data route list subview, a compact route-readiness and event-finding review, a draft media/image review queue with direct review/reject actions, dim overlay close behavior, `Esc` close behavior, focus return, active item state, and loading/error/empty patterns.
+Remains an operational surface for mode-specific editorial and admin work. It
+does not own primary route selection. Public mode does not expose restricted
+review actions; API/admin mode may expose media review; editorial mode exposes
+route review and exact-revision publication controls.
 
 ### `Icon`
 
@@ -134,7 +170,34 @@ Shows the route chronology and lets users select events. It should clarify event
 
 ### `RouteFilter`
 
-Currently exists as a reusable component for route switching, but it is not part of the main desktop surface. Desktop route discovery and route switching now live in the navigation drawer route list. It should remain single-select while the MVP uses one active route at a time.
+Owns directly visible, single-select route switching in the primary interface.
+The desktop treatment may use a compact route rail or equivalent persistent
+control. The narrow-screen treatment may condense the same choices, but it must
+remain visible and operable without opening a hidden navigation layer.
+
+## Responsive And Accessibility Behavior
+
+- Narrow screens retain a directly visible active-route control and access to
+  the other routes; route selection must not disappear at a breakpoint.
+- A compact selector may be paired with horizontally accessible route choices,
+  provided every route remains keyboard and touch operable.
+- Active-route state must be conveyed by text or programmatic state as well as
+  color.
+- Route choices use descriptive accessible names and expose the current choice.
+- Editorial readiness summaries distinguish ready, warning, blocked, draft,
+  unavailable, loading, and error states without relying only on color.
+- Moving between route summaries and one route's detail preserves focus context
+  and does not imply that more than one revision is being edited.
+
+## Navigation Non-Goals
+
+- Showing several routes' events together on the map or timeline.
+- Bulk editorial approval, bulk overrides, or bulk publication.
+- A generalized dashboard, multi-user administration system, or new editorial
+  workflow service.
+- Moving media review into the public explorer.
+- Treating the all-routes overview as an authority over route-specific review
+  records.
 
 ### `StoryPanel`
 
@@ -179,19 +242,18 @@ Embeds playable media links when available. The active admin review workflow now
 ## Known Design Gaps
 
 - The map does not yet feel dominant enough in the first viewport.
-- The drawer route list needs screenshot critique to decide whether route selection should keep the overlay open or close after selection.
+- The persistent route-selector and all-routes editorial overview are approved design targets but are not yet implemented.
 - The Birth of Hip-Hop route range starts at 1970, while an early route event starts in 1967.
 - Timeline selection has both ticks and event cards, which can feel visually busy.
 - If the horizontal event-card strip remains, selected cards should stay centered so the fallback does not feel detached from the active selection.
 - Map selected-event context is split between the compact route header, selected marker/place chrome, timeline, and inspector; it may still need a better single focal cue.
-- Mobile behavior has an implemented ordering strategy, but it needs review against the current design baseline and screenshots.
+- Mobile behavior has an implemented ordering strategy, but persistent route selection and editorial overview still require implementation and screenshot review.
 - Public mode must continue to hide or gate editorial and media/image review actions.
 - Public-facing image/media browsing still needs a clearer behavior definition for fixed preview dimensions, long media lists, lazy loading, and focused image/video inspection.
 
 ## Open Decisions
 
 - How should pre-1970 hip-hop context be represented in route ranges and timeline layout?
-- Should drawer route selection keep the overlay open on desktop, or close after a route is selected?
 - Should restricted drawer/admin items be hidden or disabled in public-facing contexts?
 - What is the public-mode boundary for hiding or gating the admin drawer media/image review workflow?
 - Should timeline event cards remain, become more compact, or move into the inspector?
