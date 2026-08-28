@@ -28,7 +28,7 @@ This means:
 The approved navigation target is illustrated in
 [`persistent-route-multi-review-navigation.svg`](mockups/persistent-route-multi-review-navigation.svg).
 It is a design target, not a statement that the current frontend already
-implements multi-route review summaries.
+implements published-only route filtering or a cross-route review list.
 
 ## Primary User Workflow
 
@@ -47,9 +47,9 @@ implements multi-route review summaries.
 The current main screen is organized around:
 
 - Compact app header: product name, geographic/time scope, active route title, route years, short route context, and API/status summary
-- Persistent route selector: directly visible in the primary interface in every mode, with one active route controlling map, timeline, and story context
-- Operational navigation: mode-specific access to editorial route review and admin media/image review without owning route selection
-- Editorial all-routes overview: simultaneous route-level readiness summaries with one active route detail and no bulk approval or publication
+- Navigation drawer: the only route-selection surface; it lists routes at the first level rather than opening a nested route screen
+- Two route collections in editorial mode: `Routes` for published route versions and `Routes to review` for unpublished or changed review revisions
+- Operational navigation: mode-specific media and route-review controls, with one active route or exact review revision at a time
 - Map: primary spatial exploration surface
 - Timeline: route sequence and selected event range
 - Event inspector: selected event details, navigation, sources, related events, and media
@@ -59,25 +59,27 @@ The intended hierarchy is:
 1. Active route and map context
 2. Timeline sequence
 3. Selected-event story and relationships
-4. Mode-specific review tasks
+4. Navigation and mode-specific review tasks
 5. Sources and media
 
 ## Navigation Across Modes
 
-The route selector is an exploration control, not an administrative task. It
-must remain directly available in every mode and must not require opening the
-navigation drawer or entering a nested route subview.
+Route selection occurs only in navigation. The drawer directly lists selectable
+route rows; it must not use a `Routes` parent item that opens a second-level
+route screen. The header, map, timeline, and StoryPanel show the selected route
+context but do not switch routes.
 
-| Mode | Persistent primary navigation | Mode-specific operations |
+| Mode | First-level route navigation | Mode-specific operations |
 | --- | --- | --- |
-| Public static explorer | Select one active route | None; editorial and media review remain unavailable |
-| API/admin explorer | Select one active route | Media/image review may span events from several routes |
-| Editorial mode | Select one active route and retain an all-routes readiness overview | Inspect and change one route's exact review revision; publish only that selected revision |
+| Public static explorer | `Routes` lists published route versions | None; editorial and media review remain unavailable |
+| API/admin explorer | `Routes` lists published route versions | Media/image review may span events from several routes |
+| Editorial mode | `Routes` and `Routes to review` are separate first-level lists | Inspect and change one exact review revision; publish only that revision |
 
-“Several routes at the same time” means that editorial route summaries remain
-visible together for orientation and work selection. It does not mean that
-several routes become active on the map or timeline, or that approval and
-publication become bulk operations.
+`Routes` names published route versions. `Routes to review` contains only routes
+with no published revision or a current review revision different from the
+published revision. A stable route can occur in both lists when those revisions
+differ. Neither list makes several routes active on the map or timeline, and
+approval and publication remain route- and revision-specific.
 
 ## State Model
 
@@ -111,14 +113,15 @@ Derived state includes:
 - route event counts
 - review queue items
 
-The navigation target introduces a distinction between two kinds of route
+The navigation target introduces a distinction between three kinds of route
 state:
 
-- **Active route:** the single route controlling the map, timeline, StoryPanel,
-  detailed editorial review, and revision-bound publication action.
-- **All-routes review overview:** route-level counts, warnings, blockers,
-  availability, and readiness used to choose the next route to inspect. This
-  overview does not own editorial decisions or publication authority.
+- **Active route:** the one route or review revision controlling the map,
+  timeline, StoryPanel, detailed editorial review, and revision-bound
+  publication action.
+- **Published route list:** the first-level `Routes` navigation collection.
+- **Review route list:** the separate first-level `Routes to review` collection.
+  It selects editorial work but does not own approval or publication authority.
 
 Map marker and polygon clicks, timeline clicks, route selection, inspector
 navigation, StoryPanel place controls, related-event clicks, and keyboard
@@ -135,10 +138,12 @@ Owns data loading, shared selection state, derived selected event/place/route st
 
 ### `NavigationDrawer`
 
-Remains an operational surface for mode-specific editorial and admin work. It
-does not own primary route selection. Public mode does not expose restricted
-review actions; API/admin mode may expose media review; editorial mode exposes
-route review and exact-revision publication controls.
+Owns first-level route selection and mode-specific operations. `Routes` lists
+published routes directly. Editorial mode adds a separately labelled `Routes to
+review` list, whose rows select one exact review revision. No route row leads to
+a second-level route subview. Public mode does not expose restricted review
+actions; API/admin mode may expose media review; editorial mode exposes route
+review and exact-revision publication controls.
 
 ### `Icon`
 
@@ -170,33 +175,33 @@ Shows the route chronology and lets users select events. It should clarify event
 
 ### `RouteFilter`
 
-Owns directly visible, single-select route switching in the primary interface.
-The desktop treatment may use a compact route rail or equivalent persistent
-control. The narrow-screen treatment may condense the same choices, but it must
-remain visible and operable without opening a hidden navigation layer.
+Remains a reusable single-select route control, but it is not the approved
+primary navigation surface for this slice. Route switching belongs in the
+navigation drawer's first-level lists.
 
 ## Responsive And Accessibility Behavior
 
-- Narrow screens retain a directly visible active-route control and access to
-  the other routes; route selection must not disappear at a breakpoint.
-- A compact selector may be paired with horizontally accessible route choices,
-  provided every route remains keyboard and touch operable.
+- Narrow screens retain a visible navigation trigger and direct first-level
+  access to `Routes` and, in editorial mode, `Routes to review`; route
+  selection must not disappear at a breakpoint or move into a nested subview.
 - Active-route state must be conveyed by text or programmatic state as well as
   color.
 - Route choices use descriptive accessible names and expose the current choice.
 - Editorial readiness summaries distinguish ready, warning, blocked, draft,
   unavailable, loading, and error states without relying only on color.
-- Moving between route summaries and one route's detail preserves focus context
-  and does not imply that more than one revision is being edited.
+- Moving between a review-route row and one route's detail preserves focus
+  context and does not imply that more than one revision is being edited.
 
 ## Navigation Non-Goals
 
+- A main-view route selector, a second-level route navigation screen, or a
+  footer control solely for route selection.
 - Showing several routes' events together on the map or timeline.
 - Bulk editorial approval, bulk overrides, or bulk publication.
 - A generalized dashboard, multi-user administration system, or new editorial
   workflow service.
 - Moving media review into the public explorer.
-- Treating the all-routes overview as an authority over route-specific review
+- Treating `Routes to review` as an authority over route-specific review
   records.
 
 ### `StoryPanel`
@@ -242,12 +247,16 @@ Embeds playable media links when available. The active admin review workflow now
 ## Known Design Gaps
 
 - The map does not yet feel dominant enough in the first viewport.
-- The persistent route-selector and all-routes editorial overview are approved design targets but are not yet implemented.
+- First-level `Routes` and `Routes to review` navigation lists are approved
+  design targets but are not yet implemented. The current frontend still uses a
+  `Routes` item followed by a nested subview and has no cross-route review list.
 - The Birth of Hip-Hop route range starts at 1970, while an early route event starts in 1967.
 - Timeline selection has both ticks and event cards, which can feel visually busy.
 - If the horizontal event-card strip remains, selected cards should stay centered so the fallback does not feel detached from the active selection.
 - Map selected-event context is split between the compact route header, selected marker/place chrome, timeline, and inspector; it may still need a better single focal cue.
-- Mobile behavior has an implemented ordering strategy, but persistent route selection and editorial overview still require implementation and screenshot review.
+- Mobile behavior has an implemented ordering strategy, but first-level route
+  navigation and the separate review-route list still require implementation
+  and screenshot review.
 - Public mode must continue to hide or gate editorial and media/image review actions.
 - Public-facing image/media browsing still needs a clearer behavior definition for fixed preview dimensions, long media lists, lazy loading, and focused image/video inspection.
 
