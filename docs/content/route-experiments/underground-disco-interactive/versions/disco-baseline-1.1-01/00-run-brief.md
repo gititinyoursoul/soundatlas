@@ -8,8 +8,8 @@
 - Status: `checkpointed`
 - Starting condition: `fixed-topic`
 - First executable stage: `02`
-- Current stage: `05`
-- Last completed stage: `05`
+- Current stage: `06`
+- Last completed stage: `06`
 - Started: `2026-08-27T22:29:47Z`, when the matching Proceed record was posted
 - Step 02 checkpointed: `2026-08-27`
 - Step 02 Human decision: compare Arcs A, B, and C as equal contenders
@@ -18,6 +18,10 @@
   retain Arc B as a mandatory corrective lens
 - Step 04 completed: `2026-08-27`
 - Step 05 checkpointed: `2026-08-27`
+- Step 05 Human decision: retain the five shared core Events and research the
+  Gallery and “Heartbeat” equally as competing sixth Events; keep Best of
+  Friends as context
+- Step 06 checkpointed: `2026-08-28`
 
 ## Authority
 
@@ -25,6 +29,8 @@
 - Accepted Concept: [Issue comment](https://github.com/gititinyoursoul/soundatlas/issues/158#issuecomment-5442219193)
 - Plan: [live Disco steps 00 and 02–05](https://github.com/gititinyoursoul/soundatlas/issues/158#issuecomment-5445956622)
 - Proceed record: [Issue comment](https://github.com/gititinyoursoul/soundatlas/issues/158#issuecomment-5445968776)
+- Continuation Plan: [live Disco step 06](https://github.com/gititinyoursoul/soundatlas/issues/158#issuecomment-5446654939)
+- Continuation Proceed record: [Issue comment](https://github.com/gititinyoursoul/soundatlas/issues/158#issuecomment-5446675797)
 
 ## Fixed topic and test question
 
@@ -45,8 +51,9 @@
 
 This version explores competing narrative arcs, tests the Human-selected or
 authorized shortlist with one bounded Candidate landscape, researches the
-material gaps exposed by that test, and recommends a defensible cohort. The
-authorized terminal stage is step 05.
+material gaps exposed by that test, recommends a defensible cohort, and deep-
+researches the five shared core Events plus two competing sixth Events. The
+current authorized terminal stage is step 06.
 
 The route-length hypothesis is six to nine Events. This is a comparison range,
 not a quota. A shorter or longer result is valid when step 05 explains the
@@ -104,7 +111,7 @@ roughly 150–220 words, but no reader-facing copy is written in this slice.
   or enter editorial review.
 - Do not implement product, schema, workflow, pipeline, prompt, media, rights,
   or map changes.
-- Do not execute steps 06–11 or make the final experimental-method decision.
+- Do not execute steps 07–11 or make the final experimental-method decision.
 
 ## Checkpoints and next permitted work
 
@@ -124,17 +131,31 @@ cohort: a five-Event minimum core plus the 1981 “Heartbeat” enrichment. Best
 Friends remains contextual network evidence rather than a falsely bounded
 Event, and the Gallery remains the first challenger for a seven-Event option.
 
+The Human revised the recommended research direction without changing the
+six-Event target: the five shared core Events remain fixed for step 06, while
+the Gallery and “Heartbeat” receive equal deep research as competing sixth
+Events. Best of Friends remains supporting context, not an Event dossier.
+
+Step 06 is recorded in
+[`06-deep-route-research.md`](06-deep-route-research.md). It retains the five
+core Events, narrows the St. Mary's terminal date to `unknown`, resolves the
+original Vinylmania point to 30/30A Carmine Street while preserving the unknown
+exact “Heartbeat” night, and finds both sixth-Event challengers viable. The
+Agent recommends “Heartbeat” by a narrow margin because it adds a later,
+record-specific floor-to-retail outcome; Gallery has the stronger room-level
+and visual evidence.
+
 Required Human checkpoint now:
 
-1. Choose the recommended six-Event cohort, the five-Event minimum core, the
-   seven-Event Gallery expansion, or a revision.
-2. Confirm or revise Best of Friends as context and the Gallery as reserve.
-3. Decide which selected Events or challengers should receive deep research if
-   a later Plan authorizes steps 06–11.
+1. Choose `gallery-mercer-dj-dancer-response` or
+   `heartbeat-garage-retail-circulation` as the sixth Event, revise the
+   six-Event direction, or stop this route version.
+2. Confirm whether the chosen six may proceed to cross-Event synthesis in a
+   later separately approved step-07 Plan.
 
-Stage 05 is the authorized terminal stage of the current Plan. No stage 06 work
-is permitted until these decisions are recorded and a separately confirmed
-Plan and Proceed record authorize the continuation.
+Stage 06 is the authorized terminal stage of the current Plan. No step 07 work
+is permitted until the challenger decision is recorded and a separately
+confirmed Plan and Proceed record authorize the continuation.
 
-Stop reason: waiting for the required step-05 Human cohort, route-length, and
-challenger deep-research decisions.
+Stop reason: waiting for the required Gallery-versus-“Heartbeat” sixth-Event
+decision and direction on later cross-Event synthesis.
