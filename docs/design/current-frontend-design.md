@@ -146,6 +146,21 @@ area precision and place-relationship direction, context, and sources textual
 equivalents. The media tab remains exploratory rather than an admin review
 surface.
 
+#### Event story hierarchy
+
+![Event StoryPanel mockup showing an Event title followed by two ordered titled story sections, each with one paragraph.](mockups/issue-160-event-story-section-hierarchy.png)
+
+The route narrative groups Events. Each selected Event is the complete
+reader-facing chapter beneath its Event title. A section-based Event contains
+one or more ordered story sections, each with a distinct Human-reviewed heading
+and body.
+
+The current hierarchy is: route narrative section -> Event title/chapter ->
+ordered story-section heading and one rendered paragraph. `StoryPanel` renders
+each story-section body as a single HTML paragraph. Multiple paragraphs beneath
+one story-section heading are not currently supported. This mockup documents
+current behavior; it does not authorize new route copy or a behavior change.
+
 ### `MediaEmbed`
 
 Embeds playable media links when available. The active admin review workflow now lives in the navigation drawer; any embedded media controls should stay secondary to the public story-reading surface.
