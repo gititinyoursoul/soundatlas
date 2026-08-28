@@ -66,14 +66,15 @@
       ]
     },
     {
+      "year_start": 1970,
+      "year_end": 1981,
+      "content_review_status": "draft",
       "id": "new-york-builds-the-dance-floor",
       "title": "New York Builds the Dance Floor",
       "color": "#d1495b",
       "creator": "SoundAtlas",
-      "year_start": 1970,
-      "year_end": 1978,
-      "summary": "How private parties, Black nightlife, Puerto Rican social dance, DJ-led clubs, and record networks changed what a dance floor could be.",
-      "thesis": "Disco did not begin in one nightclub or move through one simple lineage; different New Yorkers changed the relationships among records, sound, DJs, dancers, and social space.",
+      "summary": "New York underground Disco, 1970–1981 — one Bronx community space, one Midtown institution, and a dense group of lower-Manhattan rooms and record networks.",
+      "thesis": "The route follows overlapping forms of collective power while keeping their places, participants, and limits distinct. Hosts and dancers shaped social rooms and movement practices. Black entrepreneurs and working DJs built different institutions for nightlife, promotion, distribution, and critique. A purpose-built club became a durable community setting where, in later accounts, a particular record met resistance before listeners reportedly sought it at a specialist store. Promotion was not feedback, membership was not ownership, and chronology or proximity did not make separate communities one network.",
       "tags": [
         "disco",
         "dance-floor",
@@ -84,16 +85,29 @@
         "sound-system",
         "record-pool",
         "bronx",
-        "manhattan"
+        "manhattan",
+        "collective-power"
       ],
-      "review_status": "draft",
       "source_urls": [
         "https://www.nyclgbtsites.org/site/david-mancuso-residence-the-loft/",
-        "https://americanhistory.si.edu/collections/archival-collection/sova-nmah-ac-1614",
+        "https://daily.redbullmusicacademy.com/2016/11/david-mancuso-dj-history-interview/",
+        "https://daily.redbullmusicacademy.com/2018/02/nicky-siano-interview-dj-history/",
         "https://bronxhistoricalsociety.org/dance/2",
+        "https://bronxhistoricalsociety.org/dance/3",
+        "https://www.latinempireproductions.com/",
         "https://www.nyclgbtsites.org/site/the-gallery/",
-        "https://www.worldradiohistory.com/Archive-All-Music/Record-World/70s/RW-1975-07-12.pdf",
-        "https://www.nyclgbtsites.org/site/paradise-garage/"
+        "https://www.worldradiohistory.com/Archive-All-Music/Billboard/70s/1976/Billboard%201976-03-06a.pdf",
+        "https://www.worldradiohistory.com/Archive-All-Music/Cash-Box/70s/1974/CB-1974-12-28.pdf",
+        "https://www.linkedin.com/pulse/leviticus-opened-50-years-ago-noel-hankin-clh9e",
+        "https://routes-mag.com/issue-1978-6-17/",
+        "https://www.worldradiohistory.com/Archive-All-Music/Billboard/70s/1975/Billboard%201975-06-21.pdf",
+        "https://www.tandfonline.com/doi/full/10.1080/00076791.2017.1308485",
+        "https://www.nyclgbtsites.org/site/paradise-garage/",
+        "https://findingaids.library.nyu.edu/fales/mss_483/all/",
+        "https://www.worldradiohistory.com/Archive-Record-World/80s/81/RW-1981-04-11.pdf",
+        "https://www.timeout.com/newyork/nightlife/paradise-garage-the-oral-history-of-nycs-greatest-club",
+        "https://daily.redbullmusicacademy.com/2016/02/vinylmania-oral-history/",
+        "https://www.worldradiohistory.com/Archive-All-Music/Billboard/80s/1988/BB-1988-06-11.pdf"
       ]
     },
     {

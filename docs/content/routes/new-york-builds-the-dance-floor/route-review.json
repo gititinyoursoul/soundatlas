@@ -1,6 +1,6 @@
 {
   "route_id": "new-york-builds-the-dance-floor",
-  "revision_id": "b352db80f4da169f3ef4fed4cae1c27457a1c1a4fda9e06c4e1120f2856a5bad",
+  "revision_id": "8edfc73954383d39ef78e8b52ff878c4fc18f3a6a61586dc49e141ac66cdcbb8",
   "source": "complete-draft.json",
   "route": {
     "year_start": 1970,
@@ -50,7 +50,7 @@
   "proposals": [
     {
       "candidate_id": "loft-broadway-party-1970-1974",
-      "editorial_state": "draft",
+      "editorial_state": "approved",
       "active": true,
       "included": true,
       "renderable": true,
@@ -120,7 +120,7 @@
     },
     {
       "candidate_id": "st-marys-dance-incubator-1974",
-      "editorial_state": "draft",
+      "editorial_state": "approved",
       "active": true,
       "included": true,
       "renderable": true,
@@ -190,7 +190,7 @@
     },
     {
       "candidate_id": "gallery-mercer-room-1974-1977",
-      "editorial_state": "draft",
+      "editorial_state": "approved",
       "active": true,
       "included": true,
       "renderable": true,
@@ -258,7 +258,7 @@
     },
     {
       "candidate_id": "leviticus-opening-and-label-parties-1974-1976",
-      "editorial_state": "draft",
+      "editorial_state": "approved",
       "active": true,
       "included": true,
       "renderable": true,
@@ -330,7 +330,7 @@
     },
     {
       "candidate_id": "new-york-record-pool-launch-1975",
-      "editorial_state": "draft",
+      "editorial_state": "approved",
       "active": true,
       "included": true,
       "renderable": true,
@@ -400,7 +400,7 @@
     },
     {
       "candidate_id": "paradise-garage-buildout-opening-1977-1978",
-      "editorial_state": "draft",
+      "editorial_state": "approved",
       "active": true,
       "included": true,
       "renderable": true,
@@ -470,7 +470,7 @@
     },
     {
       "candidate_id": "heartbeat-garage-vinylmania-1981",
-      "editorial_state": "draft",
+      "editorial_state": "approved",
       "active": true,
       "included": true,
       "renderable": true,

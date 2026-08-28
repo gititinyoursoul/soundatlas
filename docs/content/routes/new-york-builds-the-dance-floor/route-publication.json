@@ -1,13 +1,14 @@
 {
   "route_id": "new-york-builds-the-dance-floor",
-  "revision_id": "f24599b48e8a83b9103b0227f3abc6bea205b06c0de44f8af44e4aa5f8aca34f",
+  "revision_id": "8edfc73954383d39ef78e8b52ff878c4fc18f3a6a61586dc49e141ac66cdcbb8",
   "event_ids": [
-    "loft-room-becomes-musical-space",
-    "leviticus-black-nightlife-infrastructure",
-    "st-marys-latin-hustle-incubator",
-    "gallery-dj-shapes-the-room",
-    "new-york-record-pool-network",
-    "paradise-garage-built-for-dance-floor"
+    "loft-broadway-party-1970-1974",
+    "st-marys-dance-incubator-1974",
+    "gallery-mercer-room-1974-1977",
+    "leviticus-opening-and-label-parties-1974-1976",
+    "new-york-record-pool-launch-1975",
+    "paradise-garage-buildout-opening-1977-1978",
+    "heartbeat-garage-vinylmania-1981"
   ],
   "connection_ids": []
 }
