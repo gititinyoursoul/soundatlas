@@ -9,12 +9,13 @@
 - Status: `in-progress`
 - Starting condition: `fixed-topic`
 - First executable stage: `07`
-- Current stage: `08`
-- Last completed stage: `08`
+- Current stage: `09`
+- Last completed stage: `09`
 - Started: `2026-08-28`, when the Issue #183 Proceed record was posted
-- Required Human checkpoint: none before step 09; step 08 introduced no new
-  material route claim or architecture change
-- Next permitted stage: `09`
+- Required Human checkpoint: mandatory after step 10a presents the complete
+  final reader copy; step 09 found no separate Source, sensitivity,
+  representation, or acceptable-uncertainty decision that blocks refinement
+- Next permitted stage: `10a`
 
 ## Authority
 
@@ -210,14 +211,15 @@ Verdict: the confirmed scope, stable IDs, fixed inherited inputs, evidence
 boundary, method changes, non-blind limitation, Human authority, and Stage 07
 entry point are explicit. No material decision blocks research execution.
 
-Steps 00, 07, and 08 are complete. Step 08 followed all seven narrative
-blueprints, produced a complete argument-centric reader draft, retained the
-four accepted section assignments and stable Event IDs, and passed its
-reader-readiness check. It introduced no new material route claim or
-architecture change.
+Steps 00, 07, 08, and 09 are complete. Step 09 audited the thesis, section
+framing, transitions, every Event chapter, conclusion, representation claims,
+and implied visual treatment against the fixed evidence. It recorded every
+wording change and produced a complete corrected reader draft without changing
+the cohort, architecture, stable IDs, or material route argument.
 
-Keep run status `in-progress`; execute step 09 next from
-[`08-narrative-draft.md`](08-narrative-draft.md). Successful step-08 validation
-is not Human acceptance of the reader copy and does not approve Sources,
-presentation intent, media, rights, editorial state, canonical content, or
-publication.
+Keep run status `in-progress`; execute step 10a next from
+[`09-evidence-audit.md`](09-evidence-audit.md) and
+[`09-corrected-draft.md`](09-corrected-draft.md). Step 10a must present the
+complete final reader copy for Human acceptance, correction, or rejection.
+Successful step-09 validation does not approve Sources, presentation intent,
+media, rights, editorial state, canonical content, or publication.
