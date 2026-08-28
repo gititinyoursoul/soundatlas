@@ -4,6 +4,7 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, Field, field_validator
 
+from app.event_story import event_story_legacy_pair, event_story_text
 from app.media_enrichment.retrieval_brief import (
     CONCRETE_PLACE_TYPES,
     DEFAULT_AVOID_TERMS,
@@ -192,6 +193,7 @@ def retrieval_brief_from_component(
     place: dict[str, Any],
 ) -> RetrievalBrief:
     fallback = build_retrieval_brief(event=event, route=route, place=place)
+    story_summary, story_significance = event_story_legacy_pair(event)
     time_context = component.time_context
     return RetrievalBrief(
         event_id=component.event_id or fallback.event_id,
@@ -207,8 +209,8 @@ def retrieval_brief_from_component(
         year_end=time_context.year_end if time_context.year_end is not None else fallback.year_end,
         year_phrase=time_context.query_year_phrase or fallback.year_phrase,
         tags=tuple(clean_text(value) for value in event.get("tags", []) if clean_text(value)),
-        summary=clean_text(event.get("summary")) or fallback.summary,
-        significance=clean_text(event.get("significance")) or fallback.significance,
+        summary=clean_text(story_summary) or fallback.summary,
+        significance=clean_text(story_significance) or fallback.significance,
         strong_terms=tuple(component.search_control.strong_terms) or fallback.strong_terms,
         supporting_terms=tuple(component.search_control.supporting_terms)
         or fallback.supporting_terms,
@@ -446,8 +448,7 @@ def combined_text(
         term
         for term in (
             clean_text(event.get("title")),
-            clean_text(event.get("summary")),
-            clean_text(event.get("significance")),
+            event_story_text(event),
             " ".join(
                 tag.replace("-", " ") for tag in event.get("tags", []) if isinstance(tag, str)
             ),

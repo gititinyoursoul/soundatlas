@@ -31,7 +31,9 @@ Project constraints
 - Keep `media_links` as structured media objects when adding external media.
 - Do not add local audio, video, image, or scraped media files.
 - Avoid overstating disputed historical claims; phrase uncertainty clearly.
-- Write all new route-facing content in English: route titles, UI copy, event titles, event summaries, significance text, tags, and related prompt output.
+- Write all new route-facing content in English: route titles, UI copy, Event
+  titles, section headings and bodies, legacy summaries/significance, tags, and
+  related prompt output.
 - If the existing documentation for the route is in another language, translate the route-facing parts to English before creating seed data.
 
 Route concept requirements
@@ -92,12 +94,16 @@ Seed data requirements
   shared-place update.
 - Store agent-retrieved or curated geodata and provenance in route artifacts;
   do not make preview or promotion depend on a live external lookup.
-- Confirm each seed event has an accepted-event decision, inclusion rationale,
-  route fit, place, year range, cautious summary, cautious significance, and
+- Confirm each seed Event has an accepted-event decision, inclusion rationale,
+  route fit, place, year range, one complete reader-facing story, and a
   source-risk note before seed transfer.
-- Keep event `summary` focused on what happened.
-- Keep event `significance` focused on why it matters for the route.
-- Keep every new event title, summary, significance, and route description in English.
+- Author new Events with ordered `story_sections`; each section has a distinct
+  proposed `heading` and source-grounded `body` for Human review.
+- Do not add `summary` or `significance` to a section-based Event. Preserve the
+  legacy pair only on existing Events that have not been deliberately migrated.
+- Preserve existing reviewed heading wording and order exactly during
+  migration; do not generate generic migration headings.
+- Keep every new Event title, heading, body, and route description in English.
 - Keep any route-specific interface labels, captions, and helper text in English when generating UI-facing copy.
 - For event media, use structured entries with `provider`, `type`, `title`, `url`, `query`, `confidence`, and `review_status`.
 
@@ -170,7 +176,8 @@ Acceptance criteria
 - The route has a research dossier that explains the artists, groups, places,
   influences, circumstances, source directions, and risks behind the route.
 - The route can be explored chronologically and geographically.
-- Every proposed event has a place, time range, summary, and significance.
+- Every proposed Event has a place, time range, and complete ordered titled
+  story; inactive Candidate previews may retain summary/significance.
 - Every proposed event has an inclusion rationale before seed transfer.
 - Seed event authoring starts from accepted events, not raw candidate lists or
   unresolved route concept material.
@@ -180,4 +187,5 @@ Acceptance criteria
   transfer.
 - Agent-generated route artifacts are reviewed variants before they are treated
   as commit-ready content.
-- Data can be consumed by the existing FastAPI and SvelteKit map flow without schema changes.
+- Data can be consumed by the FastAPI and SvelteKit map flow through the
+  documented Event-story contract.

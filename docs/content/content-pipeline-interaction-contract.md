@@ -80,8 +80,10 @@ The surface must:
   explicitly approves that update on the exact review revision.
 
 The StoryPanel uses the same reader-facing event shape and presentation in
-editorial and public modes, including title, dates, summary, significance,
-places, sources, media, and relationships. Candidate planning fields do not
+editorial and public modes, including title, dates, the Event's ordered titled
+sections or legacy summary/significance prose, places, sources, media, and
+relationships. Section order, heading wording, and prose are exact reviewed
+content. Candidate planning fields do not
 stand in for those story fields. Editorial controls, recommendations, warnings,
 and technical errors appear as separate secondary review information. Each
 event row shows warning and blocking-error counts; the selected event shows the

@@ -24,6 +24,15 @@ def test_publication_summary_and_publish_filter_exact_review_result(tmp_path: Pa
     content_root = tmp_path / "content"
     seed_dir = tmp_path / "seed"
     write_publication_fixture(content_root, seed_dir)
+    draft_path = content_root / ROUTE_ID / "complete-draft.json"
+    draft = json.loads(draft_path.read_text(encoding="utf-8"))
+    draft["events"][0].pop("summary")
+    draft["events"][0].pop("significance")
+    draft["events"][0]["story_sections"] = [
+        {"heading": "Keep this wording", "body": "First published section."},
+        {"heading": "Keep this order", "body": "Second published section."},
+    ]
+    draft_path.write_text(json.dumps(draft), encoding="utf-8")
     review_repository = RouteReviewRepository(content_root, seed_dir=seed_dir)
     review = review_repository.refresh(ROUTE_ID)
     review = review_repository.update_state(
@@ -65,6 +74,10 @@ def test_publication_summary_and_publish_filter_exact_review_result(tmp_path: Pa
         (seed_dir / "connections.json").read_text(encoding="utf-8")
     )
     assert [event["id"] for event in events_payload["events"]] == ["event-one"]
+    assert events_payload["events"][0]["story_sections"] == [
+        {"heading": "Keep this wording", "body": "First published section."},
+        {"heading": "Keep this order", "body": "Second published section."},
+    ]
     assert places_payload["_meta"] == {"schema_version": 2}
     assert places_payload["place_notes"] == ["Keep place metadata."]
     assert events_payload["_meta"] == {"schema_version": 2}

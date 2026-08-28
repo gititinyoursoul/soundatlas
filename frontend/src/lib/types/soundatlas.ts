@@ -113,6 +113,11 @@ export type PlaceRelationship = {
   source_urls: string[];
 };
 
+export type EventStorySection = {
+  heading: string;
+  body: string;
+};
+
 export type Event = {
   id: string;
   route_id: string;
@@ -124,8 +129,9 @@ export type Event = {
   route_entry_role?: RouteEntryRole;
   year_start: number;
   year_end: number;
-  summary: string;
-  significance: string;
+  summary: string | null;
+  significance: string | null;
+  story_sections: EventStorySection[];
   tags: string[];
   content_review_status: ContentReviewStatus;
   source_urls: string[];
@@ -135,10 +141,23 @@ export type Event = {
 
 export type EventInput = Omit<
   Event,
-  'place_ids' | 'default_place_id' | 'place_relationships'
+  | 'place_ids'
+  | 'default_place_id'
+  | 'place_relationships'
+  | 'summary'
+  | 'significance'
+  | 'story_sections'
 > &
   Partial<
-    Pick<Event, 'place_ids' | 'default_place_id' | 'place_relationships'>
+    Pick<
+      Event,
+      | 'place_ids'
+      | 'default_place_id'
+      | 'place_relationships'
+      | 'summary'
+      | 'significance'
+      | 'story_sections'
+    >
   >;
 
 export type Connection = {

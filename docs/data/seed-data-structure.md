@@ -56,6 +56,11 @@ flowchart TD
 
 - Seed files remain the source of truth for runtime map, timeline, story, and
   connection data.
+- An Event has one story authority. Existing Events use the legacy
+  `summary`/`significance` pair; newly authored or deliberately migrated Events
+  may instead use ordered `story_sections` with `heading` and `body`. The
+  representations are not mixed, and migration occurs through editorial
+  review rather than automatic heading generation.
 - Retrieval-specific hints should stay outside `data/seed/` when they become
   more detailed than normal prose, tags, places, and sources.
 - Use `review_status: "draft"` for uncertain or unreviewed records.

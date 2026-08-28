@@ -58,6 +58,7 @@ MATERIAL_FIELDS = (
     "route_function",
     "summary",
     "significance",
+    "story_sections",
     "claims",
 )
 
@@ -659,14 +660,8 @@ def _review_event(
         errors.append(
             f"Reader-facing event route '{event.route_id}' does not match '{route_id}'."
         )
-    for field, label in (
-        ("title", "title"),
-        ("summary", "What happened"),
-        ("significance", "Why it matters"),
-    ):
-        value = getattr(event, field)
-        if not value.strip():
-            errors.append(f"Reader-facing event is missing {label} ('{field}').")
+    if not event.title.strip():
+        errors.append("Reader-facing event is missing title ('title').")
     if not event.source_urls:
         errors.append(MISSING_SOURCE_URL_ERROR)
     for place_id in event.place_ids:

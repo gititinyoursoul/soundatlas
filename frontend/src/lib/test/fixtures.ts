@@ -51,9 +51,7 @@ export function makeEvent(
     place_relationships,
     ...eventOverrides
   } = overrides;
-  const resolvedPlaceIds = place_ids ?? [
-    place_id ?? '1520-sedgwick-avenue'
-  ];
+  const resolvedPlaceIds = place_ids ?? [place_id ?? '1520-sedgwick-avenue'];
   const resolvedDefaultPlaceId =
     default_place_id ?? place_id ?? resolvedPlaceIds[0];
 
@@ -68,6 +66,7 @@ export function makeEvent(
     year_end: 1973,
     summary: 'Event summary',
     significance: 'Event significance',
+    story_sections: [],
     tags: [],
     content_review_status: 'draft',
     source_urls: [],

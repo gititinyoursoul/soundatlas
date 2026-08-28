@@ -752,7 +752,8 @@ def test_agent_prompts_include_editorial_quality_contracts(tmp_path: Path) -> No
     assert "complete current-schema framing" in complete_prompt
     assert "exactly one coherent Place decision for each `place_id`" in complete_prompt
     assert "Events may share and revisit that Place" in complete_prompt
-    assert '`contract_version: "2"`' in complete_prompt
+    assert '`contract_version: "3"`' in complete_prompt
+    assert "`story_sections`" in complete_prompt
     assert "`reuse`, `new`, or `update`" in complete_prompt
     assert "never claim Human approval" in complete_prompt
     assert "Never place names, boroughs, types, summaries" in complete_prompt
@@ -761,10 +762,10 @@ def test_agent_prompts_include_editorial_quality_contracts(tmp_path: Path) -> No
     assert "story-serving headings" in concept_prompt
     assert "place logic" in concept_prompt
 
-    assert "Do not use `summary` or `significance` as editorial Markdown headers" in framing_prompt
-    assert "what-happens prose" in framing_prompt
-    assert "why-this-matters-here prose" in framing_prompt
-    assert "usually stay under 70 words" in framing_prompt
+    assert "one or more ordered story sections" in framing_prompt
+    assert "preserve a supplied editorial heading exactly" in framing_prompt
+    assert "source-grounded prose" in framing_prompt
+    assert "editorial proposals for Human review" in framing_prompt
     assert "usually under 90 characters" in framing_prompt
 
     assert "publication readiness" in revision_prompt
@@ -773,7 +774,7 @@ def test_agent_prompts_include_editorial_quality_contracts(tmp_path: Path) -> No
     metadata = json.loads(
         (route_dir / "complete_draft-run.ai-draft.json").read_text(encoding="utf-8")
     )
-    assert metadata["prompt_contract"]["version"] == "1"
+    assert metadata["prompt_contract"]["version"] == "2"
     assert len(metadata["prompt_contract"]["sha256"]) == 64
 
 
@@ -1428,6 +1429,25 @@ def test_complete_draft_requires_complete_candidate_accounting(tmp_path: Path) -
     assert "outline-context-event" in "\n".join(errors)
 
 
+def test_complete_draft_requires_titled_sections_for_active_events(tmp_path: Path) -> None:
+    _, seed_dir = write_pipeline_fixture(tmp_path)
+    payload = json.loads(build_complete_draft_json())
+    payload["events"][0].pop("story_sections")
+    payload["events"][0]["summary"] = "Legacy summary."
+    payload["events"][0]["significance"] = "Legacy significance."
+
+    errors = route_content_pipeline.validate_complete_draft(
+        payload=payload,
+        route_id=ROUTE_ID,
+        seed_dir=seed_dir,
+        source_outline="candidate-outline.json",
+        source_outline_payload=json.loads(build_complete_draft_outline_json()),
+    )
+
+    assert any("requires non-empty story_sections" in error for error in errors)
+    assert any("must not include summary or significance" in error for error in errors)
+
+
 def test_complete_draft_rejects_invalid_composition_relationship_and_phase_coverage(
     tmp_path: Path,
 ) -> None:
@@ -1840,7 +1860,9 @@ def test_selective_regeneration_preserves_unaffected_events(tmp_path: Path) -> N
     request_path.write_text(json.dumps(request), encoding="utf-8")
     regenerated = json.loads(initial)
     regenerated["_meta"]["regenerated_candidate_ids"] = ["added-route-event"]
-    regenerated["events"][1]["summary"] = "A selectively regenerated event summary."
+    regenerated["events"][1]["story_sections"][0]["body"] = (
+        "A selectively regenerated event section."
+    )
     fake_regeneration = write_fake_codex(
         tmp_path / "regenerated", output=json.dumps(regenerated)
     )
@@ -1850,8 +1872,12 @@ def test_selective_regeneration_preserves_unaffected_events(tmp_path: Path) -> N
          "--revision-request", "revision-request.json"]
     ) == 0
     active = json.loads((route_dir / "complete-draft.json").read_text(encoding="utf-8"))
-    assert active["events"][0]["summary"] == "A complete draft event summary."
-    assert active["events"][1]["summary"] == "A selectively regenerated event summary."
+    assert active["events"][0]["story_sections"][0]["body"] == (
+        "A complete draft event section."
+    )
+    assert active["events"][1]["story_sections"][0]["body"] == (
+        "A selectively regenerated event section."
+    )
 
 
 def test_broad_revision_request_requires_full_regeneration(tmp_path: Path) -> None:
@@ -1933,8 +1959,16 @@ def build_complete_draft_json() -> str:
                 "title": title,
                 "year_start": 1973,
                 "year_end": 1973,
-                "summary": "A complete draft event summary.",
-                "significance": "A complete draft route significance.",
+                "story_sections": [
+                    {
+                        "heading": "A preserved editorial heading",
+                        "body": "A complete draft event section.",
+                    },
+                    {
+                        "heading": "The route turns",
+                        "body": "A complete draft route interpretation.",
+                    },
+                ],
                 "tags": [],
                 "review_status": "draft",
                 "source_urls": ["https://example.org/source"],
@@ -1944,7 +1978,7 @@ def build_complete_draft_json() -> str:
         )
     payload = {
         "_meta": {
-            "contract_version": "2",
+            "contract_version": "3",
             "route_id": ROUTE_ID,
             "source_outline": "candidate-outline.json",
             "review_status": "draft",

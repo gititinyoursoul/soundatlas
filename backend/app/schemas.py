@@ -274,6 +274,18 @@ class PlaceRelationship(BaseModel):
         return self
 
 
+class EventStorySection(BaseModel):
+    heading: str
+    body: str
+
+    @field_validator("heading", "body")
+    @classmethod
+    def validate_story_text(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("story section text must not be empty")
+        return value
+
+
 class Event(ContentReviewMixin, YearRangeMixin):
     id: str
     route_id: str
@@ -282,8 +294,9 @@ class Event(ContentReviewMixin, YearRangeMixin):
     default_place_id: str
     place_relationships: list[PlaceRelationship] = Field(default_factory=list)
     title: str
-    summary: str
-    significance: str
+    summary: str | None = None
+    significance: str | None = None
+    story_sections: list[EventStorySection] = Field(default_factory=list)
     tags: list[str]
     source_urls: list[str]
     media_links: list[MediaLink]
@@ -325,6 +338,21 @@ class Event(ContentReviewMixin, YearRangeMixin):
             raise ValueError("default_place_id must appear in place_ids")
         if self.place_id != self.default_place_id:
             raise ValueError("place_id must equal default_place_id during compatibility")
+        has_sections = bool(self.story_sections)
+        has_legacy_story = bool(
+            self.summary
+            and self.summary.strip()
+            and self.significance
+            and self.significance.strip()
+        )
+        if has_sections and (self.summary is not None or self.significance is not None):
+            raise ValueError(
+                "event story must use story_sections or summary/significance, not both"
+            )
+        if not has_sections and not has_legacy_story:
+            raise ValueError(
+                "event story requires story_sections or non-empty summary and significance"
+            )
         return self
 
 

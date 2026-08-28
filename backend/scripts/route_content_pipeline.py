@@ -1449,8 +1449,8 @@ def validate_complete_draft(
         errors.append(f"Complete draft route_id must be `{route_id}`.")
     if metadata.get("source_outline") != source_outline:
         errors.append(f"Complete draft source_outline must be `{source_outline}`.")
-    if metadata.get("contract_version") != "2":
-        errors.append("Complete draft `_meta.contract_version` must be `2`.")
+    if metadata.get("contract_version") != "3":
+        errors.append("Complete draft `_meta.contract_version` must be `3`.")
     content_review_status = metadata.get("content_review_status", metadata.get("review_status"))
     if content_review_status != "draft":
         errors.append("Complete draft `_meta.content_review_status` must be `draft`.")
@@ -1626,6 +1626,18 @@ def validate_complete_draft(
         errors.append("Complete draft events must have unique IDs.")
     if set(event_ids) != set(active_candidate_ids):
         errors.append("Complete draft event IDs must match active or added candidate IDs.")
+    for event in events:
+        if not isinstance(event, dict):
+            continue
+        sections = event.get("story_sections")
+        if not isinstance(sections, list) or not sections:
+            errors.append(
+                f"Complete draft Event `{event.get('id')}` requires non-empty story_sections."
+            )
+        if "summary" in event or "significance" in event:
+            errors.append(
+                f"Complete draft Event `{event.get('id')}` must not include summary or significance."
+            )
 
     seed = load_seed_payloads(seed_dir)
     place_decision_indexes: dict[str, int] = {}

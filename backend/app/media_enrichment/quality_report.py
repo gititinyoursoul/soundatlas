@@ -5,6 +5,7 @@ from collections import Counter
 from statistics import mean
 from typing import Any
 
+from app.event_story import event_story_text
 from app.link_ignores import link_is_ignored
 
 GENERIC_QUERY_TOKENS = {
@@ -445,10 +446,7 @@ def score_specificity(
         score += 0.15
     if year_overlap(event.get("year_start"), event.get("year_end"), text_blob):
         score += 0.1
-    if token_overlap(event.get("summary"), text_blob) or token_overlap(
-        event.get("significance"),
-        text_blob,
-    ):
+    if token_overlap(event_story_text(event), text_blob):
         score += 0.1
     if has_identifying_query(query):
         score += 0.1

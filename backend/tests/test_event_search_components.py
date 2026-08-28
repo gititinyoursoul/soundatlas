@@ -31,6 +31,29 @@ def test_build_component_extracts_artist_place_and_time_context() -> None:
     assert report.errors == []
 
 
+def test_build_component_extracts_entities_from_titled_sections() -> None:
+    event = build_event(
+        {
+            "summary": None,
+            "significance": None,
+            "story_sections": [
+                {
+                    "heading": "The room changes",
+                    "body": "Grandmaster Flash develops a new turntable technique.",
+                }
+            ],
+        }
+    )
+
+    component = build_event_search_component(
+        event=event,
+        route=build_route(),
+        place=build_place(),
+    )
+
+    assert "Grandmaster Flash" in component.entities.artists
+
+
 def test_build_component_types_quoted_release_and_film_works() -> None:
     release_component = build_event_search_component(
         event=build_event(

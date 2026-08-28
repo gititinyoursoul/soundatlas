@@ -39,6 +39,13 @@ the event's source material.
 
 ## Field Standards
 
+An Event has one reader-facing story authority. New or deliberately migrated
+Events use ordered `story_sections`; existing Events may retain the legacy
+`summary` and `significance` pair. Do not place both representations on one
+Event. Headings are proposed and accepted through the editorial process, and a
+heading already present in reviewed editorial material keeps its exact wording
+and order during migration.
+
 ### `title`
 
 Name a concrete subject, action, or historical moment. A strong title creates
@@ -55,7 +62,7 @@ timeline contexts.
 
 ### `summary`
 
-Tell what happened. A summary should generally use two to four sentences to
+For a legacy Event, tell what happened. A summary should generally use two to four sentences to
 turn the documented event into a compact editorial chapter.
 
 - establish the relevant people, action, place, and time
@@ -68,7 +75,7 @@ turn the documented event into a compact editorial chapter.
 
 ### `significance`
 
-Explain why the event matters to this route. Significance should generally use
+For a legacy Event, explain why the event matters to this route. Significance should generally use
 one or two sentences and should add interpretation rather than restate the
 summary.
 
@@ -78,6 +85,26 @@ summary.
 - connect backward or forward without assuming a fixed reading order
 - avoid significance that could be copied unchanged onto any other route event
 - treat one or two sentences as a flexible target, not a validation limit
+
+### `story_sections`
+
+For a new or deliberately migrated Event, use one or more ordered sections to
+form the complete reader-facing chapter beneath the Event title. Each section
+has:
+
+- `heading`: a distinct, story-serving editorial heading
+- `body`: non-empty source-grounded prose belonging to that heading
+
+The order is editorial meaning. Review and publication preserve every heading
+and body without flattening, renaming, or reordering them. Do not substitute
+generic global headings such as `What happened` or `Why it matters`. Agents may
+propose new headings, but the Human reviews them with the complete Event story.
+If reviewed editorial source material already contains headings, copy their
+wording and order exactly rather than rewriting them during migration.
+
+There is no fixed maximum section count. Keep the chapter as short as its
+historical and narrative job allows, use a flat list without nested sections,
+and revise sections that do not add a distinct movement or idea.
 
 ### `source_urls`
 
@@ -97,7 +124,7 @@ Event with no Source URL is technically unready for Publication.
 - keep unresolved source concerns visible instead of allowing a URL's presence
   to imply certainty
 
-This event-level source model does not require sentence-level citation fields.
+This event-level source model does not require sentence- or section-level citation fields.
 If a claim cannot be represented responsibly with the current model, keep the
 event in draft or raise a separate schema proposal.
 
@@ -196,7 +223,7 @@ source supports them.
 | Route fit | `The event happened in the same city and era.` | `The event belongs because it shows how [route practice] moved from [earlier state] to [later state].` |
 | Tags | `important`, `music`, `history`, and a new synonym for an existing term | Reused tags such as `dj-culture`, `block-party`, and `bronx` when each describes the event and recurs across the collection |
 
-A complete event should let the fields do different work:
+A complete legacy Event should let its two prose fields do different work:
 
 ```text
 Title: [Named subject] [specific action or change]
@@ -207,6 +234,9 @@ people, action, place, time, and consequence.
 Significance: Why this chapter changes or clarifies the route's story, rendered
 in one or two sentences without repeating the summary.
 ```
+
+A section-based Event instead uses its ordered headings and bodies as the sole
+reader-facing story. It does not retain duplicate summary/significance prose.
 
 ## Candidate Recommendations, Route State, And Seed Review Status
 
@@ -250,8 +280,12 @@ draft review signals only and translate them into `keep`, `maybe`, `merge`, or
 
 - [ ] The event is a self-contained chapter with a clear role in the route arc.
 - [ ] The title names a concrete subject, action, or historical moment.
-- [ ] The summary says what happened through specific, sourced detail.
-- [ ] The significance says why it matters here without repeating the summary.
+- [ ] A section-based Event has distinct, non-empty headings and bodies in the
+      intended editorial order, or a legacy Event has both summary and
+      significance.
+- [ ] Existing reviewed heading wording is preserved during migration.
+- [ ] Legacy summary says what happened and significance says why it matters
+      here without repetition.
 - [ ] The prose remains understandable when events are opened out of order.
 - [ ] Vague importance claims and generic editorial adjectives have been
       replaced with concrete meaning.

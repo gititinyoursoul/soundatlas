@@ -4,6 +4,65 @@ from pydantic import ValidationError
 from app.schemas import Event, ImageLink, MediaLink
 
 
+def event_story_payload() -> dict[str, object]:
+    return {
+        "id": "example-event",
+        "route_id": "example-route",
+        "place_id": "example-place",
+        "place_ids": ["example-place"],
+        "default_place_id": "example-place",
+        "place_relationships": [],
+        "title": "Example Event",
+        "year_start": 1970,
+        "year_end": 1970,
+        "tags": [],
+        "review_status": "draft",
+        "source_urls": ["https://example.org/source"],
+        "media_links": [],
+        "image_links": [],
+    }
+
+
+def test_event_accepts_ordered_titled_story_sections_verbatim() -> None:
+    payload = event_story_payload()
+    payload["story_sections"] = [
+        {"heading": "The room opens", "body": "The first section."},
+        {"heading": "A practice travels", "body": "The second section."},
+    ]
+
+    event = Event.model_validate(payload)
+
+    assert [section.heading for section in event.story_sections] == [
+        "The room opens",
+        "A practice travels",
+    ]
+    assert event.summary is None
+    assert event.significance is None
+
+
+@pytest.mark.parametrize(
+    "overrides",
+    [
+        {"story_sections": [{"heading": "", "body": "Body"}]},
+        {"story_sections": [{"heading": "Heading", "body": " "}]},
+        {
+            "summary": "Legacy summary",
+            "significance": "Legacy significance",
+            "story_sections": [{"heading": "Heading", "body": "Body"}],
+        },
+        {"summary": "Only half of a legacy story"},
+    ],
+)
+def test_event_rejects_incomplete_or_competing_story_representations(
+    overrides: dict[str, object],
+) -> None:
+    payload = event_story_payload()
+    payload.update(overrides)
+
+    with pytest.raises(ValidationError):
+        Event.model_validate(payload)
+
+
 def test_legacy_review_status_is_input_only_and_canonical_field_is_emitted() -> None:
     link = MediaLink.model_validate(
         {

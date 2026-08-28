@@ -2,6 +2,8 @@ import re
 from dataclasses import dataclass
 from typing import Any
 
+from app.event_story import event_story_legacy_pair
+
 CONCRETE_PLACE_TYPES = {"building", "club", "housing_complex", "park", "venue"}
 BROAD_PLACE_TYPES = {"city", "neighborhood", "region"}
 DEFAULT_AVOID_TERMS = (
@@ -58,8 +60,9 @@ def build_retrieval_brief(
     place_type = clean_text(place.get("place_type")).casefold()
     place_borough = clean_text(place.get("borough"))
     tags = tuple(tag for tag in (clean_text(value) for value in event.get("tags", [])) if tag)
-    summary = clean_text(event.get("summary"))
-    significance = clean_text(event.get("significance"))
+    raw_summary, raw_significance = event_story_legacy_pair(event)
+    summary = clean_text(raw_summary)
+    significance = clean_text(raw_significance)
     year_start = int_or_none(event.get("year_start"))
     year_end = int_or_none(event.get("year_end"))
     year_phrase = format_year_phrase(year_start, year_end)

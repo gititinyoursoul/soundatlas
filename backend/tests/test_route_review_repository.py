@@ -38,6 +38,15 @@ def test_refresh_defaults_to_draft_and_preserves_agent_recommendation(tmp_path: 
 
 def test_review_binds_exact_reader_facing_event_and_place(tmp_path: Path) -> None:
     repository = write_review_fixture(tmp_path)
+    draft_path = tmp_path / ROUTE_ID / "complete-draft.json"
+    payload = json.loads(draft_path.read_text(encoding="utf-8"))
+    payload["events"][0].pop("summary")
+    payload["events"][0].pop("significance")
+    payload["events"][0]["story_sections"] = [
+        {"heading": "The room opens", "body": "The generated story begins."},
+        {"heading": "A practice travels", "body": "The route meaning follows."},
+    ]
+    draft_path.write_text(json.dumps(payload), encoding="utf-8")
 
     result = repository.refresh(ROUTE_ID)
 
@@ -45,7 +54,10 @@ def test_review_binds_exact_reader_facing_event_and_place(tmp_path: Path) -> Non
     assert result.source == "complete-draft.json"
     assert proposal.event is not None
     assert proposal.event.title == "Reader-facing event"
-    assert proposal.event.summary == "What happened in the generated story."
+    assert [section.heading for section in proposal.event.story_sections] == [
+        "The room opens",
+        "A practice travels",
+    ]
     assert proposal.event.source_urls == ["https://example.org/source"]
     assert result.places[0].place.name == "Review Place"
 
@@ -207,7 +219,7 @@ def test_invalid_reader_facing_event_is_an_explicit_technical_error(tmp_path: Pa
     assert result.proposals[0].event is None
     assert result.proposals[0].renderable is False
     assert result.technical_ready is False
-    assert "Reader-facing event has invalid `summary`" in result.proposals[0].technical_errors[0]
+    assert "event story requires story_sections" in result.proposals[0].technical_errors[0]
 
 
 def test_missing_source_is_owned_blocks_publication_but_preserves_preview(

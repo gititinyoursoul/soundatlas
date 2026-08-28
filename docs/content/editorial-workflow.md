@@ -15,8 +15,9 @@ existing records remain readable temporarily for compatibility.
 This document describes how SoundAtlas app-facing editorial content is created
 before it is turned into structured seed data.
 
-This layer includes route concepts, event wording, significance text, and other
-text that later appears in the product. It is intentionally separate from seed
+This layer includes route concepts, Event titles, section headings and prose,
+legacy summary/significance text, and other text that later appears in the
+product. It is intentionally separate from seed
 schema rules and enrichment execution.
 In practice, route work should move through checkable route-folder artifacts
 before seed data is changed. The route content pipeline can create and refresh
@@ -56,7 +57,7 @@ flowchart TD
   I --> C["Research dossier<br/>research-dossier.md"]
   C --> D["Candidate outline<br/>candidate-outline.json"]
   D --> K["Complete draft<br/>complete-draft.json + route-review.json"]
-  K --> E["Event framing<br/>title, summary, significance, sources"]
+  K --> E["Event framing<br/>title, titled story or legacy prose, sources"]
   E --> H["Seed preview and validation<br/>route folder reports"]
   H --> F["Seed promotion<br/>data/seed/"]
   F --> G["Enrichment upstream prep<br/>docs/enrichment/upstream/"]
@@ -115,8 +116,9 @@ flowchart TD
 16. Run the event editorial quality pass from
     `docs/content/event-editorial-quality-standards.md` before translating
     accepted events into `data/seed/`.
-17. Define event titles, summaries, and significance text in editorial form
-    before translating them into `data/seed/`.
+17. Define Event titles and either ordered section headings and prose or legacy
+    summary/significance text in editorial form before translating them into
+    `data/seed/`. Preserve reviewed heading wording and order exactly.
 18. Use the generated seed preview and validation report to inspect event place
     ordering/defaults, canonical reuse, new places, spatial before/after
     updates, affected existing events, provenance, approval state, and blocking
@@ -265,8 +267,12 @@ uv run --project backend python backend/scripts/route_content_pipeline.py promot
 
 ## Editorial Rules
 
-- Keep event `summary` focused on what happened.
-- Keep event `significance` focused on why the event matters.
+- For section-based Events, use distinct story-serving headings and
+  source-grounded prose in reviewed order.
+- For legacy Events, keep `summary` focused on what happened and
+  `significance` focused on why the event matters.
+- Do not mix the two Event-story representations or generate migration headings
+  outside editorial review.
 - Avoid overstating contested historical claims.
 - Use explicit artist, place, work, and organization names when they matter.
 - Treat route briefs, dossiers, and concepts as editorial source documents, not

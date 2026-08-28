@@ -12,6 +12,7 @@ BACKEND_ROOT = Path(__file__).resolve().parents[1]
 if str(BACKEND_ROOT) not in sys.path:
     sys.path.insert(0, str(BACKEND_ROOT))
 
+from app.event_story import event_story_text
 from app.link_ignores import build_ignored_link_index, link_is_ignored
 from app.media_enrichment.event_search_components import (
     EventSearchComponent,
@@ -666,11 +667,7 @@ def format_years(year_start: Any, year_end: Any) -> str:
 
 
 def extract_notable_terms(event: dict[str, Any], max_terms: int) -> list[str]:
-    text = " ".join(
-        value
-        for value in (event.get("summary"), event.get("significance"))
-        if isinstance(value, str)
-    )
+    text = event_story_text(event)
     phrases = re.findall(r"\b(?:[A-Z][A-Za-z0-9']+)(?:\s+[A-Z][A-Za-z0-9']+)*\b", text)
     terms = []
     seen_terms = set()
@@ -935,8 +932,7 @@ def score_image_candidate(
             token_overlap(event.get("title"), text_blob),
             token_overlap(route.get("title"), text_blob),
             tag_overlap(event.get("tags", []), text_blob),
-            token_overlap(event.get("summary"), text_blob),
-            token_overlap(event.get("significance"), text_blob),
+            token_overlap(event_story_text(event), text_blob),
         ],
     )
     if place_type in {"city", "region", "neighborhood"} and not has_specificity:
@@ -953,10 +949,7 @@ def score_image_candidate(
         score += 0.15
     if year_overlap(event.get("year_start"), event.get("year_end"), text_blob):
         score += 0.1
-    if token_overlap(event.get("summary"), text_blob) or token_overlap(
-        event.get("significance"),
-        text_blob,
-    ):
+    if token_overlap(event_story_text(event), text_blob):
         score += 0.05
     return round(min(score, 1.0), 2)
 

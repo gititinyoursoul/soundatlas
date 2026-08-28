@@ -34,7 +34,8 @@ This means:
 5. User selects an event from the map, timeline, or inspector navigation.
 6. Map, timeline, and event inspector update from the same selected event state.
 7. User may focus any place within the selected event from the map or inspector.
-8. User inspects event summary, significance, places, route context, sources, and media.
+8. User inspects the Event's ordered titled story or legacy prose, places,
+   route context, sources, and media.
 
 ## Screen Structure
 

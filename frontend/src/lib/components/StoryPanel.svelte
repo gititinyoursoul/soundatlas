@@ -415,8 +415,25 @@
         >
           <section class="story-reading">
             <div class="story-copy">
-              <p>{event.summary}</p>
-              <p>{event.significance}</p>
+              {#if event.story_sections.length > 0}
+                {#each event.story_sections as section, index (`${index}:${section.heading}`)}
+                  <section
+                    class="space-y-2"
+                    aria-labelledby={`story-section-${index}`}
+                  >
+                    <h3
+                      id={`story-section-${index}`}
+                      class="m-0 text-base font-semibold leading-snug text-slate-100"
+                    >
+                      {section.heading}
+                    </h3>
+                    <p>{section.body}</p>
+                  </section>
+                {/each}
+              {:else}
+                <p>{event.summary}</p>
+                <p>{event.significance}</p>
+              {/if}
             </div>
           </section>
 

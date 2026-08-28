@@ -24,7 +24,10 @@ export function normalizeEvent(event: EventInput): Event {
     place_id: event.place_id ?? defaultPlaceId,
     place_ids: placeIds,
     default_place_id: defaultPlaceId,
-    place_relationships: event.place_relationships ?? []
+    place_relationships: event.place_relationships ?? [],
+    summary: event.summary ?? null,
+    significance: event.significance ?? null,
+    story_sections: event.story_sections ?? []
   };
 }
 

@@ -20,6 +20,14 @@ def test_media_quality_report_counts_filters_and_compares_to_seed(
             "events": [
                 build_event(
                     {
+                        "summary": None,
+                        "significance": None,
+                        "story_sections": [
+                            {
+                                "heading": "The community room",
+                                "body": "DJ Kool Herc plays at 1520 Sedgwick Avenue.",
+                            }
+                        ],
                         "media_links": [
                             build_media_candidate(
                                 "https://www.youtube.com/watch?v=existing",

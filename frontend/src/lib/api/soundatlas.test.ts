@@ -1,9 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import {
-  makeEvent,
-  makePlace,
-  makeRoute
-} from '$lib/test/fixtures';
+import { makeEvent, makePlace, makeRoute } from '$lib/test/fixtures';
 import {
   API_BASE_URL,
   loadApiSoundAtlasData,
@@ -64,6 +60,34 @@ describe('SoundAtlas API client', () => {
     });
   });
 
+  it('normalizes section-based API events without legacy prose fields', async () => {
+    const routes = [makeRoute({ id: 'birth-of-hip-hop' })];
+    const places = [makePlace({ id: '1520-sedgwick-avenue' })];
+    const baseEvent = makeEvent({ id: 'section-event' });
+    const input = {
+      ...baseEvent,
+      summary: undefined,
+      significance: undefined,
+      story_sections: [
+        { heading: 'The room opens', body: 'Reviewed section prose.' }
+      ]
+    };
+    const fetcher = vi
+      .fn<typeof fetch>()
+      .mockResolvedValueOnce(jsonResponse(routes))
+      .mockResolvedValueOnce(jsonResponse(places))
+      .mockResolvedValueOnce(jsonResponse([input]));
+
+    const result = await loadApiSoundAtlasData(fetcher);
+
+    expect(result.events[0]).toMatchObject({
+      id: 'section-event',
+      summary: null,
+      significance: null,
+      story_sections: input.story_sections
+    });
+  });
+
   it('surfaces collection request failures', async () => {
     const fetcher = vi
       .fn<typeof fetch>()
@@ -81,7 +105,8 @@ describe('SoundAtlas API client', () => {
   it('loads static public data from generated assets', async () => {
     const routes = [makeRoute({ id: 'birth-of-hip-hop' })];
     const places = [makePlace({ id: '1520-sedgwick-avenue' })];
-    const events = [makeEvent({ id: 'kool-herc-back-to-school-jam' })];
+    const canonicalEvent = makeEvent({ id: 'kool-herc-back-to-school-jam' });
+    const events = [{ ...canonicalEvent, story_sections: undefined }];
     const fetcher = vi
       .fn<typeof fetch>()
       .mockResolvedValueOnce(jsonResponse({ _meta: {}, routes }))
@@ -93,7 +118,7 @@ describe('SoundAtlas API client', () => {
     await expect(loadStaticSoundAtlasData(fetcher)).resolves.toEqual({
       routes,
       places,
-      events,
+      events: [canonicalEvent],
       connections: []
     });
 

@@ -47,9 +47,10 @@ Process
 - Before adding or revising event seed records, run an event editorial quality
   pass. Confirm the event comes from an accepted-event dossier, reviewed route
   artifact, or explicit human instruction; has an inclusion rationale and route
-  fit; has place and year specificity; uses `summary` for what happened and
-  `significance` for why it matters here; and preserves cautious wording for
-  contested or weakly sourced claims.
+  fit; has place and year specificity; uses one complete Event-story
+  representation; and preserves cautious wording for contested or weakly
+  sourced claims. New or deliberately migrated Events use ordered
+  `story_sections`; legacy Events may retain summary/significance.
 - Do not use seed authoring to resolve candidate review. If candidate status is
   unclear, stop at a proposal and ask for human review instead of editing
   `data/seed/`.
@@ -59,7 +60,10 @@ Process
 - Treat raw `*.ai-draft.*` files as local drafts. Use only reviewed
   route-folder variants as seed-authoring inputs.
 - Update the smallest necessary set of seed files: routes, places, events, connections.
-- Keep event wording concise: `summary` for what happened, `significance` for why it matters.
+- Keep Event stories concise. Every section has a distinct Human-reviewed
+  heading and source-grounded body. Preserve existing reviewed heading wording
+  and order during migration; do not mix sections with summary/significance or
+  generate fallback headings automatically.
 - Validate JSON syntax and cross-references if tooling is available.
 - Capture new planned follow-up work in GitHub Issues. Leave legacy `TODO.md` entries alone unless the approved Issue or plan explicitly includes legacy backlog cleanup.
 

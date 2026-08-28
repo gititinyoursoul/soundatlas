@@ -345,7 +345,8 @@ Before seed writing, inspect:
   view for the same review, not as a separate approval gate.
 - the event editorial quality checks in
   `docs/content/event-editorial-quality-standards.md`
-- event titles, summaries, significance text, and source fields
+- event titles, ordered section headings and prose (or legacy summaries and
+  significance text), and source fields
 - place reuse/add/update recommendations, ordered event place references,
   defaults, coordinates, optional area geometry, provenance, shared-place
   impact, and explicit update approval

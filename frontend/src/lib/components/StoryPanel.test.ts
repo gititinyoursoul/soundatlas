@@ -100,6 +100,53 @@ describe('StoryPanel spatial access', () => {
     expect(body).not.toContain('Publish exact reviewed route');
   });
 
+  it('renders titled story sections in reviewed order without legacy prose', () => {
+    const event = makeEvent({
+      id: 'section-event',
+      summary: null,
+      significance: null,
+      story_sections: [
+        { heading: 'The room opens', body: 'First reviewed section.' },
+        { heading: 'A practice travels', body: 'Second reviewed section.' }
+      ]
+    });
+
+    const { body } = render(StoryPanel, {
+      props: {
+        event,
+        place: makePlace({ id: 'review-place' }),
+        route: makeRoute({ id: 'birth-of-hip-hop' }),
+        editorialMode: true,
+        editorialProposal: {
+          candidate_id: 'section-event',
+          editorial_state: 'draft',
+          active: true,
+          included: true,
+          renderable: true,
+          agent_recommendation: 'include',
+          warnings: [],
+          technical_errors: [],
+          material_signature: 'section-signature',
+          proposal: {},
+          event
+        }
+      }
+    });
+
+    expect(body).toContain('The room opens');
+    expect(body).toContain('First reviewed section.');
+    expect(body).toContain('A practice travels');
+    expect(body).toContain('Second reviewed section.');
+    expect(body.indexOf('The room opens')).toBeLessThan(
+      body.indexOf('A practice travels')
+    );
+    expect(body.indexOf('Second reviewed section.')).toBeLessThan(
+      body.indexOf('Event review')
+    );
+    expect(body).not.toContain('Event summary');
+    expect(body).not.toContain('Event significance');
+  });
+
   it('shows an explicit error when reader-facing event content is missing', () => {
     const { body } = render(StoryPanel, {
       props: {

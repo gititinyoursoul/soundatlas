@@ -81,13 +81,17 @@ Required fields per event:
 - `title`
 - `year_start`
 - `year_end`
-- `summary`
-- `significance`
 - `tags`
 - `review_status`
 - `source_urls`
 - `media_links`
 - `image_links`
+
+Each event also uses exactly one reader-facing story representation:
+
+- legacy `summary` and `significance`, both non-empty; or
+- non-empty ordered `story_sections`, where every item has a non-empty
+  `heading` and `body`.
 
 `media_links` contains structured media links:
 
@@ -132,6 +136,10 @@ Validation rules:
 - A place relationship inherits the containing event's review and publication
   state; it does not have an independent `review_status`.
 - `year_start` is less than or equal to `year_end`.
+- `story_sections` and the legacy `summary`/`significance` pair are mutually
+  exclusive. Missing or mixed story representations are invalid.
+- Section heading wording and order are reader-facing editorial content and
+  must not be normalized during review, publication, or delivery.
 - `tags` and `source_urls` are arrays of strings.
 - `media_links` is an array of media-link objects.
 - `image_links` is an array of image-link objects.

@@ -17,13 +17,15 @@ describe('spatial event helpers', () => {
         ...canonical,
         place_ids: undefined,
         default_place_id: undefined,
-        place_relationships: undefined
+        place_relationships: undefined,
+        story_sections: undefined
       })
     ).toMatchObject({
       place_id: '1520-sedgwick-avenue',
       place_ids: ['1520-sedgwick-avenue'],
       default_place_id: '1520-sedgwick-avenue',
-      place_relationships: []
+      place_relationships: [],
+      story_sections: []
     });
   });
 
@@ -103,7 +105,10 @@ describe('spatial event helpers', () => {
       )
     ).toBe('Connection between The Bronx and Downtown');
     expect(
-      formatRelationshipDirection({ ...base, directionality: 'forward' }, places)
+      formatRelationshipDirection(
+        { ...base, directionality: 'forward' },
+        places
+      )
     ).toBe('From The Bronx toward Downtown');
     expect(
       formatRelationshipDirection(

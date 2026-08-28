@@ -77,6 +77,33 @@ def test_build_retrieval_brief_extracts_named_artist_terms() -> None:
     assert "South Bronx" in brief.supporting_terms
 
 
+def test_build_retrieval_brief_projects_titled_sections_without_rewriting() -> None:
+    brief = build_retrieval_brief(
+        event={
+            "id": "section-event",
+            "route_id": "birth-of-hip-hop",
+            "place_id": "south-bronx",
+            "title": "A Section-Based Event",
+            "year_start": 1977,
+            "year_end": 1977,
+            "story_sections": [
+                {"heading": "The room changes", "body": "Grandmaster Flash refines the mix."},
+                {"heading": "The practice travels", "body": "The technique moves across parties."},
+            ],
+            "tags": ["dj-technique"],
+        },
+        route={"id": "birth-of-hip-hop", "title": "Birth of Hip-Hop"},
+        place={"id": "south-bronx", "name": "South Bronx", "place_type": "region"},
+    )
+
+    assert brief.summary == (
+        "The room changes Grandmaster Flash refines the mix. "
+        "The practice travels The technique moves across parties."
+    )
+    assert brief.significance == ""
+    assert "Grandmaster Flash" in brief.strong_terms
+
+
 def test_build_retrieval_brief_handles_missing_route_and_place() -> None:
     brief = build_retrieval_brief(
         event={

@@ -90,10 +90,17 @@ Events should contain at least:
 - `title`
 - `year_start`
 - `year_end`
-- `summary`
-- `significance`
 - `source_urls`
 - `media_links`
+
+Every Event also contains exactly one reader-facing story representation:
+
+- legacy `summary` and `significance`; or
+- a non-empty ordered `story_sections` collection whose entries contain a
+  Human-reviewed `heading` and `body`.
+
+Do not store both representations on one Event. Preserve existing editorial
+heading wording and order exactly when migrating reviewed content.
 
 ## Backend Rules
 

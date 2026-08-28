@@ -29,7 +29,7 @@ CONTRACTS = {
         "dossier_to_event_review", "1", "json", required_json_keys=("_meta", "candidates"),
     ),
     "complete_draft": PromptContract(
-        "complete_draft", "1", "json",
+        "complete_draft", "2", "json",
         required_json_keys=(
             "_meta", "route_concept", "candidates", "sequence", "events", "places",
             "connections", "phase_coverage", "findings", "warnings", "technical_errors",

@@ -207,8 +207,9 @@ Include:
 - Media search query planning for accepted events only.
 - Draft source, media, and image enrichment.
 - One explicit human publication decision over the exact reviewed result.
-- Publishable event-card text: title, years, place, summary, significance,
-  source URLs, media links, image links, and connection notes.
+- Publishable Event text: title, years, place, either ordered titled story
+  sections or legacy summary/significance prose, source URLs, media links,
+  image links, and connection notes.
 
 Postpone:
 

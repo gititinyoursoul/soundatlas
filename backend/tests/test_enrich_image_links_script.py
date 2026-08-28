@@ -54,6 +54,29 @@ def test_query_builder_includes_concise_place_and_notable_term_queries() -> None
     assert all("'" not in query for query in queries)
 
 
+def test_query_builder_uses_notable_terms_from_titled_sections() -> None:
+    event = build_event(
+        {
+            "summary": None,
+            "significance": None,
+            "story_sections": [
+                {
+                    "heading": "The community room",
+                    "body": "DJ Kool Herc extends the break at Sedgwick Avenue.",
+                }
+            ],
+        }
+    )
+
+    queries = build_event_image_queries(
+        event=event,
+        route=build_route(),
+        place=build_place(),
+    )
+
+    assert "DJ Kool Herc" in queries
+
+
 def test_legacy_query_planner_uses_legacy_queries() -> None:
     queries = build_wikimedia_search_queries(
         event=build_event(),
