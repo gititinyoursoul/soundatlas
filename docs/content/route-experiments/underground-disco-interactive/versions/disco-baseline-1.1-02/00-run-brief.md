@@ -6,16 +6,17 @@
 - Version ID: `disco-baseline-1.1-02`
 - Method: `baseline-1.1`
 - Stage: `00`
-- Status: `in-progress`
+- Status: `checkpointed`
 - Starting condition: `fixed-topic`
 - First executable stage: `07`
-- Current stage: `09`
-- Last completed stage: `09`
+- Current stage: `10a`
+- Last completed stage: `10a`
 - Started: `2026-08-28`, when the Issue #183 Proceed record was posted
-- Required Human checkpoint: mandatory after step 10a presents the complete
-  final reader copy; step 09 found no separate Source, sensitivity,
-  representation, or acceptable-uncertainty decision that blocks refinement
-- Next permitted stage: `10a`
+- Required Human checkpoint: accept, correct, or reject the complete final
+  reader copy in `10a-final-route-copy.md`; this decision is mandatory before
+  step 10b or any later authoring or editorial handoff
+- Next permitted stage: Human acceptance, correction, or rejection of Step 10a
+  copy
 
 ## Authority
 
@@ -211,15 +212,12 @@ Verdict: the confirmed scope, stable IDs, fixed inherited inputs, evidence
 boundary, method changes, non-blind limitation, Human authority, and Stage 07
 entry point are explicit. No material decision blocks research execution.
 
-Steps 00, 07, 08, and 09 are complete. Step 09 audited the thesis, section
-framing, transitions, every Event chapter, conclusion, representation claims,
-and implied visual treatment against the fixed evidence. It recorded every
-wording change and produced a complete corrected reader draft without changing
-the cohort, architecture, stable IDs, or material route argument.
+Steps 00, 07, 08, 09, and 10a are complete. Step 10a made the evidence-
+corrected draft into a complete reader-facing copy with route, section, and
+final-stop records. It preserves every Stage-09 qualification and makes no
+cohort, architecture, stable-ID, relationship, or material-claim change.
 
-Keep run status `in-progress`; execute step 10a next from
-[`09-evidence-audit.md`](09-evidence-audit.md) and
-[`09-corrected-draft.md`](09-corrected-draft.md). Step 10a must present the
-complete final reader copy for Human acceptance, correction, or rejection.
-Successful step-09 validation does not approve Sources, presentation intent,
-media, rights, editorial state, canonical content, or publication.
+Keep run status `checkpointed`. The Human must accept, correct, or reject
+[`10a-final-route-copy.md`](10a-final-route-copy.md) before Step 10b may run.
+Successful Step-10a validation does not approve Sources, presentation intent,
+media, rights, editorial-review state, canonical content, or publication.
