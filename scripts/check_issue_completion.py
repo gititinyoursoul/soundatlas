@@ -76,7 +76,19 @@ def validate_completion(
     completion_comments: int,
     working_tree_verified: bool,
 ) -> None:
-    validate_report(read_text(report_path))
+    validate_completion_text(
+        read_text(report_path), commit, completion_comments, working_tree_verified
+    )
+
+
+def validate_completion_text(
+    report_text: str,
+    commit: str,
+    completion_comments: int,
+    working_tree_verified: bool,
+) -> None:
+    """Validate completion prerequisites when the report is already in memory."""
+    validate_report(report_text)
     if not re.fullmatch(r"[0-9a-fA-F]{7,40}", commit):
         raise ValidationError("commit must be a 7-40 character hexadecimal hash")
     if completion_comments != 1:

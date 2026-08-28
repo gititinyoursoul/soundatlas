@@ -230,6 +230,12 @@ heading wording and order exactly when migrating reviewed content.
   acceptance criteria, confirm that no Issue-relevant changes remain
   uncommitted, post the standard commit-referencing completion comment, and
   then close the Issue.
+- Use `python scripts/complete_pushed_issue.py` only as an explicitly invoked
+  post-push aid after the Human-authorized push. Its `audit` command is
+  read-only; its `complete` command must verify the existing Issue evidence
+  before it posts the completion comment, sets Project status to `Done`, and
+  closes one Issue. Do not invoke it from a push trigger, scheduled job, or
+  `Done`-to-close automation.
 - Unrelated user-owned working-tree changes do not block closure and must not be included merely to make the tree clean.
 - Do not push or close an Issue when review is not `Accepted`, work is
   uncommitted, the commit is partial or WIP, acceptance criteria remain

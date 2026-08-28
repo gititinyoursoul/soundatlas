@@ -48,10 +48,14 @@ Grill Me.
 ## Orchestration At A Glance
 
 SoundAtlas uses instruction-driven orchestration. There is no workflow service,
-state machine, Git hook, or GitHub Action that advances work automatically.
-Agents follow the repository guidance, while GitHub Issues preserve the durable
-scope, decisions, plans, implementation go-ahead, and completion evidence. The
-local readiness validator checks those artifacts but does not advance state.
+state machine, Git hook, GitHub Action, or scheduled process that advances work
+automatically. Agents follow the repository guidance, while GitHub Issues
+preserve the durable scope, decisions, plans, implementation go-ahead, and
+completion evidence. The local readiness validator checks those artifacts but
+does not advance state. After a Human-authorized push, an agent may explicitly
+invoke `scripts/complete_pushed_issue.py`: its audit is read-only, and its
+guarded single-Issue completion command performs the existing ordered GitHub
+actions only after validating the recorded evidence.
 
 ```text
 Request

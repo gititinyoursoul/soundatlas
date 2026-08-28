@@ -724,6 +724,23 @@ Issue closure is a mandatory, ordered post-push step:
      --working-tree-verified
    ```
 
+   The agent may use the explicit helper after completing the same checks:
+
+   ```sh
+   python scripts/complete_pushed_issue.py complete \
+     --issue <number> \
+     --commit <commit-hash> \
+     --push-authorized \
+     --working-tree-verified
+   ```
+
+   Use `--range <base>..<head>` in place of `--commit` for an explicitly
+   reviewed integration range. The helper validates the accepted Issue report
+   and remote reachability before mutating GitHub. Provide
+   `--frontend-ci-run <run-id-or-url>` when the
+   delivered range triggers Frontend CI. It is not a push hook, scheduled
+   process, or substitute for the preceding human authorization and checks.
+
 4. Verify every acceptance criterion against the committed change and checks.
 5. Confirm that no Issue-relevant files remain modified or uncommitted.
    Unrelated user-owned changes do not block closure and must not be included
@@ -770,6 +787,18 @@ Do not add workflow-state labels for completion. Project Tracker `Locally
 Implemented` is the approved pre-push summary. Project Tracker `Done` and the
 Issue's closed-completed state are separate ordered post-push actions. Do not
 configure a `Done`-to-close automation.
+
+For reconciliation, the explicit read-only command below may identify Project
+items that remain `Locally Implemented` although their report-named commit is
+already reachable from the intended branch:
+
+```sh
+python scripts/complete_pushed_issue.py audit
+```
+
+The audit changes neither Project nor Issue state. A historical candidate must
+still pass the guarded `complete` operation; do not reconstruct missing
+completion evidence or bulk-close candidates.
 
 ## Commit Reference
 
