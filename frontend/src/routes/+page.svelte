@@ -89,10 +89,10 @@
   $: editorialEvents = editorialProjections.flatMap((item) =>
     item.event ? [item.event] : []
   );
-  $: activePlaces = IS_EDITORIAL_MODE
-    ? (routeReview?.places.map((item) => item.place) ?? [])
+  $: activePlaces = IS_EDITORIAL_MODE && routeReview
+    ? routeReview.places.map((item) => item.place)
     : places;
-  $: routeEvents = IS_EDITORIAL_MODE
+  $: routeEvents = IS_EDITORIAL_MODE && routeReview
     ? editorialProjections
         .filter((item) => item.renderOnTimeline && item.event)
         .flatMap((item) =>
@@ -101,7 +101,7 @@
             : []
         )
     : publicRouteEvents;
-  $: mapEvents = IS_EDITORIAL_MODE
+  $: mapEvents = IS_EDITORIAL_MODE && routeReview
     ? editorialProjections
         .filter((item) => item.renderOnMap && item.event)
         .flatMap((item) =>
@@ -177,7 +177,7 @@
     selectedEventIsVisible || routeEvents.length === 0
       ? selectedEventId
       : routeEvents[0].id;
-  $: selectedEvent = IS_EDITORIAL_MODE
+  $: selectedEvent = IS_EDITORIAL_MODE && routeReview
     ? (selectedProjection?.event ?? null)
     : (routeEvents.find((event) => event.id === activeSelectedEventId) ?? null);
   $: selectedReviewProposal = selectedProjection?.proposal ?? null;
@@ -392,9 +392,7 @@
 
   function selectRoute(routeId: string): void {
     selectedRouteId = routeId;
-    selectedEventId = IS_EDITORIAL_MODE
-      ? null
-      : getFirstEventIdForRoute(events, routeId);
+    selectedEventId = getFirstEventIdForRoute(events, routeId);
     const firstEvent =
       events.find((event) => event.id === selectedEventId) ?? null;
     selectedPlaceId = resolveFocusedPlaceId(firstEvent, null);
@@ -429,11 +427,25 @@
       publicationSummary = null;
       editorialProjections = [];
       consideredCandidateProjections = [];
+      if (isLegacyRoute(routeId)) {
+        selectedEventId = getFirstEventIdForRoute(events, routeId);
+        editorialErrorMessage = null;
+        return;
+      }
       editorialErrorMessage =
         error instanceof Error
           ? `Editorial review unavailable: ${error.message}`
           : 'Editorial review unavailable.';
     }
+  }
+
+  function isLegacyRoute(routeId: string): boolean {
+    const entry = routeNavigation?.routes.find(
+      (candidate) => candidate.route.id === routeId
+    );
+    return entry?.appears_in_routes === true &&
+      entry.appears_in_published_routes === false &&
+      entry.appears_in_routes_to_review === false;
   }
 
   async function setEditorialState(
