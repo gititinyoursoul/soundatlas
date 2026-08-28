@@ -6,18 +6,16 @@
 - Version ID: `disco-baseline-1.1-02`
 - Method: `baseline-1.1`
 - Stage: `00`
-- Status: `checkpointed`
+- Status: `completed`
 - Starting condition: `fixed-topic`
 - First executable stage: `07`
-- Current stage: `10b`
-- Last completed stage: `10b`
+- Current stage: `11`
+- Last completed stage: `11`
 - Started: `2026-08-28`, when the Issue #183 Proceed record was posted
-- Required Human checkpoint: accept, correct, or reject the visual historical
-  claims, media treatment, and presentation intent in
-  `10b-presentation-visual-claims.md`; this decision is mandatory before
-  Step 11
-- Next permitted stage: Human acceptance, correction, or rejection of Step 10b
-  presentation intent
+- Required Human checkpoint: none for this authorized experimental run; any
+  editorial-review, canonical, Source, media, rights, or publication decision
+  remains outside Issue #183
+- Next permitted stage: none; terminal evaluation complete
 
 ## Authority
 
@@ -213,15 +211,12 @@ Verdict: the confirmed scope, stable IDs, fixed inherited inputs, evidence
 boundary, method changes, non-blind limitation, Human authority, and Stage 07
 entry point are explicit. No material decision blocks research execution.
 
-Steps 00, 07, 08, 09, 10a, and 10b are complete. The Human accepted Step 10a
-copy on Issue #183. Step 10b inspected the current product and produced
-presentation records that preserve the final copy's limits: selected Event
-markers and timeline sequence are supported; cross-Event map connectors,
-animation, route playback, approved media, and historical coordinate
-provenance are not.
+Steps 00, 07, 08, 09, 10a, 10b, and 11 are complete. The Human accepted the
+Step-10a copy and Step-10b conservative presentation baseline on Issue #183.
+Step 11 compared this completed replay with `disco-baseline-1.1-01`, recorded
+continuity, method findings, limits, and remaining editorial handoff work in
+[`11-run-evaluation.md`](11-run-evaluation.md).
 
-Keep run status `checkpointed`. The Human must accept, correct, or reject
-[`10b-presentation-visual-claims.md`](10b-presentation-visual-claims.md)
-before Step 11 may compare the completed route versions. Successful Step-10b
-validation does not approve Sources, media, rights, editorial-review state,
-canonical content, or publication.
+The run is `completed` as an authoring-only evidence package. It is not a
+canonical route, an editorial-review revision, Source or media approval, seed
+data, publication authority, or integration decision.
