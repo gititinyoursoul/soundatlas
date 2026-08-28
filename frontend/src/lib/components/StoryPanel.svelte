@@ -423,7 +423,7 @@
                   >
                     <h3
                       id={`story-section-${index}`}
-                      class="m-0 text-base font-semibold leading-snug text-slate-100"
+                      class="m-0 text-base font-semibold leading-snug text-slate-800"
                     >
                       {section.heading}
                     </h3>
