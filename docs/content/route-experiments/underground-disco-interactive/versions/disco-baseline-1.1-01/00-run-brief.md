@@ -8,8 +8,8 @@
 - Status: `checkpointed`
 - Starting condition: `fixed-topic`
 - First executable stage: `02`
-- Current stage: `10a`
-- Last completed stage: `10a`
+- Current stage: `10b`
+- Last completed stage: `10b`
 - Started: `2026-08-27T22:29:47Z`, when the matching Proceed record was posted
 - Step 02 checkpointed: `2026-08-27`
 - Step 02 Human decision: compare Arcs A, B, and C as equal contenders
@@ -28,6 +28,10 @@
 - Step 08 checkpointed: `2026-08-28`
 - Step 09 checkpointed: `2026-08-28`
 - Step 10a checkpointed: `2026-08-28`
+- Step 10a Human decision: accept the reader-facing copy for experimental
+  continuation into step 10b; Source, media, rights, canonical, editorial-
+  review, and publication authority remain unapproved
+- Step 10b checkpointed: `2026-08-28`
 
 ## Authority
 
@@ -45,6 +49,8 @@
 - Step 09 Proceed record: [Issue comment](https://github.com/gititinyoursoul/soundatlas/issues/158#issuecomment-5451639561)
 - Step 10a Plan: [final route copy](https://github.com/gititinyoursoul/soundatlas/issues/158#issuecomment-5451998970)
 - Step 10a Proceed record: [Issue comment](https://github.com/gititinyoursoul/soundatlas/issues/158#issuecomment-5452012582)
+- Step 10b Plan: [presentation and visual claims](https://github.com/gititinyoursoul/soundatlas/issues/158#issuecomment-5452216247)
+- Step 10b Proceed record: [Issue comment](https://github.com/gititinyoursoul/soundatlas/issues/158#issuecomment-5452230256)
 
 ## Fixed topic and test question
 
@@ -69,16 +75,19 @@ material gaps exposed by that test, recommends a defensible cohort, deep-
 researches the five shared core Events plus two challengers, synthesizes the
 Human-selected seven Events into one evidence-bounded route argument, and
 drafts that argument as a reviewable seven-Event narrative, audits and corrects
-its material claims, and refines the evidence-reviewed result into final-copy
-form for Human acceptance or rejection. The current authorized terminal stage
-is step 10a.
+its material claims, refines the evidence-reviewed result into Human-accepted
+experimental final copy, and specifies evidence-bounded presentation and
+visual claims against actual product capability. The current authorized
+terminal stage is step 10b.
 
 The route-length hypothesis is six to nine Events. This is a comparison range,
 not a quota. A shorter or longer result is valid when step 05 explains the
 historical, geographic, experiential, and complexity tradeoff. The intended
 content depth is a medium route whose major Event chapters generally carry
-roughly 150–220 words. The step-10a final-copy candidate remains Agent-authored
-experimental evidence, not Human-accepted or publication-ready content.
+roughly 150–220 words. The Human accepted the step-10a copy for this
+experimental continuation only. Neither that decision nor the step-10b
+presentation specification makes the version canonical, editorially approved,
+media-cleared, or publication-ready.
 
 ## Method hypotheses
 
@@ -130,7 +139,7 @@ experimental evidence, not Human-accepted or publication-ready content.
   or enter editorial review.
 - Do not implement product, schema, workflow, pipeline, prompt, media, rights,
   or map changes.
-- Do not execute steps 10b–11 or make the final experimental-method decision.
+- Do not execute step 11 or make the final experimental-method decision.
 
 ## Checkpoints and next permitted work
 
@@ -194,11 +203,20 @@ reader-facing copy. All seven Event stops fall within the selected 150–220-wor
 medium-depth range. The historical, causal, representation, geographic, map,
 media, rights, and Human-authority limits from step 09 remain explicit.
 
-The run is checkpointed because step 10a is the authorized terminal stage. The
-final-copy candidate is not Human-accepted copy, a Human Source decision,
-editorial-review state, presentation authority, or publication authority. The
-Human must accept, reject, or request correction of this copy. Step 10b may
-proceed only after copy acceptance and a separately confirmed Plan and matching
-Proceed record.
+The Human accepted the step-10a reader copy for experimental continuation and
+separately authorized step 10b. Step 10b is recorded in
+[`10b-presentation-visual-claims.md`](10b-presentation-visual-claims.md). It
+maps route, section, Event, relationship, transition, and media moments onto
+verified current SoundAtlas mechanisms, separates unsupported future
+capabilities, and preserves every historical and Human-authority boundary.
+The experimental route is not runtime or canonical data, and every media lead
+remains pending relevance, attribution, rights, stability, availability, and
+accessibility review.
 
-Stop reason: step 10a completed; waiting for Human final-copy review.
+The run is checkpointed because step 10b is the authorized terminal stage. The
+Human must accept, reject, or request correction of the visual historical
+claims, media intent, and presentation intent. Step 11 requires a separately
+confirmed Plan and matching Proceed record.
+
+Stop reason: step 10b completed; waiting for Human presentation and media-intent
+review.
