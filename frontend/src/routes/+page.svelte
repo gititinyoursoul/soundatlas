@@ -129,9 +129,9 @@
     },
     {}
   );
-  $: publishedRoutes =
+  $: readerRoutes =
     routeNavigation?.routes
-      .filter((entry) => entry.appears_in_published_routes)
+      .filter((entry) => entry.appears_in_routes)
       .map((entry) => entry.route) ?? [];
   $: reviewRoutes =
     routeNavigation?.routes
@@ -252,8 +252,8 @@
       places = data.places;
       events = data.events;
       const selectableRoutes = IS_EDITORIAL_MODE
-        ? [...reviewRoutes, ...publishedRoutes]
-        : publishedRoutes;
+        ? [...reviewRoutes, ...readerRoutes]
+        : readerRoutes;
       const initialRouteId =
         selectedRouteId ?? getInitialRouteId(selectableRoutes);
       selectedRouteId = initialRouteId;
@@ -682,7 +682,7 @@
     open={isNavigationOpen}
     variant={navigationVariant}
     activeItemId={activeNavigationItemId}
-    routes={publishedRoutes}
+    routes={readerRoutes}
     {reviewRoutes}
     {selectedRouteId}
     {routeEventCounts}

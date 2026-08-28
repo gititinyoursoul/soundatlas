@@ -13,6 +13,7 @@ class RouteNavigationEntry(BaseModel):
     route: Route
     review_revision_id: str | None = None
     published_revision_id: str | None = None
+    appears_in_routes: bool
     appears_in_published_routes: bool
     appears_in_routes_to_review: bool
 
@@ -56,6 +57,9 @@ class RouteNavigationRepository:
                     route=route,
                     review_revision_id=review_revision_id,
                     published_revision_id=published_revision_id,
+                    appears_in_routes=(
+                        published_revision_id is not None or review_revision_id is None
+                    ),
                     appears_in_published_routes=published_revision_id is not None,
                     appears_in_routes_to_review=(
                         review_revision_id is not None

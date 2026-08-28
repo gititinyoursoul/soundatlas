@@ -23,12 +23,14 @@ def test_route_navigation_classifies_published_and_changed_review(tmp_path: Path
 
     before = repository.summary(SeedRepository.from_seed_dir(seed_dir).list_routes())
     assert before.routes[0].appears_in_published_routes is False
+    assert before.routes[0].appears_in_routes is False
     assert before.routes[0].appears_in_routes_to_review is True
 
     publication_repository.publish(ROUTE_ID, review.revision_id)
     after = repository.summary(SeedRepository.from_seed_dir(seed_dir).list_routes())
     assert after.routes[0].published_revision_id == review.revision_id
     assert after.routes[0].appears_in_published_routes is True
+    assert after.routes[0].appears_in_routes is True
     assert after.routes[0].appears_in_routes_to_review is False
 
     client = TestClient(

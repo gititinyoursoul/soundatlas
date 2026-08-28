@@ -256,6 +256,7 @@ describe('SoundAtlas API client', () => {
           route: makeRoute({ id: 'published-route' }),
           review_revision_id: 'review-2',
           published_revision_id: 'published-1',
+          appears_in_routes: true,
           appears_in_published_routes: true,
           appears_in_routes_to_review: true
         }
