@@ -142,6 +142,8 @@
     routeNavigation?.routes
       .filter((entry) => entry.appears_in_routes_to_review)
       .map((entry) => entry.route) ?? [];
+  $: isReviewSelection =
+    IS_EDITORIAL_MODE && selectedRouteContext === 'review';
   $: reviewQueueItems = IS_PUBLIC_STATIC_MODE
     ? []
     : events.flatMap((event) => [
@@ -173,7 +175,7 @@
             previewUrl: imageLink.thumbnail_url ?? imageLink.image_url
           }))
       ]);
-  $: selectedEventIsVisible = IS_EDITORIAL_MODE
+  $: selectedEventIsVisible = isReviewSelection
     ? reviewProposals.some(
         (proposal) => proposal.candidate_id === selectedEventId
       )
@@ -242,7 +244,7 @@
     ? buildStoryConnectionItems(
         selectedEvent,
         activeConnections,
-        IS_EDITORIAL_MODE ? editorialEvents : events,
+        isReviewSelection ? editorialEvents : events,
         activePlaces,
         routes
       )
@@ -258,35 +260,25 @@
       routeNavigation = navigation;
       places = data.places;
       events = data.events;
-      const selectableRoutes = IS_EDITORIAL_MODE
-        ? [...reviewRoutes, ...readerRoutes]
-        : readerRoutes;
+      const selectableRoutes = navigation.routes
+        .filter((entry) => entry.appears_in_routes)
+        .map((entry) => entry.route);
       const initialRouteId =
         selectedRouteId ?? getInitialRouteId(selectableRoutes);
       selectedRouteId = initialRouteId;
       selectedRouteContext = 'reader';
 
-      if (!IS_EDITORIAL_MODE || selectedRouteContext === 'reader') {
-        if (
-          !selectedEventId ||
-          !data.events.some(
-            (event) =>
-              event.id === selectedEventId && event.route_id === initialRouteId
-          )
-        ) {
-          selectedEventId = getFirstEventIdForRoute(
-            data.events,
-            initialRouteId
-          );
-        }
-      } else {
-        selectedEventId = routeReview?.proposals[0]?.candidate_id ?? null;
+      if (
+        !selectedEventId ||
+        !data.events.some(
+          (event) =>
+            event.id === selectedEventId && event.route_id === initialRouteId
+        )
+      ) {
+        selectedEventId = getFirstEventIdForRoute(data.events, initialRouteId);
       }
-      const initialEvent = IS_EDITORIAL_MODE
-        ? (editorialProjections.find(
-            (item) => item.proposal.candidate_id === selectedEventId
-          )?.event ?? null)
-        : (data.events.find((event) => event.id === selectedEventId) ?? null);
+      const initialEvent =
+        data.events.find((event) => event.id === selectedEventId) ?? null;
       selectedPlaceId = resolveFocusedPlaceId(initialEvent, selectedPlaceId);
     } catch (error) {
       const message =
@@ -308,7 +300,7 @@
       selectedRouteId = routeId;
     }
 
-    const nextEvent = IS_EDITORIAL_MODE
+    const nextEvent = isReviewSelection
       ? (editorialProjections.find((item) => item.event?.id === eventId)
           ?.event ?? null)
       : (events.find((event) => event.id === eventId) ?? null);
@@ -365,7 +357,7 @@
   }
 
   function selectLocation(eventId: string, placeId: string): void {
-    const event = IS_EDITORIAL_MODE
+    const event = isReviewSelection
       ? editorialProjections.find((item) => item.event?.id === eventId)?.event
       : events.find((item) => item.id === eventId);
     if (!event || !event.place_ids.includes(placeId)) {
