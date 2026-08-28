@@ -20,6 +20,12 @@ Preserve Event identity, supported uncertainty, parallel development, and the
 distinction between fact and synthesis. Write reader-facing SoundAtlas content
 in English.
 
+Use each step 07 Event narrative blueprint as the plan for its reader copy.
+Turn the planned opening move and narrative beats into actual prose, preserve
+its required reader-visible uncertainty, and make the final decisions about
+wording, paragraph breaks, and heading text. A blueprint's structure
+recommendation guides the draft but does not preapprove its wording.
+
 Carry forward the accepted Event-to-section assignments and stable IDs. Keep
 the route layer—Events, places, evidence, and map positions—distinct from the
 narrative layer—sections, themes, transitions, and argument. Preserve each
@@ -59,6 +65,8 @@ Write `08-narrative-draft.md` with:
 - section headings, historical questions, grouping rationales, and framing;
 - event-centric or argument-centric structure decision;
 - complete Event-level reader copy;
+- a blueprint-use check covering every accepted Event and identifying any
+  non-material drafting adjustment;
 - transitions and conclusion;
 - visible uncertainty where required;
 - a completed reader-readiness check, including reader-visible qualifications
@@ -71,5 +79,8 @@ Write `08-narrative-draft.md` with:
 
 Advance only when the draft represents the accepted synthesis completely and
 passes the reader-readiness check. A new material route claim returns to
-research or synthesis. A structurally audit-like or inclusion-justification
-register returns to this Narrative Draft stage before evidence review.
+research or synthesis. If drafting shows that an Event's planned question,
+beats, structure, uncertainty, or route handoff needs material revision, return
+that architecture to step 07 rather than silently changing it in prose. A
+structurally audit-like or inclusion-justification register returns to this
+Narrative Draft stage before evidence review.

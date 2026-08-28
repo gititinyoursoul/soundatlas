@@ -50,6 +50,23 @@ Use relationship types such as `documented-influence`, `parallel-development`,
 - transition into and out of the section; and
 - presentation implication and unresolved claim gaps.
 
+## Event narrative-blueprint record — steps 07–08
+
+- stable `event_id` and assigned `section_id`;
+- reader question this Event answers within the route;
+- opening move, stated as the documented scene, action, change, or context to
+  lead with rather than as drafted prose;
+- ordered narrative beats, each grounded in supported Event or relationship
+  material;
+- reader-visible uncertainty or qualification that the draft must preserve;
+- reader-copy structure recommendation—one continuous passage, a heading, or
+  multiple subsections—and its narrative reason; and
+- transition role and route handoff into the next Event or section.
+
+This record plans reader experience; it is not reader copy. It must not add a
+historical fact, claim, relationship, or causal implication, and it does not
+fix final wording, paragraph breaks, or heading text.
+
 ## Evidence-audit record — step 09
 
 - `claim_id`, exact passage, and owning Event, relationship, or section ID;
