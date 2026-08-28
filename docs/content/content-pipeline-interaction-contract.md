@@ -33,9 +33,10 @@ CLI generates or regenerates one route result
 ```
 
 The focused review and publication slices are implemented. The route editorial review
-revision binds the seed-shaped event, place, and connection content generated
+revision binds the seed-shaped Route, Event, Place, and connection content generated
 in `complete-draft.json`; publication consumes that bound content rather than
-rereading independently mutable framing files.
+rereading independently mutable framing files. A review without a bound Route is
+explicitly incomplete and must not borrow framing from mutable canonical seeds.
 
 ## Authority And Boundaries
 
@@ -68,7 +69,7 @@ result must not be mistaken for canonical or published content.
 
 The surface must:
 
-- identify the route result under review;
+- identify the bound proposed Route result under review, including its title and period;
 - keep map, timeline, and StoryPanel selection coordinated;
 - show every proposed event with its current route-scoped editorial state;
 - show agent recommendations and rationales as advisory information;
@@ -157,7 +158,8 @@ Neither warnings nor successful validation constitute human approval.
 ## Publication
 
 Publish is one explicit, human-only route decision over the exact result shown
-in editorial review. The publication summary must identify the route result,
+in editorial review. The publication summary must identify the proposed Route
+metadata and route result,
 list the Draft and Approved events that will be included, show excluded Don’t
 use counts, preserve visible warnings, and report publication blocking checks.
 
@@ -168,8 +170,9 @@ revision. Changing the proposal or canonical spatial baseline resets approval.
 Agents may populate artifact proposals from research or curation, but review
 and publication make no live geodata request.
 
-After the decision, the system validates and promotes that exact
-Draft-plus-Approved result into canonical seed data. Publication:
+After the decision, the system validates and promotes that exact Route and
+Draft-plus-Approved result into canonical seed data in one rollback-protected
+write. Publication:
 
 - excludes Don’t use events without deleting their editorial records;
 - preserves the current Draft or Approved state internally;
@@ -184,9 +187,9 @@ Commit, push, and deployment remain explicit developer operations.
 Published content is a stable result, not a mutable pointer to the latest agent
 output. Automatic generation or regeneration must not replace it.
 
-A later content change creates a new Draft proposal. The currently published
-route remains unchanged until the revised result is opened in editorial review
-and explicitly published. The MVP does not require a generalized version
+A later content or Route-framing change creates a new revision. The currently
+published route remains unchanged until the revised result is opened in editorial
+review and explicitly published. The MVP does not require a generalized version
 browser, immutable run archive, or cross-run comparison interface to enforce
 this boundary.
 

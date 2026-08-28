@@ -1449,12 +1449,13 @@ def validate_complete_draft(
         errors.append(f"Complete draft route_id must be `{route_id}`.")
     if metadata.get("source_outline") != source_outline:
         errors.append(f"Complete draft source_outline must be `{source_outline}`.")
-    if metadata.get("contract_version") != "3":
-        errors.append("Complete draft `_meta.contract_version` must be `3`.")
+    if metadata.get("contract_version") != "4":
+        errors.append("Complete draft `_meta.contract_version` must be `4`.")
     content_review_status = metadata.get("content_review_status", metadata.get("review_status"))
     if content_review_status != "draft":
         errors.append("Complete draft `_meta.content_review_status` must be `draft`.")
     for field in (
+        "route",
         "route_concept",
         "candidates",
         "sequence",
@@ -1470,6 +1471,18 @@ def validate_complete_draft(
             errors.append(f"Complete draft is missing `{field}`.")
     if not isinstance(payload.get("route_concept"), str) or not payload.get("route_concept", "").strip():
         errors.append("Complete draft route_concept must be non-empty Markdown.")
+    proposed_route: Route | None = None
+    route_payload = payload.get("route")
+    if not isinstance(route_payload, dict):
+        errors.append("Complete draft route must be a seed-shaped Route object.")
+    else:
+        try:
+            proposed_route = Route.model_validate(route_payload)
+        except Exception as exc:
+            errors.append(f"Complete draft route is invalid: {exc}")
+        else:
+            if proposed_route.id != route_id:
+                errors.append(f"Complete draft route.id must be `{route_id}`.")
     warnings = payload.get("warnings", [])
     technical_errors = payload.get("technical_errors", [])
     if not isinstance(warnings, list) or any(not isinstance(item, str) for item in warnings):
@@ -1629,6 +1642,21 @@ def validate_complete_draft(
     for event in events:
         if not isinstance(event, dict):
             continue
+        if event.get("route_id") != route_id:
+            errors.append(
+                f"Complete draft Event `{event.get('id')}` must use route_id `{route_id}`."
+            )
+        year_start = event.get("year_start")
+        year_end = event.get("year_end")
+        if proposed_route is not None and (
+            not isinstance(year_start, int)
+            or not isinstance(year_end, int)
+            or year_start < proposed_route.year_start
+            or year_end > proposed_route.year_end
+        ):
+            errors.append(
+                f"Complete draft Event `{event.get('id')}` falls outside the proposed Route period."
+            )
         sections = event.get("story_sections")
         if not isinstance(sections, list) or not sections:
             errors.append(
@@ -1657,7 +1685,9 @@ def validate_complete_draft(
         place_decision_indexes[place_id] = index
     new_places = drafted_places({"places": {"places": places}})
     merged = {
-        "routes": seed["routes"],
+        "routes": upsert_records(seed["routes"], "routes", [route_payload])
+        if isinstance(route_payload, dict)
+        else seed["routes"],
         "places": upsert_records(seed["places"], "places", new_places),
         "events": upsert_records(seed["events"], "events", events),
         "connections": upsert_records(seed["connections"], "connections", connections),
@@ -1835,6 +1865,11 @@ def format_complete_draft_markdown(payload: dict[str, Any]) -> str:
         f"Source outline: `{payload['_meta']['source_outline']}`",
         "",
         "This generated route result is working content for route editorial review. It is not approved or publication-ready.",
+        "",
+        "## Proposed Route",
+        "",
+        f"{payload.get('route', {}).get('title', 'Missing route framing')} "
+        f"({payload.get('route', {}).get('year_start', '?')}-{payload.get('route', {}).get('year_end', '?')})",
         "",
         "## Sequence",
         "",

@@ -1,9 +1,16 @@
 import type {
   Event,
+  Route,
   RouteReviewCandidateAccount,
   RouteReviewProposal,
   RouteEditorialReview
 } from '$lib/types/soundatlas';
+
+export function routeForEditorialReview(
+  review: RouteEditorialReview | null
+): Route | null {
+  return review?.route ?? null;
+}
 
 export type EditorialProjection = {
   proposal: RouteReviewProposal;

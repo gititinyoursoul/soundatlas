@@ -8,7 +8,7 @@ from typing import Any, Literal
 from pydantic import BaseModel, Field, ValidationError
 
 from app.config import DEFAULT_CONTENT_ROOT, DEFAULT_SEED_DIR
-from app.schemas import Connection, Event, Place
+from app.schemas import Connection, Event, Place, Route
 
 ROUTE_REVIEW_FILENAME = "route-review.json"
 EVENT_LIST_FILENAME = "event-list.json"
@@ -140,6 +140,7 @@ class RouteEditorialReview(BaseModel):
     route_id: str
     revision_id: str
     source: str = EVENT_LIST_FILENAME
+    route: Route | None = None
     proposals: list[RouteReviewProposal]
     dormant_proposals: list[RouteReviewProposal] = Field(default_factory=list)
     places: list[RouteReviewPlace] = Field(default_factory=list)
@@ -209,6 +210,7 @@ class RouteReviewRepository:
         complete_draft = self._optional_complete_draft(route_id)
         if complete_draft is not None and (
             result.source != COMPLETE_DRAFT_FILENAME
+            or result.route is None
             or any(proposal.event is None for proposal in result.proposals)
             or not result.candidate_accounts
             or any(not account.context for account in result.candidate_accounts)
@@ -216,7 +218,7 @@ class RouteReviewRepository:
             return self._build_current(route_id, result, complete_draft)
         if any(not account.context for account in result.candidate_accounts):
             return self._build_current(route_id, result)
-        return result
+        return _mark_missing_route_incomplete(result)
 
     def refresh(self, route_id: str) -> RouteEditorialReview:
         previous = self._optional_review(route_id)
@@ -471,7 +473,9 @@ def build_route_review(
         active_candidate_ids,
     )
     unexpected_event_ids = sorted(set(event_payloads) - active_candidate_ids)
+    route, route_metadata_errors = _review_route(complete_draft, route_id)
     route_errors = [
+        *route_metadata_errors,
         *event_collection_errors,
         *(
             f"Reader-facing event '{event_id}' has no active proposal."
@@ -507,6 +511,12 @@ def build_route_review(
             candidate_id,
             resolved_place_ids,
         )
+        if route is not None and event is not None and (
+            event.year_start < route.year_start or event.year_end > route.year_end
+        ):
+            event_errors.append(
+                f"Reader-facing event '{candidate_id}' falls outside the bound Route period."
+            )
         errors = [*proposal_errors(candidate), *event_errors]
         renderability_errors = [
             error for error in errors if error != MISSING_SOURCE_URL_ERROR
@@ -567,6 +577,7 @@ def build_route_review(
             if complete_draft is not None
             else EVENT_LIST_FILENAME
         ),
+        route=route,
         proposals=proposals,
         dormant_proposals=sorted(dormant, key=lambda item: item.candidate_id),
         places=places,
@@ -582,6 +593,43 @@ def build_route_review(
         technical_errors=route_errors,
         technical_ready=_technical_ready(proposals, route_errors, places),
     )
+    result.revision_id = _revision_id(result)
+    return result
+
+
+MISSING_REVIEW_ROUTE_ERROR = (
+    "Review is incomplete: it has no bound proposed Route metadata; migrate or refresh it."
+)
+
+
+def _review_route(
+    complete_draft: dict[str, Any] | None,
+    route_id: str,
+) -> tuple[Route | None, list[str]]:
+    if complete_draft is None or "route" not in complete_draft:
+        return None, [MISSING_REVIEW_ROUTE_ERROR]
+    payload = complete_draft.get("route")
+    if not isinstance(payload, dict):
+        return None, ["Review is incomplete: bound proposed Route metadata is invalid."]
+    try:
+        route = Route.model_validate(payload)
+    except ValidationError as exc:
+        return None, [f"Review is incomplete: bound proposed Route metadata is invalid: {exc}"]
+    if route.id != route_id:
+        return None, [
+            f"Review route '{route.id}' does not match requested route '{route_id}'."
+        ]
+    return route, []
+
+
+def _mark_missing_route_incomplete(result: RouteEditorialReview) -> RouteEditorialReview:
+    if result.route is not None:
+        return result
+    result.technical_errors = _unique_strings(
+        result.technical_errors,
+        [MISSING_REVIEW_ROUTE_ERROR],
+    )
+    result.technical_ready = False
     result.revision_id = _revision_id(result)
     return result
 

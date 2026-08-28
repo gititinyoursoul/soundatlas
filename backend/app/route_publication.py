@@ -33,6 +33,7 @@ class RoutePublicationSummary(BaseModel):
     route_id: str
     revision_id: str
     source: str
+    proposed_route: Route | None = None
     included_events: list[PublicationEventSummary]
     excluded_event_ids: list[str]
     warnings: list[str] = Field(default_factory=list)
@@ -126,6 +127,10 @@ class RoutePublicationRepository:
             route_warnings=list(review.warnings),
             route_technical_errors=list(review.technical_errors),
         )
+        if review.route is None:
+            findings.route_technical_errors.append(
+                "Publication requires bound proposed Route metadata."
+            )
         try:
             seed = self._read_seed()
         except (FileNotFoundError, json.JSONDecodeError, RoutePublicationError) as exc:
@@ -222,8 +227,23 @@ class RoutePublicationRepository:
         # Preserve legacy Connection data unchanged while it is deferred from
         # the MVP publication path.
         connections = list(seed["connections"].get("connections", []))
+        routes = list(seed["routes"].get("routes", []))
+        matching_routes = [item for item in routes if item.get("id") == review.route_id]
+        if review.route is None:
+            pass
+        elif len(matching_routes) != 1:
+            findings.route_technical_errors.append(
+                f"Canonical Route '{review.route_id}' must exist exactly once before publication."
+            )
+        else:
+            routes = [
+                review.route.model_dump(mode="json")
+                if item.get("id") == review.route_id
+                else item
+                for item in routes
+            ]
         payload = {
-            "routes": seed["routes"],
+            "routes": {**seed["routes"], "routes": routes},
             "places": {**seed["places"], "places": places},
             "events": {**seed["events"], "events": events},
             "connections": {**seed["connections"], "connections": connections},
@@ -264,6 +284,7 @@ class RoutePublicationRepository:
             route_id=review.route_id,
             revision_id=review.revision_id,
             source=review.source,
+            proposed_route=review.route,
             included_events=included,
             excluded_event_ids=excluded,
             warnings=findings.warnings,
@@ -283,6 +304,7 @@ class RoutePublicationRepository:
         review: RouteEditorialReview,
     ) -> None:
         files = {
+            "routes.json": payload["routes"],
             "places.json": payload["places"],
             "events.json": payload["events"],
             "connections.json": payload["connections"],

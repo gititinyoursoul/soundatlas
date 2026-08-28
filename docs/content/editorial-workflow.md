@@ -100,7 +100,11 @@ flowchart TD
     active result before human editorial decisions.
 13. Create or refresh `route-review.json` to keep the private Draft, Approved,
     and Don’t use state separate from agent recommendations and to hold any
-    explicit Human approval of an existing-place spatial update. The
+    explicit Human approval of an existing-place spatial update. Every current
+    complete draft also binds one seed-shaped proposed Route; Editorial Mode
+    uses that Route to frame the review while public mode continues to use the
+    last published seed Route. A review without bound Route metadata is
+    explicitly incomplete and cannot be published. The
     complete-draft step refreshes it after successful activation; existing routes may use the
     explicit one-time legacy migration described in
     `docs/content/workflow-commands.md`.
@@ -113,6 +117,8 @@ flowchart TD
     before drafting active reader-facing prose; Human publication remains the
     decision that accepts those Sources as relevant. An active Event without a
     Source URL is visible as a blocking Source finding and cannot be published.
+    Explicit publication promotes the exact bound Route and selected review
+    content together; loading or editing a review never writes seed data.
 16. Run the event editorial quality pass from
     `docs/content/event-editorial-quality-standards.md` before translating
     accepted events into `data/seed/`.

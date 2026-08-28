@@ -21,6 +21,7 @@
   import {
     projectRouteReview,
     projectConsideredCandidates,
+    routeForEditorialReview,
     type ConsideredCandidateProjection,
     type EditorialProjection
   } from '$lib/data/editorial-review';
@@ -222,9 +223,14 @@
   $: selectedPlaceEventCount = selectedPlace
     ? getEventsForPlace(routeEvents, selectedPlace.id).length
     : 0;
-  $: activeRoute = routes.find((route) => route.id === selectedRouteId) ?? null;
+  $: publishedRoute = routes.find((route) => route.id === selectedRouteId) ?? null;
+  $: activeRoute = isReviewSelection
+    ? routeForEditorialReview(routeReview)
+    : publishedRoute;
   $: selectedRoute = activeRoute;
-  $: timelineRoute = selectedRoute ?? activeRoute ?? routes[0] ?? null;
+  $: timelineRoute = isReviewSelection
+    ? activeRoute
+    : (activeRoute ?? routes[0] ?? null);
   $: timelineStartYear = timelineRoute?.year_start ?? 1965;
   $: timelineEndYear = timelineRoute?.year_end ?? 1985;
   $: headerRouteTitle = activeRoute?.title ?? 'Loading route context';
@@ -419,6 +425,11 @@
       if (selectedRouteId !== routeId || selectedRouteContext !== 'review')
         return;
       routeReview = review;
+      if (!review.route) {
+        editorialErrorMessage =
+          review.technical_errors[0] ??
+          'Editorial review is incomplete because its Route metadata is missing.';
+      }
       publicationSummary = await loadRoutePublication(routeId);
       if (selectedRouteId !== routeId || selectedRouteContext !== 'review')
         return;

@@ -389,6 +389,7 @@ def test_complete_draft_materializes_active_outputs_and_refreshes_review(
     assert "complete_draft: written" in output
     complete_draft = json.loads((route_dir / "complete-draft.json").read_text(encoding="utf-8"))
     assert complete_draft["_meta"]["source_outline"] == "candidate-outline.json"
+    assert complete_draft["route"]["id"] == ROUTE_ID
     assert complete_draft["sequence"] == ["kool-herc-sedgwick-party", "added-route-event"]
     event_list = json.loads((route_dir / "event-list.json").read_text(encoding="utf-8"))
     assert [candidate["candidate_id"] for candidate in event_list["candidates"]] == complete_draft[
@@ -752,7 +753,7 @@ def test_agent_prompts_include_editorial_quality_contracts(tmp_path: Path) -> No
     assert "complete current-schema framing" in complete_prompt
     assert "exactly one coherent Place decision for each `place_id`" in complete_prompt
     assert "Events may share and revisit that Place" in complete_prompt
-    assert '`contract_version: "3"`' in complete_prompt
+    assert '`contract_version: "4"`' in complete_prompt
     assert "`story_sections`" in complete_prompt
     assert "`reuse`, `new`, or `update`" in complete_prompt
     assert "never claim Human approval" in complete_prompt
@@ -774,7 +775,7 @@ def test_agent_prompts_include_editorial_quality_contracts(tmp_path: Path) -> No
     metadata = json.loads(
         (route_dir / "complete_draft-run.ai-draft.json").read_text(encoding="utf-8")
     )
-    assert metadata["prompt_contract"]["version"] == "2"
+    assert metadata["prompt_contract"]["version"] == "3"
     assert len(metadata["prompt_contract"]["sha256"]) == 64
 
 
@@ -1429,6 +1430,24 @@ def test_complete_draft_requires_complete_candidate_accounting(tmp_path: Path) -
     assert "outline-context-event" in "\n".join(errors)
 
 
+def test_complete_draft_requires_matching_route_and_event_period(tmp_path: Path) -> None:
+    content_root, seed_dir = write_pipeline_fixture(tmp_path)
+    payload = json.loads(build_complete_draft_json())
+    payload["route"]["id"] = "other-route"
+    payload["route"]["year_end"] = 1972
+
+    errors = route_content_pipeline.validate_complete_draft(
+        payload=payload,
+        route_id=ROUTE_ID,
+        seed_dir=seed_dir,
+        source_outline="candidate-outline.json",
+        source_outline_payload=json.loads(build_complete_draft_outline_json()),
+    )
+
+    assert f"route.id must be `{ROUTE_ID}`" in "\n".join(errors)
+    assert "falls outside the proposed Route period" in "\n".join(errors)
+
+
 def test_complete_draft_requires_titled_sections_for_active_events(tmp_path: Path) -> None:
     _, seed_dir = write_pipeline_fixture(tmp_path)
     payload = json.loads(build_complete_draft_json())
@@ -1978,10 +1997,23 @@ def build_complete_draft_json() -> str:
         )
     payload = {
         "_meta": {
-            "contract_version": "3",
+            "contract_version": "4",
             "route_id": ROUTE_ID,
             "source_outline": "candidate-outline.json",
             "review_status": "draft",
+        },
+        "route": {
+            "id": ROUTE_ID,
+            "title": "Complete draft route",
+            "color": "#000000",
+            "creator": "SoundAtlas",
+            "year_start": 1970,
+            "year_end": 1980,
+            "summary": "Complete draft summary.",
+            "thesis": "Complete draft thesis.",
+            "tags": [],
+            "review_status": "draft",
+            "source_urls": [],
         },
         "route_concept": "# Complete route concept\n\nA complete draft route argument.\n",
         "sequence": ["kool-herc-sedgwick-party", "added-route-event"],

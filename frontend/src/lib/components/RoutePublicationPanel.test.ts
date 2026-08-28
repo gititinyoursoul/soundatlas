@@ -10,6 +10,19 @@ describe('RoutePublicationPanel', () => {
           route_id: 'birth-of-hip-hop',
           revision_id: 'revision-1',
           source: 'complete-draft.json',
+          proposed_route: {
+            id: 'birth-of-hip-hop',
+            title: 'Reviewed Bronx route',
+            color: '#000000',
+            creator: 'SoundAtlas',
+            year_start: 1970,
+            year_end: 1985,
+            summary: 'Summary',
+            thesis: 'Thesis',
+            tags: [],
+            content_review_status: 'draft',
+            source_urls: []
+          },
           included_events: [
             {
               candidate_id: 'review-event',
@@ -34,6 +47,8 @@ describe('RoutePublicationPanel', () => {
     expect(body).toContain('Publication blocking checks');
     expect(body).toContain('Publication checks clear');
     expect(body).toContain('1 included · 1 excluded');
+    expect(body).toContain('Proposed route:');
+    expect(body).toContain('Reviewed Bronx route');
     expect(body).toContain('1 event warning');
     expect(body).toContain('1 route warning');
     expect(body).toContain('Check the route chronology.');
@@ -52,6 +67,7 @@ describe('RoutePublicationPanel', () => {
           route_id: 'birth-of-hip-hop',
           revision_id: 'revision-1',
           source: 'complete-draft.json',
+          proposed_route: null,
           included_events: [],
           excluded_event_ids: [],
           warnings: [],

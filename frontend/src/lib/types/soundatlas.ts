@@ -277,6 +277,7 @@ export type RouteEditorialReview = {
   route_id: string;
   revision_id: string;
   source: string;
+  route: Route | null;
   proposals: RouteReviewProposal[];
   dormant_proposals: RouteReviewProposal[];
   places: RouteReviewPlace[];
@@ -300,6 +301,7 @@ export type RoutePublicationSummary = {
   route_id: string;
   revision_id: string;
   source: string;
+  proposed_route: Route | null;
   included_events: PublicationEventSummary[];
   excluded_event_ids: string[];
   warnings: string[];

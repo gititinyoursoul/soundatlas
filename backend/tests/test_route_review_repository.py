@@ -36,6 +36,35 @@ def test_refresh_defaults_to_draft_and_preserves_agent_recommendation(tmp_path: 
     assert (tmp_path / ROUTE_ID / "route-review.json").exists()
 
 
+def test_legacy_review_without_bound_route_is_explicitly_incomplete(tmp_path: Path) -> None:
+    repository = write_review_fixture(tmp_path)
+    draft_path = tmp_path / ROUTE_ID / "complete-draft.json"
+    payload = json.loads(draft_path.read_text(encoding="utf-8"))
+    payload.pop("route")
+    draft_path.write_text(json.dumps(payload), encoding="utf-8")
+
+    review = repository.refresh(ROUTE_ID)
+
+    assert review.route is None
+    assert review.technical_ready is False
+    assert "no bound proposed Route metadata" in review.technical_errors[0]
+
+
+def test_bound_route_change_creates_a_new_review_revision(tmp_path: Path) -> None:
+    repository = write_review_fixture(tmp_path)
+    first = repository.refresh(ROUTE_ID)
+    draft_path = tmp_path / ROUTE_ID / "complete-draft.json"
+    payload = json.loads(draft_path.read_text(encoding="utf-8"))
+    payload["route"]["thesis"] = "A materially revised route thesis."
+    draft_path.write_text(json.dumps(payload), encoding="utf-8")
+
+    refreshed = repository.refresh(ROUTE_ID)
+
+    assert refreshed.route is not None
+    assert refreshed.route.thesis == "A materially revised route thesis."
+    assert refreshed.revision_id != first.revision_id
+
+
 def test_review_binds_exact_reader_facing_event_and_place(tmp_path: Path) -> None:
     repository = write_review_fixture(tmp_path)
     draft_path = tmp_path / ROUTE_ID / "complete-draft.json"
@@ -665,6 +694,7 @@ def write_event_list(content_root: Path, candidates: list[dict[str, object]]) ->
         json.dumps(
             {
                 "_meta": {"route_id": ROUTE_ID},
+                "route": route(),
                 "candidates": candidates,
                 "events": [event(str(item["candidate_id"])) for item in candidates],
                 "places": [{"decision": "reuse", "place_id": "place-one"}],
@@ -727,6 +757,22 @@ def place(place_id: str) -> dict[str, object]:
         "latitude": 40.8,
         "longitude": -73.9,
         "summary": "Review place summary.",
+        "review_status": "draft",
+        "source_urls": [],
+    }
+
+
+def route() -> dict[str, object]:
+    return {
+        "id": ROUTE_ID,
+        "title": "Review route",
+        "color": "#000000",
+        "creator": "SoundAtlas",
+        "year_start": 1970,
+        "year_end": 1980,
+        "summary": "Review route summary.",
+        "thesis": "Review route thesis.",
+        "tags": [],
         "review_status": "draft",
         "source_urls": [],
     }

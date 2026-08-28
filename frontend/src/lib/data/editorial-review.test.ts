@@ -6,7 +6,8 @@ import type {
 } from '$lib/types/soundatlas';
 import {
   projectConsideredCandidates,
-  projectRouteReview
+  projectRouteReview,
+  routeForEditorialReview
 } from './editorial-review';
 
 function makeProposal(
@@ -41,6 +42,7 @@ function makeReview(
     route_id: 'birth-of-hip-hop',
     revision_id: 'revision-1',
     source: 'complete-draft.json',
+    route: null,
     proposals: [],
     dormant_proposals: [],
     places: [],
@@ -56,6 +58,29 @@ function makeReview(
 }
 
 describe('editorial review projection', () => {
+  it('uses only the bound Route for editorial framing', () => {
+    expect(routeForEditorialReview(makeReview())).toBeNull();
+    expect(
+      routeForEditorialReview(
+        makeReview({
+          route: {
+            id: 'birth-of-hip-hop',
+            title: 'Reviewed Bronx route',
+            color: '#000000',
+            creator: 'SoundAtlas',
+            year_start: 1970,
+            year_end: 1985,
+            summary: 'Summary',
+            thesis: 'Thesis',
+            tags: [],
+            content_review_status: 'draft',
+            source_urls: []
+          }
+        })
+      )?.year_end
+    ).toBe(1985);
+  });
+
   it('passes the generated event through without rebuilding it from planning fields', () => {
     const proposal = makeProposal();
     const [projection] = projectRouteReview(

@@ -32,6 +32,8 @@ def test_publication_summary_and_publish_filter_exact_review_result(tmp_path: Pa
         {"heading": "Keep this wording", "body": "First published section."},
         {"heading": "Keep this order", "body": "Second published section."},
     ]
+    draft["route"]["title"] = "Published review route"
+    draft["route"]["year_end"] = 1981
     draft_path.write_text(json.dumps(draft), encoding="utf-8")
     review_repository = RouteReviewRepository(content_root, seed_dir=seed_dir)
     review = review_repository.refresh(ROUTE_ID)
@@ -61,6 +63,7 @@ def test_publication_summary_and_publish_filter_exact_review_result(tmp_path: Pa
     assert [item["candidate_id"] for item in summary.json()["included_events"]] == ["event-one"]
     assert summary.json()["excluded_event_ids"] == ["event-two"]
     assert summary.json()["technical_ready"] is True
+    assert summary.json()["proposed_route"]["title"] == "Published review route"
 
     published = client.post(
         f"/editorial/routes/{ROUTE_ID}/publication",
@@ -73,6 +76,9 @@ def test_publication_summary_and_publish_filter_exact_review_result(tmp_path: Pa
     connections_payload = json.loads(
         (seed_dir / "connections.json").read_text(encoding="utf-8")
     )
+    routes_payload = json.loads((seed_dir / "routes.json").read_text(encoding="utf-8"))
+    assert routes_payload["routes"][0]["title"] == "Published review route"
+    assert routes_payload["routes"][0]["year_end"] == 1981
     assert [event["id"] for event in events_payload["events"]] == ["event-one"]
     assert events_payload["events"][0]["story_sections"] == [
         {"heading": "Keep this wording", "body": "First published section."},
@@ -165,6 +171,28 @@ def test_publication_summary_keeps_route_only_errors_distinct(tmp_path: Path) ->
     ]
     assert summary.technical_errors == summary.route_technical_errors
     assert summary.technical_ready is False
+
+
+def test_publication_blocks_legacy_review_without_bound_route(tmp_path: Path) -> None:
+    content_root = tmp_path / "content"
+    seed_dir = tmp_path / "seed"
+    write_publication_fixture(content_root, seed_dir)
+    draft_path = content_root / ROUTE_ID / "complete-draft.json"
+    draft = json.loads(draft_path.read_text(encoding="utf-8"))
+    draft.pop("route")
+    draft_path.write_text(json.dumps(draft), encoding="utf-8")
+    review_repository = RouteReviewRepository(content_root, seed_dir=seed_dir)
+    review = review_repository.refresh(ROUTE_ID)
+    repository = RoutePublicationRepository(
+        review_repository, content_root=content_root, seed_dir=seed_dir
+    )
+
+    summary = repository.summary(ROUTE_ID)
+
+    assert review.route is None
+    assert summary.proposed_route is None
+    assert summary.technical_ready is False
+    assert "Publication requires bound proposed Route metadata." in summary.technical_errors
 
 
 def test_publication_rejects_stale_revision_without_writing(tmp_path: Path) -> None:
@@ -295,7 +323,10 @@ def test_publication_failure_restores_all_previous_files(tmp_path: Path, monkeyp
         content_root=content_root,
         seed_dir=seed_dir,
     )
-    paths = [seed_dir / name for name in ("places.json", "events.json", "connections.json")]
+    paths = [
+        seed_dir / name
+        for name in ("routes.json", "places.json", "events.json", "connections.json")
+    ]
     original = {path: path.read_bytes() for path in paths}
     replace_calls = 0
 
@@ -341,6 +372,7 @@ def write_publication_fixture(content_root: Path, seed_dir: Path) -> None:
         json.dumps(
             {
                 "_meta": {"route_id": ROUTE_ID},
+                "route": route(),
                 "candidates": candidates,
                 "events": [
                     event("event-one", "place-one", "First event"),

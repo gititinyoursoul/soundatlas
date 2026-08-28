@@ -32,6 +32,13 @@
         .length} excluded
     </p>
 
+    {#if summary.proposed_route}
+      <p class="event-totals">
+        Proposed route: <strong>{summary.proposed_route.title}</strong>
+        ({summary.proposed_route.year_start}-{summary.proposed_route.year_end})
+      </p>
+    {/if}
+
     {#if summary.included_event_warning_count > 0 || summary.included_event_technical_error_count > 0}
       <div class="finding-counts" aria-label="Included event findings">
         {#if summary.included_event_warning_count > 0}

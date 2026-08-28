@@ -269,6 +269,13 @@ materially changed Approved proposals return to Draft; and Don’t use remains
 excluded until a human changes it. Inactive Candidate accounts have no Draft,
 Approved, or Don’t use state.
 
+The active `complete-draft.json` must contain a seed-shaped `route` object whose
+ID matches the route folder and whose time range covers its Events. That Route
+is part of the exact review revision and is used only by Editorial Mode until
+an explicit publication. Legacy reviews without it are readable as incomplete,
+but they must be migrated or refreshed; they never fall back to current seed
+Route metadata.
+
 The private backend boundary for the later explorer review surface is:
 
 - `GET /editorial/routes/<route-id>/review`
@@ -323,7 +330,8 @@ changed spatial fields, affected canonical event references, provenance,
 warnings, approval state, and blocking validation findings. Preview and write
 consume route artifacts only and make no live geodata request.
 
-Active-path `--write` publishes the exact bound route-review revision. It reuses
+Active-path `--write` publishes the exact bound route-review revision and its
+proposed Route metadata. It reuses
 canonical places unchanged, adds reviewed new places, and applies only an
 explicitly approved existing-place spatial update. It rejects a stale baseline,
 non-spatial change, unresolved placeholder coordinates, incomplete geometry
