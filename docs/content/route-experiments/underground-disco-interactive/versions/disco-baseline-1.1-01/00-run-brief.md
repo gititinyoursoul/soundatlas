@@ -8,8 +8,8 @@
 - Status: `checkpointed`
 - Starting condition: `fixed-topic`
 - First executable stage: `02`
-- Current stage: `06`
-- Last completed stage: `06`
+- Current stage: `07`
+- Last completed stage: `07`
 - Started: `2026-08-27T22:29:47Z`, when the matching Proceed record was posted
 - Step 02 checkpointed: `2026-08-27`
 - Step 02 Human decision: compare Arcs A, B, and C as equal contenders
@@ -22,6 +22,9 @@
   Gallery and “Heartbeat” equally as competing sixth Events; keep Best of
   Friends as context
 - Step 06 checkpointed: `2026-08-28`
+- Step 06 Human decision: select both the Gallery and “Heartbeat,” accepting
+  the seven-Event Option C
+- Step 07 checkpointed: `2026-08-28`
 
 ## Authority
 
@@ -31,6 +34,8 @@
 - Proceed record: [Issue comment](https://github.com/gititinyoursoul/soundatlas/issues/158#issuecomment-5445968776)
 - Continuation Plan: [live Disco step 06](https://github.com/gititinyoursoul/soundatlas/issues/158#issuecomment-5446654939)
 - Continuation Proceed record: [Issue comment](https://github.com/gititinyoursoul/soundatlas/issues/158#issuecomment-5446675797)
+- Step 07 Plan: [cross-Event synthesis](https://github.com/gititinyoursoul/soundatlas/issues/158#issuecomment-5446868458)
+- Step 07 Proceed record: [Issue comment](https://github.com/gititinyoursoul/soundatlas/issues/158#issuecomment-5446883576)
 
 ## Fixed topic and test question
 
@@ -51,9 +56,10 @@
 
 This version explores competing narrative arcs, tests the Human-selected or
 authorized shortlist with one bounded Candidate landscape, researches the
-material gaps exposed by that test, recommends a defensible cohort, and deep-
-researches the five shared core Events plus two competing sixth Events. The
-current authorized terminal stage is step 06.
+material gaps exposed by that test, recommends a defensible cohort, deep-
+researches the five shared core Events plus two challengers, and synthesizes
+the Human-selected seven Events into one evidence-bounded route argument. The
+current authorized terminal stage is step 07.
 
 The route-length hypothesis is six to nine Events. This is a comparison range,
 not a quota. A shorter or longer result is valid when step 05 explains the
@@ -111,7 +117,7 @@ roughly 150–220 words, but no reader-facing copy is written in this slice.
   or enter editorial review.
 - Do not implement product, schema, workflow, pipeline, prompt, media, rights,
   or map changes.
-- Do not execute steps 07–11 or make the final experimental-method decision.
+- Do not execute steps 08–11 or make the final experimental-method decision.
 
 ## Checkpoints and next permitted work
 
@@ -145,17 +151,17 @@ Agent recommends “Heartbeat” by a narrow margin because it adds a later,
 record-specific floor-to-retail outcome; Gallery has the stronger room-level
 and visual evidence.
 
-Required Human checkpoint now:
+The Human selected both challengers, accepting the seven-Event Option C and its
+downtown-density cost. Step 07 is recorded in
+[`07-cross-event-synthesis.md`](07-cross-event-synthesis.md). The synthesis
+keeps all seven Events, selects an argument-centric three-section structure,
+and finds the route ready for drafting with explicit Source, causality,
+geography, representation, coordinate, media, and rights constraints.
 
-1. Choose `gallery-mercer-dj-dancer-response` or
-   `heartbeat-garage-retail-circulation` as the sixth Event, revise the
-   six-Event direction, or stop this route version.
-2. Confirm whether the chosen six may proceed to cross-Event synthesis in a
-   later separately approved step-07 Plan.
+No new material route-direction decision emerged at step 07. The run is
+checkpointed because step 07 is the authorized terminal stage, not because the
+Agent has authority to begin reader-facing copy. Step 08 may proceed only after
+a separately confirmed Plan and matching Proceed record.
 
-Stage 06 is the authorized terminal stage of the current Plan. No step 07 work
-is permitted until the challenger decision is recorded and a separately
-confirmed Plan and Proceed record authorize the continuation.
-
-Stop reason: waiting for the required Gallery-versus-“Heartbeat” sixth-Event
-decision and direction on later cross-Event synthesis.
+Stop reason: step 07 completed; waiting for separately authorized narrative
+drafting.
