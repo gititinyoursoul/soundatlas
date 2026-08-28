@@ -46,6 +46,7 @@
   export let variant: DrawerVariant = 'expanded';
   export let activeItemId = 'map';
   export let routes: Route[] = [];
+  export let reviewRoutes: Route[] = [];
   export let selectedRouteId: string | null = null;
   export let routeEventCounts: Record<string, number> = {};
   export let reviewQueueItems: ReviewQueueItem[] = [];
@@ -55,7 +56,8 @@
   export let showEditorialReview = false;
   export let editorialProposalCount = 0;
   export let editorialProposals: RouteReviewProposal[] = [];
-  export let editorialConsideredCandidates: ConsideredCandidateProjection[] = [];
+  export let editorialConsideredCandidates: ConsideredCandidateProjection[] =
+    [];
   export let editorialErrorMessage: string | null = null;
   export let publicationSummary: RoutePublicationSummary | null = null;
   export let publicationSaving = false;
@@ -115,23 +117,7 @@
     includeEditorialReview: boolean,
     proposalCount: number
   ): NavSection[] {
-    const baseSections: NavSection[] = [
-      {
-        id: 'explore',
-        title: 'Explore',
-        items: [
-          {
-            id: 'routes',
-            label: 'Routes',
-            icon: 'route',
-            badge: routes > 0 ? String(routes) : undefined
-          }
-        ],
-        emptyMessage:
-          routes === 0 && !error ? 'No route entries loaded.' : undefined,
-        errorMessage: error
-      }
-    ];
+    const baseSections: NavSection[] = [];
 
     const sections = [...baseSections];
     if (includeEditorialReview) {
@@ -179,11 +165,6 @@
       return;
     }
 
-    if (item.id === 'routes') {
-      openRoutesPanel();
-      return;
-    }
-
     if (item.id === 'media-review') {
       if (!showAdminReview) {
         return;
@@ -199,18 +180,6 @@
     }
 
     onSelectItem(item.id);
-  }
-
-  async function openRoutesPanel(): Promise<void> {
-    activePanel = 'routes';
-    onSelectItem('routes');
-
-    if (variant === 'collapsed') {
-      onToggleVariant();
-    }
-
-    await tick();
-    panelHeadingElement?.focus();
   }
 
   async function returnToMainPanel(): Promise<void> {
@@ -592,6 +561,79 @@
           >
             Main navigation
           </h2>
+          <section
+            class="nav-section"
+            aria-labelledby="published-routes-heading"
+          >
+            {#if variant === 'expanded'}
+              <h2 id="published-routes-heading">Routes</h2>
+            {/if}
+            {#if routes.length === 0}
+              <div class="section-empty">
+                <Icon name="circle" /><span>No published routes available.</span
+                >
+              </div>
+            {:else}
+              <div class="route-list" aria-label="Published routes">
+                {#each routes as route (route.id)}
+                  <button
+                    type="button"
+                    class:active={selectedRouteId === route.id}
+                    class="route-option"
+                    style={`--route-color: ${route.color}`}
+                    aria-current={selectedRouteId === route.id
+                      ? 'page'
+                      : undefined}
+                    on:click={() => handleRouteClick(route.id)}
+                  >
+                    <span class="route-swatch" aria-hidden="true"></span><span
+                      class="route-copy"
+                      ><strong>{route.title}</strong><span
+                        >{route.year_start}-{route.year_end}</span
+                      ></span
+                    >
+                  </button>
+                {/each}
+              </div>
+            {/if}
+          </section>
+          {#if showEditorialReview}
+            <section
+              class="nav-section"
+              aria-labelledby="review-routes-heading"
+            >
+              {#if variant === 'expanded'}<h2 id="review-routes-heading">
+                  Routes to review
+                </h2>{/if}
+              {#if reviewRoutes.length === 0}
+                <div class="section-empty">
+                  <Icon name="circle" /><span>No routes to review.</span>
+                </div>
+              {:else}
+                <div class="route-list" aria-label="Routes to review">
+                  {#each reviewRoutes as route (route.id)}
+                    <button
+                      type="button"
+                      class:active={selectedRouteId === route.id}
+                      class="route-option"
+                      style={`--route-color: ${route.color}`}
+                      aria-current={selectedRouteId === route.id
+                        ? 'page'
+                        : undefined}
+                      on:click={() => handleRouteClick(route.id)}
+                    >
+                      <span class="route-swatch" aria-hidden="true"></span><span
+                        class="route-copy"
+                        ><strong>{route.title}</strong><span
+                          >Current review revision</span
+                        ></span
+                      >
+                    </button>
+                  {/each}
+                </div>
+              {/if}
+            </section>
+          {/if}
           {#each sections as section (section.id)}
             <section
               class="nav-section"

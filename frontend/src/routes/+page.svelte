@@ -4,6 +4,7 @@
     IS_EDITORIAL_MODE,
     IS_PUBLIC_STATIC_MODE,
     loadRoutePublication,
+    loadRouteNavigation,
     loadRouteReview,
     loadSoundAtlasData,
     publishRoute,
@@ -44,11 +45,13 @@
     RouteEditorialReview,
     RoutePublicationResult,
     RoutePublicationSummary,
+    RouteNavigationSummary,
     Route,
     StoryConnectionItem
   } from '$lib/types/soundatlas';
 
   let routes: Route[] = [];
+  let routeNavigation: RouteNavigationSummary | null = null;
   let places: Place[] = [];
   let events: Event[] = [];
   const activeConnections: Connection[] = [];
@@ -126,6 +129,14 @@
     },
     {}
   );
+  $: publishedRoutes =
+    routeNavigation?.routes
+      .filter((entry) => entry.appears_in_published_routes)
+      .map((entry) => entry.route) ?? [];
+  $: reviewRoutes =
+    routeNavigation?.routes
+      .filter((entry) => entry.appears_in_routes_to_review)
+      .map((entry) => entry.route) ?? [];
   $: reviewQueueItems = IS_PUBLIC_STATIC_MODE
     ? []
     : events.flatMap((event) => [
@@ -232,11 +243,19 @@
 
   onMount(async () => {
     try {
-      const data = await loadSoundAtlasData();
+      const [data, navigation] = await Promise.all([
+        loadSoundAtlasData(),
+        loadRouteNavigation()
+      ]);
       routes = data.routes;
+      routeNavigation = navigation;
       places = data.places;
       events = data.events;
-      const initialRouteId = selectedRouteId ?? getInitialRouteId(data.routes);
+      const selectableRoutes = IS_EDITORIAL_MODE
+        ? [...reviewRoutes, ...publishedRoutes]
+        : publishedRoutes;
+      const initialRouteId =
+        selectedRouteId ?? getInitialRouteId(selectableRoutes);
       selectedRouteId = initialRouteId;
 
       if (IS_EDITORIAL_MODE && initialRouteId) {
@@ -247,7 +266,8 @@
         routeReview = review;
         publicationSummary = publication;
         editorialProjections = projectRouteReview(routeReview);
-        consideredCandidateProjections = projectConsideredCandidates(routeReview);
+        consideredCandidateProjections =
+          projectConsideredCandidates(routeReview);
       }
 
       if (!IS_EDITORIAL_MODE) {
@@ -662,7 +682,8 @@
     open={isNavigationOpen}
     variant={navigationVariant}
     activeItemId={activeNavigationItemId}
-    {routes}
+    routes={publishedRoutes}
+    {reviewRoutes}
     {selectedRouteId}
     {routeEventCounts}
     {reviewQueueItems}

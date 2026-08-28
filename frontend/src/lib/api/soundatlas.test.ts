@@ -6,6 +6,7 @@ import {
   loadStaticSoundAtlasData,
   reviewEventLink,
   loadRoutePublication,
+  loadRouteNavigation,
   loadRouteReview,
   publishRoute,
   updateRouteReviewState
@@ -245,6 +246,28 @@ describe('SoundAtlas API client', () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ revision_id: 'revision-1' })
       }
+    );
+  });
+
+  it('loads the route-navigation summary from the API', async () => {
+    const summary = {
+      routes: [
+        {
+          route: makeRoute({ id: 'published-route' }),
+          review_revision_id: 'review-2',
+          published_revision_id: 'published-1',
+          appears_in_published_routes: true,
+          appears_in_routes_to_review: true
+        }
+      ]
+    };
+    const fetcher = vi
+      .fn<typeof fetch>()
+      .mockResolvedValueOnce(jsonResponse(summary));
+
+    await expect(loadRouteNavigation(fetcher)).resolves.toEqual(summary);
+    expect(fetcher).toHaveBeenCalledWith(
+      `${API_BASE_URL}/editorial/route-navigation`
     );
   });
 });

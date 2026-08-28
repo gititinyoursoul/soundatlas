@@ -191,6 +191,16 @@ export type SoundAtlasData = {
   connections: Connection[];
 };
 
+export type RouteNavigationEntry = {
+  route: Route;
+  review_revision_id: string | null;
+  published_revision_id: string | null;
+  appears_in_published_routes: boolean;
+  appears_in_routes_to_review: boolean;
+};
+
+export type RouteNavigationSummary = { routes: RouteNavigationEntry[] };
+
 export type ReviewQueueItem = {
   id: string;
   kind: ReviewLinkKind;

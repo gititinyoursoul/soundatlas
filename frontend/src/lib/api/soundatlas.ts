@@ -8,6 +8,7 @@ import type {
   Route,
   RoutePublicationResult,
   RoutePublicationSummary,
+  RouteNavigationSummary,
   RouteEditorialReview,
   SoundAtlasData
 } from '$lib/types/soundatlas';
@@ -150,6 +151,20 @@ export async function loadRoutePublication(
     `/editorial/routes/${encodeURIComponent(routeId)}/publication`,
     fetcher
   );
+}
+
+export async function loadRouteNavigation(
+  fetcher: typeof fetch = fetch
+): Promise<RouteNavigationSummary> {
+  return IS_PUBLIC_STATIC_MODE
+    ? requestStaticJson<RouteNavigationSummary>(
+        'route-navigation.json',
+        fetcher
+      )
+    : requestJson<RouteNavigationSummary>(
+        '/editorial/route-navigation',
+        fetcher
+      );
 }
 
 export async function publishRoute(

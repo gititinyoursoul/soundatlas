@@ -2,6 +2,7 @@ from fastapi import Depends, FastAPI, HTTPException, Query, status
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import DEFAULT_SEED_DIR, LOCAL_CORS_ORIGIN_REGEX, LOCAL_CORS_ORIGINS
+from app.route_navigation import RouteNavigationRepository, RouteNavigationSummary
 from app.route_publication import (
     RoutePublicationConflictError,
     RoutePublicationError,
@@ -73,6 +74,11 @@ def create_app(
     def get_route_publication_repository() -> RoutePublicationRepository:
         return active_route_publication_repository
 
+    def get_route_navigation_repository() -> RouteNavigationRepository:
+        return RouteNavigationRepository(
+            active_route_review_repository, active_route_publication_repository
+        )
+
     @api.get("/health", response_model=HealthResponse)
     def health() -> HealthResponse:
         return HealthResponse(status="ok")
@@ -82,6 +88,18 @@ def create_app(
         seed_repository: SeedRepository = Depends(get_repository),
     ) -> list[Route]:
         return seed_repository.list_routes()
+
+    @api.get(
+        "/editorial/route-navigation",
+        response_model=RouteNavigationSummary,
+    )
+    def get_route_navigation(
+        seed_repository: SeedRepository = Depends(get_repository),
+        navigation_repository: RouteNavigationRepository = Depends(
+            get_route_navigation_repository
+        ),
+    ) -> RouteNavigationSummary:
+        return navigation_repository.summary(seed_repository.list_routes())
 
     @api.get("/events", response_model=list[Event])
     def list_events(

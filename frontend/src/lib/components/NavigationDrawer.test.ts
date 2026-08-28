@@ -1,5 +1,6 @@
 import { render } from 'svelte/server';
 import { describe, expect, it } from 'vitest';
+import { makeRoute } from '$lib/test/fixtures';
 import NavigationDrawer from './NavigationDrawer.svelte';
 
 describe('NavigationDrawer mode labels', () => {
@@ -31,5 +32,21 @@ describe('NavigationDrawer mode labels', () => {
     expect(publicView.body).not.toContain('Editorial');
     expect(publicView.body).not.toContain('Route review');
     expect(publicView.body).not.toContain('Media Review');
+  });
+
+  it('renders published and review routes directly in editorial navigation', () => {
+    const { body } = render(NavigationDrawer, {
+      props: {
+        open: true,
+        showEditorialReview: true,
+        routes: [makeRoute({ id: 'published', title: 'Published route' })],
+        reviewRoutes: [makeRoute({ id: 'review', title: 'Review route' })]
+      }
+    });
+
+    expect(body).toContain('Routes to review');
+    expect(body).toContain('Published route');
+    expect(body).toContain('Review route');
+    expect(body).not.toContain('Choose selected route');
   });
 });
