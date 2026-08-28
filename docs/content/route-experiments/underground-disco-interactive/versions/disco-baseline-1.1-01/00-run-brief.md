@@ -8,8 +8,8 @@
 - Status: `checkpointed`
 - Starting condition: `fixed-topic`
 - First executable stage: `02`
-- Current stage: `07`
-- Last completed stage: `07`
+- Current stage: `08`
+- Last completed stage: `08`
 - Started: `2026-08-27T22:29:47Z`, when the matching Proceed record was posted
 - Step 02 checkpointed: `2026-08-27`
 - Step 02 Human decision: compare Arcs A, B, and C as equal contenders
@@ -25,6 +25,7 @@
 - Step 06 Human decision: select both the Gallery and “Heartbeat,” accepting
   the seven-Event Option C
 - Step 07 checkpointed: `2026-08-28`
+- Step 08 checkpointed: `2026-08-28`
 
 ## Authority
 
@@ -36,6 +37,8 @@
 - Continuation Proceed record: [Issue comment](https://github.com/gititinyoursoul/soundatlas/issues/158#issuecomment-5446675797)
 - Step 07 Plan: [cross-Event synthesis](https://github.com/gititinyoursoul/soundatlas/issues/158#issuecomment-5446868458)
 - Step 07 Proceed record: [Issue comment](https://github.com/gititinyoursoul/soundatlas/issues/158#issuecomment-5446883576)
+- Step 08 Plan: [narrative draft](https://github.com/gititinyoursoul/soundatlas/issues/158#issuecomment-5446971842)
+- Step 08 Proceed record: [Issue comment](https://github.com/gititinyoursoul/soundatlas/issues/158#issuecomment-5451060094)
 
 ## Fixed topic and test question
 
@@ -57,15 +60,17 @@
 This version explores competing narrative arcs, tests the Human-selected or
 authorized shortlist with one bounded Candidate landscape, researches the
 material gaps exposed by that test, recommends a defensible cohort, deep-
-researches the five shared core Events plus two challengers, and synthesizes
-the Human-selected seven Events into one evidence-bounded route argument. The
-current authorized terminal stage is step 07.
+researches the five shared core Events plus two challengers, synthesizes the
+Human-selected seven Events into one evidence-bounded route argument, and
+drafts that argument as a reviewable seven-Event narrative. The current
+authorized terminal stage is step 08.
 
 The route-length hypothesis is six to nine Events. This is a comparison range,
 not a quota. A shorter or longer result is valid when step 05 explains the
 historical, geographic, experiential, and complexity tradeoff. The intended
-content depth is a medium route whose eventual major Event chapters could carry
-roughly 150–220 words, but no reader-facing copy is written in this slice.
+content depth is a medium route whose major Event chapters generally carry
+roughly 150–220 words. The step-08 reader-facing copy remains Agent-authored
+experimental evidence, not Human-reviewed or publication-ready content.
 
 ## Method hypotheses
 
@@ -117,7 +122,7 @@ roughly 150–220 words, but no reader-facing copy is written in this slice.
   or enter editorial review.
 - Do not implement product, schema, workflow, pipeline, prompt, media, rights,
   or map changes.
-- Do not execute steps 08–11 or make the final experimental-method decision.
+- Do not execute steps 09–11 or make the final experimental-method decision.
 
 ## Checkpoints and next permitted work
 
@@ -158,10 +163,17 @@ keeps all seven Events, selects an argument-centric three-section structure,
 and finds the route ready for drafting with explicit Source, causality,
 geography, representation, coordinate, media, and rights constraints.
 
-No new material route-direction decision emerged at step 07. The run is
-checkpointed because step 07 is the authorized terminal stage, not because the
-Agent has authority to begin reader-facing copy. Step 08 may proceed only after
-a separately confirmed Plan and matching Proceed record.
+No new material route-direction decision emerged at step 07. Step 08 is
+recorded in [`08-narrative-draft.md`](08-narrative-draft.md). It carries the
+accepted three-section structure and all seven stable Event assignments into a
+medium-depth Agent draft, preserves the documented-versus-interpretive
+relationship boundaries, and records Source-basis and drafting notes for the
+next evidence audit.
 
-Stop reason: step 07 completed; waiting for separately authorized narrative
-drafting.
+The run is checkpointed because step 08 is the authorized terminal stage. The
+draft is not Human-approved copy, a Source decision, an evidence-audit result,
+or publication authority. Step 09 may proceed only after a separately
+confirmed Plan and matching Proceed record.
+
+Stop reason: step 08 completed; waiting for separately authorized evidence
+review.
