@@ -98,10 +98,12 @@ uv run python scripts/run_youtube_search_requests.py --event-id kool-herc-back-t
 Expected output file:
 
 ```text
-data/enrichment/youtube-search-results/kool-herc-back-to-school-jam.json
+data/enrichment/youtube-search-results/<event-id>.json
 ```
 
-The output file contains normalized draft results. It should not contain a real API key.
+The output file contains normalized draft results. Result JSON is generated
+local runtime output and is ignored by Git; it should not contain a real API
+key.
 
 ## 5. Preview The Merge Into `media_links`
 
