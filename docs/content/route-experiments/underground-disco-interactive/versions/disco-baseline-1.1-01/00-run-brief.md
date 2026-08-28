@@ -8,8 +8,8 @@
 - Status: `checkpointed`
 - Starting condition: `fixed-topic`
 - First executable stage: `02`
-- Current stage: `09`
-- Last completed stage: `09`
+- Current stage: `10a`
+- Last completed stage: `10a`
 - Started: `2026-08-27T22:29:47Z`, when the matching Proceed record was posted
 - Step 02 checkpointed: `2026-08-27`
 - Step 02 Human decision: compare Arcs A, B, and C as equal contenders
@@ -27,6 +27,7 @@
 - Step 07 checkpointed: `2026-08-28`
 - Step 08 checkpointed: `2026-08-28`
 - Step 09 checkpointed: `2026-08-28`
+- Step 10a checkpointed: `2026-08-28`
 
 ## Authority
 
@@ -42,6 +43,8 @@
 - Step 08 Proceed record: [Issue comment](https://github.com/gititinyoursoul/soundatlas/issues/158#issuecomment-5451060094)
 - Step 09 Plan: [evidence review](https://github.com/gititinyoursoul/soundatlas/issues/158#issuecomment-5451572454)
 - Step 09 Proceed record: [Issue comment](https://github.com/gititinyoursoul/soundatlas/issues/158#issuecomment-5451639561)
+- Step 10a Plan: [final route copy](https://github.com/gititinyoursoul/soundatlas/issues/158#issuecomment-5451998970)
+- Step 10a Proceed record: [Issue comment](https://github.com/gititinyoursoul/soundatlas/issues/158#issuecomment-5452012582)
 
 ## Fixed topic and test question
 
@@ -65,17 +68,17 @@ authorized shortlist with one bounded Candidate landscape, researches the
 material gaps exposed by that test, recommends a defensible cohort, deep-
 researches the five shared core Events plus two challengers, synthesizes the
 Human-selected seven Events into one evidence-bounded route argument, and
-drafts that argument as a reviewable seven-Event narrative, and audits and
-corrects its material claims. The current authorized terminal stage is step
-09.
+drafts that argument as a reviewable seven-Event narrative, audits and corrects
+its material claims, and refines the evidence-reviewed result into final-copy
+form for Human acceptance or rejection. The current authorized terminal stage
+is step 10a.
 
 The route-length hypothesis is six to nine Events. This is a comparison range,
 not a quota. A shorter or longer result is valid when step 05 explains the
 historical, geographic, experiential, and complexity tradeoff. The intended
 content depth is a medium route whose major Event chapters generally carry
-roughly 150–220 words. The corrected step-09 reader-facing copy remains
-Agent-authored experimental evidence, not Human-reviewed or publication-ready
-content.
+roughly 150–220 words. The step-10a final-copy candidate remains Agent-authored
+experimental evidence, not Human-accepted or publication-ready content.
 
 ## Method hypotheses
 
@@ -127,7 +130,7 @@ content.
   or enter editorial review.
 - Do not implement product, schema, workflow, pipeline, prompt, media, rights,
   or map changes.
-- Do not execute steps 10a–11 or make the final experimental-method decision.
+- Do not execute steps 10b–11 or make the final experimental-method decision.
 
 ## Checkpoints and next permitted work
 
@@ -183,10 +186,19 @@ corroboration limits. One supported-synthesis passage also receives a wording
 refinement. No claim requires removal or a return to research, cohort, or
 synthesis work.
 
-The run is checkpointed because step 09 is the authorized terminal stage. The
-corrected draft is not Human-approved copy, a Human Source decision, final-stop
-copy, or publication authority. Step 10a may proceed only after a separately
-confirmed Plan and matching Proceed record.
+Step 10a is recorded in
+[`10a-final-route-copy.md`](10a-final-route-copy.md). It preserves the seven
+stable Event IDs and three section IDs, supplies every shared-schema final-stop
+and narrative-section record, and refines the audited route into 2,036 words of
+reader-facing copy. All seven Event stops fall within the selected 150–220-word
+medium-depth range. The historical, causal, representation, geographic, map,
+media, rights, and Human-authority limits from step 09 remain explicit.
 
-Stop reason: step 09 completed; waiting for separately authorized final-copy
-work.
+The run is checkpointed because step 10a is the authorized terminal stage. The
+final-copy candidate is not Human-accepted copy, a Human Source decision,
+editorial-review state, presentation authority, or publication authority. The
+Human must accept, reject, or request correction of this copy. Step 10b may
+proceed only after copy acceptance and a separately confirmed Plan and matching
+Proceed record.
+
+Stop reason: step 10a completed; waiting for Human final-copy review.
