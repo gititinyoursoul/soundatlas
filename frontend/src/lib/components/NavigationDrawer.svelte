@@ -366,13 +366,13 @@
                 <span>No routes loaded.</span>
               </div>
             {:else}
-              <div class="route-list" aria-label="Available routes">
+              <div class="route-list gap-1.5" aria-label="Available routes">
                 {#each routes as route (route.id)}
                   <button
                     type="button"
                     class:active={selectedRouteId === route.id &&
                       selectedRouteContext === 'reader'}
-                    class="route-option"
+                    class="route-option min-h-[3.75rem] gap-2 px-2.5 py-2"
                     style={`--route-color: ${route.color}`}
                     aria-current={selectedRouteId === route.id &&
                     selectedRouteContext === 'reader'
@@ -381,7 +381,7 @@
                     on:click={() => handleRouteClick(route.id, 'reader')}
                   >
                     <span class="route-swatch" aria-hidden="true"></span>
-                    <span class="route-copy">
+                    <span class="route-copy gap-0.5">
                       <strong>{route.title}</strong>
                       <span>
                         {route.year_start}-{route.year_end}
@@ -585,13 +585,13 @@
                 >
               </div>
             {:else}
-              <div class="route-list" aria-label="Published routes">
+              <div class="route-list gap-1.5" aria-label="Published routes">
                 {#each routes as route (route.id)}
                   <button
                     type="button"
                     class:active={selectedRouteId === route.id &&
                       selectedRouteContext === 'reader'}
-                    class="route-option"
+                    class="route-option min-h-[3.75rem] gap-2 px-2.5 py-2"
                     style={`--route-color: ${route.color}`}
                     aria-current={selectedRouteId === route.id &&
                     selectedRouteContext === 'reader'
@@ -600,7 +600,7 @@
                     on:click={() => handleRouteClick(route.id, 'reader')}
                   >
                     <span class="route-swatch" aria-hidden="true"></span><span
-                      class="route-copy"
+                      class="route-copy gap-0.5"
                       ><strong>{route.title}</strong><span
                         >{route.year_start}-{route.year_end}</span
                       ></span
@@ -623,13 +623,13 @@
                   <Icon name="circle" /><span>No routes to review.</span>
                 </div>
               {:else}
-                <div class="route-list" aria-label="Routes to review">
+                <div class="route-list gap-1.5" aria-label="Routes to review">
                   {#each reviewRoutes as route (route.id)}
                     <button
                       type="button"
                       class:active={selectedRouteId === route.id &&
                         selectedRouteContext === 'review'}
-                      class="route-option"
+                      class="route-option min-h-[3.75rem] gap-2 px-2.5 py-2"
                       style={`--route-color: ${route.color}`}
                       aria-current={selectedRouteId === route.id &&
                       selectedRouteContext === 'review'
@@ -638,7 +638,7 @@
                       on:click={() => handleRouteClick(route.id, 'review')}
                     >
                       <span class="route-swatch" aria-hidden="true"></span><span
-                        class="route-copy"
+                        class="route-copy gap-0.5"
                         ><strong>{route.title}</strong><span
                           >Current review revision</span
                         ></span
@@ -932,16 +932,12 @@
 
   .route-list {
     display: grid;
-    gap: 0.5rem;
   }
 
   .route-option {
     display: grid;
     grid-template-columns: auto minmax(0, 1fr) auto;
     align-items: center;
-    gap: 0.7rem;
-    min-height: 4.4rem;
-    padding: 0.7rem 0.75rem;
     border: 1px solid #d9e0e7;
     border-left: 0.32rem solid var(--route-color);
     border-radius: 8px;
@@ -972,7 +968,6 @@
 
   .route-copy {
     display: grid;
-    gap: 0.2rem;
     min-width: 0;
   }
 

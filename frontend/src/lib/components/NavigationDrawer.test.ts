@@ -47,6 +47,8 @@ describe('NavigationDrawer mode labels', () => {
     expect(body).toContain('Routes to review');
     expect(body).toContain('Reader route');
     expect(body).toContain('Review route');
+    expect(body).toContain('min-h-[3.75rem]');
+    expect(body).toContain('Current review revision');
     expect(body).not.toContain('Choose selected route');
   });
 
