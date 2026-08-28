@@ -1,6 +1,6 @@
 {
   "route_id": "new-york-builds-the-dance-floor",
-  "revision_id": "a809202e5bc3c4edb1f6e1d3b2fe5c9507a94808b456d0fcc5b870d1e9710a4f",
+  "revision_id": "b352db80f4da169f3ef4fed4cae1c27457a1c1a4fda9e06c4e1120f2856a5bad",
   "source": "complete-draft.json",
   "route": {
     "year_start": 1970,
@@ -10,8 +10,8 @@
     "title": "Rooms, Records, and Collective Power",
     "color": "#d1495b",
     "creator": "SoundAtlas",
-    "summary": "How New Yorkers built collective power around dancing, recorded music, nightlife, and the music business.",
-    "thesis": "New York underground Disco was built through overlapping forms of collective power rather than one club lineage. Hosts and dancers shaped social rooms and movement practices; Black entrepreneurs and working DJs built different institutions for nightlife, promotion, distribution, and critique; and a purpose-built club could become a durable community setting where a particular record was still tested, resisted, and carried outward.",
+    "summary": "New York underground Disco, 1970–1981 — one Bronx community space, one Midtown institution, and a dense group of lower-Manhattan rooms and record networks.",
+    "thesis": "The route follows overlapping forms of collective power while keeping their places, participants, and limits distinct. Hosts and dancers shaped social rooms and movement practices. Black entrepreneurs and working DJs built different institutions for nightlife, promotion, distribution, and critique. A purpose-built club became a durable community setting where, in later accounts, a particular record met resistance before listeners reportedly sought it at a specialist store. Promotion was not feedback, membership was not ownership, and chronology or proximity did not make separate communities one network.",
     "tags": [
       "disco",
       "dance-floor",
@@ -59,13 +59,13 @@
       "next_evidence_task": null,
       "warnings": [],
       "technical_errors": [],
-      "material_signature": "1db6a3de54b72cf9537ebe40a56ae59618f6a3c71edbdbe622abc072997d0dd4",
+      "material_signature": "373afc872b4eb4752cd72917b33b254ba38bd52853badcd4d78d29900ad94283",
       "proposal": {
         "candidate_id": "loft-broadway-party-1970-1974",
         "agent_recommendation": "include",
         "editorial_state": "draft",
         "route_entry_role": "active",
-        "years": "1970\u20131974",
+        "years": "1970–1974",
         "place": "the-loft-broadway",
         "working_title": "The Loft organizes a private party around dancers, full records, and careful sound",
         "route_function": "Human-selected seven-Event experimental chapter.",
@@ -97,9 +97,14 @@
         "default_place_id": "the-loft-broadway",
         "place_relationships": [],
         "title": "The Loft organizes a private party around dancers, full records, and careful sound",
-        "summary": "From February 14, 1970 through June 1974, David Mancuso held recurring, invitation-only parties in his residence at 645\u2013647 Broadway. The gatherings were private house parties rather than conventional commercial club nights: guests danced, refreshments were provided, alcohol was not the organizing business, and Mancuso acted as musical host. A racially mixed group of LGBT and straight guests gathered around committed dancing, full-record presentation, and a carefully considered sound system.",
-        "significance": "The Broadway Loft matters here because its social intention, membership, hosting, records, and sound worked together. It offers an early documented model of a room built around dancers without becoming the sole birthplace of Disco or a universal explanation for later clubs. Nicky Siano later described attending as a dancer and adapting parts of the model for the Gallery, a direct but bounded connection. The address and period also need care: the later Loft at 99 Prince Street hosted the New York Record Pool's organization, but that was a different place, function, and Event. The Broadway guests cannot simply be treated as Pool members or as the owners of Mancuso's party.",
-        "story_sections": [],
+        "summary": null,
+        "significance": null,
+        "story_sections": [
+          {
+            "heading": "Making collective rooms and dance practices",
+            "body": "From February 14, 1970 through June 1974, David Mancuso held recurring, invitation-only parties in his home at 645–647 Broadway. These were private house parties rather than conventional commercial club nights. Guests danced; refreshments were provided; alcohol was not the organizing business; and Mancuso acted as musical host. A racially mixed group of LGBT and straight guests gathered around committed dancing, full-record presentation, and a carefully considered sound system.\n\nThe Loft matters here because its hosting, membership, records, social intention, and sound worked together. It offers an early documented model of a room built around dancers without becoming the sole birthplace of Disco or a universal explanation for later clubs. Nicky Siano later described attending as a dancer and adapting parts of the model for the Gallery—a direct but bounded connection. The address also matters. The later Loft at 99 Prince Street hosted the New York Record Pool's organization, but that was a different place, function, and Event. Broadway guests cannot simply be treated as Pool members or as owners of Mancuso's party."
+          }
+        ],
         "tags": [
           "disco",
           "collective-power"
@@ -124,13 +129,13 @@
       "next_evidence_task": null,
       "warnings": [],
       "technical_errors": [],
-      "material_signature": "e14b85a800f33c962c114fe87bc420c8aaeda3619c336475c16b46d7ff49a282",
+      "material_signature": "a9d2b2c648745e38961484789b94c106a0b45b420a18456ef9a64e7d33f7452d",
       "proposal": {
         "candidate_id": "st-marys-dance-incubator-1974",
         "agent_recommendation": "include",
         "editorial_state": "draft",
         "route_entry_role": "active",
-        "years": "1974\u20131974",
+        "years": "1974–1974",
         "place": "st-marys-recreation-center",
         "working_title": "Puerto Rican teenagers make St. Mary's a Latin Hustle and Rocking incubator",
         "route_function": "Human-selected seven-Event experimental chapter.",
@@ -162,9 +167,14 @@
         "default_place_id": "st-marys-recreation-center",
         "place_relationships": [],
         "title": "Puerto Rican teenagers make St. Mary's a Latin Hustle and Rocking incubator",
-        "summary": "In summer 1974, recurring parties at St. Mary's Recreation Center in Mott Haven gave Puerto Rican teenagers a community setting in which Latin Hustle and Rocking developed side by side. Participant and institutional accounts describe twice-weekly gatherings, local organizers, dancers practicing and competing, and efforts to make the center safer by having rival gang members check colors at the door. Photographs identified by the Bronx County Historical Society show Hustle jams and girls dancing at St. Mary's around 1974\u201375.",
-        "significance": "The Event shifts agency away from club owners, labels, and celebrated DJs. Teenage dancers used a Bronx recreation center to develop, test, and carry movement practices. Accounts place those practices later in Bronx clubs, competitions, Roseland, and other Manhattan rooms, but the evidence does not establish a precise path that could be drawn on a map. It also does not establish the final St. Mary's party date: the broader dance history extends beyond this Event, while its end remains unknown. St. Mary's therefore stands beside the downtown histories as a parallel development, not as their product, precursor, or proof of one citywide network.",
-        "story_sections": [],
+        "summary": null,
+        "significance": null,
+        "story_sections": [
+          {
+            "heading": "Making collective rooms and dance practices",
+            "body": "In summer 1974, recurring parties at St. Mary's Recreation Center in Mott Haven gave Puerto Rican teenagers a community setting where Latin Hustle and Rocking developed side by side. Participant and institutional accounts describe twice-weekly gatherings, local organizers, dancers practicing and competing, and efforts to make the center safer by having rival gang members check colors at the door. Photographs identified by the Bronx County Historical Society show Hustle jams and girls dancing at St. Mary's around 1974–75.\n\nThe Event shifts attention away from club owners, labels, and celebrated DJs. Teenage dancers used a Bronx recreation center to develop and practice movement vocabularies. Accounts place those practices later in Bronx clubs, competitions, Roseland, and other Manhattan rooms, but the evidence does not establish a precise path that could be drawn on a map. It also does not establish the final St. Mary's party date. St. Mary's stands beside the downtown histories as a parallel development, not as their product, precursor, or proof of one citywide network."
+          }
+        ],
         "tags": [
           "disco",
           "collective-power"
@@ -189,13 +199,13 @@
       "next_evidence_task": null,
       "warnings": [],
       "technical_errors": [],
-      "material_signature": "6269474b723c7c46a446d2c4106415f21a50de5c9ffe8278bfc83cd46a0911fa",
+      "material_signature": "25b9442e26930e1fbbfa14514908b9534fc54db3b8dddcd73b6d079d8485fad2",
       "proposal": {
         "candidate_id": "gallery-mercer-room-1974-1977",
         "agent_recommendation": "include",
         "editorial_state": "draft",
         "route_entry_role": "active",
-        "years": "1974\u20131977",
+        "years": "1974–1977",
         "place": "the-gallery-nyc",
         "working_title": "The Gallery coordinates dancers, sound, lighting, and records in one Mercer Street room",
         "route_function": "Human-selected seven-Event experimental chapter.",
@@ -226,9 +236,14 @@
         "default_place_id": "the-gallery-nyc",
         "place_relationships": [],
         "title": "The Gallery coordinates dancers, sound, lighting, and records in one Mercer Street room",
-        "summary": "The second Gallery operated at 172 Mercer Street from November 1974 to November 1977. Most patrons were described as gay people of color, alongside women and white dancers. From the booth, Nicky Siano coordinated a multi-level lighting system and worked with sound designer Alex Rosner on the room's tweeters, crossover, turntables, and bass horns. Record companies supplied Siano with records, while workers including Frankie Knuckles and Larry Levan took part in the room's operation and learned through its practices.",
-        "significance": "Siano described the Gallery as a dance-focused commercial adaptation of the Loft, not a copy of Mancuso's home. That distinction lets the room show how a private-party influence could be changed by commercial scale, technical design, labor, and a predominantly Black gay crowd. The evidence is unusually rich in room details and visual leads, but its most accessible testimony still centers the owner and DJ. It cannot stand in for direct accounts from ordinary Black gay dancers, women, or workers. Label-supplied records also document access, not a channel proving that floor responses returned to labels or changed their decisions.",
-        "story_sections": [],
+        "summary": null,
+        "significance": null,
+        "story_sections": [
+          {
+            "heading": "Making collective rooms and dance practices",
+            "body": "The second Gallery operated at 172 Mercer Street from November 1974 to November 1977. Most patrons were described as gay people of color, alongside women and white dancers. From the booth, Nicky Siano coordinated a multi-level lighting system and worked with sound designer Alex Rosner on the room's tweeters, crossover, turntables, and bass horns. Record companies supplied Siano with records, while workers including Frankie Knuckles and Larry Levan took part in the room's operation and learned through its practices.\n\nSiano described the Gallery as a dance-focused commercial adaptation of the Loft, not a copy of Mancuso's home. In his account, the adaptation differed through its commercial scale and room design; the Gallery's workers and predominantly Black gay crowd also made it a distinct institution. Yet the most accessible testimony still centers the owner and DJ. It cannot stand in for direct accounts from ordinary Black gay dancers, women, or workers. Label-supplied records document access, not a channel proving that floor responses returned to labels or changed their decisions."
+          }
+        ],
         "tags": [
           "disco",
           "collective-power"
@@ -252,13 +267,13 @@
       "next_evidence_task": null,
       "warnings": [],
       "technical_errors": [],
-      "material_signature": "7c8c198a2511c070a50e3be79bc95fc7237a71282fa5b80c84b0eae6155416ec",
+      "material_signature": "b2a1f4e9e200bf557b5f25db2370c5c15d96f3f4d39072fab0389043fc5e71dd",
       "proposal": {
         "candidate_id": "leviticus-opening-and-label-parties-1974-1976",
         "agent_recommendation": "include",
         "editorial_state": "draft",
         "route_entry_role": "active",
-        "years": "1974\u20131976",
+        "years": "1974–1976",
         "place": "leviticus",
         "working_title": "Best of Friends opens Leviticus and builds a Black-owned Midtown promotion venue",
         "route_function": "Human-selected seven-Event experimental chapter.",
@@ -291,9 +306,14 @@
         "default_place_id": "leviticus",
         "place_relationships": [],
         "title": "Best of Friends opens Leviticus and builds a Black-owned Midtown promotion venue",
-        "summary": "Eight Black businessmen organized as Best of Friends owned Leviticus at 45 West 33rd Street. Partner Noel Hankin later dated its public opening to November 14, 1974. A contemporary Cash Box photograph documents a Buddah Group event there by December of that year, confirming operation in 1974 even though a later Billboard report gave a conflicting 1975 opening year. The exact day therefore remains a participant account rather than an independently settled date.",
-        "significance": "By March 1976, contemporary coverage described labels holding recurring press parties at Leviticus and the owners treating record service and entertainment-industry visibility as business advantages. The Event gives Black entrepreneurship a bounded institutional role in the route: Best of Friends connected a Midtown club to promotional activity while building on a larger social and venue network with roots in Queens and activity in Brooklyn. Those other places remain context, not additional mapped Events. Label parties and record service show promotion and access. They do not establish that the Leviticus floor reported reactions to labels or caused decisions about mixes, releases, signings, radio, or sales.",
-        "story_sections": [],
+        "summary": null,
+        "significance": null,
+        "story_sections": [
+          {
+            "heading": "Owning nightlife and organizing record access",
+            "body": "Eight Black businessmen organized as Best of Friends owned Leviticus at 45 West 33rd Street. Partner Noel Hankin later dated its public opening to November 14, 1974. A contemporary Cash Box photograph documents a Buddah Group event there by December, confirming operation in 1974 even though a later Billboard report gave a conflicting 1975 opening year. The exact day therefore remains a participant account rather than an independently settled date.\n\nBy March 1976, contemporary coverage described labels holding recurring press parties at Leviticus and the owners treating record service and entertainment-industry visibility as business advantages. Best of Friends connected a Midtown club to promotional activity while building on a larger social and venue network with roots in Queens and activity in Brooklyn. Those other places remain context, not additional route stops. Label parties and record service show promotion and access. They do not establish that the Leviticus floor reported reactions to labels or caused decisions about mixes, releases, signings, radio, or sales."
+          }
+        ],
         "tags": [
           "disco",
           "collective-power"
@@ -319,13 +339,13 @@
       "next_evidence_task": null,
       "warnings": [],
       "technical_errors": [],
-      "material_signature": "89afbd0b8e96158a74c3734e7408af9e9e4a634086e177bc8dd0b8697bc24ddc",
+      "material_signature": "30013d91a245711e22bcac8875da5c9569917e4a11c26f06b78f4a7cc66094df",
       "proposal": {
         "candidate_id": "new-york-record-pool-launch-1975",
         "agent_recommendation": "include",
         "editorial_state": "draft",
         "route_entry_role": "active",
-        "years": "1975\u20131975",
+        "years": "1975–1975",
         "place": "new-york-record-pool-prince-street",
         "working_title": "Working DJs organize the New York Record Pool for distribution and requested critiques",
         "route_function": "Human-selected seven-Event experimental chapter.",
@@ -357,9 +377,14 @@
         "default_place_id": "new-york-record-pool-prince-street",
         "place_relationships": [],
         "title": "Working DJs organize the New York Record Pool for distribution and requested critiques",
-        "summary": "Between May and August 1975, working disco DJs organized a nonprofit New York Record Pool to centralize access to promotional records. Contemporary trade coverage described roughly sixty DJs, a cover letter offering product critiques when labels requested them, and a June 30 meeting with label representatives at 99 Prince Street\u2014the temporarily closed, later Loft address. Scholarship based on meeting records and interviews places the Pool's inauguration on June 2 and describes a Declaration of Intent, negotiated label participation, and centralized distribution.",
-        "significance": "The Pool is the route's clearest formal connection among records, working DJs, labels, and requested critique. It differs from Leviticus's press parties and the Gallery's label-supplied records because its stated organization included distribution and an offered response channel. That did not make it a neutral voice of \u201cthe dance floor.\u201d Membership rules, bargaining power, governance, and participant roles were contested, and working DJs' impressions did not represent every dancer or New York community. Accounts also differ over founder credit, while an original 1975 feedback sheet has not been located. The Pool can therefore show organized access and critique without claiming a specific floor reaction changed a record or label decision.",
-        "story_sections": [],
+        "summary": null,
+        "significance": null,
+        "story_sections": [
+          {
+            "heading": "Owning nightlife and organizing record access",
+            "body": "Between May and August 1975, working disco DJs organized a nonprofit New York Record Pool to centralize access to promotional records. Contemporary trade coverage described roughly sixty DJs, a cover letter offering product critiques when labels requested them, and a June 30 meeting with label representatives at 99 Prince Street—the temporarily closed, later Loft address. Scholarship based on meeting records and interviews describes a Declaration of Intent, negotiated label participation, centralized distribution, and a June 2 inauguration.\n\nThe Pool is the route's clearest formal connection among records, working DJs, labels, and requested critique. It differs from Leviticus's press parties and the Gallery's label-supplied records because its stated organization included distribution and an offered response channel. That did not make it a neutral voice of “the dance floor.” Membership rules, bargaining power, governance, and participant roles were contested; working DJs did not represent every dancer or New York community. Founder credit also differs among accounts, and an original 1975 feedback sheet has not been located. The Pool shows organized access and critique without proving that a specific floor reaction changed a record or label decision."
+          }
+        ],
         "tags": [
           "disco",
           "collective-power"
@@ -384,13 +409,13 @@
       "next_evidence_task": null,
       "warnings": [],
       "technical_errors": [],
-      "material_signature": "ae5960afb7eb093ae04315a6aafa67b394054b59b4098d5c1c0a387c2ff3fa82",
+      "material_signature": "ae9a5216d5c31f8fc3d273ec7615400c7d86730a540306ccd9b5ff2ca6c70603",
       "proposal": {
         "candidate_id": "paradise-garage-buildout-opening-1977-1978",
         "agent_recommendation": "include",
         "editorial_state": "draft",
         "route_entry_role": "active",
-        "years": "1977\u20131978",
+        "years": "1977–1978",
         "place": "paradise-garage",
         "working_title": "Paradise Garage grows from construction parties into a purpose-built membership club",
         "route_function": "Human-selected seven-Event experimental chapter.",
@@ -422,9 +447,14 @@
         "default_place_id": "paradise-garage",
         "place_relationships": [],
         "title": "Paradise Garage grows from construction parties into a purpose-built membership club",
-        "summary": "At 84 King Street, construction parties began in 1977 while the Paradise Garage was still being renovated. The club formally opened on January 28, 1978. Owner Michael Brody, financial backer Mel Cheren, resident DJ Larry Levan, sound designer Richard Long, staff, members, and dancers contributed different kinds of work to a purpose-built room. The completed club was membership-only, did not center alcohol sales, and focused on music and dancing. Its devoted membership was largely made up of sexual and ethnic minorities, particularly Black gay men.",
-        "significance": "The Garage shows institution-building as a process rather than a single opening night. Room construction, designed sound, membership, resident-DJ practice, staff labor, and community use were assembled together. Levan's earlier Gallery work provides a documented person-centered connection, but it does not prove that the Gallery caused the Garage's design or social world. Ownership and community authority also remain distinct: the centrality of Black and Latino gay members, workers, performers, and dancers does not make Brody or Cheren Black owners. Nor did the Garage absorb St. Mary's, Best of Friends, the Record Pool, or every earlier Disco network into one institution.",
-        "story_sections": [],
+        "summary": null,
+        "significance": null,
+        "story_sections": [
+          {
+            "heading": "Building a dance institution and testing a record",
+            "body": "At 84 King Street, construction parties began in 1977 while the Paradise Garage was still being renovated. The club formally opened on January 28, 1978. Michael Brody owned the club, Mel Cheren financed it, Larry Levan served as resident DJ and worked with Richard Long on sound, while staff maintained the club and members and dancers formed its core audience. The completed club was membership-only, did not center alcohol sales, and focused on music and dancing. Its devoted membership was largely made up of sexual and ethnic minorities, particularly Black gay men.\n\nThe Garage shows institution-building as a process rather than a single opening night. Levan's earlier Gallery work provides a documented person-centered connection, but it does not prove that the Gallery caused the Garage's design or social world. Ownership and community authority remain distinct: the centrality of Black and Latino gay members, workers, performers, and dancers does not make Brody or Cheren Black owners. Nor did the Garage absorb St. Mary's, Best of Friends, the Record Pool, or every earlier Disco network into one institution."
+          }
+        ],
         "tags": [
           "disco",
           "collective-power"
@@ -449,15 +479,15 @@
       "next_evidence_task": null,
       "warnings": [],
       "technical_errors": [],
-      "material_signature": "cc324021955c7fa0c70d09fe315489d65ce2ad09c114e23188a8b40c7dcf578e",
+      "material_signature": "058d7b5f6176d07d4d14ad02811ec54810a5ee0b3f00d5477e8f93ab58d5d672",
       "proposal": {
         "candidate_id": "heartbeat-garage-vinylmania-1981",
         "agent_recommendation": "include",
         "editorial_state": "draft",
         "route_entry_role": "active",
-        "years": "1981\u20131981",
+        "years": "1981–1981",
         "place": "paradise-garage",
-        "working_title": "\u201cHeartbeat\u201d meets a resistant Garage floor and reported Vinylmania demand",
+        "working_title": "“Heartbeat” meets a resistant Garage floor and reported Vinylmania demand",
         "route_function": "Human-selected seven-Event experimental chapter.",
         "decision_rationale": "Requires separate Human Editorial Mode review.",
         "review_question": "Does the draft preserve the stated evidence qualification?",
@@ -488,10 +518,15 @@
         ],
         "default_place_id": "paradise-garage",
         "place_relationships": [],
-        "title": "\u201cHeartbeat\u201d meets a resistant Garage floor and reported Vinylmania demand",
-        "summary": "West End Records issued Taana Gardner's \u201cHeartbeat\u201d in 1981, with a Larry Levan mix. Joey Llanos, the Paradise Garage's head of security, later recalled that the floor emptied when Levan first played it, that Levan repeated the record six times, and that customers lined up at Vinylmania the next day. A Vinylmania staff account also remembered seeking the record after Garage play. Contemporary trade evidence does not document that exact night or sequence, but it placed \u201cHeartbeat\u201d at number six on Record World's Disco File Top 40 by April 11 and later identified it with notable retail traffic.",
-        "significance": "The episode makes dancer response active and fallible: a resident DJ's choice was reportedly resisted before the record gained demand. It also links the Garage to the original Vinylmania at 30/30A Carmine Street as an attributed, record-specific floor-to-retail sequence. That sequence cannot prove the floor made the record a hit, caused West End to release or remix it, or produced its radio, sales, or chart history. The exact night remains unknown, the six plays and next-day line depend on retrospective testimony, and any map treatment must label the store connection as reported rather than draw an unqualified causal arrow.",
-        "story_sections": [],
+        "title": "“Heartbeat” meets a resistant Garage floor and reported Vinylmania demand",
+        "summary": null,
+        "significance": null,
+        "story_sections": [
+          {
+            "heading": "Building a dance institution and testing a record",
+            "body": "West End Records issued Taana Gardner's “Heartbeat” in 1981, with a Larry Levan mix. In Paradise Garage head of security Joey Llanos's later account, the floor emptied when Levan first played it, Levan repeated the record six times, and customers lined up at Vinylmania the next day. A Vinylmania staff account also remembered seeking the record after Garage play. Contemporary trade evidence does not document that exact night or sequence, but it placed “Heartbeat” at number six on Record World's Disco File Top 40 by April 11 and later identified it with notable retail traffic.\n\nThe episode makes dancer response active and fallible: a resident DJ's choice was reportedly resisted before the record gained demand. It links the Garage to the original Vinylmania at 30/30A Carmine Street as an attributed, record-specific floor-to-retail sequence. That sequence cannot prove the floor made the record a hit, caused West End to release or remix it, or produced its radio, sales, or chart history. The exact night remains unknown; the six plays and next-day line depend on retrospective testimony. Any map treatment must label the store connection as reported rather than draw an unqualified causal arrow."
+          }
+        ],
         "tags": [
           "disco",
           "collective-power"
@@ -657,7 +692,7 @@
         "editorial_state": "draft",
         "route_entry_role": "active",
         "years": "1970",
-        "place": "The Loft, 645\u2013647 Broadway, Manhattan",
+        "place": "The Loft, 645–647 Broadway, Manhattan",
         "working_title": "A room becomes a musical space",
         "route_function": "Begins at the scale of one private room and introduces sound, records, dancing, hosting, and community as interdependent parts of the story.",
         "decision_rationale": "The institutional history supports a specific 1970 party, place, host, and later party practice without requiring a sole-birthplace claim.",
@@ -786,7 +821,7 @@
         "agent_recommendation": "include",
         "editorial_state": "draft",
         "route_entry_role": "active",
-        "years": "1977\u20131978",
+        "years": "1977–1978",
         "place": "Paradise Garage, 84 King Street, Manhattan",
         "working_title": "A club is built around the dance floor",
         "route_function": "Closes with a venue in which music, sound design, dancing, DJ practice, and minority community could operate together at a highly developed level.",
@@ -1046,7 +1081,7 @@
         "place_type": "club",
         "latitude": 40.726871,
         "longitude": -73.995882,
-        "summary": "David Mancuso's private party space at 645\u2013647 Broadway, organized around recorded music, careful sound, dancing, and community.",
+        "summary": "David Mancuso's private party space at 645–647 Broadway, organized around recorded music, careful sound, dancing, and community.",
         "source_urls": [
           "https://www.nyclgbtsites.org/site/david-mancuso-residence-the-loft/"
         ],
@@ -1074,7 +1109,7 @@
       "active": true,
       "preview": {
         "working_title": "The Loft organizes a private party around dancers, full records, and careful sound",
-        "years": "1970\u20131974",
+        "years": "1970–1974",
         "place": "the-loft-broadway",
         "route_function": "Human-selected seven-Event experimental chapter.",
         "decision_rationale": "Requires separate Human Editorial Mode review.",
@@ -1091,7 +1126,7 @@
         "candidate_id": "loft-broadway-party-1970-1974",
         "agent_recommendation": "include",
         "route_entry_role": "active",
-        "years": "1970\u20131974",
+        "years": "1970–1974",
         "place": "the-loft-broadway",
         "working_title": "The Loft organizes a private party around dancers, full records, and careful sound",
         "route_function": "Human-selected seven-Event experimental chapter.",
@@ -1115,7 +1150,7 @@
       "active": true,
       "preview": {
         "working_title": "Puerto Rican teenagers make St. Mary's a Latin Hustle and Rocking incubator",
-        "years": "1974\u20131974",
+        "years": "1974–1974",
         "place": "st-marys-recreation-center",
         "route_function": "Human-selected seven-Event experimental chapter.",
         "decision_rationale": "Requires separate Human Editorial Mode review.",
@@ -1132,7 +1167,7 @@
         "candidate_id": "st-marys-dance-incubator-1974",
         "agent_recommendation": "include",
         "route_entry_role": "active",
-        "years": "1974\u20131974",
+        "years": "1974–1974",
         "place": "st-marys-recreation-center",
         "working_title": "Puerto Rican teenagers make St. Mary's a Latin Hustle and Rocking incubator",
         "route_function": "Human-selected seven-Event experimental chapter.",
@@ -1156,7 +1191,7 @@
       "active": true,
       "preview": {
         "working_title": "The Gallery coordinates dancers, sound, lighting, and records in one Mercer Street room",
-        "years": "1974\u20131977",
+        "years": "1974–1977",
         "place": "the-gallery-nyc",
         "route_function": "Human-selected seven-Event experimental chapter.",
         "decision_rationale": "Requires separate Human Editorial Mode review.",
@@ -1172,7 +1207,7 @@
         "candidate_id": "gallery-mercer-room-1974-1977",
         "agent_recommendation": "include",
         "route_entry_role": "active",
-        "years": "1974\u20131977",
+        "years": "1974–1977",
         "place": "the-gallery-nyc",
         "working_title": "The Gallery coordinates dancers, sound, lighting, and records in one Mercer Street room",
         "route_function": "Human-selected seven-Event experimental chapter.",
@@ -1195,7 +1230,7 @@
       "active": true,
       "preview": {
         "working_title": "Best of Friends opens Leviticus and builds a Black-owned Midtown promotion venue",
-        "years": "1974\u20131976",
+        "years": "1974–1976",
         "place": "leviticus",
         "route_function": "Human-selected seven-Event experimental chapter.",
         "decision_rationale": "Requires separate Human Editorial Mode review.",
@@ -1213,7 +1248,7 @@
         "candidate_id": "leviticus-opening-and-label-parties-1974-1976",
         "agent_recommendation": "include",
         "route_entry_role": "active",
-        "years": "1974\u20131976",
+        "years": "1974–1976",
         "place": "leviticus",
         "working_title": "Best of Friends opens Leviticus and builds a Black-owned Midtown promotion venue",
         "route_function": "Human-selected seven-Event experimental chapter.",
@@ -1238,7 +1273,7 @@
       "active": true,
       "preview": {
         "working_title": "Working DJs organize the New York Record Pool for distribution and requested critiques",
-        "years": "1975\u20131975",
+        "years": "1975–1975",
         "place": "new-york-record-pool-prince-street",
         "route_function": "Human-selected seven-Event experimental chapter.",
         "decision_rationale": "Requires separate Human Editorial Mode review.",
@@ -1255,7 +1290,7 @@
         "candidate_id": "new-york-record-pool-launch-1975",
         "agent_recommendation": "include",
         "route_entry_role": "active",
-        "years": "1975\u20131975",
+        "years": "1975–1975",
         "place": "new-york-record-pool-prince-street",
         "working_title": "Working DJs organize the New York Record Pool for distribution and requested critiques",
         "route_function": "Human-selected seven-Event experimental chapter.",
@@ -1279,7 +1314,7 @@
       "active": true,
       "preview": {
         "working_title": "Paradise Garage grows from construction parties into a purpose-built membership club",
-        "years": "1977\u20131978",
+        "years": "1977–1978",
         "place": "paradise-garage",
         "route_function": "Human-selected seven-Event experimental chapter.",
         "decision_rationale": "Requires separate Human Editorial Mode review.",
@@ -1296,7 +1331,7 @@
         "candidate_id": "paradise-garage-buildout-opening-1977-1978",
         "agent_recommendation": "include",
         "route_entry_role": "active",
-        "years": "1977\u20131978",
+        "years": "1977–1978",
         "place": "paradise-garage",
         "working_title": "Paradise Garage grows from construction parties into a purpose-built membership club",
         "route_function": "Human-selected seven-Event experimental chapter.",
@@ -1319,8 +1354,8 @@
       "related_candidate_ids": [],
       "active": true,
       "preview": {
-        "working_title": "\u201cHeartbeat\u201d meets a resistant Garage floor and reported Vinylmania demand",
-        "years": "1981\u20131981",
+        "working_title": "“Heartbeat” meets a resistant Garage floor and reported Vinylmania demand",
+        "years": "1981–1981",
         "place": "paradise-garage",
         "route_function": "Human-selected seven-Event experimental chapter.",
         "decision_rationale": "Requires separate Human Editorial Mode review.",
@@ -1339,9 +1374,9 @@
         "candidate_id": "heartbeat-garage-vinylmania-1981",
         "agent_recommendation": "include",
         "route_entry_role": "active",
-        "years": "1981\u20131981",
+        "years": "1981–1981",
         "place": "paradise-garage",
-        "working_title": "\u201cHeartbeat\u201d meets a resistant Garage floor and reported Vinylmania demand",
+        "working_title": "“Heartbeat” meets a resistant Garage floor and reported Vinylmania demand",
         "route_function": "Human-selected seven-Event experimental chapter.",
         "decision_rationale": "Requires separate Human Editorial Mode review.",
         "review_question": "Does the draft preserve the stated evidence qualification?",
@@ -1366,7 +1401,8 @@
         "loft-broadway-party-1970-1974",
         "st-marys-dance-incubator-1974",
         "gallery-mercer-room-1974-1977"
-      ]
+      ],
+      "heading": "Making collective rooms and dance practices"
     },
     {
       "phase": "section-owning-nightlife-and-organizing-record-access",
@@ -1374,7 +1410,8 @@
       "candidate_ids": [
         "leviticus-opening-and-label-parties-1974-1976",
         "new-york-record-pool-launch-1975"
-      ]
+      ],
+      "heading": "Owning nightlife and organizing record access"
     },
     {
       "phase": "section-building-and-testing-a-dance-institution",
@@ -1382,13 +1419,14 @@
       "candidate_ids": [
         "paradise-garage-buildout-opening-1977-1978",
         "heartbeat-garage-vinylmania-1981"
-      ]
+      ],
+      "heading": "Building a dance institution and testing a record"
     }
   ],
   "findings": [
     {
       "owner": "active_route",
-      "message": "Selected Stage-08 content is an Agent draft, not Human Editorial, Source, media, or publication approval.",
+      "message": "Selected Stage-10a reader copy incorporates the Stage-09 evidence audit and remains an Agent-proposed Editorial Mode Draft; experimental copy acceptance is not Human Source, editorial-state, media, canonical, or publication approval.",
       "candidate_id": null,
       "blocking": false
     },
@@ -1412,7 +1450,7 @@
     }
   ],
   "warnings": [
-    "Selected Stage-08 content is an Agent draft, not Human Editorial, Source, media, or publication approval."
+    "Selected Stage-10a reader copy incorporates the Stage-09 evidence audit and remains an Agent-proposed Editorial Mode Draft; experimental copy acceptance is not Human Source, editorial-state, media, canonical, or publication approval."
   ],
   "technical_errors": [],
   "technical_ready": true
