@@ -4,6 +4,7 @@ set -eu
 CODEX_HOME="${CODEX_HOME:-/home/soundatlas/.codex}"
 HOST_CODEX_HOME="${HOST_CODEX_HOME:-/mnt/host-codex}"
 CODEX_CONFIG="$CODEX_HOME/config.toml"
+WORKSPACE_ROOT="${SOUNDATLAS_WORKSPACE_ROOT:-$(git rev-parse --show-toplevel 2>/dev/null || pwd)}"
 
 umask 077
 mkdir -p "$CODEX_HOME"
@@ -30,17 +31,23 @@ if [ ! -e "$CODEX_CONFIG" ]; then
   fi
   chmod 0600 "$CODEX_CONFIG"
 
-  python3 - "$CODEX_CONFIG" <<'PY'
+  python3 - "$CODEX_CONFIG" "$WORKSPACE_ROOT" <<'PY'
 from pathlib import Path
+import json
 import re
 import sys
 
 path = Path(sys.argv[1])
+workspace_root = sys.argv[2]
 text = path.read_text(encoding="utf-8") if path.exists() else ""
 lines = text.splitlines()
 
 root_keys = {"approval_policy", "sandbox_mode", "web_search"}
-managed_tables = {"sandbox_workspace_write", 'projects."/workspace"'}
+managed_tables = {
+    "sandbox_workspace_write",
+    'projects."/workspace"',
+    f'projects."{workspace_root}"',
+}
 generated_defaults_comment = (
     "# SoundAtlas dev container defaults. These are applied only inside CODEX_HOME."
 )
@@ -93,18 +100,18 @@ sandbox_mode = "workspace-write"
 web_search = "cached"
 """.strip()
 
-table_block = """
+table_block = f"""
 [sandbox_workspace_write]
 network_access = true
 exclude_tmpdir_env_var = false
 exclude_slash_tmp = false
 writable_roots = [
-  "/workspace",
+  {json.dumps(workspace_root)},
   "/home/soundatlas/.cache/uv",
   "/home/soundatlas/.npm",
 ]
 
-[projects."/workspace"]
+[projects.{json.dumps(workspace_root)}]
 trust_level = "trusted"
 """.strip()
 
@@ -137,7 +144,7 @@ path.write_text(new_text, encoding="utf-8")
 PY
 fi
 
-git config --global --replace-all safe.directory /workspace
+git config --global --replace-all safe.directory "$WORKSPACE_ROOT"
 git config --global credential.useHttpPath true
 git config --global core.autocrlf true
 git config --global core.filemode false
@@ -148,9 +155,9 @@ if [ -n "${SOUNDATLAS_GIT_AUTHOR_NAME:-}" ] && [ -n "${SOUNDATLAS_GIT_AUTHOR_EMA
 fi
 
 echo "Syncing backend dependencies..."
-cd /workspace/backend
+cd "$WORKSPACE_ROOT/backend"
 uv sync --locked --dev
 
 echo "Installing frontend dependencies..."
-cd /workspace/frontend
+cd "$WORKSPACE_ROOT/frontend"
 npm ci
