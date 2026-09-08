@@ -100,6 +100,27 @@ class GhProjectTests(unittest.TestCase):
         self.assertEqual(child_env["GH_TOKEN"], "project-token")
         self.assertNotIn("project-token", str(raised.exception))
 
+    def test_project_graphql_preserves_numeric_looking_string_variables(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = self.credential_file(directory, "GH_TOKEN=project-token\n")
+            environ = {MODULE.PROJECT_ENV_PATH: str(path)}
+            completed = subprocess.CompletedProcess(
+                [], 0, stdout='{"data": {}}', stderr=""
+            )
+            with mock.patch.object(
+                MODULE.subprocess, "run", return_value=completed
+            ) as run:
+                MODULE.graphql(
+                    "query($number: Int!, $option: String!) { viewer { login } }",
+                    {"number": 1, "option": "12345678"},
+                    environ,
+                )
+
+        command = run.call_args.args[0]
+        pairs = [command[index : index + 2] for index in range(len(command) - 1)]
+        self.assertIn(["-F", "number=1"], pairs)
+        self.assertIn(["-f", "option=12345678"], pairs)
+
     def test_list_projects_emits_gh_compatible_shape(self):
         response = {
             "viewer": {

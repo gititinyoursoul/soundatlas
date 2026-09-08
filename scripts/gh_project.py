@@ -107,7 +107,8 @@ def graphql(
     child_env = project_environment(environ)
     command = ["gh", "api", "graphql", "-f", f"query={query}"]
     for name, value in variables.items():
-        command.extend(("-F", f"{name}={value}"))
+        flag = "-F" if isinstance(value, int) else "-f"
+        command.extend((flag, f"{name}={value}"))
     result = subprocess.run(
         command, env=child_env, capture_output=True, text=True, check=False
     )
