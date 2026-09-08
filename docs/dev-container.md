@@ -38,20 +38,23 @@ volumes. It does not mount the host checkout.
 ## Prerequisites
 
 Install Docker with the Docker Compose plugin before starting the stack. The
-Compose override mounts two local secret files read-only, so both files must
-exist and contain the required values before Compose startup:
+Compose override mounts three local secret files read-only, so all three files
+must exist and contain the required values before Compose startup:
 
 ```sh
 mkdir -p ../secrets/soundatlas
 $EDITOR ../secrets/soundatlas/.env
 $EDITOR ../secrets/soundatlas/github-agent.env
+$EDITOR ../secrets/soundatlas/github-project-agent.env
 ```
 
 The first file contains SoundAtlas app/provider settings such as
 `YOUTUBE_API_KEY`; the second contains the repository-scoped GitHub agent
-credential used by `gh`. Empty placeholder files are not a supported startup
-configuration. Keep both files outside the repository and never commit their
-contents.
+credential used by normal `gh` commands; and the third contains the
+Project-only credential used by `python scripts/gh_project.py`. Each GitHub
+file contains exactly one unquoted, non-empty `GH_TOKEN=<token>` assignment.
+Empty placeholder files are not a supported startup configuration. Keep all
+three files outside the repository and never commit their contents.
 
 Importing host Codex state is optional. When used, the host `.codex` directory
 is mounted read-only at `/mnt/host-codex` only in the `workspace` service, and
@@ -68,13 +71,16 @@ Copy-Item ..\secrets\soundatlas\pane_ed25519.pub ..\secrets\soundatlas\pane_auth
 ```
 
 `pane-workspace` also reads the individual host Codex `auth.json` and
-`config.toml` files and the existing `github-agent.env` file. Its entrypoint
-copies those seeds into runtime-owned volumes; the image contains no
-credential. Override the input paths with
+`config.toml` files. Its entrypoint copies those Codex seeds into a
+runtime-owned volume; the image contains no credential. GitHub credential
+files remain direct read-only inputs rather than copied runtime state. Override
+the Codex input paths with
 `SOUNDATLAS_HOST_CODEX_AUTH_FILE`, `SOUNDATLAS_HOST_CODEX_CONFIG_FILE`, or
-`SOUNDATLAS_PANE_AUTHORIZED_KEYS_FILE` when the defaults do not apply. A
-nonstandard GitHub seed path can be supplied through
-`SOUNDATLAS_GITHUB_AGENT_ENV_SEED_FILE`.
+`SOUNDATLAS_PANE_AUTHORIZED_KEYS_FILE` when the defaults do not apply. Supply
+nonstandard GitHub input paths with
+`SOUNDATLAS_GITHUB_AGENT_ENV_SOURCE_FILE` and
+`SOUNDATLAS_GITHUB_PROJECT_ENV_SOURCE_FILE`. The former also accepts the legacy
+`SOUNDATLAS_GITHUB_AGENT_ENV_SEED_FILE` name as a compatibility fallback.
 
 ## Entry Points
 
@@ -115,10 +121,11 @@ SSH through `pane-egress` at `127.0.0.1:53660` by default; set `SOUNDATLAS_PANE_
 to choose another host-loopback port.
 
 On first startup, the Pane entrypoint generates a runtime-owned SSH host key,
-copies the scoped credential seeds, creates a pairing token, and starts Pane
-headlessly with its Electron sandbox enabled. Retrieve the protected pairing
-record explicitly, start the tunnel, and paste the `pane-remote://` line into
-Pane's **Settings > Remote Pane** screen:
+copies the supported Codex and SSH seeds, creates a pairing token, and starts
+Pane headlessly with its Electron sandbox enabled. GitHub credentials stay on
+their direct read-only mounts. Retrieve the protected pairing record
+explicitly, start the tunnel, and paste the `pane-remote://` line into Pane's
+**Settings > Remote Pane** screen:
 
 ```powershell
 docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontainer.yml --profile pane exec pane-workspace sed -n '/^pane-remote:/p' /runtime/pane/remote-setup.txt
@@ -267,6 +274,7 @@ CODEX_HOME=/home/soundatlas/.codex
 GH_CONFIG_DIR=/home/soundatlas/.config/gh
 SOUNDATLAS_ENV_FILE=/run/secrets/soundatlas.env
 SOUNDATLAS_GITHUB_AGENT_ENV_FILE=/run/secrets/github-agent.env
+SOUNDATLAS_GITHUB_PROJECT_ENV_FILE=/run/secrets/github-project-agent.env
 SOUNDATLAS_GIT_AUTHOR_NAME=
 SOUNDATLAS_GIT_AUTHOR_EMAIL=
 UV_PROJECT_ENVIRONMENT=/home/soundatlas/.cache/uv/venvs/backend
@@ -297,8 +305,8 @@ Responsibilities:
 - own SoundAtlas base clones and Pane-managed worktrees under `/runtime/repos`
 - reach, but never manage, the shared `backend` and `frontend` services
 - expose only authenticated SSH on host loopback for the local Pane UI tunnel
-- preserve Pane, repository, SSH, Codex, GitHub CLI, and tool-cache state in
-  dedicated named volumes
+- preserve Pane, repository, SSH, Codex, and tool-cache state in dedicated
+  named volumes
 
 The service shares `pane-egress`'s network namespace and starts only after its
 firewall healthcheck passes. The companion depends on the Compose-owned backend
@@ -357,7 +365,6 @@ The `workspace` service uses these mounts:
 - named volume: `backend_uv_cache` to `/home/soundatlas/.cache/uv`
 - named volume: `frontend_npm_cache` to `/home/soundatlas/.npm`
 - named volume: `codex_home` to `/home/soundatlas/.codex`
-- named volume: `github_cli_config` to `/home/soundatlas/.config/gh`
 - read-only host bind mount:
   `${SOUNDATLAS_HOST_CODEX_HOME:-${USERPROFILE:-${HOME}}/.codex}` to
   `/mnt/host-codex`
@@ -365,6 +372,8 @@ The `workspace` service uses these mounts:
   `/run/secrets/soundatlas.env`
 - read-only host bind mount: `../secrets/soundatlas/github-agent.env` to
   `/run/secrets/github-agent.env`
+- read-only host bind mount: `../secrets/soundatlas/github-project-agent.env`
+  to `/run/secrets/github-project-agent.env`
 
 Because `CODEX_HOME` points at the `codex_home` volume, Codex keeps its
 container-local SQLite state and manually editable `config.toml` on a Linux
@@ -395,19 +404,21 @@ services so agent-run checks and running services see the same installed
 frontend packages and uv cache.
 
 The `pane-workspace` service uses separate runtime-owned volumes for Pane
-state, repositories/worktrees, SSH host state, Codex state, GitHub CLI state,
-and uv/npm/Playwright caches. Its only host inputs are these read-only files:
+state, repositories/worktrees, SSH host state, Codex state, and
+uv/npm/Playwright caches. Its only host inputs are these read-only files:
 
 - Pane entrypoint and SSH daemon configuration from `.devcontainer/`
 - the public `pane_authorized_keys` seed
 - host Codex `auth.json` and `config.toml` seeds
-- the scoped `github-agent.env` seed
+- the repository-scoped `github-agent.env` input
+- the Project-only `github-project-agent.env` input
 
 It does not mount `.`, `/workspace`, the host `.codex` directory, a private SSH
-key, or a container-control socket. The public SSH key, Codex login state, and
-GitHub agent environment are copied with mode `0600` into their respective
-runtime volumes when absent. The host Codex configuration is copied and
-adapted by `post-create.sh` after the Pane-owned clone exists.
+key, or a container-control socket. The public SSH key and Codex login state
+are copied with mode `0600` into their respective runtime volumes when absent.
+GitHub credentials are never copied into a runtime volume. The host Codex
+configuration is copied and adapted by `post-create.sh` after the Pane-owned
+clone exists.
 
 ### App Secrets And Agent Tokens
 
@@ -426,22 +437,71 @@ This file is intended for SoundAtlas runtime and enrichment settings such as
 environment variables. Do not mount the whole `../secrets/soundatlas`
 directory unless a specific task requires broader access.
 
-GitHub agent credentials are separate from app/provider secrets. Use a
-fine-grained GitHub token scoped to this repository only, and store it outside
-the repo, for example:
+GitHub agent credentials are separate from app/provider secrets and from each
+other. Store both files outside the repository:
 
 ```text
 ../secrets/soundatlas/github-agent.env
+../secrets/soundatlas/github-project-agent.env
 ```
 
-For issue management, the GitHub CLI can use `GH_TOKEN` from that file when it
-is loaded into the shell. Interactive Bash shells in the workspace load
-`SOUNDATLAS_GITHUB_AGENT_ENV_FILE` automatically when `GH_TOKEN` is not already
-set, so `gh` can authenticate without `gh auth login` and without writing
-GitHub credentials into the `github_cli_config` volume. For persistent
-interactive `gh auth login` inside the container, GitHub CLI config is stored
-in the `github_cli_config` Docker volume at `/home/soundatlas/.config/gh`. Do
-not mount the host GitHub CLI config into the container.
+The repository credential is a fine-grained personal access token whose
+resource owner is `gititinyoursoul`, whose selected repository is only
+`soundatlas`, and whose permissions are Metadata read, Issues read/write, Pull
+requests read/write, and Contents read/write. Add Actions read only when the
+existing CI-verification commands need it. Do not grant Workflows write as part
+of this setup.
+
+Interactive Bash shells load the repository file named by
+`SOUNDATLAS_GITHUB_AGENT_ENV_FILE` only when `GH_TOKEN` is not already set.
+The strict loader accepts exactly one unquoted, non-empty `GH_TOKEN=<token>`
+assignment and does not evaluate the file as shell code. Normal `gh issue`,
+`gh pr`, `gh run`, and repository API commands therefore use this credential.
+An explicitly supplied process-level `GH_TOKEN` remains the highest-precedence
+override.
+
+The Project credential is a classic personal access token with only the
+`project` scope. GitHub does not support fine-grained personal access tokens
+for a Project owned by a user account, and the classic scope cannot be limited
+to only Project Tracker: it grants Project read/write access for every user or
+organization Project available to the account. This is the unavoidable access
+broader than the SoundAtlas repository.
+
+Keep the Project credential out of the default shell environment. Route
+Project commands through the repository helper instead:
+
+```sh
+python scripts/gh_project.py list --owner gititinyoursoul --format json
+python scripts/gh_project.py field-list 1 --owner gititinyoursoul --format json
+```
+
+The helper replaces ambient `GH_TOKEN` and `GITHUB_TOKEN` only for its child
+`gh api graphql` process, and exposes only the Project list, field list, item
+list, item add, and single-select item edit operations SoundAtlas uses. Current
+`gh project` owner resolution requests additional scopes despite documenting
+`project` as its minimum, so the helper uses the underlying Projects GraphQL API
+to preserve the accepted Project-only credential. It prevents accidental
+credential selection; it is not a
+security boundary because an agent that can read both mounted files possesses
+their combined authority. `scripts/complete_pushed_issue.py` uses the same
+helper for Project reads and Status updates while retaining the repository
+credential for Issue comments, CI checks, and closure.
+
+Neither workspace client persists `/home/soundatlas/.config/gh`. Do not run
+`gh auth login` in either container and do not mount the host GitHub CLI
+configuration. A deliberately supplied `GH_TOKEN` overrides stored GitHub CLI
+credentials by GitHub CLI design, but stored login state is not part of this
+runtime's supported authentication path.
+
+To rotate either credential, replace its external file, recreate the affected
+workspace client when required for a reliable bind-mount refresh, and launch or
+restart the affected agents. Do not use `docker compose down -v`: Pane state,
+repositories, worktrees, sessions, SSH state, Codex state, and caches remain in
+their named volumes. Already running processes retain their old environment
+snapshot until restarted; revoking the old token on GitHub invalidates it
+immediately. Revoke obsolete tokens and any broader credential previously
+stored through `gh auth login`. Never print tokens, authorization headers,
+stable token fingerprints, or secret-file contents while validating rotation.
 
 The app services use repo-local bind mounts and named dependency/cache volumes:
 
@@ -585,6 +645,7 @@ cd /workspace
 gh --version
 gh auth status
 gh issue list
+python scripts/gh_project.py list --owner gititinyoursoul --format json
 ```
 
 ### Backend Script Completion
@@ -819,11 +880,9 @@ resolved Docker `backend:8000` and `frontend:5173` service destinations for
 local backend/frontend checks. The egress guard resolves those service names at
 startup and permits those exact destination IP/port pairs; it does not allow
 arbitrary private addresses on ports `8000` or `5173`. If a configured service
-cannot be resolved, workspace startup fails closed. It should not receive
-direct mounts to host secrets or broader host directories.
-The only host credential mount is the read-only
-`${SOUNDATLAS_HOST_CODEX_HOME:-${USERPROFILE:-${HOME}}/.codex}` seed mount
-used by the workspace service.
+cannot be resolved, workspace startup fails closed. It should receive only the
+explicit individual read-only credential inputs documented above, not broad
+host secret or configuration directories.
 
 Use `.env.codex.example` for dummy agent/test values. Keep any real
 `.env.codex` file local and untracked. Do not add real tokens, SSH keys,
@@ -850,7 +909,7 @@ docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontaine
 ```
 
 Starting `pane-workspace` again reuses its named Pane, repository, SSH, Codex,
-GitHub CLI, and tool-cache volumes. `docker compose down -v` is intentionally
+and tool-cache volumes. `docker compose down -v` is intentionally
 not part of normal rollback because it destroys those volumes and may affect
 the shared stack. Removal of `workspace`, changes to
 `.devcontainer/devcontainer.json`, and final Pane promotion require separate

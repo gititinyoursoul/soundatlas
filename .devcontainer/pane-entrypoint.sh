@@ -5,11 +5,10 @@ pane_dir="${PANE_DIR:-/runtime/pane}"
 repo_dir="${SOUNDATLAS_PANE_REPO_DIR:-/runtime/repos}"
 ssh_dir="${SOUNDATLAS_PANE_SSH_DIR:-/runtime/ssh}"
 codex_dir="${CODEX_HOME:-/home/soundatlas/.codex}"
-github_dir="${GH_CONFIG_DIR:-/home/soundatlas/.config/gh}"
 host_codex_dir="${HOST_CODEX_HOME:-/mnt/host-codex}"
 
 umask 077
-mkdir -p "$pane_dir" "$repo_dir" "$ssh_dir" "$codex_dir" "$github_dir"
+mkdir -p "$pane_dir" "$repo_dir" "$ssh_dir" "$codex_dir"
 
 copy_seed() {
   source_path="$1"
@@ -21,7 +20,6 @@ copy_seed() {
 }
 
 copy_seed "$host_codex_dir/auth.json" "$codex_dir/auth.json"
-copy_seed /run/secrets/github-agent.env "$github_dir/github-agent.env"
 copy_seed /run/secrets/pane_authorized_keys "$ssh_dir/authorized_keys"
 
 if [ -n "${SOUNDATLAS_GIT_AUTHOR_NAME:-}" ] && [ -n "${SOUNDATLAS_GIT_AUTHOR_EMAIL:-}" ]; then
