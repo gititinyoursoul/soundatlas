@@ -1,8 +1,10 @@
 services:
   workspace:
+    image: soundatlas-workspace:local
     build:
       context: .
       dockerfile: .devcontainer/Dockerfile
+      target: workspace
     init: true
     cap_add:
       - NET_ADMIN
@@ -52,7 +54,97 @@ services:
       frontend:
         condition: service_started
 
+  pane-workspace:
+    image: soundatlas-pane-workspace:${SOUNDATLAS_PANE_IMAGE_TAG:-2.4.95}
+    profiles:
+      - pane
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile
+      target: pane-workspace
+    init: true
+    user: "10001:10001"
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+      - seccomp=./.devcontainer/pane-seccomp.json
+    environment:
+      CODEX_HOME: /home/soundatlas/.codex
+      GH_CONFIG_DIR: /home/soundatlas/.config/gh
+      HOST_CODEX_HOME: /mnt/host-codex
+      PANE_DIR: /runtime/pane
+      SOUNDATLAS_GITHUB_AGENT_ENV_FILE: /home/soundatlas/.config/gh/github-agent.env
+      SOUNDATLAS_GIT_AUTHOR_NAME: ${SOUNDATLAS_GIT_AUTHOR_NAME:-}
+      SOUNDATLAS_GIT_AUTHOR_EMAIL: ${SOUNDATLAS_GIT_AUTHOR_EMAIL:-}
+      SOUNDATLAS_PANE_REPO_DIR: /runtime/repos
+      SOUNDATLAS_PANE_SSH_DIR: /runtime/ssh
+      TMPDIR: /runtime/tmp
+      UV_PROJECT_ENVIRONMENT: /home/soundatlas/.cache/uv/venvs/backend
+    pids_limit: 512
+    mem_limit: 3g
+    cpus: 4
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=256m
+      - /run:rw,nosuid,size=64m
+    volumes:
+      - type: bind
+        source: ./.devcontainer/pane-entrypoint.sh
+        target: /runtime-config/pane-entrypoint.sh
+        read_only: true
+      - type: bind
+        source: ./.devcontainer/pane-sshd_config
+        target: /runtime-config/pane-sshd_config
+        read_only: true
+      - pane_state:/runtime/pane
+      - pane_repositories:/runtime/repos
+      - pane_ssh_state:/runtime/ssh
+      - pane_codex_home:/home/soundatlas/.codex
+      - pane_github_cli_config:/home/soundatlas/.config/gh
+      - pane_uv_cache:/home/soundatlas/.cache/uv
+      - pane_npm_cache:/home/soundatlas/.npm
+      - pane_playwright_cache:/home/soundatlas/.cache/ms-playwright
+      - type: bind
+        source: ${SOUNDATLAS_HOST_CODEX_AUTH_FILE:-${USERPROFILE:-${HOME}}/.codex/auth.json}
+        target: /mnt/host-codex/auth.json
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${SOUNDATLAS_HOST_CODEX_CONFIG_FILE:-${USERPROFILE:-${HOME}}/.codex/config.toml}
+        target: /mnt/host-codex/config.toml
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${SOUNDATLAS_PANE_AUTHORIZED_KEYS_FILE:-../secrets/soundatlas/pane_authorized_keys}
+        target: /run/secrets/pane_authorized_keys
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${SOUNDATLAS_GITHUB_AGENT_ENV_SEED_FILE:-../secrets/soundatlas/github-agent.env}
+        target: /run/secrets/github-agent.env
+        read_only: true
+        bind:
+          create_host_path: false
+    ports:
+      - "127.0.0.1:${SOUNDATLAS_PANE_SSH_PORT:-53660}:2222"
+    depends_on:
+      backend:
+        condition: service_started
+      frontend:
+        condition: service_started
+
 volumes:
   codex_home:
   github_cli_config:
   playwright_cache:
+  pane_state:
+  pane_repositories:
+  pane_ssh_state:
+  pane_codex_home:
+  pane_github_cli_config:
+  pane_uv_cache:
+  pane_npm_cache:
+  pane_playwright_cache:

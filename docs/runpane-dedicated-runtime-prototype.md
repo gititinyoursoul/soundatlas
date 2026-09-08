@@ -228,3 +228,30 @@ profile or a dedicated VM boundary. It must preserve the normal Electron
 sandbox and provide direct daemon evidence before persistence/recovery work is
 useful. This Issue neither creates that follow-up nor changes production,
 workspace, RunPane, or application configuration.
+
+## Corrective rerun — 2026-09-02
+
+Issue #194 supplied the missing Seccomp evidence. A new disposable image was
+derived from the same workspace-image digest and verified the official Pane
+2.4.95 package checksum. Its profile started from Docker/Moby v29.7.2 default
+Seccomp and added only the four #194 rules for Chromium's observed
+`clone(CLONE_NEWUSER)`,
+`clone(CLONE_NEWUSER|CLONE_NEWPID|CLONE_NEWNET)`,
+`unshare(CLONE_NEWUSER)`, and `chroot` path.
+
+The result changes the prior Electron/daemon conclusion:
+
+| Corrective check | Result | Evidence |
+| --- | --- | --- |
+| Electron namespace sandbox | Pass | Headless Pane reached `Headless host ready` with the constrained profile; no parent `--no-sandbox` flag. |
+| Pane daemon | Pass | Daemon created and listened on its Unix socket. |
+| Boundary controls | Pass | Runtime UID/GID 10001; all `Cap*` masks zero; `NoNewPrivs: 1`; `Seccomp: 2`. |
+| Runtime-owned clone and Pane worktree | Pass | RunPane registered the cloned repository and created a sibling `seccomp-rerun` worktree. |
+| Built-in Codex panel | Partial | The built-in Codex panel initialized with scoped runtime-owned auth, but the Pane CLI create path left its terminal at a shell and injected malformed input; no read-only Codex probe was claimed. |
+| Authenticated remote UI | Evidence reused | #194 verified the same loopback-only SSH forwarding and local Pane-client connection path. It was not repeated in this short corrective run. |
+| Exact cleanup | Pass | The Pane was archived after a clean-worktree check; the exact container, image, profile, and temporary context were removed. |
+
+The narrowed Seccomp profile therefore resolves the original #193 blocker while
+retaining the required least-privilege boundary. The remaining direct evidence
+gap is a successful bounded Codex command through the Pane create API; it is an
+implementation/tooling defect, not grounds to relax the container profile.

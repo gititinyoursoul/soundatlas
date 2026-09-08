@@ -23,13 +23,17 @@ written through host bind mounts. App/provider secrets are mounted as a single
 read-only env file; GitHub agent credentials are kept separate from app env
 files.
 
-It starts three Compose services:
+The default stack starts three Compose services:
 
 - `workspace`: interactive shell and Codex CLI workspace
 - `backend`: FastAPI development server on port `8000`
 - `frontend`: SvelteKit/Vite development server on port `5173`
 
 The repository is mounted in the workspace container at `/workspace`.
+During the workspace-to-Pane migration, the explicit `pane` Compose profile
+adds a fourth client service, `pane-workspace`. It uses the same backend and
+frontend containers but owns its repository clones and Pane worktrees in Docker
+volumes. It does not mount the host checkout.
 
 ## Prerequisites
 
@@ -54,6 +58,24 @@ is mounted read-only at `/mnt/host-codex` only in the `workspace` service, and
 post-create setup copies the supported login/config files into the
 workspace-only `codex_home` volume.
 
+The Pane profile requires an SSH public key for its host-loopback tunnel. Keep
+the private key outside the repository and place only its public half at the
+default seed path:
+
+```powershell
+ssh-keygen -t ed25519 -f ..\secrets\soundatlas\pane_ed25519
+Copy-Item ..\secrets\soundatlas\pane_ed25519.pub ..\secrets\soundatlas\pane_authorized_keys
+```
+
+`pane-workspace` also reads the individual host Codex `auth.json` and
+`config.toml` files and the existing `github-agent.env` file. Its entrypoint
+copies those seeds into runtime-owned volumes; the image contains no
+credential. Override the input paths with
+`SOUNDATLAS_HOST_CODEX_AUTH_FILE`, `SOUNDATLAS_HOST_CODEX_CONFIG_FILE`, or
+`SOUNDATLAS_PANE_AUTHORIZED_KEYS_FILE` when the defaults do not apply. A
+nonstandard GitHub seed path can be supplied through
+`SOUNDATLAS_GITHUB_AGENT_ENV_SEED_FILE`.
+
 ## Entry Points
 
 ### Docker Compose CLI
@@ -69,6 +91,82 @@ docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontaine
 The manual `post-create.sh` step is only needed for CLI-only startup. Use
 `--user soundatlas` for manual `exec` commands so shell sessions match the
 container user configured for the workspace.
+
+### Pane workspace migration profile
+
+Build both retained development targets without changing the current default
+Dev Container service:
+
+```powershell
+docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontainer.yml --profile pane build workspace pane-workspace
+```
+
+Start the one application stack and both workspace clients in parallel:
+
+```powershell
+docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontainer.yml --profile pane up -d backend frontend workspace pane-workspace
+```
+
+The resulting local image tags are `soundatlas-workspace:local` and the
+versioned `soundatlas-pane-workspace:2.4.95`. Set
+`SOUNDATLAS_PANE_IMAGE_TAG` only when deliberately assigning another retained
+local tag. Only backend and frontend publish application ports. Pane publishes
+SSH at `127.0.0.1:53660` by default; set `SOUNDATLAS_PANE_SSH_PORT` before `up`
+to choose another host-loopback port.
+
+On first startup, the Pane entrypoint generates a runtime-owned SSH host key,
+copies the scoped credential seeds, creates a pairing token, and starts Pane
+headlessly with its Electron sandbox enabled. Retrieve the protected pairing
+record explicitly, start the tunnel, and paste the `pane-remote://` line into
+Pane's **Settings > Remote Pane** screen:
+
+```powershell
+docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontainer.yml --profile pane exec pane-workspace sed -n '/^pane-remote:/p' /runtime/pane/remote-setup.txt
+ssh -N -o IdentitiesOnly=yes -i ..\secrets\soundatlas\pane_ed25519 -p 53660 -L 42137:127.0.0.1:42137 soundatlas@127.0.0.1
+```
+
+The pairing URI is a bearer credential. Do not paste it into Issues, logs, or
+tracked files. Regenerate the `pane_state` volume if the credential is exposed.
+
+Pane owns the base clone and every Pane-managed worktree. Initialize the saved
+repository once through the SSH shell; do not register the host checkout:
+
+```sh
+git clone https://github.com/gititinyoursoul/soundatlas.git /runtime/repos/soundatlas
+cd /runtime/repos/soundatlas
+sh .devcontainer/post-create.sh
+runpane repos add --path /runtime/repos/soundatlas --name soundatlas --yes --json
+runpane agents doctor --agent codex --repo soundatlas --json
+```
+
+With Pane/RunPane 2.4.95, `runpane panes create` can return
+`input.items.0: did not match any allowed shape` after it has already created
+the Pane, managed worktree, and initialized Codex panel. Check
+`runpane panes list --repo soundatlas --json` and `runpane panels list` before
+retrying. In the Issue #195 validation, the created Codex panel completed its
+bounded read-only command after the one-time repository trust prompt; the
+wrapper error did not represent daemon, worktree, or agent startup failure.
+
+The derived repository root in `post-create.sh` lets the same bootstrap work at
+`/workspace`, in the Pane-owned base clone, or in a Pane worktree. Git commits
+and remotes are the transfer boundary between the host-mounted workspace and
+Pane; they never share a writable checkout.
+
+Use these equivalent smoke checks from each client shell. In the existing
+workspace, the root is `/workspace`; in Pane, run them from the applicable
+runtime-owned clone or worktree:
+
+```sh
+curl -fsS http://backend:8000/health
+curl -fsS -H 'Host: localhost:5173' -o /dev/null -w '%{http_code}\n' http://frontend:5173
+cd backend && uv run pytest
+cd ../frontend && npm run validate
+```
+
+Vite rejects the Compose service name in the HTTP `Host` header, so the
+frontend smoke check supplies the same allowed `localhost:5173` host used by a
+developer browser. This does not change network routing: the request still
+travels to the shared `frontend` service.
 
 ### VS Code Dev Containers
 
@@ -137,6 +235,18 @@ The workspace image uses `/workspace` as its working directory and runs
 `sleep infinity` by default so `docker compose exec` or VS Code can attach to
 the already-running tools container.
 
+The Dockerfile's shared `soundatlas-tooling` stage supplies the same pinned
+Python, uv, Node.js, npm, GitHub CLI, Git, shell tools, and browser libraries to
+both final targets. `workspace` retains Codex CLI 0.147.0. The
+`pane-workspace` target pins Codex CLI 0.153.4 for compatibility with Pane's
+current built-in model selection, and adds checksum-verified Pane 2.4.95,
+matching RunPane 2.4.95, plus the non-root SSH daemon.
+The Pane Debian artifact SHA-256 is
+`4de2274ecd9617e642bb06b430c210da28052151d090aa0ade94f19368482265`.
+`workspace` retains its existing `/workspace` working directory and egress-
+guard entrypoint; `pane-workspace` uses `/runtime/repos` and its dedicated
+non-root Pane entrypoint.
+
 ## Services
 
 ### `workspace`
@@ -175,6 +285,25 @@ sandbox helper can create the user namespaces required by Bubblewrap inside
 Docker Desktop/WSL2. Without that option, normal Codex tool calls and
 `apply_patch` can fail before touching the workspace with a Bubblewrap
 namespace error.
+
+### `pane-workspace`
+
+Defined in `.devcontainer/docker-compose.devcontainer.yml` and enabled only by
+the `pane` profile.
+
+Responsibilities:
+
+- run the Pane daemon and its built-in agents as `soundatlas` (UID/GID 10001)
+- own SoundAtlas base clones and Pane-managed worktrees under `/runtime/repos`
+- reach, but never manage, the shared `backend` and `frontend` services
+- expose only authenticated SSH on host loopback for the local Pane UI tunnel
+- preserve Pane, repository, SSH, Codex, GitHub CLI, and tool-cache state in
+  dedicated named volumes
+
+The service depends on the same Compose-owned backend and frontend services as
+`workspace`. That dependency expresses startup ordering only. Pane has no
+Docker socket and cannot start, stop, or reconfigure either application
+service.
 
 ### `backend`
 
@@ -216,8 +345,8 @@ The frontend depends on the backend healthcheck before starting.
 
 ## Mounts And Volumes
 
-The dev container setup intentionally avoids mounting host home directories,
-SSH keys, private dotfiles, or cloud configuration directories.
+The dev container setup intentionally avoids broad host home directories,
+private SSH keys, unrelated dotfiles, and cloud configuration directories.
 
 The `workspace` service uses these mounts:
 
@@ -263,6 +392,21 @@ container use the seeded login cache and configuration by default when the host
 The workspace intentionally shares dependency/cache volumes with the app
 services so agent-run checks and running services see the same installed
 frontend packages and uv cache.
+
+The `pane-workspace` service uses separate runtime-owned volumes for Pane
+state, repositories/worktrees, SSH host state, Codex state, GitHub CLI state,
+and uv/npm/Playwright caches. Its only host inputs are these read-only files:
+
+- Pane entrypoint and SSH daemon configuration from `.devcontainer/`
+- the public `pane_authorized_keys` seed
+- host Codex `auth.json` and `config.toml` seeds
+- the scoped `github-agent.env` seed
+
+It does not mount `.`, `/workspace`, the host `.codex` directory, a private SSH
+key, or a container-control socket. The public SSH key, Codex login state, and
+GitHub agent environment are copied with mode `0600` into their respective
+runtime volumes when absent. The host Codex configuration is copied and
+adapted by `post-create.sh` after the Pane-owned clone exists.
 
 ### App Secrets And Agent Tokens
 
@@ -565,6 +709,22 @@ Current dev container behavior:
 - `workspace`: egress guard enabled
 - `backend`: egress guard enabled
 - `frontend`: egress guard enabled from the root Compose file
+- `pane-workspace`: zero capabilities and no container-local `iptables` guard
+
+The Pane service deliberately preserves the Issue #194 least-privilege
+boundary: UID/GID 10001, `cap_drop: ALL`, `no-new-privileges:true`, and the
+versioned reduced Seccomp profile in `.devcontainer/pane-seccomp.json`. It does
+not use privileged mode, `NET_ADMIN`, `--no-sandbox`, `seccomp=unconfined`,
+host namespaces, a Docker/Podman socket, or a broad host mount. The Seccomp
+profile is Docker/Moby v29.7.2's default plus only the four Chromium sandbox
+allowances validated in Issue #194. The unmodified default profile's SHA-256
+is `536529b665dd0972c37bfb569f5d4ac8a53592e7b00752bc39ff063ca9864c74`.
+
+Because the current egress guard needs `NET_ADMIN`, it is not copied into
+`pane-workspace`. Issue #196 owns an equivalent infrastructure-level Pane
+egress control. This deviation does not block parallel evaluation, but the
+existing workspace must not be retired while that control remains required and
+unaccepted.
 
 This is a pragmatic agent-coding boundary, not a full sandbox. The agent can
 edit the repository and use public HTTPS for package installation, Git remotes,
@@ -594,3 +754,19 @@ Compose commands such as `docker compose stop`, `docker compose down`, and
 same Compose service and manages the editor connection, but named volumes remain
 available for later rebuilds unless they are explicitly removed with Docker
 volume cleanup commands.
+
+To roll back to workspace-only operation without touching backend, frontend,
+or the current workspace, stop only the Pane client:
+
+```powershell
+docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontainer.yml --profile pane stop pane-workspace
+docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontainer.yml exec workspace curl -fsS http://backend:8000/health
+```
+
+Starting `pane-workspace` again reuses its named Pane, repository, SSH, Codex,
+GitHub CLI, and tool-cache volumes. `docker compose down -v` is intentionally
+not part of normal rollback because it destroys those volumes and may affect
+the shared stack. Removal of `workspace`, changes to
+`.devcontainer/devcontainer.json`, and final Pane promotion require separate
+Human acceptance after the parallel smoke evidence; Issue #196 is also a
+retirement dependency while equivalent egress enforcement remains required.

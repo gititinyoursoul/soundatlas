@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 FROM node:24.11.1-bookworm-slim AS node
-FROM ghcr.io/astral-sh/uv:python3.13-bookworm-slim
+FROM ghcr.io/astral-sh/uv:python3.13-bookworm-slim AS soundatlas-tooling
 
 ARG CODEX_CLI_VERSION=0.147.0
 
@@ -77,7 +77,33 @@ RUN chown soundatlas:soundatlas /home/soundatlas/.bashrc
 COPY docker/egress-guard.sh /usr/local/bin/egress-guard
 RUN chmod 0755 /usr/local/bin/egress-guard
 
-WORKDIR /workspace
+FROM soundatlas-tooling AS workspace
 
+WORKDIR /workspace
 ENTRYPOINT ["egress-guard"]
+CMD ["sleep", "infinity"]
+
+FROM soundatlas-tooling AS pane-workspace
+
+ARG PANE_VERSION=2.4.95
+ARG PANE_SHA256=4de2274ecd9617e642bb06b430c210da28052151d090aa0ade94f19368482265
+ARG PANE_CODEX_CLI_VERSION=0.153.4
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends openssh-server \
+    && curl -fsSLo /tmp/pane.deb "https://github.com/dcouple/Pane/releases/download/v${PANE_VERSION}/Pane-${PANE_VERSION}-linux-amd64.deb" \
+    && echo "${PANE_SHA256}  /tmp/pane.deb" | sha256sum -c - \
+    && apt-get install -y /tmp/pane.deb \
+    && npm install -g "runpane@${PANE_VERSION}" "@openai/codex@${PANE_CODEX_CLI_VERSION}" \
+    && rm -f /tmp/pane.deb \
+    && rm -rf /var/lib/apt/lists/* \
+    && mkdir -p /runtime/pane /runtime/repos /runtime/ssh /runtime/tmp \
+    && chown -R soundatlas:soundatlas /runtime
+
+ENV TMPDIR=/runtime/tmp
+
+USER soundatlas
+WORKDIR /runtime/repos
+
+ENTRYPOINT ["bash", "/runtime-config/pane-entrypoint.sh"]
 CMD ["sleep", "infinity"]
