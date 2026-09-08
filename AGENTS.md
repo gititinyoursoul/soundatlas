@@ -126,6 +126,22 @@ heading wording and order exactly when migrating reviewed content.
 
 - Document product and architecture decisions in `docs/`.
 - GitHub Issues are the source of truth for planned agent work.
+- For work in this repository, inspect `docs/workflow-registry.md` and use every
+  matching repository-local `soundatlas-*` skill before an overlapping generic
+  Pane or workspace skill. The SoundAtlas skill owns its assigned workflow
+  gates, canonical artifacts, implementation procedure, and review output.
+- Pane remains the outer orchestration layer for panes, worktrees, panels, and
+  liveness. A handoff to a new SoundAtlas Pane agent must name the current Issue
+  stage and matching repository-local entrypoint before any optional generic
+  capability. Generic skills remain available for orchestration and work not
+  covered by a SoundAtlas skill.
+- When generic planning guidance conflicts with SoundAtlas planning, keep the
+  single canonical Plan Update in the GitHub Issue; do not create a parallel
+  local plan. Skill selection neither grants nor removes the explicit
+  authorization required for GitHub writes.
+- Keep these SoundAtlas-owned routing rules outside any marker-delimited
+  Pane-generated context. Do not edit or duplicate generated Pane context;
+  Pane/RunPane owns its refresh lifecycle.
 - New planned work should be captured in an Intake Issue with `Task`, `Context`, and `Acceptance Criteria`.
 - For feature work, follow the GitHub Issue workflow in `docs/github-issue-workflow.md`.
 - At Intake, before accepting a consequential concept or Plan Update, when
