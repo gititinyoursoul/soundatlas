@@ -31,7 +31,7 @@ The default stack starts three Compose services:
 
 The repository is mounted in the workspace container at `/workspace`.
 During the workspace-to-Pane migration, the explicit `pane` Compose profile
-adds a fourth client service, `pane-workspace`. It uses the same backend and
+adds `pane-workspace` and its network companion, `pane-egress`. Pane uses the same backend and
 frontend containers but owns its repository clones and Pane worktrees in Docker
 volumes. It does not mount the host checkout.
 
@@ -98,7 +98,7 @@ Build both retained development targets without changing the current default
 Dev Container service:
 
 ```powershell
-docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontainer.yml --profile pane build workspace pane-workspace
+docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontainer.yml --profile pane build workspace pane-workspace pane-egress
 ```
 
 Start the one application stack and both workspace clients in parallel:
@@ -111,7 +111,7 @@ The resulting local image tags are `soundatlas-workspace:local` and the
 versioned `soundatlas-pane-workspace:2.4.95`. Set
 `SOUNDATLAS_PANE_IMAGE_TAG` only when deliberately assigning another retained
 local tag. Only backend and frontend publish application ports. Pane publishes
-SSH at `127.0.0.1:53660` by default; set `SOUNDATLAS_PANE_SSH_PORT` before `up`
+SSH through `pane-egress` at `127.0.0.1:53660` by default; set `SOUNDATLAS_PANE_SSH_PORT` before `up`
 to choose another host-loopback port.
 
 On first startup, the Pane entrypoint generates a runtime-owned SSH host key,
@@ -300,8 +300,9 @@ Responsibilities:
 - preserve Pane, repository, SSH, Codex, GitHub CLI, and tool-cache state in
   dedicated named volumes
 
-The service depends on the same Compose-owned backend and frontend services as
-`workspace`. That dependency expresses startup ordering only. Pane has no
+The service shares `pane-egress`'s network namespace and starts only after its
+firewall healthcheck passes. The companion depends on the Compose-owned backend
+and frontend services being started. Pane has no
 Docker socket and cannot start, stop, or reconfigure either application
 service.
 
@@ -690,12 +691,13 @@ individual host file.
 
 ## Security Boundaries
 
-All project containers run as the non-root `soundatlas` user after startup.
+All workload containers run as the non-root `soundatlas` user after startup.
+The inert `pane-egress` companion remains root with only `NET_ADMIN`.
 The root phase is used only by `docker/egress-guard.sh` to prepare writable
 paths and, when enabled, apply `iptables` restrictions before dropping
 privileges with `gosu`.
 
-The egress guard:
+The unchanged legacy `docker/egress-guard.sh`:
 
 - allows loopback and established connections
 - allows Docker DNS and configured DNS resolvers on port `53`
@@ -709,7 +711,8 @@ Current dev container behavior:
 - `workspace`: egress guard enabled
 - `backend`: egress guard enabled
 - `frontend`: egress guard enabled from the root Compose file
-- `pane-workspace`: zero capabilities and no container-local `iptables` guard
+- `pane-workspace`: zero capabilities; firewall enforced by `pane-egress` in
+  their shared network namespace
 
 The Pane service deliberately preserves the Issue #194 least-privilege
 boundary: UID/GID 10001, `cap_drop: ALL`, `no-new-privileges:true`, and the
@@ -720,11 +723,94 @@ profile is Docker/Moby v29.7.2's default plus only the four Chromium sandbox
 allowances validated in Issue #194. The unmodified default profile's SHA-256
 is `536529b665dd0972c37bfb569f5d4ac8a53592e7b00752bc39ff063ca9864c74`.
 
-Because the current egress guard needs `NET_ADMIN`, it is not copied into
-`pane-workspace`. Issue #196 owns an equivalent infrastructure-level Pane
-egress control. This deviation does not block parallel evaluation, but the
-existing workspace must not be retired while that control remains required and
-unaccepted.
+### Pane egress ownership and policy
+
+`docker/pane-egress.Dockerfile` builds a minimal Debian companion with iptables
+and the resolver tools used by `docker/pane-egress-guard.sh`. It has no volumes,
+secrets, repository, Pane runtime, engine socket, host namespace, or published
+application port. Its filesystem is read-only except for a private 1 MiB `/run`
+tmpfs; limits are 32 processes, 64 MiB memory, and 0.25 CPU. It uses Docker's
+default Seccomp profile and no-new-privileges. Only this companion receives
+`NET_ADMIN`; it holds the namespace with an inert `sleep` after initialization.
+Pane's existing SSH publication belongs to the companion's network endpoint.
+
+The legacy guard allows arbitrary outbound DNS on TCP/UDP 53, rejects common
+private IPv4 ranges, permits public TCP 443, and initializes IPv6 only when
+available. Its configured application exceptions are resolved IPv4 IP/port
+pairs. Pane preserves required public HTTPS and exact application reachability,
+with stricter DNS and mandatory dual-family initialization:
+
+1. Set both IPv4 and IPv6 OUTPUT policies to DROP before resolution or flushing.
+2. Allow loopback (including Docker's embedded `127.0.0.11` resolver), then
+   established/related replies. A missing or different resolver is fatal.
+3. Resolve exactly `backend:8000 frontend:5173` and permit their usable IP/port
+   pairs. Empty, malformed, changed, or unresolvable configuration is fatal.
+4. Reject private, link-local, multicast, reserved and documentation IPv4
+   ranges before allowing public TCP 443. IPv6 permits only native global
+   unicast `2000::/3`, excluding special-use ranges including Teredo and 6to4;
+   mapped IPv4, NAT64, ULA, and link-local cannot bypass private-address rules.
+5. Drop every other outbound packet. Save and compare both installed OUTPUT
+   chains before readiness; healthchecks compare them again for drift.
+
+This is destination/port enforcement, not a hostname allowlist or HTTPS content
+inspection. Loopback peers share the namespace. Public HTTPS and embedded DNS
+remain available as required; they are not data-exfiltration prevention.
+
+Host firewall/WSL enforcement would move policy into host administration;
+a cooperative proxy would not stop direct-socket bypasses. The bounded companion
+keeps enforcement outside Pane without those host changes or Pane privileges.
+
+### Pane egress verification and failures
+
+Run allowed probes in `pane-workspace`:
+
+```sh
+getent ahosts github.com
+curl --noproxy '*' -fsS --max-time 10 -o /dev/null https://github.com
+curl --noproxy '*' -fsS --max-time 5 http://backend:8000/health
+curl --noproxy '*' -fsS --max-time 5 -H 'Host: localhost:5173' -o /dev/null http://frontend:5173
+```
+
+These denied probes must fail within their timeout:
+
+```sh
+curl --noproxy '*' --max-time 3 http://example.com
+curl --noproxy '*' -k --max-time 3 https://169.254.169.254
+```
+
+Also use a disposable listener on the Compose network at an unapproved port:
+prove it responds from an unfiltered control container, then fails from Pane.
+Do not interpret a closed port as firewall evidence. Inspect both OUTPUT chains
+from the companion and Pane's `/proc/self/status`: all capability masks must be
+zero and `NoNewPrivs` must be 1. Inspect the helper's mounts, read-only root,
+limits, and capability masks (only `NET_ADMIN`, bit `0x1000`).
+
+Use disposable Compose projects for malformed configuration and missing-service
+tests. They must leave the helper exited/unhealthy and Pane never started.
+Do not change the running development stack's service aliases for these tests.
+Remove every temporary listener, container, and network by its explicit probe
+name after testing; do not prune unrelated Docker resources.
+
+The pre-edit Docker Desktop/WSL lifecycle probe for #196 observed that killing
+the namespace owner left the unprivileged Pane member running, but removed its
+outbound route and Docker DNS. A previously reachable controlled listener stayed
+unreachable by direct IP. Never flush firewall rules on exit. A failed startup
+cannot release Pane through the health gate. A later unhealthy status does not
+automatically stop an already-running Pane: rules stay installed, or namespace
+endpoint loss stops connectivity. Treat either condition as requiring recovery.
+
+Service IP changes and companion restarts require coordinated recreation;
+restarting the helper alone can leave Pane in the old namespace. From the host:
+
+```powershell
+docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontainer.yml --profile pane stop pane-workspace pane-egress
+docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontainer.yml --profile pane up -d --force-recreate pane-egress pane-workspace
+```
+
+Repeat one allowed and one controlled denied probe after recovery. Do not use
+`--no-deps` to bypass the health gate for Pane. The legacy workspace remains a
+rollback option; retirement stays blocked until Issue #196 evidence is accepted
+or the Human explicitly changes that requirement.
 
 This is a pragmatic agent-coding boundary, not a full sandbox. The agent can
 edit the repository and use public HTTPS for package installation, Git remotes,
@@ -756,10 +842,10 @@ available for later rebuilds unless they are explicitly removed with Docker
 volume cleanup commands.
 
 To roll back to workspace-only operation without touching backend, frontend,
-or the current workspace, stop only the Pane client:
+or the current workspace, stop only the Pane client and its companion:
 
 ```powershell
-docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontainer.yml --profile pane stop pane-workspace
+docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontainer.yml --profile pane stop pane-workspace pane-egress
 docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontainer.yml exec workspace curl -fsS http://backend:8000/health
 ```
 

@@ -54,6 +54,42 @@ services:
       frontend:
         condition: service_started
 
+  pane-egress:
+    image: soundatlas-pane-egress:local
+    profiles:
+      - pane
+    build:
+      context: .
+      dockerfile: docker/pane-egress.Dockerfile
+    user: "0:0"
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_ADMIN
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /run:rw,noexec,nosuid,nodev,size=1m
+    pids_limit: 32
+    mem_limit: 64m
+    cpus: 0.25
+    environment:
+      SOUNDATLAS_ALLOWED_OUTBOUND_DESTINATIONS: "backend:8000 frontend:5173"
+    healthcheck:
+      test: ["CMD", "sh", "/usr/local/bin/pane-egress-guard", "check"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    ports:
+      - "127.0.0.1:${SOUNDATLAS_PANE_SSH_PORT:-53660}:2222"
+    depends_on:
+      backend:
+        condition: service_started
+      frontend:
+        condition: service_started
+
   pane-workspace:
     image: soundatlas-pane-workspace:${SOUNDATLAS_PANE_IMAGE_TAG:-2.4.95}
     profiles:
@@ -128,13 +164,10 @@ services:
         read_only: true
         bind:
           create_host_path: false
-    ports:
-      - "127.0.0.1:${SOUNDATLAS_PANE_SSH_PORT:-53660}:2222"
+    network_mode: service:pane-egress
     depends_on:
-      backend:
-        condition: service_started
-      frontend:
-        condition: service_started
+      pane-egress:
+        condition: service_healthy
 
 volumes:
   codex_home:
