@@ -146,13 +146,55 @@ runpane repos add --path /runtime/repos/soundatlas --name soundatlas --yes --jso
 runpane agents doctor --agent codex --repo soundatlas --json
 ```
 
-With Pane/RunPane 2.4.95, `runpane panes create` can return
-`input.items.0: did not match any allowed shape` after it has already created
-the Pane, managed worktree, and initialized Codex panel. Check
-`runpane panes list --repo soundatlas --json` and `runpane panels list` before
-retrying. In the Issue #195 validation, the created Codex panel completed its
-bounded read-only command after the one-time repository trust prompt; the
-wrapper error did not represent daemon, worktree, or agent startup failure.
+### RunPane operator signals
+
+RunPane exposes several state layers. Read them independently and retain only
+bounded, non-secret fields:
+
+- **Daemon operation:** `runpane doctor --json` is a composite diagnostic. Use
+  `daemon.reachable`, `daemon.result.ok`, executable identity, and versions for
+  the current installed daemon. `doctor.ok` can be false solely because the
+  optional remote release/setup path selected an unavailable AppImage/FUSE
+  route. `runpane doctor --format deb` checks that setup path against the
+  installed Debian artifact; setup readiness is not daemon liveness.
+- **Identity:** `runpane panes list --repo soundatlas --json` establishes the
+  exact Pane, repository, worktree, and Pane id. Pane `status` is the legacy
+  session-process layer, not Codex panel or agent liveness.
+- **Terminal readiness:** `runpane panels list --pane <pane-id> --json` and
+  `runpane panels wait --panel <panel-id> --for ready --timeout-ms 30000 --json`
+  establish panel identity and initialization. A readiness timeout is not
+  proof that the process failed. Readiness output may contain `screen.text`;
+  filter that field before retaining or publishing evidence.
+- **Agent activity:** `runpane workspace state --repo soundatlas --json` is the
+  fresh snapshot for working, idle, blocked, unknown, and exited activity.
+  `runpane watch --self-test --repo soundatlas --json` checks the read-only
+  watch path. A ready panel and an active agent are different facts.
+
+Freshness takes precedence over cached observations: daemon unreachability
+invalidates dependent state; a panel exit overrides earlier activity; a daemon
+epoch or workspace generation change invalidates older observations; unknown is
+not success or failure; and a missing watch heartbeat requires fresh inspection
+or Human handling.
+
+If `runpane panes create` returns
+`input.items.0: did not match any allowed shape`, treat the mutation as
+ambiguous. Pane/RunPane 2.4.95 can have already created the Pane, managed
+worktree, and initialized Codex panel. Do not retry automatically. In the
+single-writer workflow, first verify daemon operation, then inventory the exact
+intended Pane name and worktree, resolve exactly one Pane id, inventory exactly
+one expected CLI panel, check initialization/readiness, and inspect fresh
+activity. Stop for Human handling when anything is missing, duplicated, or
+conflicting. This avoids duplicate Pane creation while preserving the known
+upstream response-schema defect boundary.
+
+For validation, the recorded baseline is SoundAtlas revision
+`d065f32734afd41be520f0251438bed780140b7d`, Pane/RunPane 2.4.95, Codex CLI
+0.153.4, and image
+`sha256:137647437411bca45c73597b09ee624680b2552029760d8679d6df6d05b6ad61`
+(`soundatlas-pane-workspace:2.4.95`). Record the daemon endpoint type and
+redacted identity only; never publish socket paths, pairing material,
+credentials, raw terminal screens, or transcripts. A disposable creation probe
+requires separate Human authorization and isolated runtime state.
 
 The derived repository root in `post-create.sh` lets the same bootstrap work at
 `/workspace`, in the Pane-owned base clone, or in a Pane worktree. Git commits

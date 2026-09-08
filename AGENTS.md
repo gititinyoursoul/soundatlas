@@ -135,6 +135,11 @@ heading wording and order exactly when migrating reviewed content.
   stage and matching repository-local entrypoint before any optional generic
   capability. Generic skills remain available for orchestration and work not
   covered by a SoundAtlas skill.
+- For current Pane/RunPane operation, use the layered signal contract in
+  `docs/dev-container.md`: daemon health, optional setup readiness, Pane/panel
+  identity, terminal readiness, and agent activity are separate. Do not treat
+  aggregate `doctor.ok`, Pane `status`, or an ambiguous create response as
+  authoritative, and never retry an ambiguous Pane creation automatically.
 - When generic planning guidance conflicts with SoundAtlas planning, keep the
   single canonical Plan Update in the GitHub Issue; do not create a parallel
   local plan. Skill selection neither grants nor removes the explicit
