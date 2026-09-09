@@ -1,6 +1,6 @@
 {
   "route_id": "new-york-builds-the-dance-floor",
-  "revision_id": "46423b1f24eb05a81f762484230246dd80b3ca7fad0fe8c6a1f6184c1ab84ab4",
+  "revision_id": "d68d4324a1a6c891cdf1b591cd5572ee6c498e640f61b38f45e95eca0bbb1b50",
   "source": "complete-draft.json",
   "route": {
     "year_start": 1970,
@@ -132,7 +132,7 @@
       "next_evidence_task": null,
       "warnings": [],
       "technical_errors": [],
-      "material_signature": "910e001d14a8963b1ffa3130ebf410e6fd1eb8023755791d01df9e47b3c2db47",
+      "material_signature": "1290ac0a262d9dce37ad88254ce4f80cadaeb8e21814be3a93dfd33e7cc136da",
       "proposal": {
         "candidate_id": "st-marys-dance-incubator-1974",
         "agent_recommendation": "include",
@@ -175,11 +175,11 @@
         "story_sections": [
           {
             "heading": "The recreation center as a workshop",
-            "body": "Beginning in summer 1974, Puerto Rican teenagers gathered at St. Mary's\nRecreation Center in Mott Haven for recurring parties. Organizers described an\neffort to make the center a safer place to meet. Inside that community space,\nLatin Hustle and Rocking developed side by side through dancers' practice and\ncompetition. Accounts name figures including Willie Estrada, Willie Whip,\nNorma, Rubberband, and dancers associated with the Rock Masters and Latin\nSymbolics; surviving photographs also keep girls dancing at St. Mary's visible\nin the record."
+            "body": "Beginning in summer 1974, Puerto Rican teenagers gathered at St. Mary's\nRecreation Center in Mott Haven for recurring parties. Organizers described an\neffort to make the center a safer place to meet.\n\nInside that community space, Latin Hustle and Rocking developed side by side\nthrough dancers' practice and competition. Accounts name figures including\nWillie Estrada, Willie Whip, Norma, Rubberband, and dancers associated with the\nRock Masters and Latin Symbolics; surviving photographs also keep girls dancing\nat St. Mary's visible in the record."
           },
           {
             "heading": "Practices move beyond one room",
-            "body": "The gatherings belonged to a wider history that also ran through homes,\nstreets, basements, and clubs. St. Mary's was an incubator, not the sole\nbirthplace of either dance. Accounts trace the practices onward into Bronx\nclubs, competitions, Roseland, and other Manhattan rooms, although the exact\ndates and paths remain incomplete. Even the last St. Mary's party cannot be\ndated securely from the current evidence. What is clear is the historical\nagency of the dancers: they did not simply receive a culture made elsewhere.\nThey developed movement in a neighborhood institution and carried it into new\nsettings."
+            "body": "The gatherings belonged to a wider history that also ran through homes,\nstreets, basements, and clubs. St. Mary's was an incubator, not the sole\nbirthplace of either dance. Accounts trace the practices onward into Bronx\nclubs, competitions, Roseland, and other Manhattan rooms, although the exact\ndates and paths remain incomplete.\n\nEven the last St. Mary's party cannot be dated securely from the current\nevidence. What is clear is the historical agency of the dancers: they did not\nsimply receive a culture made elsewhere. They developed movement in a\nneighborhood institution and carried it into new settings."
           }
         ],
         "tags": [
@@ -206,7 +206,7 @@
       "next_evidence_task": null,
       "warnings": [],
       "technical_errors": [],
-      "material_signature": "a5263da53d78c2a8ef5322e0225d187f1d77bf22736605da468fd1f31e29d33e",
+      "material_signature": "e6bf15cae8ec8dd951f4f91dd69af7bfc34495ff407a6e6553fbcce909bb0d4d",
       "proposal": {
         "candidate_id": "leviticus-opening-and-label-parties-1974-1976",
         "agent_recommendation": "include",
@@ -252,11 +252,11 @@
         "story_sections": [
           {
             "heading": "More than one club",
-            "body": "Eight Black businessmen in the Best of Friends group owned Leviticus at 45\nWest 33rd Street. The exact opening date is disputed: partner Noel Hankin later\nremembered November 14, 1974, while a later trade report gave 1975. A\nphotograph published in December 1974 nevertheless confirms that Leviticus was\nalready operating that year. The venue was one part of Best of Friends'\nmovement from social promotion into ownership of clubs across Queens,\nManhattan, and Brooklyn. Together, those venues show that Leviticus belonged\nto a wider Black-owned nightlife network extending across Queens, Manhattan,\nand Brooklyn."
+            "body": "Eight Black businessmen in the Best of Friends group owned Leviticus at 45\nWest 33rd Street. The exact opening date is disputed: partner Noel Hankin later\nremembered November 14, 1974, while a later trade report gave 1975. A\nphotograph published in December 1974 nevertheless confirms that Leviticus was\nalready operating that year.\n\nThe venue was one part of Best of Friends' movement from social promotion into\nownership of clubs across Queens, Manhattan, and Brooklyn. Together, those\nvenues show that Leviticus belonged to a wider Black-owned nightlife network\nextending across Queens, Manhattan, and Brooklyn."
           },
           {
             "heading": "A stage for promotion",
-            "body": "Leviticus became a Midtown meeting point for nightlife and the record business.\nLabels held recurring press parties there, bringing artists, publicity, and\nindustry attention into a Black-owned venue. For the owners, that visibility\nsupported the club as a business as well as a social institution. These parties\npromoted artists and the venue; they were not a documented system for sending\ndancers' responses back to labels. Leviticus joined Black business ownership to\nnightlife and promotion without turning club response into a formal channel to\nlabels."
+            "body": "Leviticus became a Midtown meeting point for nightlife and the record business.\nLabels held recurring press parties there, bringing artists, publicity, and\nindustry attention into a Black-owned venue. For the owners, that visibility\nsupported the club as a business as well as a social institution.\n\nThese parties promoted artists and the venue; they were not a documented system\nfor sending dancers' responses back to labels. Leviticus joined Black business\nownership to nightlife and promotion without turning club response into a\nformal channel to labels."
           }
         ],
         "tags": [
@@ -286,7 +286,7 @@
       "next_evidence_task": null,
       "warnings": [],
       "technical_errors": [],
-      "material_signature": "7f30c918e1ad5eb4630fce69adc0d214d715bc7e7fa1685e865e9fb748ec5778",
+      "material_signature": "c3453fb00e38bd9895021839b6df6fd8573c7cbb32dc7c27b5d7395badc3f7b6",
       "proposal": {
         "candidate_id": "gallery-mercer-room-1974-1977",
         "agent_recommendation": "include",
@@ -328,11 +328,11 @@
         "story_sections": [
           {
             "heading": "Sound, light, and the floor",
-            "body": "The Gallery reopened at 172 Mercer Street in November 1974. Its dancers were\ndescribed as predominantly gay people of color, with women and white dancers\nalso present. From his booth, Nicky Siano coordinated a multi-level lighting\nsystem while working with sound designer Alex Rosner on tweeters, crossover,\nturntables, and bass horns. The equipment mattered because it helped coordinate\nhow music, light, a DJ, and a crowd could move together inside one commercial\nroom—not because technology acted on its own."
+            "body": "The Gallery reopened at 172 Mercer Street in November 1974. Its dancers were\ndescribed as predominantly gay people of color, with women and white dancers\nalso present. From his booth, Nicky Siano coordinated a multi-level lighting\nsystem while working with sound designer Alex Rosner on tweeters, crossover,\nturntables, and bass horns.\n\nThe equipment mattered because it helped coordinate how music, light, a DJ, and\na crowd could move together inside one commercial room—not because technology\nacted on its own."
           },
           {
             "heading": "An adaptation with its own labor",
-            "body": "Siano had attended the Broadway Loft and called the Gallery a commercial,\ndance-focused adaptation of Mancuso's model, not a copy of his home. Record\ncompanies supplied him with free records. Frankie Knuckles and Larry Levan\nworked there, and Siano recalled Levan handling decorations, lights, and\noff-night record practice. These connections place labor and incoming music\ninside the room, but free records do not establish a return channel from\ndancers to labels. Levan's later career connects the Gallery and Garage through\nhis work, not through a complete institutional lineage. Much of the detailed\naccount available here comes through Siano, leaving ordinary dancers, women,\nand other workers less fully heard. The room can be described in detail without\npretending that every person who made it has been heard equally."
+            "body": "Siano had attended the Broadway Loft and called the Gallery a commercial,\ndance-focused adaptation of Mancuso's model, not a copy of his home. Record\ncompanies supplied him with free records. Frankie Knuckles and Larry Levan\nworked there, and Siano recalled Levan handling decorations, lights, and\noff-night record practice.\n\nThese connections place labor and incoming music inside the room, but free\nrecords do not establish a return channel from dancers to labels. Levan's later\ncareer connects the Gallery and Garage through his work, not through a complete\ninstitutional lineage. Much of the detailed account available here comes\nthrough Siano, leaving ordinary dancers, women, and other workers less fully\nheard. The room can be described in detail without pretending that every\nperson who made it has been heard equally."
           }
         ],
         "tags": [
@@ -358,7 +358,7 @@
       "next_evidence_task": null,
       "warnings": [],
       "technical_errors": [],
-      "material_signature": "fdba25313572b86839646337155f47bcfe94695233f7c4dc988cfc9474c70aed",
+      "material_signature": "e4c311265b1dfd0862b8683bc59ca3c53984873826c5f6c1d6c8bc7dcef1ee81",
       "proposal": {
         "candidate_id": "new-york-record-pool-launch-1975",
         "agent_recommendation": "include",
@@ -401,15 +401,15 @@
         "story_sections": [
           {
             "heading": "Forming the Pool",
-            "body": "In 1975, a nonprofit New York Record Pool organized access for roughly 60\nworking DJs. Meetings in May and June produced a declaration of intent and an\ninauguration reported for June 2; contemporary reporting scheduled a June 30\nmeeting with label representatives at the temporarily closed Loft at 99 Prince\nStreet—not Mancuso's earlier Broadway residence. Accounts divide the\norganizing work among David Mancuso, Steve D'Acquisto, Paul Casella, and others\nrather than supporting one uncontested founder."
+            "body": "In 1975, a nonprofit New York Record Pool organized access for roughly 60\nworking DJs. Meetings in May and June produced a declaration of intent and an\ninauguration reported for June 2; contemporary reporting scheduled a June 30\nmeeting with label representatives at the temporarily closed Loft at 99 Prince\nStreet—not Mancuso's earlier Broadway residence.\n\nAccounts divide the organizing work among David Mancuso, Steve D'Acquisto, Paul\nCasella, and others rather than supporting one uncontested founder."
           },
           {
             "heading": "Moving records and critiques",
-            "body": "Participating labels could send promotional records and test pressings into a\ncentral distribution system instead of servicing DJs one by one. The Pool's\ncover letter also offered product critiques when labels requested them.\nParticipant accounts later described forms that separated a DJ's personal\nreaction from observations of the floor."
+            "body": "Participating labels could send promotional records and test pressings into a\ncentral distribution system instead of servicing DJs one by one. The Pool's\ncover letter also offered product critiques when labels requested them.\n\nParticipant accounts later described forms that separated a DJ's personal\nreaction from observations of the floor."
           },
           {
             "heading": "Collective power has limits",
-            "body": "Contemporary reporting recognized the Pool's leverage and also worried that\nDJs acting together might bargain over what clubs would play or reject.\nInternal roles and governance were contested. Most importantly, working DJs'\nwritten impressions were not the voice of every dancer or every New York\ncommunity. The Pool made record access and critique more organized; it did not\nturn response into a neutral measurement or guarantee a label decision."
+            "body": "Contemporary reporting recognized the Pool's leverage and also worried that\nDJs acting together might bargain over what clubs would play or reject.\n\nInternal roles and governance were contested. Most importantly, working DJs'\nwritten impressions were not the voice of every dancer or every New York\ncommunity. The Pool made record access and critique more organized; it did not\nturn response into a neutral measurement or guarantee a label decision."
           }
         ],
         "tags": [
@@ -436,7 +436,7 @@
       "next_evidence_task": null,
       "warnings": [],
       "technical_errors": [],
-      "material_signature": "20aea9ceda188965dce13c06860ac95de631ae0ba0011e2dbb3a72a80db55c1c",
+      "material_signature": "74bf6cb9f1b1529513efd235a896ec0aabd81baab7f469bd649e5a5a49d7ae46",
       "proposal": {
         "candidate_id": "paradise-garage-buildout-opening-1977-1978",
         "agent_recommendation": "include",
@@ -479,11 +479,11 @@
         "story_sections": [
           {
             "heading": "Building the room",
-            "body": "Paradise Garage began with construction parties at 84 King Street in 1977,\nwhile renovations were still under way. Michael Brody opened the venue, Mel\nCheren backed it financially, and resident DJ Larry Levan worked with sound\ndesigner Richard Long on a system made for the room. The buildout led to a\nformal opening on January 28, 1978. No single person can stand in for the\nowners, funding, technical work, staff labor, musical choices, and dancers that\nbrought the club into operation."
+            "body": "Paradise Garage began with construction parties at 84 King Street in 1977,\nwhile renovations were still under way. Michael Brody opened the venue, Mel\nCheren backed it financially, and resident DJ Larry Levan worked with sound\ndesigner Richard Long on a system made for the room. The buildout led to a\nformal opening on January 28, 1978.\n\nNo single person can stand in for the owners, funding, technical work, staff\nlabor, musical choices, and dancers that brought the club into operation."
           },
           {
             "heading": "Building the institution",
-            "body": "The completed Garage used membership rather than centering the sale of alcohol.\nMusic and dancing organized the night. Its devoted membership was drawn largely\nfrom sexual and ethnic minorities, especially Black and Latino gay men. That\ncommunity gave the club its social and cultural force, but it should not be\nconfused with ownership: Brody was the sole proprietor, and Cheren was a\nfinancial backer. Nor did the Garage simply gather every earlier New York Disco\nnetwork under one roof. It was a distinct institution, built through a\nparticular room, membership model, resident DJ, staff, sound system, and floor."
+            "body": "The completed Garage used membership rather than centering the sale of alcohol.\nMusic and dancing organized the night. Its devoted membership was drawn largely\nfrom sexual and ethnic minorities, especially Black and Latino gay men.\n\nThat community gave the club its social and cultural force, but it should not\nbe confused with ownership: Brody was the sole proprietor, and Cheren was a\nfinancial backer. Nor did the Garage simply gather every earlier New York Disco\nnetwork under one roof. It was a distinct institution, built through a\nparticular room, membership model, resident DJ, staff, sound system, and floor."
           }
         ],
         "tags": [
