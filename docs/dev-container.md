@@ -554,6 +554,18 @@ assignment and does not evaluate the file as shell code. Normal `gh issue`,
 An explicitly supplied process-level `GH_TOKEN` remains the highest-precedence
 override.
 
+The `pane-workspace` entrypoint performs the same strict repository-credential
+load before starting SSH or Pane. It then exports a process-scoped Git
+`credential.helper` bridge to `gh auth git-credential`, so all Pane agents and
+SSH terminals inherit a Git HTTPS credential path without writing Git or GH
+configuration. An unreadable, malformed, empty, duplicate, or otherwise invalid
+repository credential input stops Pane startup before SSH or Pane begins. This
+bridge uses the repository credential only; it does not inject the separate
+Project credential, persist a helper, authorize a push, or relax the Issue
+workflow's reviewed-range and explicit Human push requirements. Replace the
+external credential file and restart the affected Pane workspace to refresh
+already-running process environments.
+
 The Project credential is a classic personal access token with only the
 `project` scope. GitHub does not support fine-grained personal access tokens
 for a Project owned by a user account, and the classic scope cannot be limited
