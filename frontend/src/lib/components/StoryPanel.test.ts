@@ -147,6 +147,51 @@ describe('StoryPanel spatial access', () => {
     expect(body).not.toContain('Event significance');
   });
 
+  it('preserves blank-line-separated story paragraphs under one heading', () => {
+    const event = makeEvent({
+      id: 'paragraph-event',
+      summary: null,
+      significance: null,
+      story_sections: [
+        {
+          heading: 'One reviewed heading',
+          body: 'First reviewed paragraph.\n\nSecond reviewed paragraph.'
+        }
+      ]
+    });
+
+    const { body } = render(StoryPanel, {
+      props: {
+        event,
+        place: makePlace({ id: 'review-place' }),
+        route: makeRoute({ id: 'birth-of-hip-hop' }),
+        editorialMode: true,
+        editorialProposal: {
+          candidate_id: 'paragraph-event',
+          editorial_state: 'draft',
+          active: true,
+          included: true,
+          renderable: true,
+          agent_recommendation: 'include',
+          warnings: [],
+          technical_errors: [],
+          material_signature: 'paragraph-signature',
+          proposal: {},
+          event
+        }
+      }
+    });
+
+    expect(body).toMatch(/<p[^>]*>First reviewed paragraph.<\/p>/);
+    expect(body).toMatch(/<p[^>]*>Second reviewed paragraph.<\/p>/);
+    expect(body.indexOf('First reviewed paragraph.')).toBeLessThan(
+      body.indexOf('Second reviewed paragraph.')
+    );
+    expect(body.indexOf('Second reviewed paragraph.')).toBeLessThan(
+      body.indexOf('Event review')
+    );
+  });
+
   it('shows an explicit error when reader-facing event content is missing', () => {
     const { body } = render(StoryPanel, {
       props: {

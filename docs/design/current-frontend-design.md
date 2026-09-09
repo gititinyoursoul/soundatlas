@@ -231,10 +231,11 @@ one or more ordered story sections, each with a distinct Human-reviewed heading
 and body.
 
 The current hierarchy is: route narrative section -> Event title/chapter ->
-ordered story-section heading and one rendered paragraph. `StoryPanel` renders
-each story-section body as a single HTML paragraph. Multiple paragraphs beneath
-one story-section heading are not currently supported. This mockup documents
-current behavior; it does not authorize new route copy or a behavior change.
+ordered story-section heading and one or more rendered paragraphs. `StoryPanel`
+renders each non-empty blank-line-separated segment of a story-section body as
+an HTML paragraph beneath its existing heading. This preserves accepted reader
+copy without creating headings or changing their order. This mockup documents
+the hierarchy; it does not authorize new route copy or navigation behavior.
 
 ### `MediaEmbed`
 

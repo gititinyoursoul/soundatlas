@@ -178,6 +178,10 @@
     return [...imageItems, ...mediaItems];
   }
 
+  function storyParagraphs(body: string): string[] {
+    return body.split(/\n\s*\n/).filter((paragraph) => paragraph.trim() !== '');
+  }
+
   function formatMediaDescriptor(
     provider: MediaProvider,
     type: MediaType
@@ -427,7 +431,9 @@
                     >
                       {section.heading}
                     </h3>
-                    <p>{section.body}</p>
+                    {#each storyParagraphs(section.body) as paragraph, paragraphIndex (`${index}:${paragraphIndex}`)}
+                      <p>{paragraph}</p>
+                    {/each}
                   </section>
                 {/each}
               {:else}
