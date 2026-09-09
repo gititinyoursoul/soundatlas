@@ -155,8 +155,11 @@ bounded, non-secret fields:
   `daemon.reachable`, `daemon.result.ok`, executable identity, and versions for
   the current installed daemon. `doctor.ok` can be false solely because the
   optional remote release/setup path selected an unavailable AppImage/FUSE
-  route. `runpane doctor --format deb` checks that setup path against the
-  installed Debian artifact; setup readiness is not daemon liveness.
+  route. Release discovery can report a newer candidate without changing the
+  installed daemon identity or authorizing an upgrade. Use the installed daemon
+  identity for the live acceptance baseline. `runpane doctor --format deb`
+  checks that setup path against the installed Debian artifact; setup readiness
+  is not daemon liveness.
 - **Identity:** `runpane panes list --repo soundatlas --json` establishes the
   exact Pane, repository, worktree, and Pane id. Pane `status` is the legacy
   session-process layer, not Codex panel or agent liveness.
