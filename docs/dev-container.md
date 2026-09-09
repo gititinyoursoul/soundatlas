@@ -175,6 +175,43 @@ validation, Vite lifecycle, and its local browser forward. It must adopt this
 inventory interface through its own approved Issue workflow; it must not copy
 or mount a Pane worktree into the host checkout.
 
+### Browser preview of one Pane worktree
+
+The normal Compose frontend at `http://127.0.0.1:5173` serves the host checkout,
+not a Pane-managed worktree. To inspect the exact worktree of one named Pane in
+a browser, keep the Pane profile running and use the existing loopback SSH key:
+
+```sh
+scripts/pane-preview.sh --pane issue-220-worktree-browser-preview
+```
+
+The helper resolves exactly one Pane name or id through the bounded
+`soundatlas-pane-inventory` SSH command, starts Vite only from that Pane's
+worktree, and prints a local URL only after its identity page responds. Open
+that URL rather than `5173`. The page visibly identifies the Pane, branch,
+commit, clean/dirty startup snapshot, data mode, and Editorial Mode; it frames
+the normal application below. Press `Ctrl+C` in the helper terminal to stop its
+SSH tunnel and Vite process.
+
+By default the helper uses API mode and the documented
+`../secrets/soundatlas/pane_ed25519` private key. Use `--ssh-key PATH` or
+`SOUNDATLAS_PANE_SSH_KEY` for a nonstandard key, and `--ssh-port PORT` when the
+Pane profile's `SOUNDATLAS_PANE_SSH_PORT` differs from `53660`. Use an exact
+Pane id when a name is ambiguous. `--mode static` generates ignored static data
+inside the selected Pane worktree before Vite starts. `--editorial` is supported
+only in API mode because Editorial Mode needs the API; the helper rejects the
+static/editorial combination before it starts a server. `--port PORT` selects a
+strict Vite and local-forward port, so an occupied port fails visibly instead
+of reusing another preview.
+
+If no URL appears, the helper prints a concrete reason and separate temporary
+Vite and tunnel diagnostic-log paths. Typical recovery actions are: start the
+Pane profile and check its SSH key for an SSH error; select an exact name/id for
+a no-match or ambiguity error; install dependencies in that Pane worktree for a
+Vite failure; choose another `--port` for a collision; or fix static-data
+generation before retrying static mode. The helper never copies, mounts, or
+writes Pane worktree files through the host checkout.
+
 ### Routed Codex workflow panels
 
 For a SoundAtlas workflow stage that needs the repository model policy, start
