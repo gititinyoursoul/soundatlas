@@ -65,9 +65,11 @@ Request
   |     -> Relevant validation
   |     -> Commit-ready gate + local commit
   |     -> Review committed diff + Project Locally Implemented when accepted
-  |     -> Human push request
+  |     -> Human-authorized local integration to main
+  |     -> Human-authorized push of the reviewed main range
   |     -> Push + verification + completion comment
   |     -> Project Done + explicit Issue closure
+  |     -> Human-authorized safe Pane archive
   |
   +-- Non-trivial work
         -> Intake Issue + Project Todo
@@ -85,9 +87,11 @@ Request
         -> soundatlas-implementation-review
         -> Combined Implementation Report + Project Locally Implemented when accepted
         -> Human review of committed diff
-        -> Human push request
+        -> Human-authorized local integration to main
+        -> Human-authorized push of the reviewed main range
         -> Push + verification + completion comment
         -> Project Done + explicit Issue closure
+        -> Human-authorized safe Pane archive
 ```
 
 Concept work is conditional. Use it when explicitly requested or when planning
@@ -131,10 +135,12 @@ been pushed or explicitly integrated. Direct non-trivial work may use `main`
 for one current Issue only while no different pending Issue range exists;
 otherwise, route the new work package to an owned Issue branch and worktree.
 
-An ahead-of-upstream `main` range is an integration range. It may contain more
-than one Issue only when the included Issues, validation, review, and human
-push authorization are named together. This adds no automatic push, pull-
-request requirement, workflow service, or clean-working-tree requirement;
+An ahead-of-upstream `main` range is an integration range. Before a push is
+proposed for branch work, the reviewed range is explicitly integrated into local
+`main` under separate Human authorization. The detailed integration, clean-tree,
+review, recovery, push, and archival rules live in
+`docs/github-issue-workflow.md`. This adds no automatic push, pull-request
+requirement, workflow service, or broad clean-working-tree requirement;
 unrelated user-owned changes remain outside Issue delivery.
 
 ## Pane Stage Convention
@@ -148,8 +154,9 @@ review when those stages need clean context or separate observation.
 The implementation CLI is the sole designated write owner for the Pane
 worktree. Planning, review, and helper panels are cooperative read-only
 participants: they may inspect and test, but must not modify files, stage,
-commit, switch branches, rebase, merge, or push. Integration and push remain
-separate operations requiring the existing explicit Human authorization.
+commit, switch branches, rebase, merge, or push. Integration, push, and Pane
+archival remain separate operations requiring the explicit Human authorization
+and lifecycle conditions in `docs/github-issue-workflow.md`.
 
 This convention is an operational responsibility boundary, not a technical
 filesystem or hostile-agent security boundary. Pane panels share the Pane's
@@ -163,7 +170,7 @@ or duplicating Pane lifecycle here.
 The Issue record remains the authority for each trial's named entrypoints,
 write owner, observations, limitations, and follow-up decision. This registry
 owns the tool-independent convention; Pane/RunPane owns its generated context,
-panel lifecycle, and worktree management.
+panel lifecycle, worktree management, and archive mechanics.
 
 ## Skill, Prompt, and Source Boundary Policy
 

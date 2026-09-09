@@ -91,18 +91,27 @@ bodies and may remain command arguments.
     result. When its Review Result is `Accepted` and the named reviewed local
     commit or range exists, the agent sets Project status to `Locally
     Implemented`.
-14. Human reviews the committed diff and explicitly authorizes a push when the
-    work is ready.
-15. Agent pushes only the reviewed commit or reviewed integration range.
-16. After a successful push, agent captures the published commit hash and runs
+14. Human reviews the committed diff and the agent reports the named local range
+    proposed for integration into `main`.
+15. Human explicitly authorizes that local integration, naming the source range,
+    target `main`, and permitted method. This does not authorize a push.
+16. Agent integrates only that authorized range into local `main`. A
+    range-changing integration is revalidated and reviewed before push.
+17. Human explicitly authorizes a push of the named reviewed local `main` range.
+    This does not authorize later archival.
+18. Agent pushes only that reviewed integration range.
+19. After a successful push, agent captures the published commit hash and runs
     the local completion gate. The gate must confirm the canonical report
     shape, checked acceptance criteria, an `Accepted` implementation review,
     exactly one completion comment plan, and Issue-relevant working-tree
     verification.
-17. Agent posts the standard completion comment only after the gate passes and
+20. Agent posts the standard completion comment only after the gate passes and
     sets Project status to `Done` only after that comment succeeds, then closes
     the Issue explicitly.
-18. If review, push, post-push verification, or a GitHub operation fails,
+21. After normal completion, the agent may request authorization to archive the
+    exact completed Pane. Pane archival remains a separate destructive action.
+22. If review, integration, push, post-push verification, archival, or a GitHub
+    operation fails,
     agent reports the failure and leaves the Issue open when possible.
 ```
 
@@ -692,13 +701,27 @@ trivial, local, low-risk work may still use the current branch. Other CLIs may
 inspect, test, or review an owned worktree but must not stage, commit, switch
 branches, rebase, merge, or otherwise change it.
 
-Any `main` range ahead of its upstream is an integration range. Branch
-integration is explicit: a fast-forward preserves the reviewed commit; any
-rebase, merge, cherry-pick, or conflict resolution that changes the integration
-range requires relevant validation and review of that resulting range before
-push. When an integration range includes more than one Issue, name the included
-Issues, validation, review, and human push authorization together. The workflow
-does not automate integration, conflict resolution, or pushing.
+Any `main` range ahead of its upstream is an integration range. Before proposing
+a push from an Issue branch, explicitly integrate its reviewed local range into
+local `main`. The Human's integration authorization must name the source range,
+target `main`, and permitted method; it never authorizes a push. Direct work
+already committed on `main` needs no separate graph operation, but its named
+range still needs review and separate push authorization.
+
+The local `main` checkout must have no tracked changes or unknown untracked
+files before integration, and the source Pane worktree must contain no
+Issue-relevant uncommitted work. A runtime-managed sibling-worktree root may
+appear as untracked in the base repository; verify its entries with `git
+worktree list` rather than treating those registered worktrees as delivery
+content. Unrelated user-owned changes in other worktrees do not block delivery.
+A fast-forward preserves the reviewed commit. Any rebase, merge, cherry-pick,
+or conflict resolution that changes the integration range requires relevant
+validation and review of the resulting local `main` range before a separately
+authorized push. Stop for new Human instruction rather than resolving an
+unauthorized conflict. When an integration range includes more than one Issue,
+name the included Issues, validation, review, and human integration and push
+authorizations together. The workflow does not automate integration, conflict
+resolution, or pushing.
 
 ## Post-Push Completion and Issue Closure
 
@@ -799,6 +822,25 @@ python scripts/complete_pushed_issue.py audit
 The audit changes neither Project nor Issue state. A historical candidate must
 still pass the guarded `complete` operation; do not reconstruct missing
 completion evidence or bulk-close candidates.
+
+## Pane Session Archival
+
+Pane archival is the final cleanup step for a normally completed Pane-managed
+Issue. It is not part of Git integration, push, or Issue closure, and it is
+never automatic. Request separate explicit Human authorization that identifies
+the exact Pane after all of the following are true:
+
+- the integration range is confirmed reachable from the intended remote `main`;
+- post-push verification, the completion comment, Project `Done`, and explicit
+  Issue closure succeeded;
+- fresh RunPane identity and agent-activity checks resolve exactly one Pane and
+  show no active agent; and
+- RunPane's archive dry-run reports no uncommitted, untracked, or unpushed work.
+
+If any condition is missing, ambiguous, or unsafe, refuse archival, report the
+evidence, and preserve the Pane and worktree for recovery. Do not use
+`runpane panes archive --force` for normal Issue delivery. The operational
+commands and signal checks live in `docs/dev-container.md`.
 
 ## Commit Reference
 

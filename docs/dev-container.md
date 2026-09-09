@@ -176,6 +176,34 @@ epoch or workspace generation change invalidates older observations; unknown is
 not success or failure; and a missing watch heartbeat requires fresh inspection
 or Human handling.
 
+### Pane archival
+
+Pane/RunPane owns archive mechanics, including removal of its managed worktree;
+the SoundAtlas Issue lifecycle in `docs/github-issue-workflow.md` determines
+when archival is eligible. Do not archive as a substitute for integration,
+push, verification, completion, or Issue closure.
+
+After that lifecycle has completed and the Human separately authorizes archival,
+resolve the exact Pane from a fresh `runpane panes list --repo soundatlas --json`
+result and confirm fresh agent activity with `runpane workspace state --repo
+soundatlas --json`. Then inspect the exact archive evidence without mutation:
+
+```sh
+runpane panes archive --pane <pane-id> --source agent --dry-run --yes --json
+```
+
+The command refreshes the configured upstream and reports its uncommitted,
+untracked, and unpushed-commit safety evidence. Archive only the same exact Pane
+after a safe dry-run and the explicit authorization:
+
+```sh
+runpane panes archive --pane <pane-id> --source agent --yes --json
+```
+
+If the Pane identity is ambiguous, an agent remains active, the dry-run reports
+unsafe work, or the command fails, refuse archival and preserve the Pane and
+worktree for recovery. Never use `--force` for normal SoundAtlas Issue delivery.
+
 If `runpane panes create` returns
 `input.items.0: did not match any allowed shape`, treat the mutation as
 ambiguous. Pane/RunPane 2.4.95 can have already created the Pane, managed
