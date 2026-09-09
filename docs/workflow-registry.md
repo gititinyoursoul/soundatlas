@@ -170,6 +170,35 @@ panel lifecycle, and worktree management.
 This section is authoritative for repository-wide entrypoint selection and
 document ownership.
 
+### Repository-local precedence
+
+For work in the SoundAtlas repository, apply the canonical registry to the
+current Issue stage and work type before selecting generic Pane or workspace
+skills. Use every matching repository-local `soundatlas-*` skill ahead of an
+overlapping generic skill. The matching SoundAtlas skill retains its assigned
+workflow gates, canonical artifact location, implementation procedure,
+validation, and review output.
+
+Pane remains the outer orchestration layer for panes, worktrees, panels, and
+liveness. Generic skills may provide that orchestration or another capability
+not covered by a SoundAtlas skill, but they must not replace or duplicate a
+matching SoundAtlas workflow. In particular, a generic planner must not create
+a parallel local plan when `soundatlas-issue-planning` owns the canonical Plan
+Update in the GitHub Issue.
+
+A Pane handoff for a new SoundAtlas agent must name the current Issue stage and
+the matching repository-local entrypoint before naming an optional generic
+capability. Selecting either kind of skill does not grant, revoke, or broaden
+authorization for GitHub writes or any other external mutation; the existing
+SoundAtlas lifecycle and explicit Human authorization boundaries continue to
+apply.
+
+This precedence policy is owned here, with concise repository execution and
+handoff instructions in the SoundAtlas-owned portion of `AGENTS.md`. Do not
+copy it into Pane-generated context or cached generic skills. Pane/RunPane owns
+the marker-delimited generated context and its refresh lifecycle, while the
+repository-owned rule remains outside that generated region.
+
 ### Use a skill for repeatable execution
 
 Use a reusable skill when work has a stable, repeatable execution or review

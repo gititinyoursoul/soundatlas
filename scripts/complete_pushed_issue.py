@@ -11,6 +11,7 @@ import re
 import subprocess
 import sys
 from collections.abc import Callable
+from pathlib import Path
 from typing import Any
 
 from check_issue_completion import ValidationError, validate_completion_text
@@ -18,6 +19,7 @@ from check_issue_completion import ValidationError, validate_completion_text
 DEFAULT_OWNER = "gititinyoursoul"
 DEFAULT_PROJECT_NUMBER = 1
 COMMIT_PATTERN = re.compile(r"(?i)\bcommit(?:\s+range)?\s*[:]?\s*`?([0-9a-f]{7,40})`?")
+PROJECT_HELPER = str(Path(__file__).with_name("gh_project.py"))
 
 
 class ReconciliationError(RuntimeError):
@@ -25,6 +27,11 @@ class ReconciliationError(RuntimeError):
 
 
 Run = Callable[[list[str], str | None], str]
+
+
+def project_command(*arguments: str) -> list[str]:
+    """Route Project commands through the dedicated credential helper."""
+    return [sys.executable, PROJECT_HELPER, *arguments]
 
 
 def run_command(command: list[str], input_text: str | None = None) -> str:
@@ -45,7 +52,9 @@ def json_output(run: Run, command: list[str]) -> Any:
     try:
         return json.loads(run(command, None))
     except json.JSONDecodeError as exc:
-        raise ReconciliationError(f"{' '.join(command[:3])} returned invalid JSON") from exc
+        raise ReconciliationError(
+            f"{' '.join(command[:3])} returned invalid JSON"
+        ) from exc
 
 
 def first_heading(body: str) -> str | None:
@@ -77,7 +86,9 @@ def accepted_report(comments: list[dict[str, Any]]) -> str:
     try:
         validate_completion_text(reports[-1], "abcdef0", 1, True)
     except ValidationError as exc:
-        raise ReconciliationError(f"latest Implementation Report is not completion-ready: {exc}") from exc
+        raise ReconciliationError(
+            f"latest Implementation Report is not completion-ready: {exc}"
+        ) from exc
     return reports[-1]
 
 
@@ -86,7 +97,9 @@ def report_commit(report: str) -> str | None:
     return match.group(1) if match else None
 
 
-def remote_contains(run: Run, commit: str, remote: str, branch: str) -> tuple[bool, str]:
+def remote_contains(
+    run: Run, commit: str, remote: str, branch: str
+) -> tuple[bool, str]:
     remote_ref = f"{remote}/{branch}"
     remote_head = run(["git", "rev-parse", remote_ref], None).strip()
     try:
@@ -96,26 +109,41 @@ def remote_contains(run: Run, commit: str, remote: str, branch: str) -> tuple[bo
     return True, remote_head
 
 
-def reviewed_revision(run: Run, commit: str | None, commit_range: str | None) -> tuple[str, str]:
+def reviewed_revision(
+    run: Run, commit: str | None, commit_range: str | None
+) -> tuple[str, str]:
     """Resolve one reviewed commit or a validated inclusive integration range."""
     if commit:
         return run(["git", "rev-parse", commit], None).strip(), commit
     if not commit_range or ".." not in commit_range:
-        raise ReconciliationError("complete requires --commit or --range <base>..<head>")
+        raise ReconciliationError(
+            "complete requires --commit or --range <base>..<head>"
+        )
     base, head = commit_range.split("..", 1)
     if not base or not head:
         raise ReconciliationError("range must use <base>..<head>")
     try:
         run(["git", "merge-base", "--is-ancestor", base, head], None)
     except ReconciliationError as exc:
-        raise ReconciliationError(f"reviewed range is not ordered: {commit_range}") from exc
+        raise ReconciliationError(
+            f"reviewed range is not ordered: {commit_range}"
+        ) from exc
     return run(["git", "rev-parse", head], None).strip(), commit_range
 
 
 def issue_data(run: Run, repo: str, issue: int) -> dict[str, Any]:
     result = json_output(
         run,
-        ["gh", "issue", "view", str(issue), "--repo", repo, "--json", "number,title,state,comments,url"],
+        [
+            "gh",
+            "issue",
+            "view",
+            str(issue),
+            "--repo",
+            repo,
+            "--json",
+            "number,title,state,comments,url",
+        ],
     )
     if not isinstance(result, dict):
         raise ReconciliationError(f"Issue #{issue} response is not an object")
@@ -125,7 +153,16 @@ def issue_data(run: Run, repo: str, issue: int) -> dict[str, Any]:
 def project_items(run: Run, owner: str, project_number: int) -> list[dict[str, Any]]:
     result = json_output(
         run,
-        ["gh", "project", "item-list", str(project_number), "--owner", owner, "--limit", "500", "--format", "json"],
+        project_command(
+            "item-list",
+            str(project_number),
+            "--owner",
+            owner,
+            "--limit",
+            "500",
+            "--format",
+            "json",
+        ),
     )
     items = result.get("items") if isinstance(result, dict) else None
     if not isinstance(items, list):
@@ -133,7 +170,9 @@ def project_items(run: Run, owner: str, project_number: int) -> list[dict[str, A
     return [item for item in items if isinstance(item, dict)]
 
 
-def audit(run: Run, repo: str, owner: str, project_number: int, remote: str, branch: str) -> int:
+def audit(
+    run: Run, repo: str, owner: str, project_number: int, remote: str, branch: str
+) -> int:
     candidates = 0
     for item in project_items(run, owner, project_number):
         if item.get("status") != "Locally Implemented":
@@ -150,7 +189,9 @@ def audit(run: Run, repo: str, owner: str, project_number: int, remote: str, bra
                 raise ReconciliationError("latest report does not name a commit")
             published, _ = remote_contains(run, commit, remote, branch)
             if not published:
-                raise ReconciliationError(f"{commit} is not reachable from {remote}/{branch}")
+                raise ReconciliationError(
+                    f"{commit} is not reachable from {remote}/{branch}"
+                )
         except ReconciliationError as exc:
             print(f"# {issue} not a completion candidate: {exc}")
             continue
@@ -161,17 +202,41 @@ def audit(run: Run, repo: str, owner: str, project_number: int, remote: str, bra
 
 
 def project_ids(run: Run, owner: str, project_number: int) -> tuple[str, str, str]:
-    projects = json_output(run, ["gh", "project", "list", "--owner", owner, "--format", "json"])
+    projects = json_output(
+        run, project_command("list", "--owner", owner, "--format", "json")
+    )
     project = next(
-        (value for value in projects.get("projects", []) if value.get("number") == project_number), None
+        (
+            value
+            for value in projects.get("projects", [])
+            if value.get("number") == project_number
+        ),
+        None,
     )
     if not isinstance(project, dict) or not isinstance(project.get("id"), str):
-        raise ReconciliationError(f"Project #{project_number} was not found for {owner}")
-    fields = json_output(run, ["gh", "project", "field-list", str(project_number), "--owner", owner, "--format", "json"])
-    status = next((field for field in fields.get("fields", []) if field.get("name") == "Status"), None)
+        raise ReconciliationError(
+            f"Project #{project_number} was not found for {owner}"
+        )
+    fields = json_output(
+        run,
+        project_command(
+            "field-list", str(project_number), "--owner", owner, "--format", "json"
+        ),
+    )
+    status = next(
+        (field for field in fields.get("fields", []) if field.get("name") == "Status"),
+        None,
+    )
     if not isinstance(status, dict) or not isinstance(status.get("id"), str):
         raise ReconciliationError("Project has no Status field")
-    done = next((option for option in status.get("options", []) if option.get("name") == "Done"), None)
+    done = next(
+        (
+            option
+            for option in status.get("options", [])
+            if option.get("name") == "Done"
+        ),
+        None,
+    )
     if not isinstance(done, dict) or not isinstance(done.get("id"), str):
         raise ReconciliationError("Project Status field has no Done option")
     return project["id"], status["id"], done["id"]
@@ -189,34 +254,65 @@ def complete(args: argparse.Namespace, run: Run) -> int:
     if not isinstance(comments, list):
         raise ReconciliationError("Issue comments are unavailable")
     if completion_comments(comments):
-        raise ReconciliationError("Issue already has a completion comment; do not rewrite completion evidence")
+        raise ReconciliationError(
+            "Issue already has a completion comment; do not rewrite completion evidence"
+        )
     report = accepted_report(comments)
     commit, reviewed_range = reviewed_revision(run, args.commit, args.commit_range)
     if args.commit:
         recorded_commit = report_commit(report)
         if not recorded_commit:
-            raise ReconciliationError("latest Implementation Report does not name the reviewed commit")
+            raise ReconciliationError(
+                "latest Implementation Report does not name the reviewed commit"
+            )
         recorded_revision = run(["git", "rev-parse", recorded_commit], None).strip()
         if recorded_revision != commit:
-            raise ReconciliationError("named commit does not match the latest Implementation Report")
+            raise ReconciliationError(
+                "named commit does not match the latest Implementation Report"
+            )
     elif reviewed_range not in report:
-        raise ReconciliationError("latest Implementation Report does not name the reviewed integration range")
+        raise ReconciliationError(
+            "latest Implementation Report does not name the reviewed integration range"
+        )
     validate_completion_text(report, commit, 1, True)
     published, remote_head = remote_contains(run, commit, args.remote, args.branch)
     if not published:
-        raise ReconciliationError(f"{commit} is not reachable from {args.remote}/{args.branch}")
+        raise ReconciliationError(
+            f"{commit} is not reachable from {args.remote}/{args.branch}"
+        )
     if args.frontend_ci_run:
-        ci = json_output(run, ["gh", "run", "view", args.frontend_ci_run, "--repo", args.repo, "--json", "conclusion,url"])
+        ci = json_output(
+            run,
+            [
+                "gh",
+                "run",
+                "view",
+                args.frontend_ci_run,
+                "--repo",
+                args.repo,
+                "--json",
+                "conclusion,url",
+            ],
+        )
         if ci.get("conclusion") != "success":
-            raise ReconciliationError(f"Frontend CI run is not successful: {ci.get('url', args.frontend_ci_run)}")
+            raise ReconciliationError(
+                f"Frontend CI run is not successful: {ci.get('url', args.frontend_ci_run)}"
+            )
 
     items = project_items(run, args.owner, args.project_number)
     item = next(
-        (value for value in items if isinstance(value.get("content"), dict) and value["content"].get("number") == args.issue),
+        (
+            value
+            for value in items
+            if isinstance(value.get("content"), dict)
+            and value["content"].get("number") == args.issue
+        ),
         None,
     )
     if not isinstance(item, dict) or not isinstance(item.get("id"), str):
-        raise ReconciliationError(f"Issue #{args.issue} is not in Project #{args.project_number}")
+        raise ReconciliationError(
+            f"Issue #{args.issue} is not in Project #{args.project_number}"
+        )
     project_id, status_id, done_id = project_ids(run, args.owner, args.project_number)
     comment = (
         "## Completed\n\n"
@@ -229,11 +325,29 @@ def complete(args: argparse.Namespace, run: Run) -> int:
         comment += f"; successful Frontend CI run `{args.frontend_ci_run}`"
     comment += "\n"
     run(
-        ["gh", "api", "--method", "POST", f"repos/{args.repo}/issues/{args.issue}/comments", "--input", "-"],
+        [
+            "gh",
+            "api",
+            "--method",
+            "POST",
+            f"repos/{args.repo}/issues/{args.issue}/comments",
+            "--input",
+            "-",
+        ],
         json.dumps({"body": comment}),
     )
     run(
-        ["gh", "project", "item-edit", "--id", item["id"], "--project-id", project_id, "--field-id", status_id, "--single-select-option-id", done_id],
+        project_command(
+            "item-edit",
+            "--id",
+            item["id"],
+            "--project-id",
+            project_id,
+            "--field-id",
+            status_id,
+            "--single-select-option-id",
+            done_id,
+        ),
         None,
     )
     run(["gh", "issue", "close", str(args.issue), "--repo", args.repo], None)
@@ -245,20 +359,31 @@ def parser() -> argparse.ArgumentParser:
     command_parser = argparse.ArgumentParser(description=__doc__)
     command_parser.add_argument("--repo", default="gititinyoursoul/soundatlas")
     command_parser.add_argument("--owner", default=DEFAULT_OWNER)
-    command_parser.add_argument("--project-number", type=int, default=DEFAULT_PROJECT_NUMBER)
+    command_parser.add_argument(
+        "--project-number", type=int, default=DEFAULT_PROJECT_NUMBER
+    )
     command_parser.add_argument("--remote", default="origin")
     command_parser.add_argument("--branch", default="main")
     subparsers = command_parser.add_subparsers(dest="command", required=True)
 
-    subparsers.add_parser("audit", help="report published completion candidates without mutation")
-    complete_parser = subparsers.add_parser("complete", help="complete one verified, published Issue")
+    subparsers.add_parser(
+        "audit", help="report published completion candidates without mutation"
+    )
+    complete_parser = subparsers.add_parser(
+        "complete", help="complete one verified, published Issue"
+    )
     complete_parser.add_argument("--issue", type=int, required=True)
     revision = complete_parser.add_mutually_exclusive_group(required=True)
     revision.add_argument("--commit")
-    revision.add_argument("--range", dest="commit_range", help="reviewed <base>..<head> integration range")
+    revision.add_argument(
+        "--range", dest="commit_range", help="reviewed <base>..<head> integration range"
+    )
     complete_parser.add_argument("--push-authorized", action="store_true")
     complete_parser.add_argument("--working-tree-verified", action="store_true")
-    complete_parser.add_argument("--frontend-ci-run", help="required when the delivered range triggers Frontend CI")
+    complete_parser.add_argument(
+        "--frontend-ci-run",
+        help="required when the delivered range triggers Frontend CI",
+    )
     return command_parser
 
 
@@ -266,7 +391,14 @@ def main(argv: list[str] | None = None, run: Run = run_command) -> int:
     args = parser().parse_args(argv)
     try:
         if args.command == "audit":
-            return audit(run, args.repo, args.owner, args.project_number, args.remote, args.branch)
+            return audit(
+                run,
+                args.repo,
+                args.owner,
+                args.project_number,
+                args.remote,
+                args.branch,
+            )
         return complete(args, run)
     except (ReconciliationError, ValidationError) as exc:
         print(f"Reconciliation failed: {exc}", file=sys.stderr)

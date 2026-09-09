@@ -15,6 +15,7 @@ services:
       CODEX_HOME: /home/soundatlas/.codex
       GH_CONFIG_DIR: /home/soundatlas/.config/gh
       SOUNDATLAS_GITHUB_AGENT_ENV_FILE: /run/secrets/github-agent.env
+      SOUNDATLAS_GITHUB_PROJECT_ENV_FILE: /run/secrets/github-project-agent.env
       SOUNDATLAS_GIT_AUTHOR_NAME: ${SOUNDATLAS_GIT_AUTHOR_NAME:-}
       SOUNDATLAS_GIT_AUTHOR_EMAIL: ${SOUNDATLAS_GIT_AUTHOR_EMAIL:-}
       SOUNDATLAS_EGRESS_GUARD: enabled
@@ -40,14 +41,53 @@ services:
         target: /run/secrets/soundatlas.env
         read_only: true
       - type: bind
-        source: ../secrets/soundatlas/github-agent.env
+        source: ${SOUNDATLAS_GITHUB_AGENT_ENV_SOURCE_FILE:-${SOUNDATLAS_GITHUB_AGENT_ENV_SEED_FILE:-../secrets/soundatlas/github-agent.env}}
         target: /run/secrets/github-agent.env
+        read_only: true
+      - type: bind
+        source: ${SOUNDATLAS_GITHUB_PROJECT_ENV_SOURCE_FILE:-../secrets/soundatlas/github-project-agent.env}
+        target: /run/secrets/github-project-agent.env
         read_only: true
       - frontend_node_modules:/workspace/frontend/node_modules
       - backend_uv_cache:/home/soundatlas/.cache/uv
-      - github_cli_config:/home/soundatlas/.config/gh
       - playwright_cache:/home/soundatlas/.cache/ms-playwright
       - frontend_npm_cache:/home/soundatlas/.npm
+    depends_on:
+      backend:
+        condition: service_started
+      frontend:
+        condition: service_started
+
+  pane-egress:
+    image: soundatlas-pane-egress:local
+    profiles:
+      - pane
+    build:
+      context: .
+      dockerfile: docker/pane-egress.Dockerfile
+    user: "0:0"
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_ADMIN
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /run:rw,noexec,nosuid,nodev,size=1m
+    pids_limit: 32
+    mem_limit: 64m
+    cpus: 0.25
+    environment:
+      SOUNDATLAS_ALLOWED_OUTBOUND_DESTINATIONS: "backend:8000 frontend:5173"
+    healthcheck:
+      test: ["CMD", "sh", "/usr/local/bin/pane-egress-guard", "check"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    ports:
+      - "127.0.0.1:${SOUNDATLAS_PANE_SSH_PORT:-53660}:2222"
     depends_on:
       backend:
         condition: service_started
@@ -74,7 +114,8 @@ services:
       GH_CONFIG_DIR: /home/soundatlas/.config/gh
       HOST_CODEX_HOME: /mnt/host-codex
       PANE_DIR: /runtime/pane
-      SOUNDATLAS_GITHUB_AGENT_ENV_FILE: /home/soundatlas/.config/gh/github-agent.env
+      SOUNDATLAS_GITHUB_AGENT_ENV_FILE: /run/secrets/github-agent.env
+      SOUNDATLAS_GITHUB_PROJECT_ENV_FILE: /run/secrets/github-project-agent.env
       SOUNDATLAS_GIT_AUTHOR_NAME: ${SOUNDATLAS_GIT_AUTHOR_NAME:-}
       SOUNDATLAS_GIT_AUTHOR_EMAIL: ${SOUNDATLAS_GIT_AUTHOR_EMAIL:-}
       SOUNDATLAS_PANE_REPO_DIR: /runtime/repos
@@ -100,7 +141,6 @@ services:
       - pane_repositories:/runtime/repos
       - pane_ssh_state:/runtime/ssh
       - pane_codex_home:/home/soundatlas/.codex
-      - pane_github_cli_config:/home/soundatlas/.config/gh
       - pane_uv_cache:/home/soundatlas/.cache/uv
       - pane_npm_cache:/home/soundatlas/.npm
       - pane_playwright_cache:/home/soundatlas/.cache/ms-playwright
@@ -123,28 +163,29 @@ services:
         bind:
           create_host_path: false
       - type: bind
-        source: ${SOUNDATLAS_GITHUB_AGENT_ENV_SEED_FILE:-../secrets/soundatlas/github-agent.env}
+        source: ${SOUNDATLAS_GITHUB_AGENT_ENV_SOURCE_FILE:-${SOUNDATLAS_GITHUB_AGENT_ENV_SEED_FILE:-../secrets/soundatlas/github-agent.env}}
         target: /run/secrets/github-agent.env
         read_only: true
         bind:
           create_host_path: false
-    ports:
-      - "127.0.0.1:${SOUNDATLAS_PANE_SSH_PORT:-53660}:2222"
+      - type: bind
+        source: ${SOUNDATLAS_GITHUB_PROJECT_ENV_SOURCE_FILE:-../secrets/soundatlas/github-project-agent.env}
+        target: /run/secrets/github-project-agent.env
+        read_only: true
+        bind:
+          create_host_path: false
+    network_mode: service:pane-egress
     depends_on:
-      backend:
-        condition: service_started
-      frontend:
-        condition: service_started
+      pane-egress:
+        condition: service_healthy
 
 volumes:
   codex_home:
-  github_cli_config:
   playwright_cache:
   pane_state:
   pane_repositories:
   pane_ssh_state:
   pane_codex_home:
-  pane_github_cli_config:
   pane_uv_cache:
   pane_npm_cache:
   pane_playwright_cache:

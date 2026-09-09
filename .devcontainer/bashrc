@@ -8,10 +8,29 @@ if [ -f /usr/share/bash-completion/bash_completion ]; then
   . /usr/share/bash-completion/bash_completion
 fi
 
-if [ -z "${GH_TOKEN:-}" ] && [ -n "${SOUNDATLAS_GITHUB_AGENT_ENV_FILE:-}" ] && [ -f "$SOUNDATLAS_GITHUB_AGENT_ENV_FILE" ] && [ -r "$SOUNDATLAS_GITHUB_AGENT_ENV_FILE" ]; then
-  set -a
-  . "$SOUNDATLAS_GITHUB_AGENT_ENV_FILE"
-  set +a
+if [ -z "${GH_TOKEN:-}" ] && [ -n "${SOUNDATLAS_GITHUB_AGENT_ENV_FILE:-}" ]; then
+  github_token=""
+  github_token_lines=0
+  while IFS= read -r github_env_line || [ -n "$github_env_line" ]; do
+    case "$github_env_line" in
+      ""|'#'*) continue ;;
+      GH_TOKEN=*)
+        github_token="${github_env_line#GH_TOKEN=}"
+        github_token_lines=$((github_token_lines + 1))
+        ;;
+      *)
+        echo "Repository GitHub credential file must contain only GH_TOKEN" >&2
+        github_token=""
+        break
+        ;;
+    esac
+  done < "$SOUNDATLAS_GITHUB_AGENT_ENV_FILE"
+  if [ "$github_token_lines" -eq 1 ] && [ -n "$github_token" ]; then
+    export GH_TOKEN="$github_token"
+  else
+    echo "Repository GitHub credential file must contain one non-empty GH_TOKEN" >&2
+  fi
+  unset github_env_line github_token github_token_lines
 fi
 
 if [ -f /workspace/.devcontainer/backend-scripts-completion.bash ]; then
