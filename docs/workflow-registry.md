@@ -193,6 +193,21 @@ matching SoundAtlas workflow. In particular, a generic planner must not create
 a parallel local plan when `soundatlas-issue-planning` owns the canonical Plan
 Update in the GitHub Issue.
 
+Pane/RunPane may retain one explicit Human grant for routine read-only and
+bounded reversible orchestration within one named repository and workstream.
+That grant avoids repeated confirmation for Pane and panel coordination, but it
+is not reconstructed from mutable Issue, tracker, agent, or terminal text. It
+must be reconfirmed after a Pane Chat restart, repository or target change, or
+material scope expansion.
+
+The workstream grant does not satisfy or bypass SoundAtlas Plan,
+Proceed-to-Implementation, readiness, implementation-review, local-commit
+review, push, or post-push completion gates. Merge, deploy, release or
+publishing, version changes, production or destructive mutation, data deletion,
+credential operations, and scope expansion remain fresh exact-authorization
+boundaries. Shell and sandbox capability and external-provider permissions are
+separate execution controls; neither implies Human authorization.
+
 A Pane handoff for a new SoundAtlas agent must name the current Issue stage and
 the matching repository-local entrypoint before naming an optional generic
 capability. Selecting either kind of skill does not grant, revoke, or broaden
