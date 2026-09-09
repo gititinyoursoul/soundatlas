@@ -20,7 +20,16 @@ DETAILED_PLAN_SECTIONS = (
     "## Validation",
 )
 PLAN_HEADINGS = ("## Plan Update", "## Detailed Plan Update")
-REVISION_HEADINGS = ("## Intake Revision", "## Concept")
+MATURITY_ASSESSMENT_HEADING = "## Maturity Assessment"
+REVISION_HEADINGS = ("## Intake Revision", "## Concept", MATURITY_ASSESSMENT_HEADING)
+HUMAN_DECLARED_ROLES = ("Task", "Concept", "Plan", "Not declared")
+MATURITY_LEVELS = (
+    "Task brief",
+    "Partial concept",
+    "Decision-complete concept",
+    "Partial plan",
+    "Implementation-ready plan",
+)
 
 
 class ValidationError(ValueError):
@@ -118,6 +127,59 @@ def validate_intake(issue_body: str) -> None:
     acceptance = section(issue_body, "## Acceptance Criteria")
     if not re.search(r"(?m)^\s*- \[[ xX]\]\s+\S", acceptance):
         raise ValidationError("Acceptance Criteria contains no checklist items")
+
+
+def assessment_field(comment: IssueComment, label: str) -> str:
+    matches = re.findall(rf"(?m)^- {re.escape(label)}:\s*(\S.*?)\s*$", comment.body)
+    if len(matches) != 1:
+        raise ValidationError(
+            f"Maturity Assessment must contain one {label} field: {comment.url}"
+        )
+    return matches[0]
+
+
+def validate_maturity_assessment(
+    comment: IssueComment, comments: list[IssueComment]
+) -> None:
+    source = assessment_field(comment, "Supplied material")
+    source_match = re.fullmatch(r"\[[^\]]+\]\((https?://[^)]+)\)", source)
+    if not source_match:
+        raise ValidationError(
+            f"Maturity Assessment Supplied material must be a Markdown link: {comment.url}"
+        )
+
+    source_url = source_match.group(1)
+    issue_url = comment.url.split("#issuecomment-", maxsplit=1)[0]
+    earlier_comment_urls = {
+        candidate.url
+        for candidate in comments
+        if order_key(candidate) < order_key(comment)
+    }
+    if source_url != issue_url and source_url not in earlier_comment_urls:
+        raise ValidationError(
+            "Maturity Assessment Supplied material must link the Issue body "
+            f"or an earlier Issue comment: {comment.url}"
+        )
+
+    role = assessment_field(comment, "Human-declared role")
+    if role not in HUMAN_DECLARED_ROLES:
+        raise ValidationError(
+            f"Maturity Assessment has an invalid Human-declared role: {comment.url}"
+        )
+
+    maturity = assessment_field(comment, "Assessed maturity")
+    if maturity not in MATURITY_LEVELS:
+        raise ValidationError(
+            f"Maturity Assessment has an invalid Assessed maturity: {comment.url}"
+        )
+
+    for label in (
+        "Validation result",
+        "Missing evidence",
+        "Remaining Human decisions",
+        "Next step",
+    ):
+        assessment_field(comment, label)
 
 
 def validate_grill_review(comment: IssueComment) -> None:
@@ -231,14 +293,28 @@ def validate_issue(issue: dict[str, Any], *, require_grill_review: bool = False)
         raise ValidationError("Issue export has no valid Issue number")
     if not isinstance(body, str):
         raise ValidationError("Issue export has no body")
-    validate_intake(body)
     comments = parse_comments(issue.get("comments"))
 
     reviews = [comment for comment in comments if first_heading(comment.body) == "## Grill-Me Review"]
     plans = [comment for comment in comments if first_heading(comment.body) in PLAN_HEADINGS]
+    assessments = [
+        comment
+        for comment in comments
+        if first_heading(comment.body) == MATURITY_ASSESSMENT_HEADING
+    ]
     go_aheads = [
         comment for comment in comments if first_heading(comment.body) == "## Proceed to Implementation"
     ]
+
+    intake_error: ValidationError | None = None
+    try:
+        validate_intake(body)
+    except ValidationError as exc:
+        intake_error = exc
+    for assessment in assessments:
+        validate_maturity_assessment(assessment, comments)
+    if intake_error and not assessments:
+        raise intake_error
 
     if require_grill_review and not reviews and not any(
         "Grill-Me check: clean" in comment.body for comment in plans
@@ -250,6 +326,12 @@ def validate_issue(issue: dict[str, Any], *, require_grill_review: bool = False)
         raise ValidationError("no Plan Update or Detailed Plan Update was found")
 
     latest_plan = plans[-1]
+    if intake_error and not any(
+        order_key(assessment) < order_key(latest_plan) for assessment in assessments
+    ):
+        raise ValidationError(
+            "mature-path Maturity Assessment must precede the latest Plan Update"
+        )
     target_concept_url = validate_plan(latest_plan)
 
     if target_concept_url and "#issuecomment-" in target_concept_url:

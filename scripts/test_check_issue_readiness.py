@@ -37,6 +37,31 @@ Prevent premature implementation.
 """
 
 
+def mature_body() -> str:
+    return """## Intent
+
+Preserve a supplied, decision-complete concept without reducing it to a task brief.
+"""
+
+
+def maturity_assessment(
+    *,
+    source_url: str = BASE_URL,
+    role: str = "Concept",
+    maturity: str = "Decision-complete concept",
+) -> str:
+    return f"""## Maturity Assessment
+
+- Supplied material: [Issue body]({source_url})
+- Human-declared role: {role}
+- Assessed maturity: {maturity}
+- Validation result: Concept is decision-complete.
+- Missing evidence: None.
+- Remaining Human decisions: None.
+- Next step: Concept Work.
+"""
+
+
 def grill_review() -> str:
     return """## Grill-Me Review
 
@@ -139,6 +164,27 @@ def valid_issue() -> dict[str, Any]:
     }
 
 
+def valid_mature_issue() -> dict[str, Any]:
+    concept_url = f"{BASE_URL}#issuecomment-3"
+    plan_url = f"{BASE_URL}#issuecomment-4"
+    return {
+        "number": ISSUE_NUMBER,
+        "body": mature_body(),
+        "comments": [
+            comment(1, maturity_assessment()),
+            comment(2, grill_review()),
+            comment(3, concept()),
+            comment(
+                4,
+                detailed_plan(
+                    concept_basis=f"Target Concept: [#101 Concept]({concept_url})"
+                ),
+            ),
+            comment(5, go_ahead(plan_url=plan_url)),
+        ],
+    }
+
+
 class CheckIssueReadinessTests(unittest.TestCase):
     def run_cli(
         self, issue: dict[str, Any], *extra_args: str
@@ -169,6 +215,77 @@ class CheckIssueReadinessTests(unittest.TestCase):
         result = self.run_cli(valid_issue())
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn(PLAN_URL, result.stdout)
+
+    def test_accepts_mature_path_with_issue_body_source(self) -> None:
+        result = self.run_cli(valid_mature_issue())
+        self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_accepts_each_maturity_classification(self) -> None:
+        for maturity in (
+            "Task brief",
+            "Partial concept",
+            "Decision-complete concept",
+            "Partial plan",
+            "Implementation-ready plan",
+        ):
+            with self.subTest(maturity=maturity):
+                issue = valid_mature_issue()
+                issue["comments"][0]["body"] = maturity_assessment(
+                    maturity=maturity
+                )
+                result = self.run_cli(issue)
+                self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_accepts_mature_path_with_earlier_comment_source(self) -> None:
+        supplied_url = f"{BASE_URL}#issuecomment-1"
+        concept_url = f"{BASE_URL}#issuecomment-4"
+        plan_url = f"{BASE_URL}#issuecomment-5"
+        issue = {
+            "number": ISSUE_NUMBER,
+            "body": mature_body(),
+            "comments": [
+                comment(1, "## Supplied Material\n\nOriginal plan."),
+                comment(2, maturity_assessment(source_url=supplied_url)),
+                comment(3, grill_review()),
+                comment(4, concept()),
+                comment(
+                    5,
+                    detailed_plan(
+                        concept_basis=f"Target Concept: [#101 Concept]({concept_url})"
+                    ),
+                ),
+                comment(6, go_ahead(plan_url=plan_url)),
+            ],
+        }
+        result = self.run_cli(issue)
+        self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_rejects_mature_body_without_assessment(self) -> None:
+        issue = valid_issue()
+        issue["body"] = mature_body()
+        self.assert_invalid(issue, "missing required section: ## Task")
+
+    def test_rejects_invalid_maturity_classification(self) -> None:
+        issue = valid_mature_issue()
+        issue["comments"][0]["body"] = maturity_assessment(maturity="Mature")
+        self.assert_invalid(issue, "invalid Assessed maturity")
+
+    def test_rejects_invalid_human_declared_role(self) -> None:
+        issue = valid_mature_issue()
+        issue["comments"][0]["body"] = maturity_assessment(role="Architecture")
+        self.assert_invalid(issue, "invalid Human-declared role")
+
+    def test_rejects_unknown_supplied_material_source(self) -> None:
+        issue = valid_mature_issue()
+        issue["comments"][0]["body"] = maturity_assessment(
+            source_url=f"{BASE_URL}#issuecomment-99"
+        )
+        self.assert_invalid(issue, "Issue body or an earlier Issue comment")
+
+    def test_rejects_later_maturity_assessment(self) -> None:
+        issue = valid_issue()
+        issue["comments"].append(comment(5, maturity_assessment()))
+        self.assert_invalid(issue, "superseded by ## Maturity Assessment")
 
     def test_accepts_json_from_standard_input(self) -> None:
         result = subprocess.run(

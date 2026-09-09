@@ -5,9 +5,10 @@ work.
 
 The default workflow is Issue-led:
 
-> Create an Intake Issue first. For risky, vague, or cross-cutting work, run
-> Grill-Me and record confirmed decisions. Use concept work only when planning
-> would otherwise have to invent the target, then add a Plan Update. Explicit
+> Preserve the supplied request first. Use the lightweight Intake for a task
+> brief; assess substantial supplied Concept or Plan material at its attempted
+> stage. Run Grill-Me when required, use concept work only when planning would
+> otherwise have to invent the target, then add a Plan Update. Explicit
 > implementation wording does not bypass those gates.
 
 GitHub Issues are the source of truth for planned agent work. `TODO.md` is a
@@ -23,9 +24,9 @@ entrypoint for each kind of work. Skills and prompts provide the procedures for
 producing their assigned artifacts and must follow this lifecycle contract.
 
 In particular, `soundatlas-issue-planning` drafts and revises Intake Issues,
-Plan Updates, Detailed Plan Updates, `## Proceed to Implementation` records,
-and Implementation Reports. It does not own lifecycle ordering, post-push
-closure, or Issue-state management.
+Maturity Assessments, Plan Updates, Detailed Plan Updates, `## Proceed to
+Implementation` records, and Implementation Reports. It does not own lifecycle
+ordering, post-push closure, or Issue-state management.
 `soundatlas-grill-me` owns the phase-aware critique procedure, Review Modes,
 Materiality routing, and interactive one-finding flow; this document owns when
 that procedure runs and the canonical completed Grill-Me record shape.
@@ -74,7 +75,10 @@ bodies and may remain command arguments.
 ```text
 1. Human gives a feature/change request.
 2. Agent inspects the repo before asking questions when local context can answer them.
-3. Agent creates an Intake Issue containing only Task, Context, and Acceptance Criteria, adds it to the `Project Tracker`, and sets its Project status to `Todo`.
+3. Agent preserves the supplied material in an Issue, classifies it as a task
+   brief or attempted Concept/Plan, adds the Issue to the `Project Tracker`, and
+   sets its Project status to `Todo`. Task briefs use the lightweight Intake
+   body; the mature path adds a `## Maturity Assessment`.
 4. Agent performs a lightweight Grill-Me check and runs the interactive review when a material finding needs human confirmation.
 5. If planning would otherwise invent material target behavior, semantics, scope, ownership, lifecycle, responsibilities, Human/Agent authority, compatibility, or boundaries, the agent uses `soundatlas-concept-work` and records an `## Concept` comment or linked authoritative document.
 6. Agent adds a `## Plan Update` or `## Detailed Plan Update` after required decisions are confirmed. The plan references its accepted Concept or records why Concept Work was not required. When the Human accepts a required Concept or confirms a Concept-not-required Plan, the agent sets Project status to `In Progress`.
@@ -146,6 +150,68 @@ forcing a broad product `Goal` when the work is a small task, review,
 investigation, or decision. An Intake Issue is not implementation-ready and
 must not include speculative implementation steps, technical assumptions, or
 prematurely resolved open questions.
+
+## Maturity-Aware Intake
+
+Use the existing lightweight Intake above when the supplied material is a task
+brief. When it attempts to serve as a Concept or Plan, preserve the complete
+material in the Issue body, or in an earlier Issue comment when it already
+exists there, and add a `## Maturity Assessment` comment. The assessment is an
+optional intake record, not a new lifecycle phase, approval, Project status, or
+implementation authorization.
+
+A Human declaration establishes the material's intended role, not its
+readiness. Validate completeness independently. Without a declaration, propose
+the highest evidence-supported maturity conservatively; obtain Human
+confirmation before accepting materially mature Concept or Plan status when
+provenance or authority is unclear.
+
+Classify the highest supplied artifact as exactly one of:
+
+- **Task brief:** States a problem or outcome with limited constraints and no
+  material target or implementation decisions. Use the lightweight Intake.
+- **Partial concept:** States intended behavior or boundaries but lacks or
+  contradicts a material semantic, scope, authority, lifecycle, failure, or
+  compatibility decision. Preserve it and route only those gaps through
+  Grill-Me and Concept Work.
+- **Decision-complete concept:** Lets Planning choose mechanisms without
+  inventing material target behavior, semantics, scope, ownership, lifecycle,
+  responsibilities, Human/Agent authority, compatibility, boundaries, or MVP
+  scope. Run the applicable focused Concept review and record the canonical
+  Concept without rebuilding settled reasoning.
+- **Partial plan:** Contains implementation scope or mechanics but has an
+  unsettled Concept basis or lacks material plan scope, boundaries, validation,
+  or question resolution. Preserve valid content and route from the earliest
+  unresolved prerequisite.
+- **Implementation-ready plan:** Has a decision-complete Concept basis,
+  executable scope and validation, required review evidence, and no material
+  open question. Record or validate the canonical Plan; readiness still does
+  not authorize implementation.
+
+A higher-stage artifact cannot hide an incomplete prerequisite. Classification
+failure or conflict routes from the earliest unresolved prerequisite while the
+supplied material remains intact.
+
+Use this comment shape for the mature path:
+
+```md
+## Maturity Assessment
+
+- Supplied material: [<Issue body or earlier Issue comment>](<URL>)
+- Human-declared role: Task | Concept | Plan | Not declared
+- Assessed maturity: Task brief | Partial concept | Decision-complete concept | Partial plan | Implementation-ready plan
+- Validation result: <accepted, partial, contradictory, or insufficiently evidenced conclusions>
+- Missing evidence: None | <concrete gaps>
+- Remaining Human decisions: None | <concrete decisions>
+- Next step: <existing Intake, Grill-Me, Concept Work, Plan review, or Plan route>
+```
+
+The supplied material, assessment, validated conclusions, evidence gaps, and
+Human decisions must remain distinguishable. Reference and normalize settled
+content into the applicable canonical Concept or Plan once; add only missing
+information or confirmed changes. Existing Issues and closed history need no
+migration. A later Maturity Assessment invalidates an earlier Plan or Proceed
+record just like another canonical revision.
 
 ## Intake Revision
 
@@ -380,8 +446,9 @@ does not add a separate approval status.
 ## Plan Update
 
 Add a Plan Update in the Issue before non-trivial implementation. A
-decision-complete Intake may use a concise Plan with the Concept-not-required
-rationale; it does not skip the pre-implementation artifact gate.
+decision-complete Intake or validated mature-path assessment may use a concise
+Plan with the Concept-not-required rationale; neither skips the
+pre-implementation artifact gate.
 
 Before `## Plan`, include exactly one planning-basis line:
 
@@ -520,11 +587,11 @@ the proposed change would add a new policy, behavior, domain, or material scope
 even if the file is inside a declared derived-consistency surface. List every
 derived file actually changed in the Implementation Report.
 
-A later Plan Update, Detailed Plan Update, Intake Revision, Concept, or
-Grill-Me decision that routes work back to Concept, Planning, or Blocked
-invalidates the earlier go-ahead. The Human must authorize the current Plan and
-the agent must record a new `## Proceed to Implementation` before work resumes.
-Routine comments and implementation evidence do not invalidate it.
+A later Plan Update, Detailed Plan Update, Intake Revision, Maturity Assessment,
+Concept, or Grill-Me decision that routes work back to Concept, Planning, or
+Blocked invalidates the earlier go-ahead. The Human must authorize the current
+Plan and the agent must record a new `## Proceed to Implementation` before work
+resumes. Routine comments and implementation evidence do not invalidate it.
 
 Do not rewrite historical Issue comments to add this record. When existing open
 work next enters implementation, use its current canonical artifacts when they
@@ -537,8 +604,9 @@ Implementation may proceed when:
 
 - The human explicitly requests implementation of the latest Plan with wording
   such as `implement issue #<number>`, or the change is clearly trivial.
-- The Issue contains enough Task, Plan, and Acceptance Criteria detail to
-  implement safely.
+- The Issue contains either a valid lightweight Intake or an earlier valid
+  Maturity Assessment, plus enough Plan and acceptance detail to implement
+  safely.
 - Blocking questions are resolved or intentionally deferred.
 - For non-trivial work, the Issue contains a current `## Plan Update` or
   `## Detailed Plan Update`, followed by a matching `## Proceed to
@@ -568,10 +636,13 @@ recorded Grill-Me result. Without that flag, the validator still validates any
 Grill-Me records that are present; the Plan's Concept basis carries the semantic
 pre-planning decision for the clean or omitted-check path.
 
-The validator checks canonical artifact structure and ordering. It does not
-decide Materiality, create Issue comments, or replace the semantic checks owned
-by Grill Me and Issue Planning. Clearly trivial, local, low-risk work remains on
-the direct path and does not invoke this non-trivial-Issue gate.
+The validator accepts either the legacy lightweight Intake body or a mature-path
+Maturity Assessment that links the Issue body or an earlier Issue comment and
+precedes the current Plan. It checks canonical artifact structure and ordering;
+it does not decide maturity, Materiality, create Issue comments, or replace the
+semantic checks owned by Grill Me and Issue Planning. Clearly trivial, local,
+low-risk work remains on the direct path and does not invoke this
+non-trivial-Issue gate.
 
 The agent must not implement behavior outside the approved Issue content. If
 implementation reveals missing behavior, the agent should:

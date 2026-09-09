@@ -1,6 +1,6 @@
 ---
 name: soundatlas-issue-planning
-description: Draft or revise SoundAtlas GitHub Issue intake, Plan Updates, Detailed Plan Updates, Proceed-to-Implementation records, and Implementation Reports for frontend, backend, data, documentation, UX, or cross-cutting changes. Use when a SoundAtlas Issue needs to be created, refined or authorized for implementation, checked for open questions, or reported after implementation.
+description: Draft or revise SoundAtlas GitHub Issue intake, Maturity Assessments, Plan Updates, Detailed Plan Updates, Proceed-to-Implementation records, and Implementation Reports for frontend, backend, data, documentation, UX, or cross-cutting changes. Use when a SoundAtlas Issue needs to be created, classified, refined or authorized for implementation, checked for open questions, or reported after implementation.
 ---
 
 # SoundAtlas Issue Planning
@@ -22,8 +22,11 @@ readiness review before Issue content is drafted.
 ## Workflow
 
 1. Classify the request.
-   Decide whether the Issue needs an Intake Issue, Plan Update, Detailed Plan
-   Update, Proceed-to-Implementation record, or Implementation Report.
+   Preserve the supplied request, identify whether it attempts to serve as a
+   task brief, Concept, or Plan, and assess its actual maturity. Decide whether
+   the Issue needs a lightweight Intake, Maturity Assessment, Plan Update,
+   Detailed Plan Update, Proceed-to-Implementation record, or Implementation
+   Report. A Human-declared role controls interpretation, not readiness.
 
 2. Inspect the repo before asking questions.
    Resolve discoverable facts from docs, code, seed data, or existing Issues
@@ -38,11 +41,20 @@ readiness review before Issue content is drafted.
    a trigger is present, require a sufficiency or revision conclusion before
    drafting; otherwise continue without adding a gate.
 
-3. Separate intake from planning.
-   When creating an Issue, use only the Intake shape: Task, Context, and
+3. Separate lightweight and maturity-aware intake from planning.
+   For a task brief, use only the lightweight Intake shape: Task, Context, and
    Acceptance Criteria. Do not add speculative implementation steps, technical
-   assumptions, or prematurely resolve open questions. State that the Intake
-   Issue is not implementation-ready.
+   assumptions, or prematurely resolve open questions.
+
+   When supplied material attempts to serve as a Concept or Plan, preserve it
+   in the Issue and add the canonical `## Maturity Assessment` from
+   `docs/github-issue-workflow.md`. Classify the highest supplied artifact using
+   the five observable maturity levels. Keep supplied content, validated
+   conclusions, evidence gaps, and remaining Human decisions distinct. Route
+   from the earliest unresolved prerequisite and do not discard later-stage
+   material. Without a Human declaration, keep a materially consequential
+   classification proposed when authority or provenance is unclear, until the
+   Human confirms it.
 
    If discovery reveals missing scope before planning, update the Intake body
    and add an `## Intake Revision` comment recording the date, previous scope,
@@ -160,7 +172,7 @@ Changes` section instead of silently rewriting the meaning of the Issue.
 
 ## Issue Artifact Contracts
 
-Use the canonical Intake, Plan Update, Detailed Plan Update,
+Use the canonical Intake, Maturity Assessment, Plan Update, Detailed Plan Update,
 Proceed-to-Implementation, and Implementation Report shapes in
 `docs/github-issue-workflow.md`. Use `Requirements` only when complex product,
 API, data, security, or workflow rules would otherwise be unclear.
@@ -223,7 +235,7 @@ API, data, security, or workflow rules would otherwise be unclear.
 
 Return the planning result in this order:
 
-1. Issue action: create, update body, or add comment.
+1. Issue action: create, preserve supplied material, update body, or add comment.
 2. Assumptions.
 3. Open questions, if any remain.
 4. Draft Issue content or comment content.

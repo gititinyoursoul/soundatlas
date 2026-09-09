@@ -3,9 +3,9 @@
 SoundAtlas uses three lightweight layers for agent-driven work:
 
 - GitHub Issues are the source of truth for planned agent work.
-- Issue comments and body updates hold Intake Issues, Concept records, Plan
-  Updates, Detailed Plan Updates, Proceed-to-Implementation records, and
-  Implementation Reports.
+- Issue comments and body updates hold lightweight Intakes, optional Maturity
+  Assessments, Concept records, Plan Updates, Detailed Plan Updates,
+  Proceed-to-Implementation records, and Implementation Reports.
 - Skills and prompts define reusable execution patterns for critique, planning,
   implementation, tests, docs, and UX.
 
@@ -72,7 +72,8 @@ Request
   |     -> Human-authorized safe Pane archive
   |
   +-- Non-trivial work
-        -> Intake Issue + Project Todo
+        -> Preserve supplied material + Project Todo
+        -> Lightweight Intake or Maturity Assessment
         -> Lightweight Grill-Me check
              no material finding -> continue
              material finding    -> Interactive Grill Me -> confirmed decisions
@@ -328,9 +329,9 @@ for drafting and revising those artifacts, but not lifecycle ordering,
 post-push closure, or Issue-state management.
 
 `scripts/check_issue_readiness.py` owns deterministic pre-implementation
-artifact checks. It does not decide Materiality, infer Human authorization,
-write Issue comments, or replace the semantic routing owned by Grill Me and
-Issue Planning.
+artifact checks for both the lightweight Intake and maturity-aware path. It does
+not decide maturity or Materiality, infer Human authorization, write Issue
+comments, or replace the semantic routing owned by Grill Me and Issue Planning.
 
 For completion review, `soundatlas-implementation-review` owns comparison,
 proportional evidence assessment, finding classification, and routing. Grill Me
@@ -377,9 +378,11 @@ For an approved prompt-to-skill extraction:
 
 ## Workflow Rules
 
-- Create an Intake Issue first for non-trivial work. Use
-  `soundatlas-grill-me` to inspect, critique, simplify, and identify blockers
-  before a risk-flagged Issue receives a Plan Update or implementation.
+- Preserve the Human-supplied request in an Issue first for non-trivial work.
+  Use the lightweight Intake for task briefs or the optional Maturity
+  Assessment for attempted Concept/Plan material. Use `soundatlas-grill-me` to
+  inspect, critique, simplify, and identify blockers before a risk-flagged Issue
+  receives a Plan Update or implementation.
 - Apply a lightweight Grill-Me check at Intake, before accepting a consequential
   concept or broad Plan Update, when implementation reveals drift or new
   constraints, and before accepting completed implementation. Continue without
@@ -403,9 +406,11 @@ For an approved prompt-to-skill extraction:
 - Before starting a new non-trivial work package, apply the Git integration
   boundary: use direct `main` work only when no different pending Issue range
   exists; otherwise assign the work package an owned branch and worktree.
-- Capture new planned work with `Task`, `Context`, and `Acceptance Criteria`
-  through `soundatlas-issue-planning`; add the Issue to `Project Tracker` with
-  status `Todo`.
+- Capture task briefs with `Task`, `Context`, and `Acceptance Criteria` through
+  `soundatlas-issue-planning`. For mature supplied material, preserve it and
+  record the source, intended role, assessed maturity, validation result, gaps,
+  decisions, and route in `## Maturity Assessment`. Add either path to `Project
+  Tracker` with status `Todo`.
 - Allow Intake Revisions with a visible `## Intake Revision` history comment;
   material revisions require Grill-Me before planning, while material expansion
   after implementation begins requires a linked Issue. See
@@ -466,7 +471,7 @@ by the agent.
 | Phase-aware critique and planning front door | Skill                             | Intake Issue when non-trivial                                                | `.codex/skills/soundatlas-grill-me/SKILL.md` for procedure; `docs/github-issue-workflow.md` for lifecycle and completed records | `.codex/skills/soundatlas-grill-me/SKILL.md`                                                                   | Finding, verdict, or workflow handoff                               |
 | Concept synthesis                       | Skill                                  | Confirmed material decisions; only when concept work is needed               | `## Concept` Issue comment or one human-confirmed authoritative document under `docs/` | `.codex/skills/soundatlas-concept-work/SKILL.md`                                                            | Five-part concept or link to its authoritative document             |
 | Implementation review                   | Skill                                  | Completed non-trivial Issue work, or drift/risk during implementation        | Approved Issue, concept when present, plan, actual diff, evidence, and current-state docs | `.codex/skills/soundatlas-implementation-review/SKILL.md`                                               | Review Result inside the single Implementation Report; routes unresolved material UI-quality findings before acceptance |
-| Issue intake, planning, and reports     | Skill                                  | Intake or Grill-Me as required by risk                                       | GitHub Issue body/comments; lifecycle in `docs/github-issue-workflow.md`            | `.codex/skills/soundatlas-issue-planning/SKILL.md`                                                     | Intake, Plan Update, Detailed Plan Update, Proceed record, or Implementation Report |
+| Issue intake, planning, and reports     | Skill                                  | Intake assessment or Grill-Me as required by risk                            | GitHub Issue body/comments; lifecycle in `docs/github-issue-workflow.md`            | `.codex/skills/soundatlas-issue-planning/SKILL.md`                                                     | Intake, Maturity Assessment, Plan Update, Detailed Plan Update, Proceed record, or Implementation Report |
 | Frontend implementation                 | Skill                                  | Validated latest Plan and Proceed record when non-trivial                    | Approved GitHub Issue; `.codex/skills/soundatlas-frontend-implementation/SKILL.md` | `.codex/skills/soundatlas-frontend-implementation/SKILL.md`                                                      | Frontend changes and implementation report with planned UI-quality evidence for non-trivial user-visible work |
 | Backend implementation                  | Skill                                  | Validated latest Plan and Proceed record when non-trivial                    | Approved GitHub Issue; `.codex/skills/soundatlas-backend-implementation/SKILL.md` | `.codex/skills/soundatlas-backend-implementation/SKILL.md`                                                        | Backend changes and implementation report                           |
 | Documentation and workflow changes      | Skill                                  | Validated latest Plan and Proceed record when non-trivial                    | Approved GitHub Issue; `.codex/skills/soundatlas-documentation-implementation/SKILL.md` | `.codex/skills/soundatlas-documentation-implementation/SKILL.md`                                                  | Documentation changes and implementation report                     |
@@ -518,6 +523,9 @@ CI enforcement is deferred until manual use establishes a low-noise baseline.
 
 Use standardized Issue comments as the canonical workflow record:
 
+- `## Maturity Assessment` preserves the mature supplied-material source and
+  records intended role, evidence-supported maturity, validation, gaps,
+  decisions, and routing without authorizing implementation.
 - `## Grill-Me Review` records findings, confirmation requirements, and
   confirmed decisions.
 - `## Concept` records the accepted target when concept work is needed, unless

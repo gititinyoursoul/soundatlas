@@ -164,7 +164,11 @@ heading wording and order exactly when migrating reviewed content.
 - Keep these SoundAtlas-owned routing rules outside any marker-delimited
   Pane-generated context. Do not edit or duplicate generated Pane context;
   Pane/RunPane owns its refresh lifecycle.
-- New planned work should be captured in an Intake Issue with `Task`, `Context`, and `Acceptance Criteria`.
+- New planned work should preserve the Human-supplied material in the GitHub
+  Issue. Use the lightweight `Task`, `Context`, and `Acceptance Criteria`
+  Intake for task briefs. When supplied material attempts to serve as a
+  Concept or Plan, keep it intact and add the maturity assessment defined in
+  `docs/github-issue-workflow.md`; do not reduce it to a generic Intake.
 - For feature work, follow the GitHub Issue workflow in `docs/github-issue-workflow.md`.
 - At Intake, before accepting a consequential concept or Plan Update, when
   implementation reveals drift or new constraints, and before accepting
@@ -186,13 +190,16 @@ heading wording and order exactly when migrating reviewed content.
 - Record the implementation-review result inside the single
   `## Implementation Report` comment. Do not add a separate routine review
   comment or treat review as human commit approval.
-- New Issues are intake records, not implementation-ready plans. Non-trivial
-  Issue work requires a confirmed Plan Update before implementation; risky,
-  vague, or cross-cutting work also requires Grill-Me review. The Plan must
-  reference its accepted Concept or state why Concept Work was not required.
-  Explicit wording such as `implement issue #<number>` does not bypass those
-  gates. Clearly trivial, local, low-risk work may proceed directly.
-- Use standardized Issue records: a standalone `## Grill-Me Review` for
+- New Issues begin the intake decision even when they contain mature supplied
+  material; a maturity assessment is routing evidence, not implementation
+  authorization. Non-trivial Issue work requires a confirmed Plan Update before
+  implementation; risky, vague, or cross-cutting work also requires Grill-Me
+  review. The Plan must reference its accepted Concept or state why Concept
+  Work was not required. Explicit wording such as `implement issue #<number>`
+  does not bypass those gates. Clearly trivial, local, low-risk work may proceed
+  directly.
+- Use standardized Issue records: `## Maturity Assessment` for the optional
+  mature-intake path; a standalone `## Grill-Me Review` for
   material findings, confirmed decisions, blockers, or explicit standalone
   sessions; `## Concept` when concept work is needed; `## Plan Update` or
   `## Detailed Plan Update`; `## Proceed to Implementation` after the Human

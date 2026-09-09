@@ -14,6 +14,8 @@ results to the workflow that owns the artifact.
 Inspect the smallest useful context before reviewing:
 
 - the active artifact and workflow stage;
+- the Maturity Assessment and referenced supplied material when the
+  maturity-aware intake path is active;
 - the related GitHub Issue, Concept, Plan Update, implementation diff, editorial
   artifact, UX proposal, or workflow source;
 - the desired outcome, constraints, non-goals, and Human Review boundaries;
@@ -82,8 +84,10 @@ or other technical design.
 
 ## Review workflow
 
-1. Identify the active artifact, its actual stage, and the smallest applicable
-   Review Mode. Do not infer maturity from the artifact's title or detail.
+1. Identify the active artifact, its Human-declared intended role when present,
+   its evidence-supported maturity, and the smallest applicable Review Mode.
+   A declared role is not proof of readiness; do not infer maturity from the
+   artifact's title, length, headings, or technical detail.
 2. Inspect relevant repository evidence before forming findings. Treat code and
    Documentation as evidence of the current system, not proof that its design is
    correct or should be preserved.
@@ -219,6 +223,15 @@ Stress-test an Intake Issue or problem statement. Focus on:
 - missing product, editorial, Source, or workflow decisions; and
 - whether the Intake is decision-complete enough for Planning or needs Concept
   Work.
+
+For maturity-aware intake, classify the highest supplied artifact as `Task
+brief`, `Partial concept`, `Decision-complete concept`, `Partial plan`, or
+`Implementation-ready plan` using the canonical criteria in
+`docs/github-issue-workflow.md`. Preserve the source and test the attempted
+stage. A higher-stage artifact cannot hide an incomplete prerequisite. Route
+from the earliest unresolved prerequisite while retaining usable later-stage
+material. Keep the Human-declared role, assessment, validated conclusions,
+Evidence Gaps, and remaining Human Decisions distinct.
 
 Do not turn the Intake into an implementation Plan or select architecture,
 APIs, schemas, files, components, migrations, sequencing, or technical tasks.

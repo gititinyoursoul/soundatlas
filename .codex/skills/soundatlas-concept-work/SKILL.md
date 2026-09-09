@@ -16,6 +16,8 @@ Read before producing a concept:
 - the originating GitHub Issue and its confirmed Grill-Me findings or
   decisions, using a standalone `## Grill-Me Review` when required or an inline
   action comment when the result is clean;
+- the Maturity Assessment and referenced supplied Concept when the
+  maturity-aware intake path is active;
 - relevant current-state, product, architecture, workflow, data, or editorial
   sources; and
 - an existing concept when the request revises one.
@@ -35,9 +37,13 @@ human to answer them.
    unclear, return to `soundatlas-grill-me` and do not silently resolve it.
 3. Separate current behavior from the accepted target.
    Do not describe planned behavior as already implemented.
-4. Write the five-part concept in the required order.
-5. Choose one authoritative location and record the result.
-6. Hand the accepted concept to implementation planning by reference, without
+4. Preserve a validated supplied Concept by reference. Adopt its confirmed
+   wording and decisions where they satisfy the canonical Concept; synthesize
+   only missing or confirmed revised material rather than rebuilding settled
+   reasoning.
+5. Write the five-part concept in the required order.
+6. Choose one authoritative location and record the result.
+7. Hand the accepted concept to implementation planning by reference, without
    turning it into tasks in this skill.
 
 ## Five-part concept
