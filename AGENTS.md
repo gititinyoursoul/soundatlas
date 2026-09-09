@@ -12,6 +12,10 @@ These instructions apply to the entire repository.
   consequences that support a statement.
 - When explaining a decision or status, state what was observed, what conclusion
   follows, and what will happen next when applicable.
+- Every completed process task or handoff must concisely state: what was
+  completed; the recommended next concrete action or actions; and any decision,
+  input, or authorization needed to proceed. This requirement applies
+  independently of any Issue, milestone, or conversation.
 - Keep verified facts, assumptions, recommendations, and unchecked information
   distinguishable. If something has not been checked, say so directly.
 - When work is blocked, name the exact missing information, action, or approval

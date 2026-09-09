@@ -409,7 +409,8 @@ For an approved prompt-to-skill extraction:
   push, verification, and completion-comment posting, then close the Issue
   explicitly. Do not introduce workflow-state labels or automate `Done` to
   close the Issue.
-- End every workflow result with a short `Next step` handoff when useful.
+- For every completed process task or handoff, follow the project-wide
+  completion-handoff requirement in `AGENTS.md`.
 
 ## Canonical Workflow Registry
 
