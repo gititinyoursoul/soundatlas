@@ -137,6 +137,34 @@ push authorization are named together. This adds no automatic push, pull-
 request requirement, workflow service, or clean-working-tree requirement;
 unrelated user-owned changes remain outside Issue delivery.
 
+## Pane Stage Convention
+
+The current persistent Pane runtime is the orchestration boundary for a
+SoundAtlas Issue's visible Pane, managed worktree, panels, and agent process
+lifecycle. Use one Issue Pane and one managed worktree for the work package.
+Use separate panels/processes for planning, implementation, and independent
+review when those stages need clean context or separate observation.
+
+The implementation CLI is the sole designated write owner for the Pane
+worktree. Planning, review, and helper panels are cooperative read-only
+participants: they may inspect and test, but must not modify files, stage,
+commit, switch branches, rebase, merge, or push. Integration and push remain
+separate operations requiring the existing explicit Human authorization.
+
+This convention is an operational responsibility boundary, not a technical
+filesystem or hostile-agent security boundary. Pane panels share the Pane's
+worktree, and the current Pane contract does not provide a SoundAtlas
+stage-specific read-only permission profile. A clean trial therefore proves
+observed compliance only; it does not prove that writes are technically
+impossible. Record violations or material risk in the Issue and route a
+separate follow-up for technical enforcement rather than adding a supervisor
+or duplicating Pane lifecycle here.
+
+The Issue record remains the authority for each trial's named entrypoints,
+write owner, observations, limitations, and follow-up decision. This registry
+owns the tool-independent convention; Pane/RunPane owns its generated context,
+panel lifecycle, and worktree management.
+
 ## Skill, Prompt, and Source Boundary Policy
 
 This section is authoritative for repository-wide entrypoint selection and
