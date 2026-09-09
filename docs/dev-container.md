@@ -146,6 +146,35 @@ runpane repos add --path /runtime/repos/soundatlas --name soundatlas --yes --jso
 runpane agents doctor --agent codex --repo soundatlas --json
 ```
 
+### SSH Pane inventory
+
+An authorized host helper can resolve one existing Pane through the authenticated
+loopback SSH boundary without relying on the SSH shell's inherited environment:
+
+```powershell
+ssh -o BatchMode=yes -o IdentitiesOnly=yes -i ..\secrets\soundatlas\pane_ed25519 -p 53660 soundatlas@127.0.0.1 soundatlas-pane-inventory --pane <pane-name-or-id>
+```
+
+The command runs only the read-only Pane inventory operation in the container's
+Pane runtime context. It returns a compact JSON object with the selected Pane
+ID, name, repository name, and container-owned worktree path. It rejects a
+missing, ambiguous, malformed, or unavailable result before it starts a
+worktree process, preview, panel, or Pane lifecycle action. Do not copy the
+worktree path into Issues, logs, or tracked files.
+
+The existing authenticated SSH principal is a trusted execution actor. This
+helper is the supported narrow inventory interface; it does not create a
+hostile-shell isolation boundary or grant any new Pane authority. It neither
+exposes daemon endpoint details nor accepts lifecycle, panel, credential, or
+arbitrary-command arguments. If inventory is unavailable, confirm that the
+Pane profile and loopback SSH endpoint are running, then retry. Do not work
+around the failure by exposing the daemon socket or changing SSH credentials.
+
+Issue #220's preview helper remains the consumer responsible for worktree
+validation, Vite lifecycle, and its local browser forward. It must adopt this
+inventory interface through its own approved Issue workflow; it must not copy
+or mount a Pane worktree into the host checkout.
+
 ### Routed Codex workflow panels
 
 For a SoundAtlas workflow stage that needs the repository model policy, start

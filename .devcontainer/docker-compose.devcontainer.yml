@@ -137,6 +137,10 @@ services:
         source: ./.devcontainer/pane-sshd_config
         target: /runtime-config/pane-sshd_config
         read_only: true
+      - type: bind
+        source: ./.devcontainer/pane-inventory.sh
+        target: /usr/local/bin/soundatlas-pane-inventory
+        read_only: true
       - pane_state:/runtime/pane
       - pane_repositories:/runtime/repos
       - pane_ssh_state:/runtime/ssh
