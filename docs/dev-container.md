@@ -514,6 +514,21 @@ GitHub credentials are never copied into a runtime volume. The host Codex
 configuration is copied and adapted by `post-create.sh` after the Pane-owned
 clone exists.
 
+### Pane Playwright Browser Provisioning
+
+The Pane image builds Chromium from the exact Playwright version resolved by
+`frontend/package-lock.json`. During the image build, Playwright downloads the
+browser bundle to an image-only staging path. At each Pane workspace start, the
+entrypoint copies only missing bundle entries into the separate
+`pane_playwright_cache` volume at `/home/soundatlas/.cache/ms-playwright`.
+Browser checks then launch Chromium from that local cache and do not download a
+browser at test time.
+
+When a Playwright version changes, rebuild and restart `pane-workspace` so the
+image contains the matching bundle; the next start adds its new cache entries.
+`pane_playwright_cache` is never shared with or mounted as the legacy
+workspace service's `playwright_cache` volume.
+
 ### App Secrets And Agent Tokens
 
 The workspace dev container uses a narrow read-only mount for app/provider
