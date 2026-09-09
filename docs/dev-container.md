@@ -146,6 +146,27 @@ runpane repos add --path /runtime/repos/soundatlas --name soundatlas --yes --jso
 runpane agents doctor --agent codex --repo soundatlas --json
 ```
 
+### Routed Codex workflow panels
+
+For a SoundAtlas workflow stage that needs the repository model policy, start
+Codex through the resolver rather than Pane's built-in `--agent codex` template:
+
+```sh
+python scripts/run_codex_stage.py --stage planning --print-command
+runpane panels create --pane <pane-id> \
+  --tool-command 'python scripts/run_codex_stage.py --stage planning' \
+  --source agent --no-focus --wait-ready --yes --json
+```
+
+The first command prints the validated non-secret Codex invocation without
+starting Codex. The second command is a deliberate Pane mutation and requires
+the normal Pane-workstream authorization. The resolver reads
+`.codex/model-routing.toml`; it validates the named stage, role, model, and
+reasoning effort before process start. Invalid or incomplete policy fails
+visibly and never falls back to the global Codex default. Keep concrete model
+mapping decisions in that repo-owned policy, not in Pane skills, templates, or
+global Codex configuration.
+
 ### RunPane operator signals
 
 RunPane exposes several state layers. Read them independently and retain only

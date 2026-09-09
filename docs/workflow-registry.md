@@ -172,6 +172,22 @@ write owner, observations, limitations, and follow-up decision. This registry
 owns the tool-independent convention; Pane/RunPane owns its generated context,
 panel lifecycle, worktree management, and archive mechanics.
 
+### Model routing for workflow stages
+
+Pane/RunPane remains responsible for generic Pane lifecycle. SoundAtlas owns
+the mapping from a named workflow stage to a role, and the repository-owned
+`.codex/model-routing.toml` owns the role-to-model and reasoning-effort mapping.
+The resolver at `scripts/run_codex_stage.py` is the explicit handoff between
+those layers: a Pane custom command invokes it with one stage, and it starts a
+fresh Codex process only after validating the complete mapping.
+
+Do not put concrete model names in Pane templates, Pane skills, or generic
+workflow artifacts. Use Pane's `--tool-command` surface instead of its built-in
+Codex agent template when a routed stage is required. Missing, unknown, or
+malformed stage policy must fail before Codex starts; the resolver must never
+silently substitute a global Codex default. This is a launch adapter, not a
+Pane fork, persistent service, or stage-inference mechanism.
+
 ## Skill, Prompt, and Source Boundary Policy
 
 This section is authoritative for repository-wide entrypoint selection and

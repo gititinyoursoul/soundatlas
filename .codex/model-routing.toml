@@ -1,0 +1,15 @@
+[workflow]
+discussion = "fast"
+planning = "reasoning"
+implementation = "coding"
+review = "reasoning"
+
+[roles]
+fast = "gpt-5.6-luna"
+reasoning = "gpt-5.6-sol"
+coding = "gpt-5.6-terra"
+
+[effort]
+fast = "low"
+reasoning = "high"
+coding = "medium"
