@@ -27,6 +27,7 @@ RUN apt-get update \
         git \
         gosu \
         iptables \
+        jq \
         less \
         libasound2 \
         libatk-bridge2.0-0 \

@@ -328,7 +328,7 @@ Installed runtime tools:
 - GitHub CLI `gh`
 - Git
 - Bash with programmable completion and Git prompt support
-- basic shell/process tools: `bubblewrap`, `curl`, `less`, `procps`
+- basic shell/process tools: `bubblewrap`, `curl`, `jq`, `less`, `procps`
 - shared libraries needed to launch Playwright-managed Chromium for headless
   screenshots and browser checks
 
@@ -407,6 +407,17 @@ firewall healthcheck passes. The companion depends on the Compose-owned backend
 and frontend services being started. Pane has no
 Docker socket and cannot start, stop, or reconfigure either application
 service.
+
+`jq` is provisioned by the shared `soundatlas-tooling` stage in
+`.devcontainer/Dockerfile`, which both `workspace` and `pane-workspace` inherit.
+After changing this image-level tool provision, rebuild and recreate the Pane
+workspace, then verify the command inside that container:
+
+```sh
+docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontainer.yml --profile pane build pane-workspace
+docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontainer.yml --profile pane up -d --force-recreate pane-egress pane-workspace
+docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontainer.yml --profile pane exec pane-workspace jq --version
+```
 
 ### `backend`
 
