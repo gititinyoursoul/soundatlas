@@ -225,8 +225,10 @@ heading wording and order exactly when migrating reviewed content.
 - `TODO.md` is a legacy backlog and should not receive new planned work unless the user explicitly asks for a legacy note.
 - If the scope changes, update `docs/mvp-concept.md` first and then create or update the relevant GitHub Issue.
 - Codex may set existing approved GitHub labels on Issues. New labels must be proposed and explicitly approved before Codex creates or uses them.
-- Track planned SoundAtlas Issues in the `Project Tracker` GitHub Project. Use
-  its `Status` field as a visible summary, while Issue bodies and standardized
+- Track planned SoundAtlas Issues in the `Project Tracker` GitHub Project. Run
+  every Project Tracker operation through `python scripts/gh_project.py`; do
+  not use direct `gh project` commands for this workflow. Use its `Status`
+  field as a visible summary, while Issue bodies and standardized
   comments remain authoritative: `Todo` while the Issue remains at Intake;
   `In Progress` after a required Concept is accepted, a Concept-not-required
   Plan is confirmed, or explicitly authorized trivial direct work begins;

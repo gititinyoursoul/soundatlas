@@ -76,8 +76,9 @@ bodies and may remain command arguments.
 1. Human gives a feature/change request.
 2. Agent inspects the repo before asking questions when local context can answer them.
 3. Agent preserves the supplied material in an Issue, classifies it as a task
-   brief or attempted Concept/Plan, adds the Issue to the `Project Tracker`, and
-   sets its Project status to `Todo`. Task briefs use the lightweight Intake
+   brief or attempted Concept/Plan, uses `python scripts/gh_project.py` to add
+   the Issue to the `Project Tracker` and set its Project status to `Todo` by
+   following the helper sequence below. Task briefs use the lightweight Intake
    body; the mature path adds a `## Maturity Assessment`.
 4. Agent performs a lightweight Grill-Me check and runs the interactive review when a material finding needs human confirmation.
 5. If planning would otherwise invent material target behavior, semantics, scope, ownership, lifecycle, responsibilities, Human/Agent authority, compatibility, or boundaries, the agent uses `soundatlas-concept-work` and records an `## Concept` comment or linked authoritative document.
@@ -362,10 +363,27 @@ disabled so the completion comment and status transition remain ordered and
 the agent performs the explicit close only after both succeed. A closed Issue
 may be set to `Done` as a fallback when reconciling external state.
 
-When an Issue cannot be added to the Project or its status cannot be updated,
-report the specific GitHub permission or configuration failure and preserve the
-Issue record; do not infer a successful transition. Historical comments are
-not rewritten when status policy changes.
+Use `python scripts/gh_project.py` for every Project Tracker operation; do not
+use direct `gh project` commands. To add an Issue and set its status, use
+`list` to identify the Project Tracker's number and ID, `item-add` with the
+Issue URL to obtain the tracker-item ID, `field-list` to obtain the `Status`
+field ID and the target option ID, then `item-edit` with those IDs. If the
+item-add result is unavailable, use `item-list` to find the existing
+tracker-item ID by its Issue URL.
+
+A direct `gh project` token-scope failure is not evidence of missing GitHub
+permission: use the helper instead. For invalid arguments or missing IDs,
+correct the input or retrieve the IDs through the helper; treat an absent
+Project, Issue URL, or tracker-item lookup result the same way. For a transient
+helper or API error, preserve the Issue record and retry or report the
+operational failure without calling it a permission/configuration blocker.
+Treat a failure as that blocker only when its sanitized observed error identifies
+a Project-credential configuration problem (the configured credential path is
+missing, unreadable, malformed, empty, or duplicated) or explicitly identifies
+an authenticated API authorization failure. The helper's generic failure prefix
+alone is not sufficient evidence; report its sanitized observed error rather
+than guessing its cause. Do not infer a successful transition. Historical
+comments are not rewritten when status policy changes.
 
 When Codex creates an Issue, it should assign exactly one approved priority
 label unless the human explicitly asks not to. Choose the priority by reasoning
