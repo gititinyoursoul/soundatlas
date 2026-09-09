@@ -27,6 +27,7 @@ RUN apt-get update \
         git \
         gosu \
         iptables \
+        jq \
         less \
         libasound2 \
         libatk-bridge2.0-0 \
@@ -99,6 +100,14 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/* \
     && mkdir -p /runtime/pane /runtime/repos /runtime/ssh /runtime/tmp \
     && chown -R soundatlas:soundatlas /runtime
+
+COPY frontend/package.json frontend/package-lock.json /tmp/playwright/
+
+RUN cd /tmp/playwright \
+    && npm ci --ignore-scripts \
+    && PLAYWRIGHT_BROWSERS_PATH=/opt/soundatlas-playwright-browsers npx playwright install chromium \
+    && chown -R soundatlas:soundatlas /opt/soundatlas-playwright-browsers \
+    && rm -rf /tmp/playwright /root/.npm
 
 ENV TMPDIR=/runtime/tmp
 

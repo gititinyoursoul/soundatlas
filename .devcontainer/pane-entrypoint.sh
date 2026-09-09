@@ -7,6 +7,19 @@ ssh_dir="${SOUNDATLAS_PANE_SSH_DIR:-/runtime/ssh}"
 codex_dir="${CODEX_HOME:-/home/soundatlas/.codex}"
 host_codex_dir="${HOST_CODEX_HOME:-/mnt/host-codex}"
 
+seed_playwright_browser_cache() {
+  local staging_dir="${1:-/opt/soundatlas-playwright-browsers}"
+  local cache_dir="${2:-/home/soundatlas/.cache/ms-playwright}"
+
+  if [ ! -d "$staging_dir" ]; then
+    echo "pane-workspace Playwright browser bundle is missing: $staging_dir" >&2
+    return 1
+  fi
+
+  mkdir -p "$cache_dir"
+  cp -a -n "$staging_dir"/. "$cache_dir"/
+}
+
 load_repository_git_credentials() {
   if [ -z "${GH_TOKEN:-}" ]; then
     if [ -z "${SOUNDATLAS_GITHUB_AGENT_ENV_FILE:-}" ] || [ ! -r "$SOUNDATLAS_GITHUB_AGENT_ENV_FILE" ]; then
@@ -52,6 +65,7 @@ load_repository_git_credentials() {
 main() {
   umask 077
   mkdir -p "$pane_dir" "$repo_dir" "$ssh_dir" "$codex_dir"
+  seed_playwright_browser_cache
 
   copy_seed() {
     source_path="$1"

@@ -357,7 +357,7 @@ Installed runtime tools:
 - GitHub CLI `gh`
 - Git
 - Bash with programmable completion and Git prompt support
-- basic shell/process tools: `bubblewrap`, `curl`, `less`, `procps`
+- basic shell/process tools: `bubblewrap`, `curl`, `jq`, `less`, `procps`
 - shared libraries needed to launch Playwright-managed Chromium for headless
   screenshots and browser checks
 
@@ -436,6 +436,17 @@ firewall healthcheck passes. The companion depends on the Compose-owned backend
 and frontend services being started. Pane has no
 Docker socket and cannot start, stop, or reconfigure either application
 service.
+
+`jq` is provisioned by the shared `soundatlas-tooling` stage in
+`.devcontainer/Dockerfile`, which both `workspace` and `pane-workspace` inherit.
+After changing this image-level tool provision, rebuild and recreate the Pane
+workspace, then verify the command inside that container:
+
+```sh
+docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontainer.yml --profile pane build pane-workspace
+docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontainer.yml --profile pane up -d --force-recreate pane-egress pane-workspace
+docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontainer.yml --profile pane exec pane-workspace jq --version
+```
 
 ### `backend`
 
@@ -542,6 +553,21 @@ are copied with mode `0600` into their respective runtime volumes when absent.
 GitHub credentials are never copied into a runtime volume. The host Codex
 configuration is copied and adapted by `post-create.sh` after the Pane-owned
 clone exists.
+
+### Pane Playwright Browser Provisioning
+
+The Pane image builds Chromium from the exact Playwright version resolved by
+`frontend/package-lock.json`. During the image build, Playwright downloads the
+browser bundle to an image-only staging path. At each Pane workspace start, the
+entrypoint copies only missing bundle entries into the separate
+`pane_playwright_cache` volume at `/home/soundatlas/.cache/ms-playwright`.
+Browser checks then launch Chromium from that local cache and do not download a
+browser at test time.
+
+When a Playwright version changes, rebuild and restart `pane-workspace` so the
+image contains the matching bundle; the next start adds its new cache entries.
+`pane_playwright_cache` is never shared with or mounted as the legacy
+workspace service's `playwright_cache` volume.
 
 ### App Secrets And Agent Tokens
 
