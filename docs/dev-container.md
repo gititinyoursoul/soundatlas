@@ -889,25 +889,29 @@ npx playwright install chromium
 VITE_API_BASE_URL=http://backend:8000 npm run dev -- --host 127.0.0.1 --port 5173 --strictPort
 ```
 
-In another workspace shell, capture a desktop screenshot:
+From the `frontend/` directory of the checkout being reviewed, capture a
+desktop screenshot:
 
 ```sh
-cd /workspace/frontend
+cd <current-worktree>/frontend
 npx playwright screenshot --browser chromium --viewport-size=1440,1000 --wait-for-selector main.app-shell --wait-for-timeout 3000 http://127.0.0.1:5173 ../screenshots/desktop.png
 ```
 
 Capture a mobile-sized screenshot with:
 
 ```sh
-cd /workspace/frontend
+cd <current-worktree>/frontend
 npx playwright screenshot --browser chromium --viewport-size=390,844 --wait-for-selector main.app-shell --wait-for-timeout 3000 http://127.0.0.1:5173 ../screenshots/mobile.png
 ```
 
-Generated screenshots belong in `/workspace/screenshots/`, which is ignored by
-Git. Use them for local UX critique, then copy the approved files into
-`docs/design/screenshots/` and remove any stale files from that tracked folder.
-Use stable filenames so refreshed captures replace the previous version cleanly.
-For the drawer states, run `cd /workspace/frontend && npm run capture:drawer`.
+Generated screenshots belong in `<current-worktree>/screenshots/`, which is
+ignored by Git. In a Pane-managed worktree, the selected Pane's existing
+**Files** view can open these temporary captures immediately; this workflow
+does not create a Pane artifact, start a preview tunnel, or open the Files view
+automatically. Use captures for local UX critique, then copy only Human-approved
+files into `docs/design/screenshots/`. Use stable filenames so refreshed
+captures replace the previous version cleanly. For drawer states, run
+`cd <current-worktree>/frontend && npm run capture:drawer`.
 The `--strictPort` flag is intentional: if a previous dev server is still
 running, Vite should fail loudly instead of moving to a different port while
 Playwright captures the wrong page.

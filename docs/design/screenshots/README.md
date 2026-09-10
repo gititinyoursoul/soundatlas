@@ -15,9 +15,13 @@ evidence.
 
 ## Replacement workflow
 
-1. Capture temporary screenshots into `/workspace/screenshots/`.
+1. Capture temporary screenshots into `<current-worktree>/screenshots/`.
+   The root `screenshots/` directory is Git-ignored. In a Pane-managed
+   worktree, open the selected Pane's **Files** view to inspect the capture;
+   this does not publish an artifact or open a preview automatically.
 2. Review them locally against the current intended design baseline.
-3. For drawer states, run `cd /workspace/frontend && npm run capture:drawer`.
+3. For drawer states, run
+   `cd <current-worktree>/frontend && npm run capture:drawer`.
 4. Obtain Human approval for the replacement set and its stated coverage.
 5. Copy approved files into this directory and update this status section.
 
