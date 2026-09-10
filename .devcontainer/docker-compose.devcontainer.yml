@@ -95,7 +95,7 @@ services:
         condition: service_started
 
   pane-workspace:
-    image: soundatlas-pane-workspace:${SOUNDATLAS_PANE_IMAGE_TAG:-2.4.95}
+    image: soundatlas-pane-workspace:${SOUNDATLAS_PANE_IMAGE_TAG:-2.4.102}
     profiles:
       - pane
     build:

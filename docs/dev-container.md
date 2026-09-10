@@ -114,7 +114,7 @@ docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontaine
 ```
 
 The resulting local image tags are `soundatlas-workspace:local` and the
-versioned `soundatlas-pane-workspace:2.4.95`. Set
+versioned `soundatlas-pane-workspace:2.4.102`. Set
 `SOUNDATLAS_PANE_IMAGE_TAG` only when deliberately assigning another retained
 local tag. Only backend and frontend publish application ports. Pane publishes
 SSH through `pane-egress` at `127.0.0.1:53660` by default; set `SOUNDATLAS_PANE_SSH_PORT` before `up`
@@ -426,10 +426,10 @@ The Dockerfile's shared `soundatlas-tooling` stage supplies the same pinned
 Python, uv, Node.js, npm, GitHub CLI, Git, shell tools, and browser libraries to
 both final targets. `workspace` retains Codex CLI 0.147.0. The
 `pane-workspace` target pins Codex CLI 0.153.4 for compatibility with Pane's
-current built-in model selection, and adds checksum-verified Pane 2.4.95,
-matching RunPane 2.4.95, plus the non-root SSH daemon.
+current built-in model selection, and adds checksum-verified Pane 2.4.102,
+matching RunPane 2.4.102, plus the non-root SSH daemon.
 The Pane Debian artifact SHA-256 is
-`4de2274ecd9617e642bb06b430c210da28052151d090aa0ade94f19368482265`.
+`5e7155c9eb96aebbc575166ce26318c0475d2b26bf6df0dc5943c371deda594f`.
 `workspace` retains its existing `/workspace` working directory and egress-
 guard entrypoint; `pane-workspace` uses `/runtime/repos` and its dedicated
 non-root Pane entrypoint.
