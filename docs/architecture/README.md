@@ -20,6 +20,7 @@ they describe.
 
 - [Development Platform Target Principles](development-platform-target-principles.md) — non-binding target-direction guidance for later platform and contract evaluation.
 - [Development Platform Runtime Architecture Evaluation](development-platform-runtime-architecture-evaluation.md) — Issue #208's recommended shared-runtime direction, candidate comparison, and evidence gaps; it is not current-state documentation or a final platform contract.
+- [C-Compatible Per-Project Runtime Migration](development-platform-c-compatible-per-project-runtime-migration.md) — Issue #237's value-prioritized intermediate migration design; it is not implemented current-state architecture, final architecture policy, or the final Project ↔ Platform Contract.
 
 The principles remain non-binding evaluation criteria. The evaluation records
 a recommended direction and its conditions, not implemented behavior or a
