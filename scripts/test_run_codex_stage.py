@@ -55,13 +55,14 @@ class RunCodexStageTests(unittest.TestCase):
                 resolved = MODULE.resolve_stage(stage, policy)
                 self.assertEqual((resolved.role, resolved.model, resolved.effort), values)
                 self.assertEqual(
-                    MODULE.build_command(resolved),
+                    MODULE.build_command(resolved, "execution context"),
                     [
                         "codex",
                         "--model",
                         values[1],
                         "--config",
                         f'model_reasoning_effort={json.dumps(values[2])}',
+                        "execution context",
                     ],
                 )
 
@@ -109,27 +110,46 @@ class RunCodexStageTests(unittest.TestCase):
     def test_print_command_never_starts_codex(self):
         with tempfile.TemporaryDirectory() as directory, mock.patch.object(
             MODULE, "POLICY_PATH", self.policy_file(directory)
-        ), mock.patch.object(MODULE.os, "execvp") as execvp, contextlib.redirect_stdout(
+        ), mock.patch.object(MODULE, "build_execution_context", return_value="context") as context, mock.patch.object(MODULE.os, "execvp") as execvp, contextlib.redirect_stdout(
             io.StringIO()
         ) as output:
             result = MODULE.main(["--stage", "planning", "--print-command"])
 
         self.assertEqual(result, 0)
-        self.assertEqual(json.loads(output.getvalue()), MODULE.build_command(MODULE.ResolvedStage(
-            stage="planning", role="reasoning", model="gpt-5.6-sol", effort="high"
-        )))
+        self.assertEqual(
+            json.loads(output.getvalue()),
+            MODULE.build_command(
+                MODULE.ResolvedStage(
+                    stage="planning", role="reasoning", model="gpt-5.6-sol", effort="high"
+                ),
+                "context",
+            ),
+        )
+        context.assert_called_once_with()
         execvp.assert_not_called()
 
     def test_missing_codex_fails_after_validation(self):
         with tempfile.TemporaryDirectory() as directory, mock.patch.object(
             MODULE, "POLICY_PATH", self.policy_file(directory)
-        ), mock.patch.object(MODULE.os, "execvp", side_effect=FileNotFoundError), contextlib.redirect_stderr(
+        ), mock.patch.object(MODULE, "build_execution_context", return_value="context"), mock.patch.object(MODULE.os, "execvp", side_effect=FileNotFoundError), contextlib.redirect_stderr(
             io.StringIO()
         ) as error:
             result = MODULE.main(["--stage", "planning"])
 
         self.assertEqual(result, 127)
         self.assertIn("was not found", error.getvalue())
+
+    def test_context_failure_stops_before_starting_codex(self):
+        with tempfile.TemporaryDirectory() as directory, mock.patch.object(
+            MODULE, "POLICY_PATH", self.policy_file(directory)
+        ), mock.patch.object(MODULE, "build_execution_context", side_effect=MODULE.ContextError("not Pane")), mock.patch.object(
+            MODULE.os, "execvp"
+        ) as execvp, contextlib.redirect_stderr(io.StringIO()) as error:
+            result = MODULE.main(["--stage", "planning"])
+
+        self.assertEqual(result, 2)
+        self.assertIn("not Pane", error.getvalue())
+        execvp.assert_not_called()
 
 
 if __name__ == "__main__":

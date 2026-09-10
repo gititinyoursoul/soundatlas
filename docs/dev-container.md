@@ -233,6 +233,26 @@ visibly and never falls back to the global Codex default. Keep concrete model
 mapping decisions in that repo-owned policy, not in Pane skills, templates, or
 global Codex configuration.
 
+Each session started through this resolver also receives a non-secret execution
+context notice generated inside its current Pane worktree. The notice has three
+action classes: `WORKSPACE` is the current container worktree; `SERVICE` is
+unknown until freshly probed from that container, where `localhost` means only
+the shared Pane network namespace; and `HOST` is unavailable. GUI/browser
+opening, Docker/Podman, host commands, port forwarding, and host filesystem
+access therefore remain unavailable. A configured display, an installed command,
+or a narrow read-only seed mount does not change that result. Automated
+Playwright checks are workspace operations, not evidence of host browser
+access.
+
+The notice is guidance, not an access mechanism or security control. It does
+not add a mount, socket, capability, firewall exception, network route, or host
+command relay. The generator fails before Codex starts if it cannot establish a
+Pane container and Git worktree. Inspect it without starting an agent with:
+
+```sh
+python scripts/pane_execution_context.py
+```
+
 ### RunPane operator signals
 
 RunPane exposes several state layers. Read them independently and retain only

@@ -13,6 +13,8 @@ from typing import Any
 
 import tomllib
 
+from pane_execution_context import ContextError, build_execution_context
+
 SUPPORTED_STAGES = frozenset({"discussion", "planning", "implementation", "review"})
 SUPPORTED_EFFORTS = frozenset({"low", "medium", "high", "xhigh"})
 POLICY_PATH = Path(__file__).resolve().parents[1] / ".codex" / "model-routing.toml"
@@ -79,13 +81,14 @@ def resolve_stage(stage: str, policy: dict[str, Any]) -> ResolvedStage:
     return ResolvedStage(stage=stage, role=role, model=model, effort=effort)
 
 
-def build_command(resolved: ResolvedStage) -> list[str]:
+def build_command(resolved: ResolvedStage, execution_context: str) -> list[str]:
     return [
         "codex",
         "--model",
         resolved.model,
         "--config",
         f"model_reasoning_effort={json.dumps(resolved.effort)}",
+        execution_context,
     ]
 
 
@@ -103,8 +106,10 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     try:
-        command = build_command(resolve_stage(args.stage, load_policy()))
-    except PolicyError as error:
+        command = build_command(
+            resolve_stage(args.stage, load_policy()), build_execution_context()
+        )
+    except (ContextError, PolicyError) as error:
         print(f"model routing failed: {error}", file=sys.stderr)
         return 2
 
