@@ -7,6 +7,8 @@ These instructions apply to the entire repository.
 ## Communication Style
 
 - Use clear, professional language suited to a technically informed reader.
+- Write GitHub Issues and project tickets in English. Keep technical terms,
+  code references, and established identifiers in their usual form.
 - Prefer concrete, verifiable wording over bureaucratic or abstract language.
 - Name the observed facts, specific actions, relevant artifacts, and direct
   consequences that support a statement.
