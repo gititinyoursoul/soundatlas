@@ -62,6 +62,7 @@ class RunCodexStageTests(unittest.TestCase):
                         values[1],
                         "--config",
                         f'model_reasoning_effort={json.dumps(values[2])}',
+                        "--yolo",
                         "execution context",
                     ],
                 )
@@ -150,6 +151,27 @@ class RunCodexStageTests(unittest.TestCase):
         self.assertEqual(result, 2)
         self.assertIn("not Pane", error.getvalue())
         execvp.assert_not_called()
+
+    def test_invalid_stage_and_policy_stop_before_starting_codex(self):
+        invalid_policy = policy_text().replace('review = "reasoning"\n', "")
+        cases = (
+            ("unknown stage", "release", policy_text(), "unknown workflow stage"),
+            ("invalid policy", "planning", invalid_policy, "must define exactly"),
+        )
+        for name, stage, policy, message in cases:
+            with self.subTest(name=name), tempfile.TemporaryDirectory() as directory:
+                loaded_policy = MODULE.load_policy(self.policy_file(directory, policy))
+            with mock.patch.object(MODULE, "load_policy", return_value=loaded_policy), mock.patch.object(
+                MODULE, "build_execution_context"
+            ) as context, mock.patch.object(MODULE.os, "execvp") as execvp, contextlib.redirect_stderr(
+                io.StringIO()
+            ) as error:
+                result = MODULE.main(["--stage", stage])
+
+            self.assertEqual(result, 2)
+            self.assertIn(message, error.getvalue())
+            context.assert_not_called()
+            execvp.assert_not_called()
 
 
 if __name__ == "__main__":

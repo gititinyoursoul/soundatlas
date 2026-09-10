@@ -88,6 +88,7 @@ def build_command(resolved: ResolvedStage, execution_context: str) -> list[str]:
         resolved.model,
         "--config",
         f"model_reasoning_effort={json.dumps(resolved.effort)}",
+        "--yolo",
         execution_context,
     ]
 
