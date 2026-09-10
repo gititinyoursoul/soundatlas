@@ -88,13 +88,15 @@ FROM soundatlas-tooling AS pane-workspace
 
 ARG PANE_VERSION=2.4.102
 ARG PANE_SHA256=5e7155c9eb96aebbc575166ce26318c0475d2b26bf6df0dc5943c371deda594f
-ARG PANE_CODEX_CLI_VERSION=0.153.4
+ARG PANE_NPM_VERSION=11.19.1
+ARG PANE_CODEX_CLI_VERSION=0.154.0
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends openssh-server \
     && curl -fsSLo /tmp/pane.deb "https://github.com/dcouple/Pane/releases/download/v${PANE_VERSION}/Pane-${PANE_VERSION}-linux-amd64.deb" \
     && echo "${PANE_SHA256}  /tmp/pane.deb" | sha256sum -c - \
     && apt-get install -y /tmp/pane.deb \
+    && npm install -g "npm@${PANE_NPM_VERSION}" \
     && npm install -g "runpane@${PANE_VERSION}" "@openai/codex@${PANE_CODEX_CLI_VERSION}" \
     && rm -f /tmp/pane.deb \
     && rm -rf /var/lib/apt/lists/* \

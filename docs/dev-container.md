@@ -425,9 +425,10 @@ the already-running tools container.
 The Dockerfile's shared `soundatlas-tooling` stage supplies the same pinned
 Python, uv, Node.js, npm, GitHub CLI, Git, shell tools, and browser libraries to
 both final targets. `workspace` retains Codex CLI 0.147.0. The
-`pane-workspace` target pins Codex CLI 0.153.4 for compatibility with Pane's
-current built-in model selection, and adds checksum-verified Pane 2.4.102,
-matching RunPane 2.4.102, plus the non-root SSH daemon.
+`pane-workspace` target pins npm 11.19.1 and Codex CLI 0.154.0 for
+compatibility with Pane's current built-in model selection, and adds
+checksum-verified Pane 2.4.102, matching RunPane 2.4.102, plus the non-root
+SSH daemon.
 The Pane Debian artifact SHA-256 is
 `5e7155c9eb96aebbc575166ce26318c0475d2b26bf6df0dc5943c371deda594f`.
 `workspace` retains its existing `/workspace` working directory and egress-
