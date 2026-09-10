@@ -41,9 +41,22 @@ validate_port() {
   [[ "$1" =~ ^[0-9]+$ ]] && (( $1 >= 1024 && $1 <= 65535 )) || fail "Port must be between 1024 and 65535."
 }
 
+PYTHON_COMMAND=""
+
+resolve_python() {
+  local candidate
+  for candidate in python3 python; do
+    if command -v "$candidate" >/dev/null && "$candidate" -c 'import sys; raise SystemExit(0 if sys.version_info[0] == 3 else 1)' >/dev/null 2>&1; then
+      PYTHON_COMMAND="$candidate"
+      return
+    fi
+  done
+  fail "Python 3 is unavailable. Install Python 3 or make python3 or python available in this shell."
+}
+
 build_identity_json() {
   local pane_id="$1" pane_name="$2" branch="$3" commit="$4" state="$5" mode="$6" editorial="$7"
-  python3 - "$pane_id" "$pane_name" "$branch" "$commit" "$state" "$mode" "$editorial" <<'PY'
+  "${PYTHON_COMMAND:-python3}" - "$pane_id" "$pane_name" "$branch" "$commit" "$state" "$mode" "$editorial" <<'PY'
 import json
 import sys
 keys = ("paneId", "paneName", "branch", "commit", "worktreeState", "mode", "editorial")
@@ -52,29 +65,24 @@ PY
 }
 
 select_pane() {
-  python3 -c '
+  "${PYTHON_COMMAND:-python3}" -c '
 import json
 import sys
 
-selector = sys.argv[1]
 try:
-    panes = json.load(sys.stdin).get("panes", [])
-except (json.JSONDecodeError, AttributeError) as error:
-    raise SystemExit(f"Pane list was not valid JSON: {error}")
-matches = [pane for pane in panes if selector in (pane.get("id"), pane.get("paneId"), pane.get("name"))]
-if not matches:
-    raise SystemExit(f"No Pane matched {selector!r}. Run runpane panes list --repo soundatlas --json and choose one exact name or id.")
-if len(matches) != 1:
-    raise SystemExit(f"Pane selector {selector!r} is ambiguous; use an exact Pane id.")
-pane = matches[0]
-worktree = pane.get("worktreePath")
-if not isinstance(worktree, str) or not worktree:
-    raise SystemExit("The selected Pane has no worktreePath.")
-for value in (pane.get("id") or pane.get("paneId"), pane.get("name"), worktree):
+    pane = json.load(sys.stdin)
+except json.JSONDecodeError as error:
+    raise SystemExit(f"Pane inventory was not valid JSON: {error}")
+if not isinstance(pane, dict):
+    raise SystemExit("Pane inventory did not return an object.")
+pane_id = pane.get("pane_id")
+pane_name = pane.get("pane_name")
+worktree = pane.get("worktree_path")
+for value in (pane_id, pane_name, worktree):
     if not isinstance(value, str) or not value:
         raise SystemExit("The selected Pane is missing a stable id, name, or worktree path.")
-print("\t".join((pane.get("id") or pane.get("paneId"), pane["name"], worktree)))
-' "$PANE_SELECTOR"
+print("\t".join((pane_id, pane_name, worktree)))
+'
 }
 
 PANE_SELECTOR=""
@@ -136,7 +144,13 @@ parse_args() {
 
 SSH_PID=""
 VITE_PID=""
-LOG_FILE=""
+VITE_LOG_FILE=""
+TUNNEL_LOG_FILE=""
+
+create_diagnostics_logs() {
+  VITE_LOG_FILE="$(mktemp -t soundatlas-pane-preview-vite.XXXXXX.log)"
+  TUNNEL_LOG_FILE="$(mktemp -t soundatlas-pane-preview-tunnel.XXXXXX.log)"
+}
 
 cleanup() {
   local code=$?
@@ -145,8 +159,9 @@ cleanup() {
   [[ -z "$VITE_PID" ]] || kill "$VITE_PID" 2>/dev/null || true
   [[ -z "$SSH_PID" ]] || wait "$SSH_PID" 2>/dev/null || true
   [[ -z "$VITE_PID" ]] || wait "$VITE_PID" 2>/dev/null || true
-  if (( code != 0 )) && [[ -n "$LOG_FILE" ]]; then
-    echo "Pane preview diagnostics: $LOG_FILE" >&2
+  if (( code != 0 )); then
+    [[ -z "$VITE_LOG_FILE" ]] || echo "Pane preview Vite diagnostics: $VITE_LOG_FILE" >&2
+    [[ -z "$TUNNEL_LOG_FILE" ]] || echo "Pane preview tunnel diagnostics: $TUNNEL_LOG_FILE" >&2
   fi
   exit "$code"
 }
@@ -155,22 +170,24 @@ main() {
   parse_args "$@"
   [[ -r "$SSH_KEY" ]] || fail "SSH key is unavailable at $SSH_KEY. Create the documented Pane SSH key or pass --ssh-key PATH."
   command -v ssh >/dev/null || fail "ssh is unavailable. Install an OpenSSH client before starting a Pane preview."
-  command -v python3 >/dev/null || fail "python3 is unavailable; it is required to validate Pane identity."
+  resolve_python
   command -v curl >/dev/null || fail "curl is unavailable; it is required to verify preview readiness."
   if [[ "$MODE" == "api" ]] && ! curl --fail --silent --max-time 2 http://127.0.0.1:8000/health >/dev/null; then
     fail "The host API is unavailable at http://127.0.0.1:8000/health. Start the Compose backend before an API or Editorial preview."
   fi
 
   local -a ssh_base=(ssh -o BatchMode=yes -o IdentitiesOnly=yes -o ExitOnForwardFailure=yes -i "$SSH_KEY" -p "$SSH_PORT" soundatlas@127.0.0.1)
-  local pane_json selected pane_id pane_name worktree remote_identity branch commit worktree_state identity_json
-  if ! pane_json="$("${ssh_base[@]}" 'runpane panes list --repo soundatlas --json')"; then
-    fail "Cannot query Pane over SSH on 127.0.0.1:$SSH_PORT. Start the Pane profile and verify its SSH/key prerequisite."
+  local pane_json selected pane_id pane_name worktree q_selector
+  printf -v q_selector '%q' "$PANE_SELECTOR"
+  if ! pane_json="$("${ssh_base[@]}" "soundatlas-pane-inventory --pane $q_selector")"; then
+    fail "Cannot resolve the selected Pane through the authenticated SSH inventory helper. Confirm that the Pane profile is running and retry."
   fi
   if ! selected="$(printf '%s' "$pane_json" | select_pane)"; then
     fail "Could not resolve exactly one Pane: $selected"
   fi
   IFS=$'\t' read -r pane_id pane_name worktree <<<"$selected"
 
+  local remote_identity branch commit worktree_state identity_json
   local q_worktree
   printf -v q_worktree '%q' "$worktree"
   if ! remote_identity="$("${ssh_base[@]}" "bash -lc 'worktree=$q_worktree; test \"\$(git -C \"\$worktree\" rev-parse --is-inside-work-tree)\" = true || exit 21; branch=\$(git -C \"\$worktree\" branch --show-current); commit=\$(git -C \"\$worktree\" rev-parse --short HEAD); if git -C \"\$worktree\" diff --quiet && git -C \"\$worktree\" diff --cached --quiet; then state=clean; else state=dirty; fi; printf \"%s\\n%s\\n%s\\n\" \"\$branch\" \"\$commit\" \"\$state\"'")"; then
@@ -206,10 +223,10 @@ main() {
   printf -v q_identity '%q' "$identity_json"
   start_command="cd -- $q_frontend && exec env SOUNDATLAS_PANE_PREVIEW=1 SOUNDATLAS_PANE_PREVIEW_ID=$q_pane_id SOUNDATLAS_PANE_PREVIEW_NAME=$q_pane_name SOUNDATLAS_PANE_PREVIEW_BRANCH=$q_branch SOUNDATLAS_PANE_PREVIEW_COMMIT=$q_commit SOUNDATLAS_PANE_PREVIEW_STATE=$q_state SOUNDATLAS_PANE_PREVIEW_MODE=$q_mode VITE_EDITORIAL_MODE=$q_editorial VITE_API_BASE_URL=$q_api_base VITE_DATA_MODE=$q_mode npm run dev -- --host 127.0.0.1 --port $PREVIEW_PORT --strictPort"
 
-  LOG_FILE="$(mktemp -t soundatlas-pane-preview.XXXXXX.log)"
-  "${ssh_base[@]}" "bash -lc '$start_command'" >"$LOG_FILE" 2>&1 &
+  create_diagnostics_logs
+  "${ssh_base[@]}" "bash -lc '$start_command'" >"$VITE_LOG_FILE" 2>&1 &
   VITE_PID=$!
-  "${ssh_base[@]}" -N -L "$PREVIEW_PORT:127.0.0.1:$PREVIEW_PORT" >"$LOG_FILE" 2>&1 &
+  "${ssh_base[@]}" -N -L "$PREVIEW_PORT:127.0.0.1:$PREVIEW_PORT" >"$TUNNEL_LOG_FILE" 2>&1 &
   SSH_PID=$!
   trap cleanup EXIT INT TERM
 

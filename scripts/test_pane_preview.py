@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import json
+import os
 import subprocess
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -45,30 +47,120 @@ class PanePreviewTests(unittest.TestCase):
         self.assertNotEqual(incompatible.returncode, 0)
         self.assertIn("Editorial Mode requires --mode api", incompatible.stderr)
 
-    def test_selects_an_exact_pane_and_rejects_ambiguous_or_missing_matches(self):
-        panes = {
-            "panes": [
-                {"id": "one", "name": "alpha", "worktreePath": "/runtime/repos/soundatlas/worktrees/alpha"},
-                {"id": "two", "name": "beta", "worktreePath": "/runtime/repos/soundatlas/worktrees/beta"},
-            ]
+    def test_reads_the_single_bounded_inventory_result(self):
+        pane = {
+            "pane_id": "one",
+            "pane_name": "alpha",
+            "repo_name": "soundatlas",
+            "worktree_path": "/runtime/repos/soundatlas/worktrees/alpha",
         }
-        selected = self.source_function("PANE_SELECTOR=one; select_pane", input_text=json.dumps(panes))
+        selected = self.source_function("select_pane", input_text=json.dumps(pane))
         self.assertEqual(selected.returncode, 0, selected.stderr)
         self.assertEqual(selected.stdout.strip().split("\t")[:2], ["one", "alpha"])
 
-        ambiguous = self.source_function(
-            "PANE_SELECTOR=shared; select_pane",
-            input_text=json.dumps({"panes": [
-                {"id": "one", "name": "shared", "worktreePath": "/one"},
-                {"id": "two", "name": "shared", "worktreePath": "/two"},
-            ]}),
-        )
-        self.assertNotEqual(ambiguous.returncode, 0)
-        self.assertIn("ambiguous", ambiguous.stderr)
+        invalid = self.source_function("select_pane", input_text=json.dumps([]))
+        self.assertNotEqual(invalid.returncode, 0)
+        self.assertIn("did not return an object", invalid.stderr)
 
-        missing = self.source_function("PANE_SELECTOR=missing; select_pane", input_text=json.dumps(panes))
-        self.assertNotEqual(missing.returncode, 0)
-        self.assertIn("No Pane matched", missing.stderr)
+    def test_falls_back_to_python_when_python3_is_unusable(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            temporary = Path(temporary_directory)
+            unusable_python3 = temporary / "python3"
+            unusable_python3.write_text("#!/usr/bin/env bash\nexit 1\n", encoding="utf-8")
+            unusable_python3.chmod(0o755)
+
+            environment = os.environ.copy()
+            environment["PATH"] = str(temporary) + os.pathsep + environment["PATH"]
+            result = subprocess.run(
+                [
+                    "bash",
+                    "-c",
+                    'source "$1"; resolve_python; printf "%s" "$PYTHON_COMMAND"',
+                    "pane-preview-test",
+                    str(SCRIPT),
+                ],
+                capture_output=True,
+                text=True,
+                check=False,
+                env=environment,
+            )
+
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(result.stdout, "python")
+
+    def test_uses_separate_diagnostics_logs_for_vite_and_tunnel(self):
+        command = 'source "$1"; create_diagnostics_logs; printf "%s\\n%s\\n" "$VITE_LOG_FILE" "$TUNNEL_LOG_FILE"'
+        result = subprocess.run(
+            ["bash", "-c", command, "pane-preview-test", str(SCRIPT)],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+
+        self.assertEqual(result.returncode, 0, result.stderr)
+        vite_log, tunnel_log = result.stdout.splitlines()
+        self.assertNotEqual(vite_log, tunnel_log)
+        self.assertIn("pane-preview-vite", vite_log)
+        self.assertIn("pane-preview-tunnel", tunnel_log)
+        self.assertTrue(Path(vite_log).is_file())
+        self.assertTrue(Path(tunnel_log).is_file())
+        Path(vite_log).unlink()
+        Path(tunnel_log).unlink()
+
+    def test_queries_inventory_over_ssh_without_running_runpane_locally(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            temporary = Path(temporary_directory)
+            key = temporary / "pane-key"
+            ssh_log = temporary / "ssh.log"
+            key.write_text("test-only\n", encoding="utf-8")
+
+            pane_json = json.dumps({
+                "pane_id": "pane-id",
+                "pane_name": "preview-pane",
+                "repo_name": "soundatlas",
+                "worktree_path": "/runtime/repos/soundatlas/worktrees/preview-pane",
+            })
+            command = r'''
+source "$1"
+shift
+ssh() {
+  printf '%s\n' "$*" >>"$SSH_LOG"
+  if [[ "$*" == *"soundatlas-pane-inventory --pane preview-pane"* ]]; then
+    printf '%s\n' "$PANE_JSON"
+    return 0
+  fi
+  if [[ "$*" == *"rev-parse --is-inside-work-tree"* ]]; then
+    printf '%s\n' 'issue-220-worktree-browser-preview' '01a10e3' 'clean'
+    return 0
+  fi
+  return 1
+}
+main --pane preview-pane --mode static --ssh-key "$TEST_KEY"
+'''
+            environment = os.environ.copy()
+            environment.update({
+                "PANE_JSON": pane_json,
+                "SSH_LOG": str(ssh_log),
+                "TEST_KEY": str(key),
+            })
+            result = subprocess.run(
+                ["bash", "-c", command, "pane-preview-test", str(SCRIPT)],
+                capture_output=True,
+                text=True,
+                check=False,
+                env=environment,
+            )
+
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("Vite dependencies are unavailable", result.stderr)
+            self.assertIn(
+                "soundatlas-pane-inventory --pane preview-pane",
+                ssh_log.read_text(encoding="utf-8"),
+            )
+            self.assertNotIn(
+                "runpane panes list",
+                ssh_log.read_text(encoding="utf-8"),
+            )
 
     def test_identity_snapshot_excludes_runtime_worktree_paths(self):
         result = self.source_function(
