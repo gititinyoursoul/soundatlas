@@ -19,8 +19,10 @@ they describe.
 ## Target-direction guidance
 
 - [Development Platform Target Principles](development-platform-target-principles.md) — non-binding target-direction guidance for later platform and contract evaluation.
+- [Development Platform Runtime Architecture Evaluation](development-platform-runtime-architecture-evaluation.md) — Issue #208's recommended shared-runtime direction, candidate comparison, and evidence gaps; it is not current-state documentation or a final platform contract.
 
-This guidance records evaluation criteria, not implemented behavior or a
+The principles remain non-binding evaluation criteria. The evaluation records
+a recommended direction and its conditions, not implemented behavior or a
 binding development-platform contract.
 
 ## Related authoritative documentation
