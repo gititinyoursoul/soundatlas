@@ -35,16 +35,16 @@ for resolver in $resolvers; do
   test "$resolver" = 127.0.0.11
 done
 
-destinations=${SOUNDATLAS_ALLOWED_OUTBOUND_DESTINATIONS-"backend:8000 frontend:5173"}
+destinations=${SOUNDATLAS_ALLOWED_OUTBOUND_DESTINATIONS-"backend:8000 frontend:5173 host.docker.internal:11434"}
 test -n "$destinations"
 # Restrict configuration to the approved service/port pairs, including overrides.
 for destination in $destinations; do
   case "$destination" in
-    backend:8000|frontend:5173) ;;
+    backend:8000|frontend:5173|host.docker.internal:11434) ;;
     *) echo 'Unsupported Pane outbound destination' >&2; exit 1 ;;
   esac
 done
-test "$destinations" = 'backend:8000 frontend:5173'
+test "$destinations" = 'backend:8000 frontend:5173 host.docker.internal:11434'
 
 iptables -w 5 -A OUTPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
 ip6tables -w 5 -A OUTPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT

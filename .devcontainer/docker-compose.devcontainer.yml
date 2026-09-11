@@ -79,7 +79,7 @@ services:
     mem_limit: 64m
     cpus: 0.25
     environment:
-      SOUNDATLAS_ALLOWED_OUTBOUND_DESTINATIONS: "backend:8000 frontend:5173"
+      SOUNDATLAS_ALLOWED_OUTBOUND_DESTINATIONS: "backend:8000 frontend:5173 host.docker.internal:11434"
     healthcheck:
       test: ["CMD", "sh", "/usr/local/bin/pane-egress-guard", "check"]
       interval: 5s
