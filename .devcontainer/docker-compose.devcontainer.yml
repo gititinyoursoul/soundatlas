@@ -114,6 +114,7 @@ services:
       GH_CONFIG_DIR: /home/soundatlas/.config/gh
       HOST_CODEX_HOME: /mnt/host-codex
       PANE_DIR: /runtime/pane
+      SOUNDATLAS_OPENROUTER_ENV_FILE: /run/secrets/openrouter.env
       SOUNDATLAS_GITHUB_AGENT_ENV_FILE: /run/secrets/github-agent.env
       SOUNDATLAS_GITHUB_PROJECT_ENV_FILE: /run/secrets/github-project-agent.env
       SOUNDATLAS_GIT_AUTHOR_NAME: ${SOUNDATLAS_GIT_AUTHOR_NAME:-}
@@ -163,6 +164,12 @@ services:
       - type: bind
         source: ${SOUNDATLAS_PANE_AUTHORIZED_KEYS_FILE:-../secrets/soundatlas/pane_authorized_keys}
         target: /run/secrets/pane_authorized_keys
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${SOUNDATLAS_OPENROUTER_ENV_SOURCE_FILE:-../secrets/soundatlas/openrouter.env}
+        target: /run/secrets/openrouter.env
         read_only: true
         bind:
           create_host_path: false

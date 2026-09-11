@@ -62,6 +62,42 @@ load_repository_git_credentials() {
   export "GIT_CONFIG_VALUE_${git_config_count}=!gh auth git-credential"
 }
 
+load_openrouter_credentials() {
+  if [ -n "${OPENROUTER_API_KEY:-}" ]; then
+    return 0
+  fi
+
+  if [ -z "${SOUNDATLAS_OPENROUTER_ENV_FILE:-}" ] || [ ! -r "$SOUNDATLAS_OPENROUTER_ENV_FILE" ]; then
+    echo "pane-workspace requires a readable OpenRouter credential file" >&2
+    return 1
+  fi
+
+  local openrouter_key=""
+  local openrouter_key_lines=0
+  local env_line
+
+  while IFS= read -r env_line || [ -n "$env_line" ]; do
+    case "$env_line" in
+      ""|'#'*) continue ;;
+      OPENROUTER_API_KEY=*)
+        openrouter_key="${env_line#OPENROUTER_API_KEY=}"
+        openrouter_key_lines=$((openrouter_key_lines + 1))
+        ;;
+      *)
+        echo "OpenRouter credential file must contain only OPENROUTER_API_KEY" >&2
+        return 1
+        ;;
+    esac
+  done < "$SOUNDATLAS_OPENROUTER_ENV_FILE"
+
+  if [ "$openrouter_key_lines" -ne 1 ] || [ -z "$openrouter_key" ]; then
+    echo "OpenRouter credential file must contain one non-empty OPENROUTER_API_KEY" >&2
+    return 1
+  fi
+
+  export OPENROUTER_API_KEY="$openrouter_key"
+}
+
 main() {
   umask 077
   mkdir -p "$pane_dir" "$repo_dir" "$ssh_dir" "$codex_dir"
@@ -88,6 +124,8 @@ main() {
   git config --global core.filemode false
 
   load_repository_git_credentials
+  
+  load_openrouter_credentials
 
   if [ ! -f "$ssh_dir/ssh_host_ed25519_key" ]; then
     ssh-keygen -q -t ed25519 -N "" -f "$ssh_dir/ssh_host_ed25519_key"
