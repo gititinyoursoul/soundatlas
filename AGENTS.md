@@ -286,10 +286,14 @@ heading wording and order exactly when migrating reviewed content.
   closes one Issue. Do not invoke it from a push trigger, scheduled job, or
   `Done`-to-close automation.
 - Unrelated user-owned working-tree changes do not block closure and must not be included merely to make the tree clean.
-- Do not push or close an Issue when review is not `Accepted`, work is
-  uncommitted, the commit is partial or WIP, acceptance criteria remain
-  incomplete, multiple Issues are ambiguously involved, or the user asks to
-  keep the ticket open.
+- Do not make a final delivery push or close an Issue when review is not
+  `Accepted`, work is uncommitted, the commit is partial or WIP, acceptance
+  criteria remain incomplete, multiple Issues are ambiguously involved, or the
+  user asks to keep the ticket open. An explicitly Human-authorized provisional
+  commit and exact-SHA Issue-branch push may serve only external or isolated
+  validation under `docs/github-issue-workflow.md`; it is not delivery and must
+  not target `main`, support acceptance or completion, advance Project status,
+  or authorize archival.
 - If the push, completion comment, or close operation fails, report the failure
   and leave the Issue open when possible.
 - `main` is the reviewed integration branch. A pending Issue range is an

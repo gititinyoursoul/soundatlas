@@ -83,6 +83,8 @@ Request
         -> Proceed to Implementation record
         -> Readiness validation
         -> Relevant execution skill
+        -> Optional Human-authorized provisional commit + exact-SHA Issue-branch
+           external-validation push; evidence is not delivery
         -> Validation
         -> Commit-ready gate + local commit
         -> soundatlas-implementation-review
@@ -136,10 +138,13 @@ been pushed or explicitly integrated. Direct non-trivial work may use `main`
 for one current Issue only while no different pending Issue range exists;
 otherwise, route the new work package to an owned Issue branch and worktree.
 
-An ahead-of-upstream `main` range is an integration range. Before a push is
-proposed for branch work, the reviewed range is explicitly integrated into local
-`main` under separate Human authorization. The detailed integration, clean-tree,
-review, recovery, push, and archival rules live in
+An ahead-of-upstream `main` range is an integration range. Before a final
+delivery push is proposed for branch work, the reviewed range is explicitly
+integrated into local `main` under separate Human authorization. A narrowly
+authorized pre-acceptance Issue-branch push may provide external-validation
+evidence for one exact SHA; it is not integration or delivery. The detailed
+provisional-commit, evidence, integration, clean-tree, review, recovery, final
+push, and archival rules live in
 `docs/github-issue-workflow.md`. This adds no automatic push, pull-request
 requirement, workflow service, or broad clean-working-tree requirement;
 unrelated user-owned changes remain outside Issue delivery.

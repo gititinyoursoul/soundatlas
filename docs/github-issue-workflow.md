@@ -86,36 +86,47 @@ bodies and may remain command arguments.
 7. Human starts implementation with explicit wording such as "implement issue #<number>". This confirms the latest Plan Update and authorizes only its recorded scope.
 8. Agent records `## Proceed to Implementation`, linking the exact confirmed Plan Update, and runs the readiness validator before the first repository edit.
 9. Agent implements from the validated Issue content.
-10. Agent validates the change with the relevant checks.
-11. When the commit-ready gate passes, agent stages only the Issue-scoped files
+10. When external or isolated validation needs an exact revision before the
+    work can complete local validation or implementation review, the Human may
+    explicitly authorize an Issue-scoped provisional commit. After that commit
+    exists, a separate explicit Human authorization may permit pushing that
+    exact commit on its owned Issue branch solely for the named validation
+    purpose. Record the source-worktree identity and branch, destination Issue
+    branch, commit SHA, validation environment and purpose, remote SHA readback,
+    and validation result in the Issue. This is not integration or delivery; it
+    must not target `main`, establish accepted review, advance Project status,
+    support completion, or authorize archival. A new candidate revision needs
+    new external-validation evidence.
+11. Agent validates the change with the relevant checks.
+12. When the commit-ready gate passes, agent stages only the Issue-scoped files
     and creates a local Conventional Commit with an `Issue: #<number>` footer.
-12. For completed non-trivial Issue work, agent uses
+13. For completed non-trivial Issue work, agent uses
     `soundatlas-implementation-review` against that named local commit or an
     explicit local commit range.
-13. Agent posts one combined `## Implementation Report` containing the review
+14. Agent posts one combined `## Implementation Report` containing the review
     result. When its Review Result is `Accepted` and the named reviewed local
     commit or range exists, the agent sets Project status to `Locally
     Implemented`.
-14. Human reviews the committed diff and the agent reports the named local range
+15. Human reviews the committed diff and the agent reports the named local range
     proposed for integration into `main`.
-15. Human explicitly authorizes that local integration, naming the source range,
+16. Human explicitly authorizes that local integration, naming the source range,
     target `main`, and permitted method. This does not authorize a push.
-16. Agent integrates only that authorized range into local `main`. A
+17. Agent integrates only that authorized range into local `main`. A
     range-changing integration is revalidated and reviewed before push.
-17. Human explicitly authorizes a push of the named reviewed local `main` range.
+18. Human explicitly authorizes a push of the named reviewed local `main` range.
     This does not authorize later archival.
-18. Agent pushes only that reviewed integration range.
-19. After a successful push, agent captures the published commit hash and runs
+19. Agent pushes only that reviewed integration range.
+20. After a successful push, agent captures the published commit hash and runs
     the local completion gate. The gate must confirm the canonical report
     shape, checked acceptance criteria, an `Accepted` implementation review,
     exactly one completion comment plan, and Issue-relevant working-tree
     verification.
-20. Agent posts the standard completion comment only after the gate passes and
+21. Agent posts the standard completion comment only after the gate passes and
     sets Project status to `Done` only after that comment succeeds, then closes
     the Issue explicitly.
-21. After normal completion, the agent may request authorization to archive the
+22. After normal completion, the agent may request authorization to archive the
     exact completed Pane. Pane archival remains a separate destructive action.
-22. If review, integration, push, post-push verification, archival, or a GitHub
+23. If review, integration, push, post-push verification, archival, or a GitHub
     operation fails,
     agent reports the failure and leaves the Issue open when possible.
 ```
@@ -747,6 +758,29 @@ checklist item, no unchecked acceptance item, and `- Verdict: Accepted` in its
 Review Result. A report with open criteria or a non-`Accepted` verdict remains
 an implementation status record, not a completion record.
 
+## Pre-Acceptance External Validation
+
+An external or isolated validator may need a Git revision before all validation
+and implementation review can complete. This is a pre-acceptance evidence path,
+not a delivery path.
+
+Before creating a provisional commit, obtain explicit Human authorization for
+the Issue scope, source-worktree identity and owned Issue branch, and named
+external or isolated validation purpose. The provisional commit must remain
+Issue-scoped and is not commit-ready, accepted, integrated, delivered, or
+completion-ready. After the commit exists, obtain separate explicit Human
+authorization before pushing that exact SHA to the named remote Issue branch.
+Never force-push and never use this path to target `main`.
+
+Record the source-worktree identity and branch, destination Issue branch,
+published commit SHA, remote SHA readback, validation environment and purpose,
+and the validation result in the Issue. That evidence applies only to the
+recorded SHA. A changed candidate revision needs new external validation before
+it can support implementation review or final delivery. The external-validation
+push must not set Project status to `Locally Implemented` or `Done`, support an
+`Accepted` review or a completion claim, invoke a completion helper, or
+authorize Pane archival.
+
 ## Commit-Ready Gate and Local Commits
 
 After implementation validation succeeds, the agent creates a local commit
@@ -791,11 +825,11 @@ inspect, test, or review an owned worktree but must not stage, commit, switch
 branches, rebase, merge, or otherwise change it.
 
 Any `main` range ahead of its upstream is an integration range. Before proposing
-a push from an Issue branch, explicitly integrate its reviewed local range into
-local `main`. The Human's integration authorization must name the source range,
-target `main`, and permitted method; it never authorizes a push. Direct work
-already committed on `main` needs no separate graph operation, but its named
-range still needs review and separate push authorization.
+a final delivery push from an Issue branch, explicitly integrate its reviewed
+local range into local `main`. The Human's integration authorization must name
+the source range, target `main`, and permitted method; it never authorizes a
+push. Direct work already committed on `main` needs no separate graph operation,
+but its named range still needs review and separate final-push authorization.
 
 The local `main` checkout must have no tracked changes or unknown untracked
 files before integration, and the source Pane worktree must contain no
@@ -878,12 +912,14 @@ the accepted local result, return it to `In Progress`. If only the final close
 operation fails after status becomes `Done`, leave the Issue open, report the
 failure, and retry closure without rewriting completion evidence.
 
-Do not push or close the Issue when the review is not `Accepted`, the work is
-uncommitted, the commit is partial or WIP, an acceptance criterion is
-incomplete, the commit covers multiple Issues without an explicitly named and
-reviewed integration range, or the human explicitly asks to keep the Issue
-open. If the push, completion comment, or close operation fails, report the
-failure and leave the Issue open when possible.
+Do not make a final delivery push or close the Issue when the review is not
+`Accepted`, the work is uncommitted, the commit is partial or WIP, an acceptance
+criterion is incomplete, the commit covers multiple Issues without an explicitly
+named and reviewed integration range, or the human explicitly asks to keep the
+Issue open. The narrowly authorized pre-acceptance external-validation path
+above is the only exception for an Issue-branch push. If the push, completion
+comment, or close operation fails, report the failure and leave the Issue open
+when possible.
 
 The completion sequence must remain distinct in the workflow record: the
 Implementation Report describes the reviewed result, the local commit records
