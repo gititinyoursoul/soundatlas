@@ -15,6 +15,12 @@ main() {
   [[ -f "$codex_dir/auth.json" ]] || fail "synthetic Codex auth file is missing"
   [[ -f "$ssh_dir/authorized_keys" ]] || fail "authorized-keys file is missing"
   mkdir -p "$pane_dir" "$ssh_dir"
+  git config --global --add safe.directory "$repository_root/$PANE_REPOSITORY_NAME"
+  case "${PANE_GIT_AUTOCRLF:-}" in
+    "") ;;
+    true|false) git config --global core.autocrlf "$PANE_GIT_AUTOCRLF" ;;
+    *) fail "PANE_GIT_AUTOCRLF must be true or false" ;;
+  esac
   chmod 0700 "$ssh_dir"
   if [[ -n "${PANE_GIT_AUTHOR_NAME:-}" && -n "${PANE_GIT_AUTHOR_EMAIL:-}" ]]; then
     git config --global user.name "$PANE_GIT_AUTHOR_NAME"

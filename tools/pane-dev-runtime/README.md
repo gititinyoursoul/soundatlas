@@ -14,6 +14,8 @@ export PANE_PROOF_ROOT=/absolute/path/to/disposable-proof-root
 export PANE_REPOSITORY_NAME=independent-proof
 export PANE_AUTHORIZED_KEYS_FILE=/absolute/path/to/test-authorized-keys
 export PANE_CODEX_AUTH_FILE=/absolute/path/to/synthetic-auth.json
+# Optional for a Windows-host checkout whose line-ending policy must be honored.
+export PANE_GIT_AUTOCRLF=true
 ```
 
 From this directory, use the one supported candidate lifecycle:

@@ -10,6 +10,10 @@ cd "$root"
 docker compose --project-name "${PANE_COMPOSE_PROJECT:-pane-runtime-phase1}" -f compose.yaml config --quiet
 docker compose --project-name "${PANE_COMPOSE_PROJECT:-pane-runtime-phase1}" -f compose.yaml build
 docker compose --project-name "${PANE_COMPOSE_PROJECT:-pane-runtime-phase1}" -f compose.yaml up -d
+for attempt in $(seq 1 12); do
+  docker compose --project-name "${PANE_COMPOSE_PROJECT:-pane-runtime-phase1}" -f compose.yaml exec -T runtime pane-runtime-status | grep -q '"daemon_socket_ready":true' && break
+  sleep 5
+done
 docker compose --project-name "${PANE_COMPOSE_PROJECT:-pane-runtime-phase1}" -f compose.yaml exec -T runtime pane-runtime-status
 docker compose --project-name "${PANE_COMPOSE_PROJECT:-pane-runtime-phase1}" -f compose.yaml exec -T runtime pane-runtime-attach-repository "$PANE_REPOSITORY_NAME"
 docker compose --project-name "${PANE_COMPOSE_PROJECT:-pane-runtime-phase1}" -f compose.yaml exec -T runtime codex --version

@@ -5,7 +5,7 @@ FROM debian:bookworm-slim
 ARG PANE_VERSION=2.4.102
 ARG PANE_SHA256=5e7155c9eb96aebbc575166ce26318c0475d2b26bf6df0dc5943c371deda594f
 ARG CODEX_CLI_VERSION=0.154.0
-ENV CODEX_HOME=/runtime/codex PANE_DIR=/runtime/pane PANE_REPOSITORY_ROOT=/runtime/repos PANE_SSH_DIR=/runtime/ssh TMPDIR=/runtime/tmp
+ENV CODEX_HOME=/runtime/codex PANE_DIR=/runtime/pane PANE_REPOSITORY_ROOT=/runtime/repos PANE_SSH_DIR=/runtime/ssh
 
 COPY --from=node /usr/local/bin/node /usr/local/bin/node
 COPY --from=node /usr/local/lib/node_modules /usr/local/lib/node_modules
@@ -23,6 +23,7 @@ RUN ln -sf ../lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
     && useradd --uid 10001 --gid pane --create-home --shell /bin/bash pane \
     && mkdir -p /runtime/pane /runtime/repos /runtime/ssh /runtime/codex /runtime/tmp /run/sshd \
     && chown -R pane:pane /runtime /run/sshd
+ENV TMPDIR=/runtime/tmp
 COPY bin/runtime-entrypoint.sh /usr/local/bin/pane-runtime-entrypoint
 COPY bin/runtime-status.sh /usr/local/bin/pane-runtime-status
 COPY bin/attach-repository.sh /usr/local/bin/pane-runtime-attach-repository
