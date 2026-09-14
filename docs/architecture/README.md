@@ -16,15 +16,20 @@ documentation.
 These documents are the architecture source of truth for the implemented areas
 they describe.
 
-## Target-direction guidance
+## Current target direction
 
-- [Development Platform Target Principles](development-platform-target-principles.md) — non-binding target-direction guidance for later platform and contract evaluation.
-- [Development Platform Runtime Architecture Evaluation](development-platform-runtime-architecture-evaluation.md) — Issue #208's recommended shared-runtime direction, candidate comparison, and evidence gaps; it is not current-state documentation or a final platform contract.
-- [C-Compatible Per-Project Runtime Migration](development-platform-c-compatible-per-project-runtime-migration.md) — Issue #237's value-prioritized intermediate migration design; it is not implemented current-state architecture, final architecture policy, or the final Project ↔ Platform Contract.
+- [Pane Workspace Runtime Target Principles](pane-workspace-runtime-target-principles.md) — the current minimal, project-neutral runtime scope, responsibility boundary, evidence standard, and deferred questions confirmed by Issue #241.
 
-The principles remain non-binding evaluation criteria. The evaluation records
-a recommended direction and its conditions, not implemented behavior or a
-binding development-platform contract.
+## Historical target-direction inputs
+
+- [Development Platform Target Principles](development-platform-target-principles.md) — historical, non-binding ownership guidance derived from Issue #209.
+- [Development Platform Runtime Architecture Evaluation](development-platform-runtime-architecture-evaluation.md) — Issue #208's historical shared-runtime recommendation, candidate comparison, and evidence gaps.
+- [C-Compatible Per-Project Runtime Migration](development-platform-c-compatible-per-project-runtime-migration.md) — Issue #237's historical C-compatible migration design and rollback analysis.
+
+These artifacts remain evidence for the current runtime target, but their
+Candidate C, shared-platform, and future-contract direction is not a Milestone
+10 requirement. None of the target-direction documents describes implemented
+current behavior.
 
 ## Related authoritative documentation
 
@@ -35,10 +40,7 @@ binding development-platform contract.
 - Workflow and Issue planning: [`../workflow-registry.md`](../workflow-registry.md), [`../github-issue-workflow.md`](../github-issue-workflow.md)
 
 Product and data changes update their authoritative documents rather than this
-index. A later approved decision or design artifact can establish a binding
-development-platform contract, with the GitHub issue controlling that work
-recording Human approval and identifying the authoritative artifact. That approved
-decision determines whether these non-binding principles remain aligned, need
-revision, or are superseded. If superseded, this index points directly to the
-replacement authority and labels or replaces the older entry so readers are
-not left with stale guidance.
+index. Any later broader architecture direction requires its own approved Issue
+and current multi-project evidence. The architecture index must continue to
+distinguish that future proposal from the current target and implemented
+behavior.
