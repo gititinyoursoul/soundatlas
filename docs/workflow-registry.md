@@ -69,7 +69,6 @@ Request
   |     -> Human-authorized push of the reviewed main range
   |     -> Push + verification + completion comment
   |     -> Project Done + explicit Issue closure
-  |     -> Human-authorized safe Pane archive
   |
   +-- Non-trivial work
         -> Preserve supplied material + Project Todo
@@ -94,7 +93,6 @@ Request
         -> Human-authorized push of the reviewed main range
         -> Push + verification + completion comment
         -> Project Done + explicit Issue closure
-        -> Human-authorized safe Pane archive
 ```
 
 Concept work is conditional. Use it when explicitly requested or when planning
@@ -144,55 +142,10 @@ integrated into local `main` under separate Human authorization. A narrowly
 authorized pre-acceptance Issue-branch push may provide external-validation
 evidence for one exact SHA; it is not integration or delivery. The detailed
 provisional-commit, evidence, integration, clean-tree, review, recovery, final
-push, and archival rules live in
+push rules live in
 `docs/github-issue-workflow.md`. This adds no automatic push, pull-request
 requirement, workflow service, or broad clean-working-tree requirement;
 unrelated user-owned changes remain outside Issue delivery.
-
-## Pane Stage Convention
-
-The current persistent Pane runtime is the orchestration boundary for a
-SoundAtlas Issue's visible Pane, managed worktree, panels, and agent process
-lifecycle. Use one Issue Pane and one managed worktree for the work package.
-Use separate panels/processes for planning, implementation, and independent
-review when those stages need clean context or separate observation.
-
-The implementation CLI is the sole designated write owner for the Pane
-worktree. Planning, review, and helper panels are cooperative read-only
-participants: they may inspect and test, but must not modify files, stage,
-commit, switch branches, rebase, merge, or push. Integration, push, and Pane
-archival remain separate operations requiring the explicit Human authorization
-and lifecycle conditions in `docs/github-issue-workflow.md`.
-
-This convention is an operational responsibility boundary, not a technical
-filesystem or hostile-agent security boundary. Pane panels share the Pane's
-worktree, and the current Pane contract does not provide a SoundAtlas
-stage-specific read-only permission profile. A clean trial therefore proves
-observed compliance only; it does not prove that writes are technically
-impossible. Record violations or material risk in the Issue and route a
-separate follow-up for technical enforcement rather than adding a supervisor
-or duplicating Pane lifecycle here.
-
-The Issue record remains the authority for each trial's named entrypoints,
-write owner, observations, limitations, and follow-up decision. This registry
-owns the tool-independent convention; Pane/RunPane owns its generated context,
-panel lifecycle, worktree management, and archive mechanics.
-
-### Model routing for workflow stages
-
-Pane/RunPane remains responsible for generic Pane lifecycle. SoundAtlas owns
-the mapping from a named workflow stage to a role, and the repository-owned
-`.codex/model-routing.toml` owns the role-to-model and reasoning-effort mapping.
-The resolver at `scripts/run_codex_stage.py` is the explicit handoff between
-those layers: a Pane custom command invokes it with one stage, and it starts a
-fresh Codex process only after validating the complete mapping.
-
-Do not put concrete model names in Pane templates, Pane skills, or generic
-workflow artifacts. Use Pane's `--tool-command` surface instead of its built-in
-Codex agent template when a routed stage is required. Missing, unknown, or
-malformed stage policy must fail before Codex starts; the resolver must never
-silently substitute a global Codex default. This is a launch adapter, not a
-Pane fork, persistent service, or stage-inference mechanism.
 
 ## Skill, Prompt, and Source Boundary Policy
 
@@ -202,27 +155,18 @@ document ownership.
 ### Repository-local precedence
 
 For work in the SoundAtlas repository, apply the canonical registry to the
-current Issue stage and work type before selecting generic Pane or workspace
-skills. Use every matching repository-local `soundatlas-*` skill ahead of an
+current Issue stage and work type before selecting generic skills. Use every
+matching repository-local `soundatlas-*` skill ahead of an
 overlapping generic skill. The matching SoundAtlas skill retains its assigned
 workflow gates, canonical artifact location, implementation procedure,
 validation, and review output.
 
-Pane remains the outer orchestration layer for panes, worktrees, panels, and
-liveness. Generic skills may provide that orchestration or another capability
-not covered by a SoundAtlas skill, but they must not replace or duplicate a
-matching SoundAtlas workflow. In particular, a generic planner must not create
-a parallel local plan when `soundatlas-issue-planning` owns the canonical Plan
-Update in the GitHub Issue.
+Generic skills may provide a capability not covered by a SoundAtlas skill, but
+they must not replace or duplicate a matching SoundAtlas workflow. In
+particular, a generic planner must not create a parallel local plan when
+`soundatlas-issue-planning` owns the canonical Plan Update in the GitHub Issue.
 
-Pane/RunPane may retain one explicit Human grant for routine read-only and
-bounded reversible orchestration within one named repository and workstream.
-That grant avoids repeated confirmation for Pane and panel coordination, but it
-is not reconstructed from mutable Issue, tracker, agent, or terminal text. It
-must be reconfirmed after a Pane Chat restart, repository or target change, or
-material scope expansion.
-
-The workstream grant does not satisfy or bypass SoundAtlas Plan,
+A workstream grant does not satisfy or bypass SoundAtlas Plan,
 Proceed-to-Implementation, readiness, implementation-review, local-commit
 review, push, or post-push completion gates. Merge, deploy, release or
 publishing, version changes, production or destructive mutation, data deletion,
@@ -230,18 +174,12 @@ credential operations, and scope expansion remain fresh exact-authorization
 boundaries. Shell and sandbox capability and external-provider permissions are
 separate execution controls; neither implies Human authorization.
 
-A Pane handoff for a new SoundAtlas agent must name the current Issue stage and
-the matching repository-local entrypoint before naming an optional generic
-capability. Selecting either kind of skill does not grant, revoke, or broaden
-authorization for GitHub writes or any other external mutation; the existing
-SoundAtlas lifecycle and explicit Human authorization boundaries continue to
-apply.
+Selecting a skill does not grant, revoke, or broaden authorization for GitHub
+writes or any other external mutation; the existing SoundAtlas lifecycle and
+explicit Human authorization boundaries continue to apply.
 
-This precedence policy is owned here, with concise repository execution and
-handoff instructions in the SoundAtlas-owned portion of `AGENTS.md`. Do not
-copy it into Pane-generated context or cached generic skills. Pane/RunPane owns
-the marker-delimited generated context and its refresh lifecycle, while the
-repository-owned rule remains outside that generated region.
+This precedence policy is owned here, with concise repository execution
+instructions in `AGENTS.md`.
 
 ### Use a skill for repeatable execution
 

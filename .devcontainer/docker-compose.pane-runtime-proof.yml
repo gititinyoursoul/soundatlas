@@ -1,5 +1,0 @@
-services:
-  runtime:
-    image: soundatlas-pane-runtime-proof:phase1
-    environment:
-      PANE_REPOSITORY_NAME: soundatlas-phase1
