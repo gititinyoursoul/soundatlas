@@ -1138,3 +1138,26 @@ the shared stack. Removal of `workspace`, changes to
 `.devcontainer/devcontainer.json`, and final Pane promotion require separate
 Human acceptance after the parallel smoke evidence; Issue #196 is also a
 retirement dependency while equivalent egress enforcement remains required.
+
+## Phase 1 isolated Pane runtime candidate
+
+Issue #243 adds a parallel proof candidate at `tools/pane-dev-runtime/`. Its
+Docker build context is that directory alone; it does not read SoundAtlas source
+files. The candidate `compose.yaml` starts only `runtime` and `egress` with new
+Compose-project-scoped state, and has no dependency on root application services.
+
+The SoundAtlas proof builds `.devcontainer/pane-soundatlas.Dockerfile` from the
+generic image and applies `.devcontainer/docker-compose.pane-runtime-proof.yml`
+as a proof-only overlay. The current dev-container and Pane profile stay
+unchanged. An operator outside the candidate controls its exact Compose project.
+
+Phase 1 accepts only fresh disposable clones, test-only SSH public keys, and
+synthetic read-only Codex auth-shaped files. It does not mount current Pane
+volumes or live credentials. Its egress companion preserves the existing
+default-deny/public-HTTPS goal as a regression fixture; it does not select the
+generic credential or network end-state.
+
+The DBT independent-repository proof covers generic attachment, identity,
+Pane/Codex/Git/worktree behavior, and absence of SoundAtlas assumptions. It does
+not build, configure, start, or validate DBT or PostgreSQL. Extraction,
+consumption, and current-runtime cutover remain outside Phase 1.
