@@ -1,4 +1,4 @@
-"""Static Phase 1 contracts for the isolated Pane runtime candidate."""
+"""Static contracts for the pinned isolated Pane runtime."""
 from __future__ import annotations
 
 import json
@@ -6,18 +6,23 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-RUNTIME = ROOT / "tools" / "pane-dev-runtime"
+RUNTIME = ROOT / "vendor" / "pane-dev-runtime"
+
 
 class PaneRuntimeProofTests(unittest.TestCase):
     def test_isolated_surface_is_complete(self) -> None:
         expected = {".dockerignore", "Dockerfile", "egress.Dockerfile", "compose.yaml", "bin/runtime-entrypoint.sh", "bin/runtime-status.sh", "bin/attach-repository.sh", "bin/egress-guard.sh", "config/pane-seccomp.json", "config/sshd_config", "tests/contract.sh", "tests/smoke.sh", "README.md"}
-        actual = {path.relative_to(RUNTIME).as_posix() for path in RUNTIME.rglob("*") if path.is_file()}
+        actual = {
+            path.relative_to(RUNTIME).as_posix()
+            for path in RUNTIME.rglob("*")
+            if path.is_file() and path.name != ".git"
+        }
         self.assertEqual(actual, expected)
 
     def test_generic_sources_have_no_project_assumptions(self) -> None:
         prohibited = ("soundatlas", "postgres", "dbt", "openrouter", "ollama", "github-agent")
         for path in RUNTIME.rglob("*"):
-            if not path.is_file() or path.name in {"README.md", "contract.sh"}:
+            if not path.is_file() or path.name in {".git", "README.md", "contract.sh"}:
                 continue
             with self.subTest(path=path):
                 self.assertFalse(any(token in path.read_text(encoding="utf-8").lower() for token in prohibited))
@@ -53,6 +58,7 @@ class PaneRuntimeProofTests(unittest.TestCase):
 
     def test_seccomp_profile_is_json(self) -> None:
         self.assertEqual(json.loads((RUNTIME / "config/pane-seccomp.json").read_text())["defaultAction"], "SCMP_ACT_ERRNO")
+
 
 if __name__ == "__main__":
     unittest.main()

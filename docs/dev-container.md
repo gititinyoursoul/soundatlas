@@ -1139,11 +1139,16 @@ the shared stack. Removal of `workspace`, changes to
 Human acceptance after the parallel smoke evidence; Issue #196 is also a
 retirement dependency while equivalent egress enforcement remains required.
 
-## Phase 1 isolated Pane runtime candidate
+## Isolated Pane runtime proof candidate
 
-Issue #243 adds a parallel proof candidate at `tools/pane-dev-runtime/`. Its
-Docker build context is that directory alone; it does not read SoundAtlas source
-files. The candidate `compose.yaml` starts only `runtime` and `egress` with new
+Issue #243 retains the Phase-1 candidate at `tools/pane-dev-runtime/` as
+rollback evidence. Gate 5 consumes the extracted runtime through the pinned
+`vendor/pane-dev-runtime` Git submodule; initialize it with
+`git -c core.autocrlf=false submodule update --init vendor/pane-dev-runtime`.
+The one-command override preserves the runtime scripts' LF bytes on Windows; it
+does not change host or repository Git policy. Its Docker build context is that
+directory alone and does not read SoundAtlas source files. The candidate
+`compose.yaml` starts only `runtime` and `egress` with new
 Compose-project-scoped state, and has no dependency on root application services.
 
 The SoundAtlas proof builds `.devcontainer/pane-soundatlas.Dockerfile` from the
@@ -1159,5 +1164,5 @@ generic credential or network end-state.
 
 The DBT independent-repository proof covers generic attachment, identity,
 Pane/Codex/Git/worktree behavior, and absence of SoundAtlas assumptions. It does
-not build, configure, start, or validate DBT or PostgreSQL. Extraction,
-consumption, and current-runtime cutover remain outside Phase 1.
+not build, configure, start, or validate DBT or PostgreSQL. Current-runtime
+cutover remains outside this proof; the retained candidate is not deleted.

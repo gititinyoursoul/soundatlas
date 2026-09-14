@@ -1,0 +1,3 @@
+[submodule "vendor/pane-dev-runtime"]
+	path = vendor/pane-dev-runtime
+	url = https://github.com/gititinyoursoul/pane-dev-runtime.git
