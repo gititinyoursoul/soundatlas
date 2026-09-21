@@ -1,0 +1,5 @@
+interface:
+  # Temporary Milestone 9 skill; sunset is owned by #203.
+  display_name: "SoundAtlas Workflow Migration"
+  short_description: "Compose approved Milestone 9 migration slices safely"
+  default_prompt: "Use $soundatlas-workflow-migration for an approved SoundAtlas migration child Issue #247–#251."
