@@ -151,6 +151,13 @@ heading wording and order exactly when migrating reviewed content.
   single canonical Plan Update in the GitHub Issue; do not create a parallel
   local plan. Skill selection neither grants nor removes the explicit
   authorization required for GitHub writes.
+- For Pane-composed work, apply the Pane–SoundAtlas composition contract in
+  `docs/workflow-registry.md`. Pass the canonical Issue scope and records,
+  tracked SoundAtlas authorities, Human gates, write boundary, validation, and
+  stop conditions to the selected generic mechanism without copying that
+  mechanism's procedure into this repository. Local Pane artifacts are not
+  Issue Plan or Proceed authority. Missing, stale, or contradictory authority
+  fails closed and returns to its tracked owner or Human decision gate.
 - New planned work should preserve the Human-supplied material in the GitHub
   Issue. Use the lightweight `Task`, `Context`, and `Acceptance Criteria`
   Intake for task briefs. When supplied material attempts to serve as a

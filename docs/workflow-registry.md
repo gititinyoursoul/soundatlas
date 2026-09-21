@@ -147,6 +147,145 @@ push rules live in
 requirement, workflow service, or broad clean-working-tree requirement;
 unrelated user-owned changes remain outside Issue delivery.
 
+## Pane–SoundAtlas Composition Contract
+
+This section is the single tracked composition-contract authority for using a
+Pane mechanism on SoundAtlas work. SoundAtlas owns correctness, authorization,
+and project/domain meaning. Pane owns reusable workflow procedure. Composition
+supplies the former to the latter and returns evidence to the existing
+SoundAtlas record; it does not merge those responsibilities or create another
+workflow authority.
+
+`docs/github-issue-workflow.md` owns the lifecycle and canonical record shapes.
+`AGENTS.md` owns repository-wide constraints. Domain documents own their named
+product, data, editorial, UX, security, environment, and architecture rules.
+This registry owns composition, routing, and the precedence stated here.
+
+### Required composition envelope
+
+Before a generic mechanism runs, the agent must identify the inputs applicable
+to that stage:
+
+1. repository identity, exact revision, branch/worktree identity, Issue URL,
+   and requested stage;
+2. current canonical Issue records, including confirmed decisions, the Concept
+   or Concept-not-required basis, latest Plan, matching Proceed record when
+   required, and review/report evidence when applicable;
+3. the Plan's named authorities, bounded derived-consistency surface, excluded
+   scope, and the Proceed record's exact audited derived files;
+4. applicable tracked repository/domain authorities, required validation and
+   evidence, Human-owned gates, allowed external effects, and stop conditions;
+5. the selected Pane capability and its exact Pane application, RunPane
+   wrapper, and skill-bundle provenance; and
+6. the tracked sources and ordinary repository commands for the equivalent
+   non-Pane path.
+
+The envelope is a logical input/output contract, not a required stored file,
+new approval object, or workflow state. A composer or temporary runner may
+carry it, but that representation remains subordinate to this section and the
+canonical Issue records.
+
+### Authority precedence
+
+Apply these layers without flattening their separate ownership:
+
+1. Execution-environment security controls and external-provider permissions
+   are independent hard limits and never imply SoundAtlas authorization.
+2. Tracked SoundAtlas authorities define repository-wide and domain
+   correctness. A requested policy change returns to the authority and Issue
+   that own it.
+3. Current canonical Issue records narrow work to accepted scope and record
+   Human decisions. The latest valid GitHub Issue Plan and its later matching
+   Proceed record are the only canonical implementation authority for
+   non-trivial Issue work.
+4. The Proceed record authorizes only its linked current Plan boundary and the
+   exact audited derived files. A broad grant or Plan alone does not authorize
+   execution.
+5. Pane skills and runtime mechanisms choose reusable procedure only within
+   those conditions.
+6. Generated prompts, summaries, cached context, Session text, terminal output,
+   and local or temporary Pane artifacts are advisory evidence only.
+
+When two authorities conflict, do not merge or infer a resolution. Use the
+document-ownership rules in this registry to return the conflict to its tracked
+owner. If ownership itself is unclear, route the finding through Issue Planning
+and Grill Me for a Human decision.
+
+### Outputs and external effects
+
+A composed run returns only stage-appropriate outputs:
+
+- its achieved outcome or exact stop/failure condition and recovery owner;
+- read-only findings or changed paths within the authorized boundary;
+- validation commands/results, unavailable-environment evidence, risks, and
+  unresolved decisions;
+- exact repository/worktree and Pane/RunPane/capability provenance;
+- an Issue-scoped local commit/range only after the commit-ready gate; and
+- canonical Issue records only through the Issue lifecycle and under the
+  authorization applicable to that GitHub write.
+
+PR creation, rebase/integration, push, merge, publication, deployment, release,
+Project mutation, Issue closure, credential operations, destructive cleanup,
+and scope expansion remain separate effects. Selecting or running a Pane
+capability never authorizes one.
+
+### Canonical Issue artifacts and generic procedure
+
+Local or temporary Pane planning artifacts are non-authoritative. A Pane plan,
+generated brief, Session summary, or reviewer note may inform drafting, but it
+must be reconciled into the canonical GitHub Issue Plan, transported safely,
+and read back before readiness. It may not be linked as the Plan in a Proceed
+record, consumed by the readiness validator as authority, or committed merely
+to preserve planning state. A later canonical Issue revision makes conflicting
+local context stale.
+
+Composition names the selected Pane capability, supplies or references the
+required envelope, constrains outputs/effects, and captures evidence. It does
+not copy how Pane performs discussion, planning, implementation, review,
+testing, commit, handoff, or PR work. If Pane lacks reusable behavior, retain
+the current SoundAtlas/non-Pane path and route a separate Pane capability gap;
+do not implement a repository-local Pane fork.
+
+### Fail-closed conditions
+
+| Condition | Required result |
+| --- | --- |
+| Required Issue, Concept basis, Plan, Proceed, scope, or Human decision is missing | Do not start the gated stage; return to Issue Planning or the Human gate. |
+| A material decision is unresolved | Do not infer it; return to Grill Me, Concept Work, or the named Human owner. |
+| Authorities conflict or ownership is unclear | Stop at the conflict and route it under the precedence rules above. |
+| Plan/Proceed, revision, or write boundary is stale or mismatched | Stop repository mutation; require current Planning, confirmation, Proceed, and readiness. |
+| A requested path or behavior is outside the authorized boundary | Leave it untouched and route a linked Intake. |
+| The selected Pane capability is missing, renamed, or unverified | Do not emulate or fork it locally; retain the tracked non-Pane path and route the gap. |
+| Pane, RunPane, or skill content has materially drifted | Stop before use and return to Planning/evaluation. |
+| A required tool, service, permission, credential boundary, or validation environment is unavailable | Record the exact prerequisite; do not substitute weaker evidence. |
+| Validation fails | Do not claim completion, commit readiness, delivery, or acceptance. |
+| A Pane default implies an unauthorized external effect | Suppress the effect and return to its exact authorization boundary. |
+| A run is interrupted or partial | Preserve Issue records and user work, report last verified state/paths, and recheck current authority before resuming. |
+| The tracked non-Pane route is missing or ownership becomes circular | Fail routing validation and block acceptance of the affected migration. |
+
+Pane/RunPane drift is material when it changes capability identity, required
+inputs, produced artifacts, external writes/effects, approval behavior, or the
+invocation route in a way that could affect SoundAtlas authority, evidence, or
+stop behavior. A version match alone is not provenance. Record the exact
+version plus source revision or content digest; inspect changed instructions
+before proceeding. Cosmetic or internal technique changes that leave those
+observable properties unchanged may be recorded as non-material.
+
+### Non-Pane route and downstream use
+
+A contributor without Pane starts at `AGENTS.md`, uses this registry to select
+the work type and authority, uses `docs/github-issue-workflow.md` for canonical
+records/gates, reads the Issue and named domain authorities, performs the work
+with ordinary repository/GitHub tools, and produces the same validation and
+Issue evidence. Equivalent correctness and evidence are required; identical
+procedure is not.
+
+Issue #252 may operationalize this contract in a temporary migration runner.
+Issues #247 through #251 apply it to their bounded migration themes. Issue #202
+evaluates representative Pane and non-Pane behavior, and Issue #203 alone owns
+later retirement decisions. None may silently reclassify the accepted #200
+Inventory and Migration Map or make a temporary runner a competing authority.
+
 ## Skill, Prompt, and Source Boundary Policy
 
 This section is authoritative for repository-wide entrypoint selection and

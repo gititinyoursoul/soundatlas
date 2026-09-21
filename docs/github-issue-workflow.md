@@ -34,6 +34,22 @@ that procedure runs and the canonical completed Grill-Me record shape.
 assessment, finding classification, and routing. This document owns when that
 review occurs and how its result enters the Issue lifecycle.
 
+For work performed through Pane or another generic mechanism,
+`docs/workflow-registry.md` owns the Pane–SoundAtlas composition contract. This
+document continues to own when canonical records are required and their shape.
+The composer supplies the current Issue scope, decisions, Plan/Proceed boundary,
+tracked authorities, validation, Human gates, and stop conditions to the
+mechanism; it does not give the mechanism authority over those inputs.
+
+Local or temporary Pane planning artifacts are non-authoritative.
+Only the latest valid GitHub Issue Plan and its later matching
+`## Proceed to Implementation` record can satisfy the non-trivial
+implementation gate. Drafts, generated briefs, Session context, or local files
+may inform the canonical Plan
+only after reconciliation, safe GitHub transport, and readback. A Pane default
+must fail closed when it conflicts with this lifecycle or implies an external
+effect that has not received its exact authorization.
+
 ## Safe GitHub Markdown Transport
 
 Every multiline Markdown body created or edited through `gh` must come from a
