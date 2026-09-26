@@ -24,7 +24,7 @@ services:
         source: .
         target: /workspace
       - type: bind
-        source: ../secrets/soundatlas/.env
+        source: ../../Dev/secrets/soundatlas/.env
         target: /run/secrets/soundatlas.env
         read_only: true
       - frontend_node_modules:/workspace/frontend/node_modules
