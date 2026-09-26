@@ -3,12 +3,9 @@
 FROM node:24.11.1-bookworm-slim AS node
 FROM ghcr.io/astral-sh/uv:python3.13-bookworm-slim AS soundatlas-tooling
 
-ARG CODEX_CLI_VERSION=0.147.0
-
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     UV_LINK_MODE=copy \
-    CODEX_HOME=/home/soundatlas/.codex \
     GH_CONFIG_DIR=/home/soundatlas/.config/gh
 
 COPY --from=node /usr/local/bin/node /usr/local/bin/node
@@ -20,7 +17,6 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         bash \
         bash-completion \
-        bubblewrap \
         ca-certificates \
         curl \
         fonts-liberation \
@@ -65,11 +61,9 @@ RUN mkdir -p -m 0755 /etc/apt/keyrings \
     && apt-get install -y --no-install-recommends gh \
     && rm -rf /var/lib/apt/lists/*
 
-RUN npm install -g "@openai/codex@${CODEX_CLI_VERSION}"
-
 RUN groupadd --gid 10001 soundatlas \
     && useradd --uid 10001 --gid soundatlas --create-home --shell /bin/bash soundatlas \
-    && mkdir -p /workspace /home/soundatlas/.cache/ms-playwright /home/soundatlas/.cache/uv /home/soundatlas/.config/gh /home/soundatlas/.npm /home/soundatlas/.codex \
+    && mkdir -p /workspace /home/soundatlas/.cache/ms-playwright /home/soundatlas/.cache/uv /home/soundatlas/.config/gh /home/soundatlas/.npm \
     && chown -R soundatlas:soundatlas /workspace /home/soundatlas
 
 COPY .devcontainer/bashrc /home/soundatlas/.bashrc

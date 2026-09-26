@@ -8,7 +8,6 @@
   "workspaceFolder": "/workspace",
   "remoteUser": "soundatlas",
   "overrideCommand": false,
-  "postCreateCommand": "sh .devcontainer/post-create.sh",
   "customizations": {
     "vscode": {
       "extensions": [

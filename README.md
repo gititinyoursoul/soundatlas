@@ -82,24 +82,32 @@ troubleshooting.
 
 ### Dev Container
 
-Use this path for a reproducible workspace in VS Code or Codex. Docker Compose
-and the required external secret files must be available; see the
+Use this path for a reproducible SoundAtlas workspace, with optional VS Code
+integration. Docker Compose and the external application env file must be available; see the
 [`Dev Container documentation`](docs/dev-container.md) for those prerequisites.
 
 In VS Code, open the repository and run `Dev Containers: Reopen in Container`
-from the Command Palette.
+from the Command Palette. Then run the explicit project setup in its terminal:
+
+```sh
+cd /workspace
+sh .devcontainer/setup-workspace.sh
+```
 
 For a CLI workspace, run from the repository root:
 
 ```sh
 docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontainer.yml up -d --build workspace
-docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontainer.yml exec --user soundatlas workspace sh .devcontainer/post-create.sh
+docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontainer.yml exec --user soundatlas workspace sh .devcontainer/setup-workspace.sh
 docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontainer.yml exec --user soundatlas workspace bash
 ```
 
 The workspace commands intentionally run as the non-root `soundatlas` user.
 Keep setup and development commands under that same container user so shared
 dependency volumes do not become owned by `root`.
+Run setup before development or validation and repeat it after dependency lockfile
+changes. Codex and GitHub credentials are not required; GitHub CLI remains an
+optional developer tool.
 
 The full service, secret, volume, and troubleshooting details remain in
 [`docs/dev-container.md`](docs/dev-container.md).

@@ -12,7 +12,7 @@ checking the MVP stack without installing all project tooling on the host.
 
 The default stack starts three services:
 
-- `workspace`: interactive shell and Codex CLI workspace
+- `workspace`: interactive SoundAtlas development shell
 - `backend`: FastAPI development server on port `8000`
 - `frontend`: SvelteKit/Vite development server on port `5173`
 
@@ -23,57 +23,70 @@ runtime or repository.
 ## Prerequisites
 
 Install Docker with the Docker Compose plugin. The Compose override expects
-these local, read-only files outside the repository:
+the application env file outside the repository, mounted read-only:
 
 ```sh
 mkdir -p ../secrets/soundatlas
 $EDITOR ../secrets/soundatlas/.env
-$EDITOR ../secrets/soundatlas/github-agent.env
-$EDITOR ../secrets/soundatlas/github-project-agent.env
 ```
 
-The app env file contains settings such as `YOUTUBE_API_KEY`. Each GitHub file
-contains exactly one unquoted, non-empty `GH_TOKEN=<token>` assignment. Do not
-commit any of these files.
+The app env file contains settings such as `YOUTUBE_API_KEY`; it may be empty
+when optional application integrations are unused. Do not commit it. Normal
+startup, setup, and validation require no Codex installation or authentication,
+GitHub credentials, or private Pane repositories.
 
-Importing host Codex state is optional. When present, the host `.codex`
-directory is mounted read-only at `/mnt/host-codex`; post-create setup seeds
-the supported login and configuration files into the workspace-only
-`codex_home` volume.
+GitHub CLI is available as an optional developer tool. Authenticated GitHub
+operations require the contributor's own explicit authentication; the workspace
+does not mount GitHub agent credential files or import tokens automatically.
 
 ## Start the workspace
 
 ```powershell
 docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontainer.yml up -d --build workspace
-docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontainer.yml exec --user soundatlas workspace sh .devcontainer/post-create.sh
+docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontainer.yml exec --user soundatlas workspace sh .devcontainer/setup-workspace.sh
 docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontainer.yml exec --user soundatlas workspace bash
 ```
 
-The manual `post-create.sh` step is needed only for CLI-only startup. VS Code
-Dev Containers runs its configured post-create command automatically. To use
-VS Code, open the repository and select **Dev Containers: Reopen in
-Container**.
+Setup is explicit for both startup paths. To use VS Code, open the repository
+and select **Dev Containers: Reopen in Container**, then run:
+
+```sh
+cd /workspace
+sh .devcontainer/setup-workspace.sh
+```
+
+There is no automatic post-create hook. Run setup before development or
+validation, and repeat it after dependency lockfile changes. CLI setup and
+development commands use the same non-root `soundatlas` user.
+
+If the already-running frontend reports stale Vite pre-bundles after `npm ci`,
+restart that service from the host repository root:
+
+```sh
+docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontainer.yml restart frontend
+```
 
 ## Workspace image and services
 
 The `workspace` service is built from the `workspace` target in
 `.devcontainer/Dockerfile`. It includes Python 3.13 and `uv`, Node.js and npm,
-Git, GitHub CLI, Codex CLI, Bash, and the libraries required by
+Git, optional GitHub CLI, Bash, and the libraries required by
 Playwright-managed Chromium.
 
-`workspace` mounts the repository, package/cache volumes, the optional
-read-only host Codex state, and the three read-only secret files. It depends on
-the backend and frontend services starting. `seccomp=unconfined` is retained
-for Codex's Bubblewrap sandbox under Docker Desktop/WSL2.
+`workspace` mounts the repository, package/cache volumes, and the read-only
+application env file at `/run/secrets/soundatlas.env`. It depends on the backend
+and frontend services starting. Codex provisioning and its Bubblewrap/seccomp
+workaround are removed; Docker's default seccomp policy applies.
 
 The backend serves `http://localhost:8000` and its health endpoint at
 `http://localhost:8000/health`. The frontend serves
 `http://localhost:5173` and waits for the backend healthcheck.
 
-## Post-create setup
+## Explicit project setup
 
-`.devcontainer/post-create.sh` configures the container-local Git and Codex
-state, then installs backend and frontend dependencies from their lockfiles.
+`.devcontainer/setup-workspace.sh` configures container-local Git, then installs
+backend and frontend dependencies from their lockfiles using `uv sync --locked --dev`
+and `npm ci`.
 It uses `/workspace` as Git's safe directory and only writes a Git author when
 both `SOUNDATLAS_GIT_AUTHOR_NAME` and `SOUNDATLAS_GIT_AUTHOR_EMAIL` are set.
 

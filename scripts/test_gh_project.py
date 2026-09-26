@@ -62,15 +62,15 @@ class GhProjectTests(unittest.TestCase):
         self.assertNotIn("GITHUB_TOKEN", result)
         self.assertEqual(result["UNCHANGED"], "value")
 
-    def test_new_shell_reads_replacement_repository_credential(self):
+    def test_new_shell_does_not_import_repository_credential(self):
         with tempfile.TemporaryDirectory() as directory:
             path = self.credential_file(directory, "GH_TOKEN=first-dummy-token\n")
             first = self.shell_token(path)
             path.write_text("GH_TOKEN=second-dummy-token\n", encoding="utf-8")
             second = self.shell_token(path)
 
-        self.assertEqual(first, "first-dummy-token")
-        self.assertEqual(second, "second-dummy-token")
+        self.assertEqual(first, "")
+        self.assertEqual(second, "")
 
     def test_explicit_repository_token_override_wins(self):
         with tempfile.TemporaryDirectory() as directory:
