@@ -2,7 +2,7 @@ import os
 from dataclasses import dataclass
 from pathlib import Path
 
-from app.config import DEFAULT_CODEX_ENV_FILE
+from app.config import DEFAULT_CODEX_ENV_FILE, PROJECT_ROOT
 
 ALLOWED_ENV_KEYS = {
     "YOUTUBE_API_KEY",
@@ -17,8 +17,16 @@ def parse_bool(value: str | None, default: bool = False) -> bool:
 
 
 def parse_env_file(path: Path) -> dict[str, str]:
+    try:
+        if not path.is_file():
+            raise ValueError("Application credential file must be a readable regular UTF-8 file")
+        lines = path.read_text(encoding="utf-8").splitlines()
+    except (OSError, UnicodeError, ValueError):
+        raise ValueError(
+            "Application credential file must be a readable regular UTF-8 file",
+        ) from None
     values: dict[str, str] = {}
-    for raw_line in path.read_text(encoding="utf-8").splitlines():
+    for raw_line in lines:
         line = raw_line.strip()
         if not line or line.startswith("#") or "=" not in line:
             continue
@@ -74,12 +82,27 @@ def resolve_env_file(
 ) -> tuple[Path | None, str]:
     configured_path = env.get("SOUNDATLAS_ENV_FILE")
     if configured_path:
-        env_file = Path(configured_path).expanduser()
-        if not env_file.exists():
-            raise ValueError(
-                f"SOUNDATLAS_ENV_FILE points to a missing file: {env_file}",
-            )
+        try:
+            env_file = Path(configured_path).expanduser()
+        except (OSError, ValueError, RuntimeError):
+            raise ValueError("SOUNDATLAS_ENV_FILE must select an application file") from None
         return env_file, "external"
+    configured_root = env.get("SOUNDATLAS_SECRETS_DIR")
+    if configured_root:
+        root_error = (
+            "SOUNDATLAS_SECRETS_DIR must be an absolute, accessible directory "
+            "outside the checkout"
+        )
+        try:
+            root = Path(configured_root).expanduser()
+            if not root.is_absolute():
+                raise ValueError(root_error)
+            root = root.resolve(strict=True)
+            if root.is_relative_to(PROJECT_ROOT.resolve()) or not root.is_dir():
+                raise ValueError(root_error)
+        except (OSError, ValueError, RuntimeError):
+            raise ValueError(root_error) from None
+        return root / ".env", "external"
     if codex_env_file.exists():
         return codex_env_file, "codex"
     return None, "none"

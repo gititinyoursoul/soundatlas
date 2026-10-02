@@ -189,14 +189,20 @@ It does not call provider APIs directly. YouTube API interaction happens only in
 
 ## Environment Variables
 
-Example values are documented in `.env.example`. For local Codex and test runs, `.env.codex` is also included in the repository with dummy values only.
+Example values are documented in `.env.example` and `.env.codex.example`.
+An optional repository-root `.env.codex` is a dummy-only fallback when neither
+application path setting is selected; it is not a live credential store.
 
 ```powershell
 SOUNDATLAS_USE_DUMMY_SERVICES=false
 YOUTUBE_API_KEY=
 ```
 
-Real secrets must not live in the repository. Instead, an external file path is provided through `SOUNDATLAS_ENV_FILE`.
+Real secrets must not live in the repository. Export `SOUNDATLAS_SECRETS_DIR`
+as an absolute external application directory containing `.env`, or select a
+file explicitly with `SOUNDATLAS_ENV_FILE` (which takes precedence). See the
+[development credential guide](../../development-credentials.md) for ownership,
+failure behavior and the independent Project credential.
 
 The merge script does not need provider credentials. The YouTube request runner needs a live YouTube key unless it is run in dry-run mode.
 

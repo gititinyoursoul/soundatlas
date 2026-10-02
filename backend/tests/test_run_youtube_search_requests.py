@@ -13,6 +13,28 @@ from scripts.run_youtube_search_requests import (
 )
 
 
+@pytest.mark.parametrize("kind", ["directory", "invalid-text"])
+def test_cli_handles_invalid_credentials_without_provider_call(
+    tmp_path: Path, monkeypatch, capsys, kind: str,
+) -> None:
+    selected = tmp_path / "application.env"
+    if kind == "directory":
+        selected.mkdir()
+    else:
+        selected.write_bytes(b"YOUTUBE_API_KEY=do-not-print\xff")
+    monkeypatch.setenv("SOUNDATLAS_ENV_FILE", str(selected))
+
+    def unexpected_request(*args, **kwargs):
+        pytest.fail("Invalid credentials must fail before a provider call")
+
+    monkeypatch.setattr(run_youtube_search_requests, "request_json", unexpected_request)
+    assert main(["--dry-run"]) == 2
+    captured = capsys.readouterr()
+    assert "Application credential file" in captured.err
+    assert "do-not-print" not in captured.err
+    assert "Traceback" not in captured.err
+
+
 def test_run_request_plan_injects_key_and_writes_redacted_results() -> None:
     captured_params = []
 

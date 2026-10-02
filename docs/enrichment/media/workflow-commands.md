@@ -85,13 +85,16 @@ If this fails, fix the request plan JSON first.
 
 ## 4. Run The Live YouTube Search
 
-Live search requires a real `YOUTUBE_API_KEY` configured through `SOUNDATLAS_ENV_FILE`.
+Live search requires `YOUTUBE_API_KEY` and `SOUNDATLAS_USE_DUMMY_SERVICES=false`
+in the external application file. Export `SOUNDATLAS_SECRETS_DIR` to select its
+`.env`, or use `SOUNDATLAS_ENV_FILE` for an explicit file override. See the
+[credential guide](../../development-credentials.md); no GitHub token is needed.
 
 Example:
 
 ```powershell
 cd backend
-$env:SOUNDATLAS_ENV_FILE='C:\Users\*\secrets\soundatlas\.env'
+$env:SOUNDATLAS_SECRETS_DIR='C:\external\secrets\soundatlas' # replace with your absolute path
 uv run python scripts/run_youtube_search_requests.py --event-id kool-herc-back-to-school-jam
 ```
 
@@ -203,7 +206,7 @@ Run all live YouTube searches:
 
 ```powershell
 cd backend
-$env:SOUNDATLAS_ENV_FILE='C:\Users\*\secrets\soundatlas\.env'
+$env:SOUNDATLAS_SECRETS_DIR='C:\external\secrets\soundatlas' # replace with your absolute path
 uv run python scripts/run_youtube_search_requests.py
 ```
 

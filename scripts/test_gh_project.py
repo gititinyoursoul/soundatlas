@@ -181,6 +181,50 @@ class GhProjectTests(unittest.TestCase):
                 with self.assertRaises(MODULE.ProjectCredentialError):
                     MODULE.read_project_token(path)
 
+    def test_application_root_and_repository_token_cannot_select_project_auth(self):
+        with tempfile.TemporaryDirectory() as directory:
+            self.credential_file(directory, "GH_TOKEN=dummy-project-token\n")
+            with self.assertRaisesRegex(MODULE.ProjectCredentialError, "not configured"):
+                MODULE.project_environment({
+                    "SOUNDATLAS_SECRETS_DIR": directory,
+                    "GH_TOKEN": "dummy-repository-token",
+                    "GITHUB_TOKEN": "dummy-fallback-token",
+                })
+
+    def test_explicit_project_path_is_independent_of_application_root(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = self.credential_file(directory, "GH_TOKEN=dummy-project-token\n")
+            result = MODULE.project_environment({
+                MODULE.PROJECT_ENV_PATH: str(path),
+                "SOUNDATLAS_SECRETS_DIR": "nonexistent-application-store",
+            })
+            self.assertEqual(result["GH_TOKEN"], "dummy-project-token")
+
+    def test_invalid_project_files_fail_before_gh_without_exposing_contents(self):
+        for kind in ("missing", "directory", "invalid-text", "unreadable"):
+            with self.subTest(kind=kind), tempfile.TemporaryDirectory() as directory:
+                path = Path(directory) / "project.env"
+                if kind == "directory":
+                    path.mkdir()
+                elif kind in ("invalid-text", "unreadable"):
+                    path.write_bytes(b"GH_TOKEN=do-not-print\xff")
+                with contextlib.ExitStack() as stack:
+                    if kind == "unreadable":
+                        stack.enter_context(mock.patch.object(
+                            Path, "read_text", side_effect=PermissionError("do-not-print"),
+                        ))
+                    stack.enter_context(mock.patch.dict(MODULE.os.environ, {
+                        MODULE.PROJECT_ENV_PATH: str(path),
+                        "GH_TOKEN": "dummy-repository-token",
+                    }, clear=True))
+                    run = stack.enter_context(mock.patch.object(MODULE.subprocess, "run"))
+                    error = stack.enter_context(contextlib.redirect_stderr(io.StringIO()))
+                    result = MODULE.main(["list"])
+                self.assertEqual(result, 1)
+                self.assertIn("readable regular UTF-8 file", error.getvalue())
+                self.assertNotIn("do-not-print", error.getvalue())
+                run.assert_not_called()
+
 
 if __name__ == "__main__":
     unittest.main()

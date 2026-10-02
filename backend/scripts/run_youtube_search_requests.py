@@ -71,8 +71,9 @@ def main(argv: list[str] | None = None) -> int:
 
     if not args.dry_run and not settings.has_live_youtube_credentials:
         print(
-            "No live YouTube credentials found. Set SOUNDATLAS_ENV_FILE with "
-            "YOUTUBE_API_KEY and SOUNDATLAS_USE_DUMMY_SERVICES=false.",
+            "No live YouTube credentials found. Select an external file with "
+            "SOUNDATLAS_ENV_FILE or a directory containing .env with SOUNDATLAS_SECRETS_DIR; "
+            "configure YOUTUBE_API_KEY and SOUNDATLAS_USE_DUMMY_SERVICES=false.",
             file=sys.stderr,
         )
         return 2

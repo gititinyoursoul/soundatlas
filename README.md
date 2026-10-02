@@ -20,7 +20,10 @@ Deployed page: [gititinyoursoul.github.io/soundatlas](https://gititinyoursoul.gi
 
 ## Quick Start
 
-Choose one of the two supported development paths.
+Development targets are the host and Pane. Host commands are available below;
+Pane integration still has the dependencies described in the
+[development credential guide](docs/development-credentials.md).
+Normal application startup and validation require no GitHub credentials.
 
 ### Local development
 
@@ -80,37 +83,17 @@ is available at `http://127.0.0.1:8000/health`. See
 [`docs/local-development.md`](docs/local-development.md) for checks and
 troubleshooting.
 
-### Dev Container
+### Pane
 
-Use this path for a reproducible SoundAtlas workspace, with optional VS Code
-integration. Docker Compose and the external application env file must be available; see the
-[`Dev Container documentation`](docs/dev-container.md) for those prerequisites.
+Pane owns agent repository authentication through its GitHub App. SoundAtlas
+application credentials and the operator's Project Tracker PAT remain separate;
+see the [credential guide](docs/development-credentials.md) for the individual-file
+delivery contract and current integration limitations.
 
-In VS Code, open the repository and run `Dev Containers: Reopen in Container`
-from the Command Palette. Then run the explicit project setup in its terminal:
-
-```sh
-cd /workspace
-sh .devcontainer/setup-workspace.sh
-```
-
-For a CLI workspace, run from the repository root:
-
-```sh
-docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontainer.yml up -d --build workspace
-docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontainer.yml exec --user soundatlas workspace sh .devcontainer/setup-workspace.sh
-docker compose -f docker-compose.yml -f .devcontainer/docker-compose.devcontainer.yml exec --user soundatlas workspace bash
-```
-
-The workspace commands intentionally run as the non-root `soundatlas` user.
-Keep setup and development commands under that same container user so shared
-dependency volumes do not become owned by `root`.
-Run setup before development or validation and repeat it after dependency lockfile
-changes. Codex and GitHub credentials are not required; GitHub CLI remains an
-optional developer tool.
-
-The full service, secret, volume, and troubleshooting details remain in
-[`docs/dev-container.md`](docs/dev-container.md).
+Standalone devcontainer development is no longer supported. Its files remain
+because the current Pane broker still selects their Compose declaration.
+[Legacy workspace documentation](docs/dev-container.md) records that setup;
+[issue #270](https://github.com/gititinyoursoul/soundatlas/issues/270) owns its migration.
 
 ## Build and deployment
 

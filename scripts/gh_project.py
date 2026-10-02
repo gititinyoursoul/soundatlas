@@ -65,9 +65,15 @@ class ProjectCredentialError(RuntimeError):
 def read_project_token(path: Path) -> str:
     """Read one non-empty GH_TOKEN assignment without evaluating shell code."""
     try:
+        if not path.is_file():
+            raise ProjectCredentialError(
+                "Project credential file must be a readable regular UTF-8 file"
+            )
         lines = path.read_text(encoding="utf-8").splitlines()
-    except OSError as exc:
-        raise ProjectCredentialError("Project credential file is not readable") from exc
+    except (OSError, UnicodeError, ValueError):
+        raise ProjectCredentialError(
+            "Project credential file must be a readable regular UTF-8 file"
+        ) from None
     assignments = []
     for line in lines:
         if not line or line.startswith("#"):

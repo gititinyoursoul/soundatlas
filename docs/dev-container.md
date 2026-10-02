@@ -1,5 +1,13 @@
 # Dev Container And Workspace Setup
 
+> **Legacy setup — standalone devcontainer development is unsupported.**
+> Use the [current development credential guide](development-credentials.md)
+> for host and Pane ownership and delivery requirements. The operational content
+> below describes the retained workspace, not a supported developer target.
+> The current Pane broker still selects its Compose declaration; dropping support
+> does not remove that dependency. Workspace migration belongs to
+> [#270](https://github.com/gititinyoursoul/soundatlas/issues/270).
+
 This document describes SoundAtlas' normal containerized development setup. It
 uses the root `docker-compose.yml` and `.devcontainer/docker-compose.devcontainer.yml`.
 VS Code integration is optional; `.devcontainer/devcontainer.json` attaches VS
