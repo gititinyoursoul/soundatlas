@@ -1,9 +1,11 @@
 # Development credentials
 
-Host and Pane are the development targets. Standalone devcontainer development
-is unsupported; its retained files still participate in current Pane project
-selection. Host consumer configuration is described below. Full Pane delivery
-remains dependent on the integration work listed at the end.
+Host development and the backend/frontend Compose dev containers are supported.
+The former workspace/devcontainer setup is retired. Host consumer configuration
+is described below; component containers accept an individual application file
+as documented in [local development](local-development.md#optional-provider-tasks).
+Pane delivery remains separate and dependent on the integration work listed at
+the end.
 
 Normal application startup, setup and validation require no GitHub credentials.
 Live YouTube enrichment needs a provider key; offline/dry-run work does not.
@@ -108,12 +110,12 @@ the access boundary; a file mount does not isolate arbitrary same-user processes
 Source evidence from Runtime revision
 `3cae0988ee70ecc3bfd54304fb724b21b1de9993`, recorded in
 [#269's Plan](https://github.com/gititinyoursoul/soundatlas/issues/269#issuecomment-5962011423),
-establishes these current limitations:
+recorded the following integration limitations:
 
-- The broker selects the Compose declaration in `.devcontainer/devcontainer.json`
-  before root Compose discovery. Removing standalone support does not retire
-  those files. [#270](https://github.com/gititinyoursoul/soundatlas/issues/270)
-  owns workspace migration and needs its own approved implementation scope.
+- Historically, the broker selected the former devcontainer declaration before
+  root Compose discovery. [#270](https://github.com/gititinyoursoul/soundatlas/issues/270)
+  retires that SoundAtlas setup independently of Pane compatibility. This is not
+  evidence that the external broker has been adapted or its integration verified.
 - External attachment requires exact service/source/destination approval and
   protected host interpolation inputs. Project `.env` and `env_file` loading
   are unsupported. No approved replacement project route is claimed here.

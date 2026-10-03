@@ -90,10 +90,10 @@ application credentials and the operator's Project Tracker PAT remain separate;
 see the [credential guide](docs/development-credentials.md) for the individual-file
 delivery contract and current integration limitations.
 
-Standalone devcontainer development is no longer supported. Its files remain
-because the current Pane broker still selects their Compose declaration.
-[Legacy workspace documentation](docs/dev-container.md) records that setup;
-[issue #270](https://github.com/gititinyoursoul/soundatlas/issues/270) owns its migration.
+Container development uses the backend and frontend dev images in root Compose;
+see [local development](docs/local-development.md).
+The former workspace/devcontainer setup is retired. Pane integration is separate
+from this SoundAtlas setup.
 
 ## Build and deployment
 
@@ -137,5 +137,5 @@ repository components and their boundaries. The top-level areas are:
 - Architecture: `docs/architecture/README.md`
 - Planned agent work: GitHub Issues
 - Local development: `docs/local-development.md`
-- Dev container workflow: `docs/dev-container.md`
+- Component-container workflow: `docs/local-development.md`
 - GitHub Issue workflow: `docs/github-issue-workflow.md`

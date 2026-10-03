@@ -1,10 +1,9 @@
-# Keep the repository normalized to LF across Linux/devcontainer and Windows workspaces.
+# Keep the repository normalized to LF across Linux containers and Windows workspaces.
 # Docker, shell, Python, TypeScript, JSON, Markdown, and config files should not churn
 # between LF and CRLF when different environments touch them.
 * text=auto eol=lf
 
 *.sh text eol=lf
-.devcontainer/bashrc text eol=lf
 
 # Windows command scripts may use CRLF because they are executed by Windows shells.
 *.bat text eol=crlf

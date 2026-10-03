@@ -3,6 +3,7 @@ services:
     build:
       context: .
       dockerfile: backend/Dockerfile
+      target: dev
     init: true
     cap_add:
       - NET_ADMIN
@@ -10,7 +11,7 @@ services:
       - no-new-privileges:true
     environment:
       SOUNDATLAS_EGRESS_GUARD: enabled
-      SOUNDATLAS_WRITABLE_PATHS: /opt/soundatlas/backend/.venv /workspace/backend/.pytest_cache /home/soundatlas/.cache/uv
+      SOUNDATLAS_WRITABLE_PATHS: /workspace/backend/.pytest_cache /workspace/backend/.ruff_cache /home/soundatlas/.cache/uv
     volumes:
       - type: bind
         source: ./backend
@@ -52,6 +53,7 @@ services:
     build:
       context: .
       dockerfile: frontend/Dockerfile
+      target: dev
     init: true
     cap_add:
       - NET_ADMIN
@@ -62,13 +64,22 @@ services:
         condition: service_healthy
     environment:
       SOUNDATLAS_EGRESS_GUARD: enabled
-      SOUNDATLAS_WRITABLE_PATHS: /workspace/frontend/node_modules /home/soundatlas/.npm
+      SOUNDATLAS_WRITABLE_PATHS: /workspace/frontend/node_modules /workspace/frontend/.svelte-kit /workspace/frontend/build /workspace/frontend/static/soundatlas-data /workspace/frontend/screenshots /home/soundatlas/.npm
+      SOUNDATLAS_ALLOWED_OUTBOUND_DESTINATIONS: "backend:8000"
       HOST: 0.0.0.0
       VITE_API_BASE_URL: http://localhost:8000
     volumes:
       - type: bind
         source: ./frontend
         target: /workspace/frontend
+      - type: bind
+        source: ./data/seed
+        target: /workspace/data/seed
+        read_only: true
+      - type: bind
+        source: ./docs/content/routes
+        target: /workspace/docs/content/routes
+        read_only: true
       - frontend_node_modules:/workspace/frontend/node_modules
       - frontend_npm_cache:/home/soundatlas/.npm
     ports:

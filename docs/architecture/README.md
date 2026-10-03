@@ -35,7 +35,7 @@ current behavior.
 
 - Product and MVP decisions: [`../mvp-concept.md`](../mvp-concept.md)
 - Seed structure and validation: [`../data/seed-data-structure.md`](../data/seed-data-structure.md), [`../data/seed-data-validation.md`](../data/seed-data-validation.md)
-- Development environment: [`../dev-container.md`](../dev-container.md)
+- Development environment: [`../local-development.md`](../local-development.md)
 - Current frontend design: [`../design/current-frontend-design.md`](../design/current-frontend-design.md)
 - Workflow and Issue planning: [`../workflow-registry.md`](../workflow-registry.md), [`../github-issue-workflow.md`](../github-issue-workflow.md)
 

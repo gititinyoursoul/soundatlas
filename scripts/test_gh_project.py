@@ -9,7 +9,6 @@ from pathlib import Path
 from unittest import mock
 
 SCRIPT = Path(__file__).with_name("gh_project.py")
-BASHRC = SCRIPT.parent.parent / ".devcontainer" / "bashrc"
 SPEC = importlib.util.spec_from_file_location("gh_project", SCRIPT)
 assert SPEC and SPEC.loader
 MODULE = importlib.util.module_from_spec(SPEC)
@@ -21,30 +20,6 @@ class GhProjectTests(unittest.TestCase):
         path = Path(directory) / "github-project-agent.env"
         path.write_text(content, encoding="utf-8")
         return path
-
-    def shell_token(self, path: Path, ambient_token: str | None = None) -> str:
-        environ = {
-            "HOME": os.environ.get("HOME", "/tmp"),
-            "PATH": os.environ["PATH"],
-            "SOUNDATLAS_GITHUB_AGENT_ENV_FILE": str(path),
-        }
-        if ambient_token is not None:
-            environ["GH_TOKEN"] = ambient_token
-        result = subprocess.run(
-            [
-                "bash",
-                "--noprofile",
-                "--rcfile",
-                str(BASHRC),
-                "-ic",
-                'printf "%s" "$GH_TOKEN"',
-            ],
-            env=environ,
-            capture_output=True,
-            text=True,
-            check=True,
-        )
-        return result.stdout
 
     def test_project_environment_replaces_ambient_github_tokens(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -61,23 +36,6 @@ class GhProjectTests(unittest.TestCase):
         self.assertEqual(result["GH_TOKEN"], "project-token")
         self.assertNotIn("GITHUB_TOKEN", result)
         self.assertEqual(result["UNCHANGED"], "value")
-
-    def test_new_shell_does_not_import_repository_credential(self):
-        with tempfile.TemporaryDirectory() as directory:
-            path = self.credential_file(directory, "GH_TOKEN=first-dummy-token\n")
-            first = self.shell_token(path)
-            path.write_text("GH_TOKEN=second-dummy-token\n", encoding="utf-8")
-            second = self.shell_token(path)
-
-        self.assertEqual(first, "")
-        self.assertEqual(second, "")
-
-    def test_explicit_repository_token_override_wins(self):
-        with tempfile.TemporaryDirectory() as directory:
-            path = self.credential_file(directory, "GH_TOKEN=mounted-dummy-token\n")
-            result = self.shell_token(path, ambient_token="explicit-dummy-token")
-
-        self.assertEqual(result, "explicit-dummy-token")
 
     def test_project_graphql_replaces_auth_and_redacts_failures(self):
         with tempfile.TemporaryDirectory() as directory:

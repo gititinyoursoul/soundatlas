@@ -1,6 +1,10 @@
 # syntax=docker/dockerfile:1
 
-FROM ghcr.io/astral-sh/uv:python3.13-bookworm-slim
+FROM node:24.11.1-bookworm-slim AS node
+FROM ghcr.io/astral-sh/uv:python3.13-bookworm-slim AS dev
+
+# Pyright's Python entrypoint requires Node; avoid a runtime nodeenv download.
+COPY --from=node /usr/local/bin/node /usr/local/bin/node
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
@@ -22,7 +26,7 @@ RUN groupadd --gid 10001 soundatlas \
 WORKDIR /workspace/backend
 
 COPY backend/pyproject.toml backend/uv.lock backend/README.md ./
-RUN uv sync --frozen
+RUN uv sync --locked --dev
 
 COPY docker/egress-guard.sh /usr/local/bin/egress-guard
 RUN chmod 0755 /usr/local/bin/egress-guard

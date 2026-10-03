@@ -1,8 +1,9 @@
 # syntax=docker/dockerfile:1
 
-FROM node:24.11.1-bookworm-slim
+FROM node:24.11.1-bookworm-slim AS dev
 
-ENV NODE_ENV=development
+ENV NODE_ENV=development \
+    PLAYWRIGHT_BROWSERS_PATH=/opt/playwright
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -18,11 +19,14 @@ WORKDIR /workspace/frontend
 
 COPY frontend/package.json frontend/package-lock.json ./
 RUN npm ci
+RUN npx --no-install playwright install --with-deps chromium
 
 COPY docker/egress-guard.sh /usr/local/bin/egress-guard
 RUN chmod 0755 /usr/local/bin/egress-guard
 
 COPY frontend/ ./
+COPY data/seed/ /workspace/data/seed/
+COPY docs/content/routes/ /workspace/docs/content/routes/
 RUN chown -R soundatlas:soundatlas /workspace /home/soundatlas
 
 ENTRYPOINT ["egress-guard"]

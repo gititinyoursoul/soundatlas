@@ -50,4 +50,4 @@ rules remain authoritative in [`../mvp-concept.md`](../mvp-concept.md).
 - [Seed data structure](../data/seed-data-structure.md)
 - [Current frontend design](../design/current-frontend-design.md)
 - [Desktop UI guide](../design/desktop-ui-guide.md)
-- [Development container](../dev-container.md)
+- [Local development](../local-development.md)
