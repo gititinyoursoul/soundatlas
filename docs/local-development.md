@@ -28,7 +28,21 @@ GitHub Pages deployment is unchanged.
 Source edits are bind-mounted. Frontend seed and editorial inputs are mounted
 read-only; generated data, build output and screenshots remain in ignored
 frontend directories. Backend data/content mounts remain writable for existing
-editorial operations. Container processes and validation run as `soundatlas`.
+editorial operations. Container startup, application processes and ordinary
+Compose exec commands run as `soundatlas` (UID/GID 10001), with all capabilities
+dropped and `no-new-privileges` enabled. The backend/frontend containers use
+normal Docker Compose outbound networking. The Pane Runtime firewall applies to
+the Runtime, not these containers or broker `project exec` commands. The Broker
+still restricts Docker authority, mounts and other container settings.
+
+The source bind mounts must let UID/GID 10001 write backend `.pytest_cache` and
+`.ruff_cache`, and frontend `.svelte-kit`, `build`, `static/soundatlas-data` and
+`screenshots`. The `backend_uv_cache`, `frontend_node_modules` and
+`frontend_npm_cache` named volumes must also be writable by UID/GID 10001.
+Image ownership prepares fresh named volumes; bind mounts use host-checkout
+ownership instead. Check permissions when using a new checkout. Retained volumes
+keep their contents across recreation. Report incompatible ownership rather
+than changing host permissions or deleting volumes as incidental repair.
 
 ### Component checks and dependency refresh
 
@@ -65,19 +79,13 @@ commands.
 
 The normal Vite server uses `http://localhost:8000` for a browser on the host.
 A browser inside the frontend container instead needs `http://backend:8000`.
-The egress guard allows that exact destination while retaining the existing
-private-network restrictions. It resolves the backend address at frontend
-startup. After recreating the backend, wait for health and restart the frontend
-to refresh the rule:
-
-```sh
-docker compose up -d --force-recreate --wait backend
-docker compose restart frontend
-```
+Docker Compose service discovery lets the frontend reach `backend:8000` inside
+the project network. After recreating the backend, wait for health before a
+browser check; no firewall destination rule needs refreshing.
 
 For a dedicated browser check, stop the normal frontend and open a one-off
 frontend container with its normal command replaced by a shell. The image
-entrypoint applies the same egress policy and drops to `soundatlas`. This avoids
+container starts directly as `soundatlas`. This avoids
 simultaneous Vite/build writers in the shared source directory:
 
 ```sh

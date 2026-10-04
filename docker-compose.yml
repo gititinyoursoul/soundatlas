@@ -5,13 +5,11 @@ services:
       dockerfile: backend/Dockerfile
       target: dev
     init: true
-    cap_add:
-      - NET_ADMIN
+    user: "10001:10001"
+    cap_drop:
+      - ALL
     security_opt:
       - no-new-privileges:true
-    environment:
-      SOUNDATLAS_EGRESS_GUARD: enabled
-      SOUNDATLAS_WRITABLE_PATHS: /workspace/backend/.pytest_cache /workspace/backend/.ruff_cache /home/soundatlas/.cache/uv
     volumes:
       - type: bind
         source: ./backend
@@ -55,17 +53,15 @@ services:
       dockerfile: frontend/Dockerfile
       target: dev
     init: true
-    cap_add:
-      - NET_ADMIN
+    user: "10001:10001"
+    cap_drop:
+      - ALL
     security_opt:
       - no-new-privileges:true
     depends_on:
       backend:
         condition: service_healthy
     environment:
-      SOUNDATLAS_EGRESS_GUARD: enabled
-      SOUNDATLAS_WRITABLE_PATHS: /workspace/frontend/node_modules /workspace/frontend/.svelte-kit /workspace/frontend/build /workspace/frontend/static/soundatlas-data /workspace/frontend/screenshots /home/soundatlas/.npm
-      SOUNDATLAS_ALLOWED_OUTBOUND_DESTINATIONS: "backend:8000"
       HOST: 0.0.0.0
       VITE_API_BASE_URL: http://localhost:8000
     volumes:

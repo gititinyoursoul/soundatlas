@@ -16,23 +16,19 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         ca-certificates \
         curl \
-        gosu \
-        iptables \
     && rm -rf /var/lib/apt/lists/*
 
 RUN groupadd --gid 10001 soundatlas \
-    && useradd --uid 10001 --gid soundatlas --create-home --shell /bin/sh soundatlas
+    && useradd --uid 10001 --gid soundatlas --create-home --shell /bin/sh soundatlas \
+    && mkdir -p /home/soundatlas/.cache/uv
 
 WORKDIR /workspace/backend
 
 COPY backend/pyproject.toml backend/uv.lock backend/README.md ./
 RUN uv sync --locked --dev
 
-COPY docker/egress-guard.sh /usr/local/bin/egress-guard
-RUN chmod 0755 /usr/local/bin/egress-guard
-
 COPY backend/ ./
 RUN chown -R soundatlas:soundatlas /workspace /opt/soundatlas /home/soundatlas
 
-ENTRYPOINT ["egress-guard"]
+USER 10001:10001
 CMD ["uvicorn", "app.main:app", "--reload", "--host", "0.0.0.0", "--port", "8000"]
