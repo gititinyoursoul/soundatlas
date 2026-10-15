@@ -6,6 +6,7 @@ from app.media_enrichment.quality_report import (
     build_quality_report,
     compare_quality_reports,
 )
+from app.media_enrichment.services import MediaProviderError
 from scripts import report_enrichment_quality
 
 
@@ -158,6 +159,121 @@ def test_image_quality_report_counts_types_rights_and_compares_to_seed(
         "open_license": 0,
         "unknown": 1,
     }
+
+
+def test_media_cli_text_compares_to_saved_report(tmp_path: Path, monkeypatch, capsys) -> None:
+    event = build_event()
+    route = build_route()
+    place = build_place()
+    events_path, routes_path, places_path = write_seed_files(
+        tmp_path, events_payload={"events": [event]}
+    )
+    results_dir = tmp_path / "youtube-results"
+    results_dir.mkdir()
+    (results_dir / f"{event['id']}.json").write_text(
+        json.dumps(build_youtube_result_payload()), encoding="utf-8"
+    )
+    baseline = build_quality_report(
+        kind="media",
+        events=[event],
+        routes_by_id={route["id"]: route},
+        places_by_id={place["id"]: place},
+        raw_candidates_by_event_id={},
+    )
+    baseline_path = tmp_path / "baseline.json"
+    baseline_path.write_text(json.dumps(baseline), encoding="utf-8")
+
+    monkeypatch.setattr(report_enrichment_quality, "EVENTS_PATH", events_path)
+    monkeypatch.setattr(report_enrichment_quality, "ROUTES_PATH", routes_path)
+    monkeypatch.setattr(report_enrichment_quality, "PLACES_PATH", places_path)
+    exit_code = report_enrichment_quality.main(
+        [
+            "--kind", "media", "--results-dir", str(results_dir),
+            "--compare-to", str(baseline_path),
+        ]
+    )
+
+    output = capsys.readouterr()
+    assert exit_code == 0
+    assert output.err == ""
+    assert "Enrichment quality report: media" in output.out
+    assert "Note: media reports read saved YouTube result files" in output.out
+    assert "raw candidates: 5" in output.out
+    assert f"Comparison baseline: {baseline_path}" in output.out
+    assert "delta candidates: +3" in output.out
+    assert f"{event['id']}: 0 -> 3 (+3)" in output.out
+
+
+def test_image_cli_text_renders_rights_warnings_and_seed_comparison(
+    tmp_path: Path, monkeypatch, capsys
+) -> None:
+    events_path, routes_path, places_path = write_seed_files(
+        tmp_path, events_payload={"events": [build_event()]}
+    )
+    monkeypatch.setattr(report_enrichment_quality, "EVENTS_PATH", events_path)
+    monkeypatch.setattr(report_enrichment_quality, "ROUTES_PATH", routes_path)
+    monkeypatch.setattr(report_enrichment_quality, "PLACES_PATH", places_path)
+    monkeypatch.setattr(report_enrichment_quality, "request_wikimedia_json", fake_wikimedia_request)
+
+    exit_code = report_enrichment_quality.main(
+        ["--kind", "image", "--baseline-from-seed"]
+    )
+
+    output = capsys.readouterr()
+    assert exit_code == 0
+    assert output.err == ""
+    assert "Enrichment quality report: image" in output.out
+    assert "rights counts: open_license=1, unknown=1" in output.out
+    assert "unknown_rights_status" in output.out
+    assert "Comparison baseline: seed_links" in output.out
+    assert "delta candidates: +2" in output.out
+    assert "Note: media reports" not in output.out
+
+
+def test_media_cli_rejects_invalid_limit_and_unknown_event(
+    tmp_path: Path, monkeypatch, capsys
+) -> None:
+    assert report_enrichment_quality.main(["--kind", "media", "--limit", "0"]) == 2
+    invalid_limit = capsys.readouterr()
+    assert invalid_limit.out == ""
+    assert "--limit must be at least 1" in invalid_limit.err
+
+    events_path, routes_path, places_path = write_seed_files(
+        tmp_path, events_payload={"events": [build_event()]}
+    )
+    monkeypatch.setattr(report_enrichment_quality, "EVENTS_PATH", events_path)
+    monkeypatch.setattr(report_enrichment_quality, "ROUTES_PATH", routes_path)
+    monkeypatch.setattr(report_enrichment_quality, "PLACES_PATH", places_path)
+    assert report_enrichment_quality.main(
+        ["--kind", "media", "--event-id", "missing-event"]
+    ) == 2
+    unknown_event = capsys.readouterr()
+    assert unknown_event.out == ""
+    assert "No event found for --event-id 'missing-event'" in unknown_event.err
+
+
+def test_image_cli_reports_provider_failure_without_live_request(
+    tmp_path: Path, monkeypatch, capsys
+) -> None:
+    events_path, routes_path, places_path = write_seed_files(
+        tmp_path, events_payload={"events": [build_event()]}
+    )
+    monkeypatch.setattr(report_enrichment_quality, "EVENTS_PATH", events_path)
+    monkeypatch.setattr(report_enrichment_quality, "ROUTES_PATH", routes_path)
+    monkeypatch.setattr(report_enrichment_quality, "PLACES_PATH", places_path)
+
+    def fail_request(url: str, params: dict[str, str] | None = None) -> dict[str, Any]:
+        raise MediaProviderError("fixture provider failure")
+
+    monkeypatch.setattr(report_enrichment_quality, "request_wikimedia_json", fail_request)
+    exit_code = report_enrichment_quality.main(["--kind", "image", "--json"])
+
+    output = capsys.readouterr()
+    report = json.loads(output.out)
+    assert exit_code == 0
+    assert "Warning: Wikimedia quality report failed" in output.err
+    assert report["kind"] == "image"
+    assert report["events"][0]["raw_candidate_count"] == 0
 
 
 def test_compare_quality_reports_highlights_type_quality_deltas() -> None:
