@@ -73,4 +73,46 @@ describe('NavigationDrawer mode labels', () => {
     expect(body).toContain('Routes to review');
     expect(body).not.toContain('Route review');
   });
+
+  it('shows a current reader route publicly and a current review revision editorially', () => {
+    const route = makeRoute({
+      id: 'birth-of-hip-hop',
+      title: 'Birth of Hip-Hop',
+      year_start: 1970,
+      year_end: 1985
+    });
+    const publicView = render(NavigationDrawer, {
+      props: {
+        open: true,
+        showAdminReview: false,
+        routes: [route],
+        selectedRouteId: route.id,
+        selectedRouteContext: 'reader'
+      }
+    });
+    const editorialView = render(NavigationDrawer, {
+      props: {
+        open: true,
+        showEditorialReview: true,
+        enableEditorialActions: false,
+        routes: [route],
+        reviewRoutes: [route],
+        selectedRouteId: route.id,
+        selectedRouteContext: 'review'
+      }
+    });
+
+    expect(publicView.body).toContain('Birth of Hip-Hop');
+    expect(publicView.body).toContain('1970-1985');
+    expect(publicView.body).toContain('aria-current="page"');
+    expect(publicView.body).not.toContain('Routes to review');
+
+    expect(editorialView.body).toContain('Routes to review');
+    expect(editorialView.body).toContain('Current review revision');
+    const currentRoute = editorialView.body.match(
+      /<button[^>]*aria-current="page"[^>]*>[\s\S]*?<\/button>/g
+    );
+    expect(currentRoute).toHaveLength(1);
+    expect(currentRoute?.[0]).toContain('Current review revision');
+  });
 });
