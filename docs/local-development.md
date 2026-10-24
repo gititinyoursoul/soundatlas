@@ -242,9 +242,10 @@ A project name alone does not isolate source mounts or `.svelte-kit`. Run build
 and browser phases sequentially. Verify changed-backend-IP recovery in this
 isolated project: recreate the backend on a different address using a temporary
 network override, wait for health, restart the frontend and repeat API smoke.
-Record old/new addresses and the refreshed destination rule. Reusing the same
-IP proves recreation only, not changed-address recovery. Preserve user-owned
-containers and volumes; stop only the validation resources you created.
+Record old/new addresses; no project firewall destination rule is maintained.
+Reusing the same IP proves recreation only, not changed-address recovery.
+Preserve user-owned containers and volumes; stop only the validation resources
+you created.
 
 ## Prerequisites
 
