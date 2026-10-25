@@ -37,10 +37,15 @@ class WorkflowMigrationCheckTests(unittest.TestCase):
         return root
 
     def test_valid_contract_and_theme(self) -> None:
-        self.assertEqual(find_errors(self.make_root(), 247), [])
+        root = self.make_root()
+        for theme in (247, 248, 249, 250, 251):
+            with self.subTest(theme=theme):
+                self.assertEqual(find_errors(root, theme), [])
 
     def test_unsupported_theme_is_rejected(self) -> None:
-        self.assertTrue(validate_supported_theme(246))
+        for theme in (246, 252, 281):
+            with self.subTest(theme=theme):
+                self.assertTrue(validate_supported_theme(theme))
         self.assertEqual(validate_supported_theme(251), [])
 
     def test_missing_output_marker_is_reported(self) -> None:

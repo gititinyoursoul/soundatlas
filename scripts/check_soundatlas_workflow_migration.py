@@ -24,8 +24,7 @@ REQUIRED_MARKERS = (
     "#246 composition contract",
     "#202 representative-evaluation handoff",
     "Issue #203 owns removal",
-    "Local Pane plans",
-    "separate Pane capability ticket",
+    "Local runtime plans",
     "cannot authorize",
 )
 FORBIDDEN_PROCEDURE_HEADINGS = (
