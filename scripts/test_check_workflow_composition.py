@@ -6,6 +6,9 @@ from pathlib import Path
 
 from scripts.check_workflow_composition import (
     CONTRACT_HEADING,
+    DECISION_ENTRIES,
+    DECISION_OWNERS,
+    DECISION_ROUTE,
     EXPECTED_MARKERS,
     find_contract_errors,
 )
@@ -22,6 +25,11 @@ class WorkflowCompositionCheckTests(unittest.TestCase):
             lines = list(markers)
             if relative_path == Path("docs/workflow-registry.md"):
                 lines.insert(0, CONTRACT_HEADING)
+                lines.append("### Decision and planning composition")
+                lines.extend(
+                    f"| {entry} | fixture route |" for entry in DECISION_ENTRIES
+                )
+                lines.extend(f"`{owner}`" for owner in DECISION_OWNERS)
             target.write_text("\n".join(lines) + "\n", encoding="utf-8")
         return root
 
@@ -74,6 +82,60 @@ class WorkflowCompositionCheckTests(unittest.TestCase):
         errors = find_contract_errors(root)
 
         self.assertTrue(any(repr(missing) in error for error in errors))
+
+    def test_missing_decision_entry_is_reported(self) -> None:
+        for entry in DECISION_ENTRIES:
+            with self.subTest(entry=entry):
+                root = self.make_root()
+                registry = root / "docs/workflow-registry.md"
+                registry.write_text(
+                    registry.read_text(encoding="utf-8").replace(f"| {entry} |", ""),
+                    encoding="utf-8",
+                )
+                self.assertTrue(
+                    any(repr(entry) in error for error in find_contract_errors(root))
+                )
+
+    def test_missing_retained_owner_is_reported(self) -> None:
+        root = self.make_root()
+        (root / DECISION_OWNERS[0]).unlink()
+        self.assertTrue(
+            any(
+                str(DECISION_OWNERS[0]) in error for error in find_contract_errors(root)
+            )
+        )
+
+    def test_duplicate_decision_route_is_reported(self) -> None:
+        root = self.make_root()
+        skill = root / DECISION_OWNERS[0]
+        skill.write_text(DECISION_ROUTE + "\n" + DECISION_ROUTE, encoding="utf-8")
+        self.assertTrue(
+            any(
+                "duplicate decision/planning route" in error
+                for error in find_contract_errors(root)
+            )
+        )
+
+    def test_missing_decision_route_is_reported(self) -> None:
+        root = self.make_root()
+        (root / DECISION_OWNERS[0]).write_text("", encoding="utf-8")
+        self.assertTrue(
+            any(repr(DECISION_ROUTE) in error for error in find_contract_errors(root))
+        )
+
+    def test_unlinked_retained_owner_is_reported(self) -> None:
+        root = self.make_root()
+        registry = root / "docs/workflow-registry.md"
+        registry.write_text(
+            registry.read_text(encoding="utf-8").replace(f"`{DECISION_OWNERS[0]}`", ""),
+            encoding="utf-8",
+        )
+        self.assertTrue(
+            any(
+                "missing decision/planning owner" in error
+                for error in find_contract_errors(root)
+            )
+        )
 
 
 if __name__ == "__main__":

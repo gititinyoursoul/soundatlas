@@ -286,6 +286,65 @@ evaluates representative Pane and non-Pane behavior, and Issue #203 alone owns
 later retirement decisions. None may silently reclassify the accepted #200
 Inventory and Migration Map or make a temporary runner a competing authority.
 
+### Decision and planning composition
+
+Issue #247 consolidates these entrypoints; it does not complete generic
+planning migration. Use this section within the existing composition envelope,
+authority precedence, drift checks, and external-effect limits above. The
+accepted #200 atomic map remains unchanged. No entrypoint is retired.
+
+The entries below name delegated inputs and retained responsibilities without
+copying the selected Pane capability's procedure.
+
+| Entry | Route or retained owner | Bounded output / retained responsibility |
+| --- | --- | --- |
+| exploration | Pane `discussion` | Read-only repository/source exploration, factual comparison, contradictions and dependency findings; inputs to SoundAtlas judgment. |
+| defect investigation | Pane `investigate` | Evidence-led findings about broken behavior; no repair authority. |
+| fresh reader | Pane `cold-read` | A fresh reader's actual critique only; preserve identity, exact artifact/revision and provenance. |
+| retained critique | `.codex/skills/soundatlas-grill-me/SKILL.md` | Required context, source/contrary evidence and facts versus assumptions/gaps; phase/maturity/revalidation, current-state versus target, relevance before Materiality, review modes, clean continuation, one finding and Human pause at a time, Concept/Plan separation, drift/failure routing and completed-record/publication boundaries. GAP-1 remains open. |
+| retained synthesis | `.codex/skills/soundatlas-concept-work/SKILL.md` | Required authoritative inputs; Workflow 1–7, five-part confirmed Concept synthesis, supplied-Concept reuse, current versus target, Persistence, Planning boundary and Output. GAP-2 remains open; no verified replacement. |
+| canonical composer | `.codex/skills/soundatlas-issue-planning/SKILL.md` | Intake/maturity, Concept basis, write boundary, safe transport/readback, later matching Proceed/readiness, criteria history and combined report under `docs/github-issue-workflow.md`. GAP-3 remains open. |
+| unsupported planning | Existing Issue Planning step 4 | Breakdown/sequencing and prose assembly remain explicitly retained; `simple-plan` and `create-plan` have no verified available equivalent. |
+| unsupported drafting and review | Existing Issue Planning steps 3–9, step 5 and Planning Rules | Artifact drafting, completeness and validation selection remain explicitly retained; no verified generic canonical Issue-plan reviewer. |
+| canonical records | `docs/github-issue-workflow.md` | Issue Intake, Plan, Proceed, Grill-Me results, readiness evidence and Concept by default; one authoritative Concept document under `docs/` is allowed only with Human confirmation and an Issue link, without duplicate full content. Local Pane artifacts remain advisory. |
+| unavailable before invocation | Retained SoundAtlas / non-Pane route | Report the missing capability and use the ordinary route before delegation starts. |
+| failed delegation | Affected operation's authority and recovery owner | Stop the affected operation. Review what actually ran, side effects and applicable authority before recovery; do not automatically retry via another route and duplicate Human decisions or writes. |
+
+In Grill Me, only generic fact-finding/comparison and contradiction/dependency
+exploration from Required context, Review workflow step 2 and Shared checks
+move to these routes. In Concept Work, only generic source inspection in
+Required context moves. In Issue Planning, only factual exploration in step 2
+moves; its following semantic Grill-Me/Concept-revalidation checks remain.
+Other named retained sections keep their SoundAtlas responsibilities. Repeated
+lifecycle policy links to its owner instead of becoming another authority.
+
+Verify the installed `discussion`, `investigate` and `cold-read` identity,
+behavior and source digest before invocation. Only their read-only outputs are
+composed here; probes, dispatch suggestions and publication defaults add no
+authorization. `reality-check`, `simple-plan`, `create-plan` and `plan-reviewer`
+are unavailable in the inspected bundle; `create-ticket` has not been verified
+as a canonical Issue Plan replacement. Retention is not capability equivalence
+or gap closure. Return the concrete generic Issue-led planning/review gap to the
+owning Session for a separate capability ticket or verified-equivalent check;
+do not create a repository-local Pane fork.
+
+Without Pane, follow `AGENTS.md` → this registry →
+`docs/github-issue-workflow.md` → the current Issue and the retained skills
+above. Inspect the named sources using ordinary repository/GitHub tools,
+compose the same canonical records, run `python scripts/check_issue_readiness.py`
+against the current export with `--require-grill-review` when required, and
+follow the Issue's validation and stop conditions. No Pane installation,
+cached skill, Session state or local Plan is required. Unavailable-before-use
+and failed-after-start recovery remain distinct on either route.
+
+#202 owns representative clean/material/drift/failure, Concept-required and
+Concept-not-required, canonical Plan/Proceed and authorization-failure evidence
+for GAP-1..3. #247 supplies structural wiring and actual bounded-run evidence,
+not semantic parity. #203 alone owns retirement after accepted affected-row
+#202 evidence. Roll back through a reviewed corrective change restoring only
+this slice's prior skill/registry/checker hunks from its implementation parent;
+preserve Issue history, user work and the callable retained route.
+
 ## Skill, Prompt, and Source Boundary Policy
 
 This section is authoritative for repository-wide entrypoint selection and

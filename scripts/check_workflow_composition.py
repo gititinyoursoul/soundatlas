@@ -8,6 +8,30 @@ from pathlib import Path
 
 CONTRACT_HEADING = "## Pane–SoundAtlas Composition Contract"
 
+DECISION_ROUTE = "../../../docs/workflow-registry.md#decision-and-planning-composition"
+DECISION_ENTRIES = (
+    "exploration",
+    "defect investigation",
+    "fresh reader",
+    "retained critique",
+    "retained synthesis",
+    "canonical composer",
+    "unsupported planning",
+    "unsupported drafting and review",
+    "canonical records",
+    "unavailable before invocation",
+    "failed delegation",
+)
+DECISION_OWNERS = (
+    Path(".codex/skills/soundatlas-grill-me/SKILL.md"),
+    Path(".codex/skills/soundatlas-concept-work/SKILL.md"),
+    Path(".codex/skills/soundatlas-issue-planning/SKILL.md"),
+)
+DECISION_SOURCES = (
+    *DECISION_OWNERS,
+    Path(".codex/skills/soundatlas-workflow-migration/SKILL.md"),
+)
+
 EXPECTED_MARKERS: dict[Path, tuple[str, ...]] = {
     Path("AGENTS.md"): (
         "For Pane-composed work, apply the Pane–SoundAtlas composition contract",
@@ -26,6 +50,9 @@ EXPECTED_MARKERS: dict[Path, tuple[str, ...]] = {
         "Only the latest valid GitHub Issue Plan and its later matching",
     ),
 }
+
+for owner in DECISION_SOURCES:
+    EXPECTED_MARKERS[owner] = (DECISION_ROUTE,)
 
 
 def find_contract_errors(root: Path) -> list[str]:
@@ -51,6 +78,26 @@ def find_contract_errors(root: Path) -> list[str]:
                 f"{registry_path}: expected exactly one {CONTRACT_HEADING!r} "
                 f"heading, found {heading_count}"
             )
+
+        for entry in DECISION_ENTRIES:
+            if f"| {entry} |" not in registry:
+                errors.append(
+                    f"{registry_path}: missing decision/planning entry {entry!r}"
+                )
+        for owner in DECISION_OWNERS:
+            if f"`{owner}`" not in registry:
+                errors.append(
+                    f"{registry_path}: missing decision/planning owner {owner}"
+                )
+        heading = "### Decision and planning composition"
+        if registry.splitlines().count(heading) != 1:
+            errors.append(f"{registry_path}: expected one {heading!r} heading")
+
+    # Wiring only: no claim about semantics, Human authority or Pane equivalence.
+    for relative_path in DECISION_SOURCES:
+        text = contents.get(relative_path, "")
+        if text.count(DECISION_ROUTE) > 1:
+            errors.append(f"{relative_path}: duplicate decision/planning route")
 
     for relative_path, markers in EXPECTED_MARKERS.items():
         text = contents.get(relative_path)

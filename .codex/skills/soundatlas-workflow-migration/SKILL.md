@@ -38,7 +38,7 @@ The supported input is exactly one of these child Issues and its applicable
 
 | Issue | Migration theme | Generic procedure is delegated to Pane |
 | --- | --- | --- |
-| #247 | discussion, planning, and decision/planning entrypoints | `discussion`, `investigate`, `reality-check`, `create-plan`, `plan-reviewer` |
+| #247 | bounded decision/planning consolidation; see [decision/planning composition](../../../docs/workflow-registry.md#decision-and-planning-composition) | Verified inputs: `discussion`, `investigate`, `cold-read`; unsupported planning and SoundAtlas capabilities stay on the retained route |
 | #248 | implementation and review entrypoints | `implement`, `implementer`, `implementation-reviewer` |
 | #249 | deterministic test entrypoints | `smallest-test`, `pr-test-automation` |
 | #250 | commit and delivery entrypoints | `commit`, `handoff`, `prepare-pr` only where separately authorized |
