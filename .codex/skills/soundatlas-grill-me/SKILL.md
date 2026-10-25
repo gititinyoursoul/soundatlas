@@ -23,7 +23,11 @@ Inspect the smallest useful context before reviewing:
   contrary or historical evidence rather than only supporting examples; and
 - validation evidence and current-state documentation for implementation work.
 
-Do not ask the Human for facts that repository inspection can establish.
+Use the registry's [decision/planning composition](../../../docs/workflow-registry.md#decision-and-planning-composition)
+for the required factual exploration, defect investigation and independent
+critique capabilities. The runtime chooses how to fulfil them. SoundAtlas
+retains source/contrary-evidence obligations, stage and Materiality judgment,
+and Human decisions. GAP-1 remains open for #202 evaluation.
 
 ## Core boundary
 
@@ -88,9 +92,9 @@ or other technical design.
    its evidence-supported maturity, and the smallest applicable Review Mode.
    A declared role is not proof of readiness; do not infer maturity from the
    artifact's title, length, headings, or technical detail.
-2. Inspect relevant repository evidence before forming findings. Treat code and
-   Documentation as evidence of the current system, not proof that its design is
-   correct or should be preserved.
+2. Require the factual evidence described above; the runtime chooses the
+   inspection method. Treat code and Documentation as current-state evidence,
+   not proof of the accepted target.
 3. Separate observed facts, assumptions, solution hypotheses, `Unknown`,
    `Evidence Gap`, recommendations, and Human Decisions.
 4. Restate the candidate Concept in mechanism-neutral terms. If this cannot be
@@ -114,10 +118,9 @@ or other technical design.
 
 Apply only concerns that genuinely cross stages:
 
-- observed facts versus assumptions or hypotheses;
 - unclear outcomes, scope, non-goals, or Human Review boundaries;
-- contradictions, hidden dependencies, premature automation, or speculative
-  future scope;
+- current-stage consequences of the exploration findings, including premature
+  automation or speculative future scope;
 - editorial, Source, media, rights, historical-claim, security, privacy, or
   production-stability risk when relevant;
 - drift between the active artifact and its accepted upstream authority;

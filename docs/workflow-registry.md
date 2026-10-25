@@ -147,6 +147,46 @@ push rules live in
 requirement, workflow service, or broad clean-working-tree requirement;
 unrelated user-owned changes remain outside Issue delivery.
 
+## Decision and planning composition
+
+SoundAtlas defines the capabilities and evidence needed for correct work. The
+runtime discovers available capabilities and chooses tools, skills, agents,
+delegation and technical execution. These requirements apply independently of
+the runtime; this registry does not prescribe its selection or execution steps.
+
+| Entry | Required capability or SoundAtlas responsibility | Required outcome |
+| --- | --- | --- |
+| exploration | Factual repository/source exploration and comparison | Findings distinguish evidence, assumptions, contradictions and dependencies, including contrary evidence. |
+| defect investigation | Investigation of broken behavior | Evidence supports the observed cause and uncertainty; findings alone do not authorize repair. |
+| independent critique | Independent assessment when required | Findings identify the actual reviewer, reviewed artifact/revision and evidence limits; do not imply independence for self-review. |
+| retained critique | `.codex/skills/soundatlas-grill-me/SKILL.md` | SoundAtlas phase/maturity/revalidation, relevance before Materiality, current-state versus target, clean continuation, one finding and Human decision at a time, Concept/Plan separation and publication boundaries. |
+| retained synthesis | `.codex/skills/soundatlas-concept-work/SKILL.md` | Five-part Concept synthesis from confirmed decisions, conditional invocation, supplied-Concept reuse and clear authority. |
+| canonical composer | `.codex/skills/soundatlas-issue-planning/SKILL.md` | Intake/maturity, Concept basis, exact write boundary, transport/readback, later matching Proceed/readiness, criteria history and combined report. |
+| planning | Work breakdown, sequencing and prose assembly | A decision-complete Plan derived from accepted scope and confirmed target decisions. |
+| drafting and review | Artifact drafting, completeness and validation selection | Canonical records meet the lifecycle contract and identify missing evidence or unresolved decisions. |
+| canonical records | `docs/github-issue-workflow.md` | Issue records remain authoritative. A Concept may instead use one Human-confirmed document under `docs/`, linked without duplication. Local runtime artifacts are advisory. |
+| capability availability | Runtime reports unmet capability/evidence requirements | SoundAtlas does not infer the missing result or waive the affected authorization/readiness gate. |
+| execution evidence | Runtime reports performed actions, results and incomplete work | SoundAtlas accepts only supported completion claims; resumed work must still satisfy current authority and evidence requirements. |
+
+The runtime owns discovery, delegation, execution and recovery mechanics.
+SoundAtlas retains its domain rules, Human decisions, allowed effects and
+required validation; technical capability or successful delegation grants no
+additional authority. Missing capability before execution and incomplete work
+after execution must remain distinguishable in the returned evidence, without
+prescribing an alternate provider or retry procedure here.
+
+Use `AGENTS.md` → this registry → `docs/github-issue-workflow.md` → the current
+Issue and the retained skills above. Ordinary repository/GitHub tools can fulfil
+the same requirements. No particular runtime installation, agent, local state
+or implementation-specific artifact is required. Run the Issue's documented
+readiness and validation commands in its approved environment.
+
+GAP-1..3 remain open for #202's representative evidence; textual requirements
+and structural wiring checks do not prove behavioral parity or gap closure.
+#203 owns retirement after accepted affected-row evidence. Rollback restores
+only the reviewed slice's prior hunks and preserves user work and canonical
+Issue history.
+
 ## Pane–SoundAtlas Composition Contract
 
 This section is the single tracked composition-contract authority for using a

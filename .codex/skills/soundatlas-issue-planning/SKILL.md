@@ -19,6 +19,15 @@ with:
 Use `soundatlas-grill-me` when the request needs critique, simplification, or
 readiness review before Issue content is drafted.
 
+This skill owns the canonical Issue composer for GAP-3. It requires work
+breakdown, sequencing and prose assembly in step 4; completeness and validation
+selection in step 5 and Planning Rules; and artifact drafting in steps 3–9.
+The runtime chooses the capabilities, tools or agents used to fulfil those
+requirements. SoundAtlas owns the accepted scope, canonical record contracts,
+authorization and required evidence. Existing planning functionality remains
+available through ordinary repository tools; #202 evaluates GAP-3 and #203 owns
+later retirement.
+
 ## Workflow
 
 1. Classify the request.
@@ -28,9 +37,10 @@ readiness review before Issue content is drafted.
    Detailed Plan Update, Proceed-to-Implementation record, or Implementation
    Report. A Human-declared role controls interpretation, not readiness.
 
-2. Inspect the repo before asking questions.
-   Resolve discoverable facts from docs, code, seed data, or existing Issues
-   before blocking on user input.
+2. Require factual exploration and, for broken behavior, defect investigation
+   as described in the registry's
+   [decision/planning composition](../../../docs/workflow-registry.md#decision-and-planning-composition).
+   The runtime owns discovery, delegation and technical execution.
 
    Perform the lightweight Grill-Me check defined by repository guidance. If
    planning would otherwise have to invent material target behavior, semantics,
@@ -95,19 +105,9 @@ readiness review before Issue content is drafted.
    or interaction is affected; for non-visual changes, record why visual
    evidence is not applicable.
 
-   When creating an Issue, choose exactly one approved `priority:p*` label by
-   reasoning from blocking level, MVP/release impact, risk reduction, and
-   urgency. Use `priority:p2` only as the neutral fallback when `p0`, `p1`, or
-   `p3` are not clearly justified. Briefly state the priority rationale.
-
-   Inspect existing open milestones at Issue-creation time. Assign one only
-   when completing the Issue directly advances the outcome stated by the
-   milestone title and description. Shared labels, a related product area, or
-   an indirect benefit are not sufficient. Leave partial, indirect, multiple,
-   or ambiguous matches unassigned and explain why. Do not create, rename, or
-   broaden milestones without explicit human approval. In the Issue-creation
-   handoff, report the milestone decision and rationale alongside the priority
-   rationale.
+   Apply the Issue-creation label, priority, milestone and rationale rules in
+   `AGENTS.md`, section `Documentation`, and the Project Tracker procedure in
+   `docs/github-issue-workflow.md`, section `Project Tracker Status`.
 
 5. Keep the Issue decision-complete for implementation.
    For security, credentials, infrastructure, networking, workflow, UX,
@@ -181,10 +181,9 @@ API, data, security, or workflow rules would otherwise be unclear.
 
 - Keep GitHub Issues as the default source of truth for planning,
   implementation, and verification.
-- When creating or editing multiline Issue, pull-request, or comment bodies
-  through `gh`, use a UTF-8 `--body-file` or structured JSON from a body file
-  through stdin. Do not interpolate Markdown or JSON-escaped newlines into
-  shell arguments; read the resulting body back when practical.
+- Use `docs/github-issue-workflow.md`, section `Safe GitHub Markdown Transport`,
+  for multiline body-file/stdin submission and exact readback. Transport does
+  not supply authorization for a GitHub write.
 - Prefer `Task` over `Goal` for intake because SoundAtlas follow-up work often
   starts as a task, review, investigation, or decision.
 - Keep Plan Updates concise by default; use Detailed Plan Updates only when

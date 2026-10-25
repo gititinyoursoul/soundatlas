@@ -22,8 +22,11 @@ Read before producing a concept:
   sources; and
 - an existing concept when the request revises one.
 
-Use the smallest relevant context. Inspect discoverable facts before asking the
-human to answer them.
+Use the registry's [decision/planning composition](../../../docs/workflow-registry.md#decision-and-planning-composition)
+for factual source exploration or defect investigation as needed. The runtime
+chooses how to obtain that evidence. Authoritative inputs and confirmed
+decisions remain mandatory; Concept synthesis and its five-part contract remain
+SoundAtlas responsibilities. GAP-2 remains open for #202 evaluation.
 
 ## Workflow
 
@@ -108,11 +111,11 @@ responsibilities, Human/Agent authority, compatibility, boundaries, or MVP
 scope. Remaining Design or Implementation ambiguity does not make the Concept
 incomplete.
 
-Use `soundatlas-issue-planning` for implementation slices, sequencing,
-validation, and Plan Updates. Require the plan to reference the accepted concept
-instead of repeating it. Return to concept work if planning exposes a missing or
-contradictory material target decision, not merely a choice between technical
-representations or mechanisms.
+Hand off implementation slices, sequencing, validation, and Plan Updates to
+`soundatlas-issue-planning` under `docs/github-issue-workflow.md`, sections
+`Concept Work` and `Plan Update`. Those sections own reference-only reuse and
+the return route for a missing material target decision; choosing technical
+representations alone does not require another Concept.
 
 Do not create implementation tasks, code, application changes, a mandatory
 concept stage, a concept registry, or a separate approval status from this
