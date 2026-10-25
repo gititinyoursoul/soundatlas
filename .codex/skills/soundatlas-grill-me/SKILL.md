@@ -24,10 +24,10 @@ Inspect the smallest useful context before reviewing:
 - validation evidence and current-state documentation for implementation work.
 
 Use the registry's [decision/planning composition](../../../docs/workflow-registry.md#decision-and-planning-composition)
-for generic exploration, defect investigation, and fresh-reader inputs. Retain
-source and contrary-evidence obligations here; a generic finding is not a
-SoundAtlas stage, Materiality, or Human decision. This preserved critique
-capability remains necessary while GAP-1 is open for #202 evaluation.
+for the required factual exploration, defect investigation and independent
+critique capabilities. The runtime chooses how to fulfil them. SoundAtlas
+retains source/contrary-evidence obligations, stage and Materiality judgment,
+and Human decisions. GAP-1 remains open for #202 evaluation.
 
 ## Core boundary
 
@@ -92,8 +92,9 @@ or other technical design.
    its evidence-supported maturity, and the smallest applicable Review Mode.
    A declared role is not proof of readiness; do not infer maturity from the
    artifact's title, length, headings, or technical detail.
-2. Obtain relevant evidence through the registry route above. Treat code and
-   Documentation as current-state evidence, not proof of the accepted target.
+2. Require the factual evidence described above; the runtime chooses the
+   inspection method. Treat code and Documentation as current-state evidence,
+   not proof of the accepted target.
 3. Separate observed facts, assumptions, solution hypotheses, `Unknown`,
    `Evidence Gap`, recommendations, and Human Decisions.
 4. Restate the candidate Concept in mechanism-neutral terms. If this cannot be

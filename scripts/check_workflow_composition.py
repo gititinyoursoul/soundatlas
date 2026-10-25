@@ -12,15 +12,15 @@ DECISION_ROUTE = "../../../docs/workflow-registry.md#decision-and-planning-compo
 DECISION_ENTRIES = (
     "exploration",
     "defect investigation",
-    "fresh reader",
+    "independent critique",
     "retained critique",
     "retained synthesis",
     "canonical composer",
-    "unsupported planning",
-    "unsupported drafting and review",
+    "planning",
+    "drafting and review",
     "canonical records",
-    "unavailable before invocation",
-    "failed delegation",
+    "capability availability",
+    "execution evidence",
 )
 DECISION_OWNERS = (
     Path(".codex/skills/soundatlas-grill-me/SKILL.md"),
@@ -89,11 +89,11 @@ def find_contract_errors(root: Path) -> list[str]:
                 errors.append(
                     f"{registry_path}: missing decision/planning owner {owner}"
                 )
-        heading = "### Decision and planning composition"
+        heading = "## Decision and planning composition"
         if registry.splitlines().count(heading) != 1:
             errors.append(f"{registry_path}: expected one {heading!r} heading")
 
-    # Wiring only: no claim about semantics, Human authority or Pane equivalence.
+    # Wiring only: no claim about semantics, Human authority or runtime equivalence.
     for relative_path in DECISION_SOURCES:
         text = contents.get(relative_path, "")
         if text.count(DECISION_ROUTE) > 1:

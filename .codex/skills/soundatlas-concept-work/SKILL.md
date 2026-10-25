@@ -23,10 +23,10 @@ Read before producing a concept:
 - an existing concept when the request revises one.
 
 Use the registry's [decision/planning composition](../../../docs/workflow-registry.md#decision-and-planning-composition)
-for generic source exploration or defect investigation. The authoritative
-inputs above and confirmed-decision requirement remain mandatory. Confirmed
-Concept synthesis is the retained SoundAtlas capability for GAP-2; no verified
-generic replacement exists, and #202 owns its evaluation.
+for factual source exploration or defect investigation as needed. The runtime
+chooses how to obtain that evidence. Authoritative inputs and confirmed
+decisions remain mandatory; Concept synthesis and its five-part contract remain
+SoundAtlas responsibilities. GAP-2 remains open for #202 evaluation.
 
 ## Workflow
 

@@ -19,13 +19,14 @@ with:
 Use `soundatlas-grill-me` when the request needs critique, simplification, or
 readiness review before Issue content is drafted.
 
-This skill retains the canonical Issue composer for GAP-3. Generic work without
-a verified replacement also remains here explicitly: breakdown, sequencing and
-prose assembly in step 4; completeness and validation selection in step 5 and
-Planning Rules; and artifact drafting in steps 3–9. This is unsupported retained
-planning/drafting and plan-review work, not Pane equivalence or gap closure.
-Route its reusable capability gap to the owning Session for a separate Pane
-capability handoff; #202 evaluates it and #203 owns later retirement.
+This skill owns the canonical Issue composer for GAP-3. It requires work
+breakdown, sequencing and prose assembly in step 4; completeness and validation
+selection in step 5 and Planning Rules; and artifact drafting in steps 3–9.
+The runtime chooses the capabilities, tools or agents used to fulfil those
+requirements. SoundAtlas owns the accepted scope, canonical record contracts,
+authorization and required evidence. Existing planning functionality remains
+available through ordinary repository tools; #202 evaluates GAP-3 and #203 owns
+later retirement.
 
 ## Workflow
 
@@ -36,9 +37,10 @@ capability handoff; #202 evaluates it and #203 owns later retirement.
    Detailed Plan Update, Proceed-to-Implementation record, or Implementation
    Report. A Human-declared role controls interpretation, not readiness.
 
-2. Obtain discoverable facts through the registry's
-   [decision/planning composition](../../../docs/workflow-registry.md#decision-and-planning-composition):
-   `discussion` for exploration, `investigate` for broken behavior.
+2. Require factual exploration and, for broken behavior, defect investigation
+   as described in the registry's
+   [decision/planning composition](../../../docs/workflow-registry.md#decision-and-planning-composition).
+   The runtime owns discovery, delegation and technical execution.
 
    Perform the lightweight Grill-Me check defined by repository guidance. If
    planning would otherwise have to invent material target behavior, semantics,

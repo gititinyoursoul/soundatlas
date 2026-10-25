@@ -25,7 +25,7 @@ class WorkflowCompositionCheckTests(unittest.TestCase):
             lines = list(markers)
             if relative_path == Path("docs/workflow-registry.md"):
                 lines.insert(0, CONTRACT_HEADING)
-                lines.append("### Decision and planning composition")
+                lines.append("## Decision and planning composition")
                 lines.extend(
                     f"| {entry} | fixture route |" for entry in DECISION_ENTRIES
                 )
