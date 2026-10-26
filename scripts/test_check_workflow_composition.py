@@ -26,9 +26,7 @@ class WorkflowCompositionCheckTests(unittest.TestCase):
             if relative_path == Path("docs/workflow-registry.md"):
                 lines.insert(0, CONTRACT_HEADING)
                 lines.append("## Decision and planning composition")
-                lines.extend(
-                    f"| {entry} | fixture route |" for entry in DECISION_ENTRIES
-                )
+                lines.extend(f"| {entry} | fixture route |" for entry in DECISION_ENTRIES)
                 lines.extend(f"`{owner}`" for owner in DECISION_OWNERS)
             target.write_text("\n".join(lines) + "\n", encoding="utf-8")
         return root
@@ -92,17 +90,13 @@ class WorkflowCompositionCheckTests(unittest.TestCase):
                     registry.read_text(encoding="utf-8").replace(f"| {entry} |", ""),
                     encoding="utf-8",
                 )
-                self.assertTrue(
-                    any(repr(entry) in error for error in find_contract_errors(root))
-                )
+                self.assertTrue(any(repr(entry) in error for error in find_contract_errors(root)))
 
     def test_missing_retained_owner_is_reported(self) -> None:
         root = self.make_root()
         (root / DECISION_OWNERS[0]).unlink()
         self.assertTrue(
-            any(
-                str(DECISION_OWNERS[0]) in error for error in find_contract_errors(root)
-            )
+            any(str(DECISION_OWNERS[0]) in error for error in find_contract_errors(root))
         )
 
     def test_duplicate_decision_route_is_reported(self) -> None:
@@ -111,17 +105,14 @@ class WorkflowCompositionCheckTests(unittest.TestCase):
         skill.write_text(DECISION_ROUTE + "\n" + DECISION_ROUTE, encoding="utf-8")
         self.assertTrue(
             any(
-                "duplicate decision/planning route" in error
-                for error in find_contract_errors(root)
+                "duplicate decision/planning route" in error for error in find_contract_errors(root)
             )
         )
 
     def test_missing_decision_route_is_reported(self) -> None:
         root = self.make_root()
         (root / DECISION_OWNERS[0]).write_text("", encoding="utf-8")
-        self.assertTrue(
-            any(repr(DECISION_ROUTE) in error for error in find_contract_errors(root))
-        )
+        self.assertTrue(any(repr(DECISION_ROUTE) in error for error in find_contract_errors(root)))
 
     def test_unlinked_retained_owner_is_reported(self) -> None:
         root = self.make_root()
@@ -131,11 +122,30 @@ class WorkflowCompositionCheckTests(unittest.TestCase):
             encoding="utf-8",
         )
         self.assertTrue(
-            any(
-                "missing decision/planning owner" in error
-                for error in find_contract_errors(root)
-            )
+            any("missing decision/planning owner" in error for error in find_contract_errors(root))
         )
+
+    def test_runtime_and_authority_markers_are_required(self) -> None:
+        for relative_path, markers in EXPECTED_MARKERS.items():
+            for marker in markers:
+                with self.subTest(path=relative_path, marker=marker):
+                    root = self.make_root()
+                    source = root / relative_path
+                    source.write_text(
+                        source.read_text(encoding="utf-8").replace(marker, "", 1),
+                        encoding="utf-8",
+                    )
+
+                    errors = find_contract_errors(root)
+
+                    self.assertTrue(
+                        any(
+                            f"{relative_path}: missing composition routing marker" in error
+                            and repr(marker) in error
+                            for error in errors
+                        ),
+                        errors,
+                    )
 
 
 if __name__ == "__main__":

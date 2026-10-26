@@ -43,11 +43,24 @@ EXPECTED_MARKERS: dict[Path, tuple[str, ...]] = {
         "The latest valid GitHub Issue Plan and its later matching",
         "Local or temporary Pane planning artifacts are non-authoritative.",
         "A contributor without Pane starts at `AGENTS.md`",
+        "SoundAtlas defines the capabilities and evidence needed for correct work.",
+        "runtime discovers available capabilities and chooses tools, skills, agents,",
+        "These requirements apply independently of",
+        "Ordinary repository/GitHub tools can fulfil",
+        "Frontend, backend and documentation implementation use their retained skills",
+        "the active environment selects suitable implementation procedure, tools,",
+        "Ordinary repository/GitHub tools may fulfil the same",
+        "When Pane is selected, apply the existing envelope, exact provenance, drift,",
+        "without copying provider procedure. Without Pane,",
+        "GAP-1..3 remain open for #202's representative evidence; textual requirements",
+        "PR creation, rebase/integration, push, merge, publication, deployment, release,",
     ),
     Path("docs/github-issue-workflow.md"): (
         "`docs/workflow-registry.md` owns the Pane–SoundAtlas composition contract.",
         "Local or temporary Pane planning artifacts are non-authoritative.",
         "Only the latest valid GitHub Issue Plan and its later matching",
+        "GitHub Issues are the source of truth for planned agent work.",
+        "For non-trivial Issue work, one explicit human implementation request after the",
     ),
 }
 
@@ -70,9 +83,7 @@ def find_contract_errors(root: Path) -> list[str]:
     registry_path = Path("docs/workflow-registry.md")
     registry = contents.get(registry_path)
     if registry is not None:
-        heading_count = sum(
-            line.strip() == CONTRACT_HEADING for line in registry.splitlines()
-        )
+        heading_count = sum(line.strip() == CONTRACT_HEADING for line in registry.splitlines())
         if heading_count != 1:
             errors.append(
                 f"{registry_path}: expected exactly one {CONTRACT_HEADING!r} "
@@ -81,14 +92,10 @@ def find_contract_errors(root: Path) -> list[str]:
 
         for entry in DECISION_ENTRIES:
             if f"| {entry} |" not in registry:
-                errors.append(
-                    f"{registry_path}: missing decision/planning entry {entry!r}"
-                )
+                errors.append(f"{registry_path}: missing decision/planning entry {entry!r}")
         for owner in DECISION_OWNERS:
             if f"`{owner}`" not in registry:
-                errors.append(
-                    f"{registry_path}: missing decision/planning owner {owner}"
-                )
+                errors.append(f"{registry_path}: missing decision/planning owner {owner}")
         heading = "## Decision and planning composition"
         if registry.splitlines().count(heading) != 1:
             errors.append(f"{registry_path}: expected one {heading!r} heading")
@@ -105,18 +112,14 @@ def find_contract_errors(root: Path) -> list[str]:
             continue
         for marker in markers:
             if marker not in text:
-                errors.append(
-                    f"{relative_path}: missing composition routing marker {marker!r}"
-                )
+                errors.append(f"{relative_path}: missing composition routing marker {marker!r}")
 
     return errors
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(
-        "--root", type=Path, default=Path(__file__).resolve().parents[1]
-    )
+    parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[1])
     args = parser.parse_args()
     errors = find_contract_errors(args.root.resolve())
     if errors:
