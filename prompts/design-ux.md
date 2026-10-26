@@ -1,190 +1,67 @@
 # Design UX
 
-Reusable prompts for UX and design work on SoundAtlas. These are working templates, not project documentation.
-
-This prompt set is the UX entrypoint for the current workflow.
-
-Design UX prompts produce audit findings, critique, and UX slice proposals.
-They do not authorize implementation.
-Use `soundatlas-grill-me` to critique and narrow a selected UX slice before
-implementation. Use
-`soundatlas-issue-planning` to turn the selected slice into a GitHub
-Issue Plan Update after recording the confirmed review under `## Grill-Me
-Review`.
+Compatibility entrypoint for bounded SoundAtlas UX findings and proposals.
+Use the three modes below with the canonical
+[UX workflow](../docs/design/ux-workflow.md). Every mode is inspection and
+proposal only: do not edit code, data, or documentation from this prompt.
 
 ## Shared Context
 
-Use this context at the top of UX/design prompts when the session does not already have enough project context:
+Provide the screen/component/workflow, user goal, constraints, relevant audit,
+runtime or screenshots, viewport, and known evidence gaps.
 
-```text
-Act as a senior UX/product designer and frontend engineer for SoundAtlas.
+Read the [desktop contract](../docs/design/desktop-ui-guide.md) and
+[current intended frontend baseline](../docs/design/current-frontend-design.md).
+Apply the UX workflow's SoundAtlas UX Frame, Core Rules, and UI Quality Loop,
+including its region/evidence/owner/impact/correction format. Inspect a target
+mockup only when explicitly referenced by an accepted Issue or design authority;
+approved screenshots are observed evidence. State when review is source-based.
 
-Project context:
-- SoundAtlas is an interactive music history app.
-- MVP scope: New York 1965-1985.
-- Vertical slice: Birth of Hip-Hop: Bronx 1970-1985.
-- The map is the primary interface.
-- Timeline, route switching, and event inspector should share one central selection state.
-- Use real seed data where possible; avoid mock-only UI.
-- The visual tone should be dense, documentary, source-aware, and usable.
-- Apply `docs/design/desktop-ui-guide.md` as the desktop design contract.
-- Treat `docs/design/current-frontend-design.md` as the current intended frontend design baseline when available.
-- Treat a mockup as a target only when an accepted Issue, the desktop contract,
-  or the current design baseline explicitly names it. Treat approved
-  screenshots as observed evidence, not independent design authority.
-- Store durable UX audits, critiques, and design explorations in `docs/design/audits/`.
-- Store current approved screenshots in `docs/design/screenshots/` when they are meant to stay in Git.
-- Store visual mockups, diagrams, and supporting images in `docs/design/mockups/`.
-
-When reviewing or designing, focus on:
-- Map-first exploration
-- Place/time/story clarity
-- Visual hierarchy
-- Interaction flow
-- Responsive behavior
-- Source and media discoverability
-- Small, reviewable implementation steps
-
-For each material UI-quality finding, identify the affected screen region,
-direct runtime or screenshot evidence, responsible component or data source,
-user impact, and recommended correction. Check information hierarchy and
-ownership, progressive disclosure, interface copy, density and space use,
-redundancy, conditional visibility, signal-to-noise, semantic emphasis,
-state/action feedback, and content-versus-interface attribution. Treat
-screenshots as temporary evidence unless they are Human-approved as a tracked
-design reference.
-
-Do not suggest a landing page unless explicitly requested.
-Do not propose broad redesigns before auditing the current frontend.
-If the intended design changes, recommend updating `docs/design/current-frontend-design.md`.
-```
+Use [workflow routing](../docs/workflow-registry.md) for critique and Issue
+planning and the [Issue lifecycle](../docs/github-issue-workflow.md) for
+authorization. A UX slice proposal does not replace the canonical Issue Plan.
+Recommend artifact paths for durable findings or visual explorations using the
+UX workflow's documentation locations; this prompt grants no write authority.
 
 ## UX Audit
 
-Use this before changing frontend code:
+Use before frontend changes. Inspect the current SvelteKit implementation,
+layout, real seed/API data, shared selection state, component boundaries,
+friction, missing states, hierarchy, and design consistency.
 
-```text
-Review the current SvelteKit frontend as a UX/product engineer.
-
-Focus on the MVP: map-first exploration of New York 1965-1985, with the first vertical slice being Birth of Hip-Hop: Bronx 1970-1985.
-
-Use `docs/design/desktop-ui-guide.md` as the desktop contract and
-`docs/design/current-frontend-design.md` as the current intended baseline.
-Inspect relevant explicitly referenced target mockups when present.
-
-Identify the biggest usability and visual design issues. Cover:
-- Current layout structure
-- Data flow and shared selection state
-- Component boundaries
-- UX friction
-- Missing states
-- Visual hierarchy and design inconsistencies
-
-Ground findings in:
-- Current implementation files or components
-- Applicable rules from `docs/design/desktop-ui-guide.md`
-- `docs/design/current-frontend-design.md`
-- Relevant explicitly referenced target mockups
-- Screenshots if available
-- Real seed/API data where relevant
-
-Do not make changes yet. Return:
-- Findings ordered by severity
-- Evidence for each finding
-- Gaps between implementation and current design baseline
-- Applicable desktop-contract rules and affected interaction states
-- Material UI-quality findings with screen region, evidence, responsible owner,
-  user impact, and recommended correction
-- Recommended design direction
-- Candidate UX slices
-- Suggested first UX slice
-- Files and components likely affected
-- Suggested audit filename under `docs/design/audits/` if the findings should be saved
-- Suggested mockup filenames under `docs/design/mockups/` if visual artifacts are needed
-- Next step: usually grill the selected UX slice with `soundatlas-grill-me`,
-  then create or update the GitHub Issue Plan Update with
-  `soundatlas-issue-planning`
-```
+Return the outputs in the UX workflow's **Step 2: Audit Without Editing**:
+severity-ordered findings and evidence, baseline gaps, applicable desktop rules
+and states, recommended direction, candidate slices and a suggested first
+slice, affected files/components, and suggested audit/mockup paths when useful.
+Identify the next critique or Issue-planning step without implementing it.
 
 ## UX Pass Plan
 
-Use this after a UX audit or screenshot critique, before implementation planning.
+Use after an audit or screenshot critique, before implementation planning.
+Propose exactly one workflow slice using **Steps 3–5** of the UX workflow.
+Preserve the intended baseline unless recommending an explicit design change;
+use SvelteKit/TypeScript, small domain-named components, Leaflet as the primary
+map, and real seed data. Avoid broad redesign unless explicitly requested.
 
-```text
-Plan one SoundAtlas UX pass.
-
-Constraints:
-- SvelteKit + TypeScript
-- Leaflet map is primary
-- Use existing seed data
-- Respect `docs/design/current-frontend-design.md` unless the plan explicitly recommends changing the design baseline
-- Apply `docs/design/desktop-ui-guide.md`; name the applicable rules and any
-  explicitly referenced target mockup
-- Components should stay small and domain-named, such as MapView, Timeline, NavigationDrawer, RouteFilter, and StoryPanel
-- No mock-only UI
-- Dense, documentary, usable MVP style
-- The first screen should be the product experience, not a landing page
-- Save durable design plans or explorations under `docs/design/audits/`
-- Save visual mockups and diagrams under `docs/design/mockups/`
-
-Plan exactly one workflow slice. Do not redesign the whole app unless explicitly requested.
-
-Return:
-- UX target
-- User workflow slice
-- Affected surfaces/components
-- State/data flow impact
-- Visual/layout changes
-- Responsive behavior
-- Accessibility considerations
-- Applicable desktop-contract rules
-- Affected interaction and failure states
-- Target mockups, or `None` with a reason
-- Required desktop visual evidence and viewport
-- Mobile evidence only when mobile layout or interaction is affected
-- UI-quality checklist findings and disposition before implementation planning
-- Out of scope
-- Acceptance criteria candidates
-- Risks or open questions
-- Recommended audit/design-plan path under `docs/design/audits/`, if this should be saved
-- Recommended mockup path under `docs/design/mockups/`, if visual artifacts are needed
-- Next step: create or update the GitHub Issue Plan Update with
-  `soundatlas-issue-planning`
-```
+Return the UX target, workflow slice, state/data flow, affected surfaces,
+visual/layout changes, responsive and accessibility considerations, desktop
+rules and interaction/failure states, target mockups or `None` with a reason,
+planned desktop evidence/viewports, and mobile evidence only when affected.
+Include UI-quality findings/disposition, exclusions, acceptance-criteria
+candidates, risks/open questions, suggested audit/mockup paths when useful,
+and the next critique or canonical Issue-planning step. This remains a proposal.
 
 ## Screenshot Critique
 
-Use this after running the app and capturing desktop or mobile screenshots:
+Use after runtime capture. Follow **Step 8: Critique With Screenshots** and the
+UI Quality Loop in the UX workflow. Review map primacy, place/time/story
+clarity, hierarchy, spacing/density, readability, affordances, source/media
+discoverability, and responsive behavior.
 
-```text
-Critique this SoundAtlas screen like a senior product designer.
-
-Focus on:
-- Whether the map feels like the primary surface
-- Place/time/story clarity
-- Visual hierarchy
-- Spacing and density
-- Readability
-- Affordances and interaction cues
-- Source and media discoverability
-- Responsive layout issues
-
-Suggest specific changes, not general advice.
-Prioritize the changes by user impact and implementation size.
-
-Return:
-- Prioritized visual/UX findings
-- Screenshot evidence
-- Whether each finding is bug, polish, or design-direction issue
-- Recommended follow-up UX slice
-- Whether a GitHub Issue Plan Update is needed
-- Whether `docs/design/current-frontend-design.md` should change
-- Whether the critique should be saved under `docs/design/audits/`
-- Whether supporting annotated screenshots or mockups should be saved under `docs/design/mockups/`
-- Whether each material finding is corrected in the current pass, needs a
-  follow-up, or blocks acceptance
-- Next step: usually grill the follow-up with `soundatlas-grill-me`, create
-  the follow-up Issue plan with `soundatlas-issue-planning`, or update
-  the design baseline with
-  `.codex/skills/soundatlas-documentation-implementation/SKILL.md`
-```
+Return specific findings with screenshot evidence, prioritized by user impact
+and implementation size. Classify each as bug, polish, or design direction;
+state whether each material finding is corrected, needs follow-up, or blocks
+acceptance. Recommend one follow-up slice, whether an Issue Plan or design
+baseline change is needed, and suggested audit/annotated-image/mockup paths
+when useful. End at the appropriate critique, Issue-planning, or documentation
+handoff; do not apply the recommendations automatically.

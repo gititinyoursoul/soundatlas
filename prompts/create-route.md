@@ -109,11 +109,11 @@ Seed data requirements
 
 Recommended workflow
 
-- For non-trivial route creation or route reshaping, use
-  `soundatlas-grill-me` first to critique scope, thesis, source risks, and
-  candidate-event boundaries. Record the confirmed review in a `## Grill-Me
-Review` Issue comment, then use `soundatlas-issue-planning` to
-  create or update a GitHub Issue Plan Update before broad seed edits.
+- Follow `docs/workflow-registry.md` and `docs/github-issue-workflow.md` for
+  critique, Issue planning, implementation authorization, reporting, and commits.
+  Route-specific critique covers scope, thesis, source risks, and
+  candidate-event boundaries; editorial requirements remain in
+  `docs/content/editorial-workflow.md`.
 - For new route content, first create or update
   `docs/content/routes/<route-id>/brief.md`.
 - Keep later route-specific files in `docs/content/routes/<route-id>/`. A
@@ -143,7 +143,6 @@ Review` Issue comment, then use `soundatlas-issue-planning` to
 - Then map only accepted events and reviewed route metadata into seed data.
 - Validate JSON syntax.
 - Validate references between routes, places, events, and connections.
-- Capture new planned follow-up work in GitHub Issues. Leave legacy `TODO.md` entries alone unless the approved Issue or plan explicitly includes legacy backlog cleanup.
 
 Deliverables
 
@@ -161,14 +160,8 @@ Deliverables
 - Pipeline status, seed preview, or validation report notes when the route
   content pipeline is used.
 - Seed data changes if requested.
-- Related GitHub Issue note, when used.
 - Notes on unresolved source or content questions.
 - Validation command run and outcome.
-- Suggested commit grouping:
-  - `docs: add <route> route concept`
-  - `data: add <route> seed data`
-  - `docs: update route workflow notes`
-  - If implementing from an Issue, reference it in the commit body, for example `Issue: #123`
 
 Acceptance criteria
 
