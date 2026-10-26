@@ -13,6 +13,24 @@ storage for a later product phase.
   endpoint behavior.
 - Keep field names aligned with the documented seed contracts.
 
+## Implementation constraints
+
+Keep FastAPI code under `backend/app/` and use the repository's established
+Python/`uv` patterns. Response-shape changes require Pydantic schemas before
+endpoint handlers; data-access changes require explicit seed repositories or
+loaders. Read the documented seed contracts and related data/tests before
+changing seed-backed behavior.
+
+Preserve existing endpoints, filtering, unknown-ID and empty-result behavior
+unless the approved Issue changes them. Include targeted tests for changed
+behavior. The endpoint list below describes context, not permission to change
+unrelated endpoints. Do not introduce a database without an approved Issue.
+
+Do not commit secrets, API keys, local paths, generated media, audio or video.
+`AGENTS.md` owns required backend lint/type/test commands; the
+[seed validation contract](../data/seed-data-validation.md) owns data checks.
+Report blocked or unavailable validation explicitly, without claiming a pass.
+
 ## Current structure
 
 ```text
