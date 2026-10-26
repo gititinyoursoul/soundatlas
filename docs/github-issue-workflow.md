@@ -858,6 +858,49 @@ name the included Issues, validation, review, and human integration and push
 authorizations together. The workflow does not automate integration, conflict
 resolution, or pushing.
 
+### Delivery Identity and Partial Outcomes
+
+Before integration or another gated delivery effect, identify the exact
+repository and worktree, branch, source commit or range, associated Issue or
+Issues, and current integration base. Verify commit reachability rather than
+relying on a branch name. For an authorized cherry-pick, record the source to
+integrated commit mapping and the disposition of relevant alternate lines so
+the Issue association and delivered range remain traceable. This evidence
+allows multiple development lines where the confirmed Issue scope permits it;
+#250's traceability alignment does not implement or accept #225's proposed
+policy, which remains with that Issue.
+
+Use `git worktree list` to distinguish registered sibling worktrees from
+unknown untracked content. Registered siblings are not delivery content; do
+not stage, reset, or remove a sibling worktree to make a tree appear clean.
+Fresh Human authorization and runtime/provider permission remain separate:
+a routine workstream grant does not authorize a delivery hard stop or survive
+the documented restart, target, repository, or material scope changes. Follow
+`AGENTS.md` and the registry's conditional Pane composition contract for those
+authority boundaries.
+
+When a delivery stage fails or is interrupted, report whether the required
+capability or prerequisite was missing before invocation or whether an
+operation started. Include the last verified revision, changed paths, observed
+local or remote effects, incomplete actions, and recovery owner. Before
+resuming or retrying, recheck the current authorization and boundary and inspect
+the effects already observed. Do not assume a clean fallback, repeat an
+uncertain mutation, or infer that a later stage succeeded.
+
+| Failure point | Required outcome |
+| --- | --- |
+| Validation, index, authority, or base mismatch | Stop the affected stage and preserve the index, references, and user work; return to the relevant correction or Human gate. |
+| Integration conflict or changed range | Do not perform unauthorized conflict work. After the permitted resolution, revalidate and review the resulting range before a separately authorized push. |
+| Push fails or publication is uncertain | Read remote state before claiming publication or retrying; do not infer completion or closure. |
+| CI, verification, or completion-comment operation fails | Keep the Issue open and retain `Locally Implemented` while that accepted result remains valid. Corrective work that invalidates it returns Project status to `In Progress`. |
+| Completion comment succeeds but Project update fails | Preserve the comment and readback evidence; report the partial state and perform only the remaining authorized operation after readback. Do not duplicate the comment or close before `Done`. |
+| Project reaches `Done` but Issue close fails | Leave the Issue open, report the failure, and retry closure only after verifying the existing completion evidence. |
+
+Rollback restores only the reviewed Issue-scoped documentation hunks and
+preserves user work and canonical Issue history. A published external effect
+does not imply a compensating mutation; do not force-push, delete, rewrite
+history, or archive to recover.
+
 ## Post-Push Completion and Issue Closure
 
 For completed Issue-based work, an explicit request to push the reviewed change

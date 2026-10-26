@@ -147,6 +147,31 @@ push rules live in
 requirement, workflow service, or broad clean-working-tree requirement;
 unrelated user-owned changes remain outside Issue delivery.
 
+## Commit and Delivery Composition
+
+Select capabilities by the evidence needed at each SoundAtlas delivery
+boundary. The lifecycle and authorization rules remain in
+`docs/github-issue-workflow.md`; when Pane is selected, also apply the
+conditional #246 composition contract above. Ordinary Git and GitHub tools may
+produce the same outcomes. This section routes required evidence and effects;
+it does not copy a generic provider's commit, handoff, or PR procedure.
+
+| Capability | Required SoundAtlas evidence or boundary | Lifecycle owner |
+| --- | --- | --- |
+| Selective staging and local commit | Validated Plan/Proceed boundary, readiness and commit-ready evidence; Issue-only index and an Issue-scoped Conventional Commit with its Issue footer. Preserve unrelated staged and user work. | `docs/github-issue-workflow.md` — Implementation Gate and Commit-Ready Gate and Local Commits |
+| Handoff | Identify the repository/worktree, branch, exact source revision or range, Issue association, completed and pending actions, validation evidence, and recovery owner. A handoff does not imply a commit, push, or next-stage authorization. | `docs/github-issue-workflow.md` — canonical Issue records and Implementation Report |
+| Optional PR or review publication | PR creation/update, review publication, rebase, ready-state changes, and merge are separate effects with their own exact authorization. A PR is not required for SoundAtlas delivery. | `docs/github-issue-workflow.md` — Pre-Acceptance External Validation and post-push lifecycle |
+| Integration and final delivery | Name the reviewed source range, target `main`, and permitted integration method; integration does not authorize push. Revalidate and review a changed range, then obtain separate authorization for the exact final push and verify the published result. | `docs/github-issue-workflow.md` — Commit-Ready Gate and Local Commits and Post-Push Completion and Issue Closure |
+| Interrupted or partial execution | Distinguish a missing prerequisite before invocation from a started, failed, or interrupted operation. Record the last verified revision, changed paths and observed effects, incomplete actions, and recovery owner; inspect current effects before retry or resumption. | `docs/github-issue-workflow.md` — Delivery Identity and Partial Outcomes |
+
+Generic provider defaults cannot carry authorization between these stages or
+authorize another external effect. Preserve the tracked non-Pane route when
+Pane is not selected. The #202 handoff must cover authorized delivery,
+unauthorized or stale authority (stop before mutation), partial or uncertain
+effects, and the non-PR completion path. GAP-5 closes only after accepted #202
+evidence covers authorized, unauthorized, stale, failing, and non-PR cases;
+documentary routing or structural checks do not prove runtime parity.
+
 ## Decision and planning composition
 
 SoundAtlas defines the capabilities and evidence needed for correct work. The

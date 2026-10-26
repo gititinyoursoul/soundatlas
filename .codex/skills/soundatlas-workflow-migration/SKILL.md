@@ -46,7 +46,7 @@ The supported input is exactly one child Issue and its applicable #200 rows:
 | #247 | bounded decision/planning consolidation | Exploration, defect investigation, independent critique when required, planning and canonical composition; retain phase, Concept and Issue responsibilities. |
 | #248 | implementation and review entrypoints | Scoped frontend/backend/docs implementation and evidence-based review; retain authority, validation, review outcomes and independence requirements. |
 | #249 | deterministic test entrypoints | Focused deterministic test design/execution, levels, fixtures/mocks and environment evidence; experiments or journey QA cannot replace required coverage. |
-| #250 | commit and delivery entrypoints | Selective staging, commit/delivery evidence and handoff within exact Human authorization and Git/lifecycle integrity rules. |
+| #250 | [commit and delivery entrypoints](../../../docs/workflow-registry.md#commit-and-delivery-composition) | Selective staging, commit/delivery evidence and handoff within exact Human authorization and Git/lifecycle integrity rules; see [delivery identity and partial outcomes](../../../docs/github-issue-workflow.md#delivery-identity-and-partial-outcomes). |
 | #251 | domain and compatibility entrypoints | Domain work and compatibility/reference audits within existing editorial/data/UX contracts, Human checkpoints and publication boundaries. |
 
 Do not accept an unsupported Issue, invent a theme or reclassify an atomic
