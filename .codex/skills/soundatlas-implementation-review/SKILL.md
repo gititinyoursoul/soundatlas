@@ -8,6 +8,13 @@ description: Review completed SoundAtlas Issue implementations against their acc
 Determine whether a named local Issue commit or commit range matches its
 accepted target and has enough evidence to proceed to human review before push.
 
+This retained SoundAtlas override supplies comparison requirements and results;
+the environment selects suitable generic review mechanics. Use the registry's
+[implementation and review composition](../../../docs/workflow-registry.md#implementation-and-review-composition)
+for capability inputs, precedence, allowed effects and stop routes. Ordinary
+repository/GitHub tools may satisfy the contract; when Pane is selected, apply
+its existing composition contract there without copying provider procedure.
+
 ## Required context
 
 Read the smallest available set that establishes the target and result:
@@ -21,7 +28,7 @@ Read the smallest available set that establishes the target and result:
   required one;
 - the Plan's planned write boundary and the Proceed record's audited derived
   files, when the work is non-trivial;
-- the named local commit or explicit commit range, its actual diff, and
+- the exact named committed base/head or explicit commit range, its actual diff, and
   Issue-relevant working-tree state;
 - validation results and other supplied evidence; and
 - current-state documentation affected by the implementation.
@@ -29,42 +36,51 @@ Read the smallest available set that establishes the target and result:
 Do not require retroactive concept work merely because an Issue has no concept
 artifact. Inspect discoverable evidence before declaring it missing.
 
-## Workflow
+## Comparison requirements
 
-1. Confirm the trigger.
-   Review completed non-trivial Issue work before it is accepted. Review work in
-   progress only when drift, risk, or a new material constraint appears. Skip a
-   clearly trivial, local, low-risk change unless the human requests review.
-2. Record reviewer mode.
-   Use `implementing agent` by default. Use `independent review` when the human
-   requests it or when risk, ambiguity, architecture change, or uncertainty
-   materially justifies it. Do not imply independence when self-reviewing.
-3. Establish the available authorities.
-   Treat the Issue as the scope and acceptance-criteria authority, the concept
-   as the target-behavior authority when present, and the plan as the authority
-   for implementation tasks and planned validation. Treat the Proceed record as
-   evidence of Human authorization for that exact Plan, not approval of the
-   completed implementation. Treat contradictions as findings instead of
-   silently choosing a winner.
-4. Identify material claims.
-   List the target behaviors, runtime responsibilities, acceptance criteria,
-   non-goals, and material documentation claims the implementation must support.
-   For non-trivial user-visible frontend work, also identify the recorded
-   desktop-contract inputs, UI-quality findings, planned runtime evidence, and
-   any stated disposition of material findings.
-5. Assess evidence proportionately.
-   Map each material claim to credible evidence. Use existing automated checks
-   when they establish the claim. Inspect or request focused runtime,
-   integration, visual, or manual evidence only where ordinary checks leave a
-   material gap. A missing or failing check is evidence of a finding, not a
-   reason to assume success.
-6. Compare the implementation.
-   Inspect target coverage, plan completion, unapproved behavior, non-goal
-   preservation, scope drift, implementation constraints, unrelated changes,
-   and documentation impact.
-7. Classify and route every material finding.
-8. Produce the Review Result for the existing Implementation Report. Do not
-   create a separate routine review comment.
+Review completed non-trivial Issue work before acceptance; review work in
+progress only for drift, risk or a new material constraint. Skip clearly
+trivial, local, low-risk changes unless the Human requests review.
+
+Apply the registry's authority precedence: current tracked policy constrains
+the Issue; the Issue owns scope/criteria, the Concept owns target behavior when
+present, the Plan owns tasks/planned validation, and the matching Proceed
+records authorization for that exact Plan. Proceed is not completed-work
+approval. Contradictions are findings, not permission to choose a winner.
+
+The comparison must cover material target behaviors, runtime responsibilities,
+criteria, Plan completion, non-goals, implementation constraints, scope drift,
+unapproved behavior, unrelated changes and documentation claims/impact. Link
+each material claim to credible proportional evidence. For non-trivial
+user-visible frontend work, include recorded desktop rules, UI-quality findings,
+planned runtime evidence and dispositions. Missing or failing evidence is a
+finding, not assumed success. Classify and route every material finding below;
+return the Review Result to the single Implementation Report, without a
+separate routine review comment.
+
+## Reviewer identity and revision evidence
+
+Use `Implementing agent` for self-review. Independent review is appropriate
+when requested or materially justified by risk, ambiguity, architecture change
+or uncertainty, but its claim requires actual separation evidence. Consume the
+bounded [#218 handoff](https://github.com/gititinyoursoul/soundatlas/issues/218#issuecomment-6402197893):
+
+- Identify actual implementing and reviewing clients/processes and how their
+  separation was corroborated by actual dispatch or process identity.
+- Link the reviewer's own returned comparison and outcome to the requested
+  exact base/head or range, identifying evidence inspected and limits.
+- Record missing provenance and shared-worktree limits. A role label,
+  fresh-tab assertion, model choice or shared Session alone proves no
+  separation. Shared-worktree read-only instructions imply no technical write
+  isolation; do not assert a security boundary or invent a required
+  platform-specific identifier.
+- A changed head needs current review evidence. Stale acceptance, a new label
+  or a report correction cannot transfer an old comparison to a changed range.
+
+Missing separation/provenance withholds the independent claim. Accurate
+implementing-agent wording is allowed only when that mode is otherwise
+permitted; an independently required gate remains unmet without evidence.
+Generic dispatch and enforcement remain runtime/provider responsibilities.
 
 For non-trivial user-visible frontend work, treat an unresolved material
 hierarchy, copy, density, styleguide, accessibility, or interaction finding—or
@@ -141,6 +157,7 @@ Return this section for inclusion in the single Implementation Report comment:
 
 - Verdict: Accepted | Correction required | Return to planning | Return to concept | Needs decision
 - Reviewer mode: Implementing agent | Independent review
+- Reviewer evidence: <actual implementer/reviewer identities, separation evidence or limits, exact reviewed range and returned comparison>
 - Compared artifacts: <artifacts actually reviewed>
 - Evidence coverage: <material claims and supporting evidence or gaps>
 - Findings and routing: None | <category, evidence, affected responsibility, destination>

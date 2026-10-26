@@ -187,6 +187,69 @@ and structural wiring checks do not prove behavioral parity or gap closure.
 only the reviewed slice's prior hunks and preserves user work and canonical
 Issue history.
 
+## Implementation and review composition
+
+Frontend, backend and documentation implementation use their retained skills
+as capability/authority/result entrypoints. They supply project requirements;
+the active environment selects suitable implementation procedure, tools,
+providers and delegation. Ordinary repository/GitHub tools may fulfil the same
+requirements without Pane. Different suitable methods are valid; historical
+Pane `implement`, `implementer` and `implementation-reviewer` mappings are not
+universal selection requirements or repository-local procedure to copy.
+
+Before execution, the supplied context must identify repository/revision and
+worktree, requested stage, canonical Issue scope/criteria and confirmed
+decisions, Concept or Concept-not-required basis, current Plan and later
+matching Proceed when required, named paths and exact audited derived files,
+exclusions, tracked domain/security/environment authorities, project commands,
+required evidence, Human gates, allowed effects and stop routes. Follow
+`AGENTS.md` and `docs/github-issue-workflow.md` for the implementation gate;
+non-trivial work requires the official fresh
+`python scripts/check_issue_readiness.py --file <export>` check before edits,
+with `--require-grill-review` when risk flags require it. A canonical revision
+or blocking decision requires renewed authority/readiness before resumption.
+
+Frontend correctness lives in `docs/architecture/frontend.md`, the named
+design authorities and `AGENTS.md`; backend correctness lives in
+`docs/architecture/backend.md`, the seed contract and `AGENTS.md`.
+Documentation follows the classification and bounded consistency rules below.
+These tracked authorities constrain the Issue; an Issue cannot silently
+override them. The authority-precedence rules in the composition contract
+below apply to the SoundAtlas inputs regardless of execution provider.
+
+`soundatlas-implementation-review` remains the project-specific comparison
+override: exact committed base/head or range and actual diff, Issue-relevant
+worktree state, current tracked policy, Issue criteria, Concept when present,
+Plan tasks/validation and matching Proceed. It owns proportional evidence,
+finding routes, truthful independence and separate verdicts. The runtime owns
+generic review mechanics. Review is read-only and returns its result to
+`soundatlas-issue-planning` for one combined Implementation Report. It grants
+no Human commit approval or delivery authorization; lifecycle gates remain
+separate.
+
+Execution evidence identifies actual work and changed paths, validation and
+criteria results, provider/tools and invoked instruction source revision or
+content digest, risks and incomplete work. Missing capability/evidence before
+invocation is distinct from a started, failed or partial run. Preserve the
+last verified state and observed effects; recheck authority before recovery
+and do not infer a clean fallback or repeat effects silently. Missing/stale
+Plan/Proceed, conflicting authority or a new material target decision stops
+the affected gate and returns to Issue Planning, Grill Me or the named owner.
+Out-of-boundary work remains untouched and routes to a linked Intake.
+Unavailable validation blocks the affected claim. Suppress unauthorized
+delivery defaults; implementation capability grants no push, PR, integration,
+merge, publication, deployment, Project mutation, closure or retirement.
+
+When Pane is selected, apply the existing envelope, exact provenance, drift,
+failure and gap rules below, without copying provider procedure. Without Pane,
+follow `AGENTS.md` → registry → lifecycle/current Issue → named authorities and
+retained entrypoints using ordinary tools, returning the same correctness,
+validation, effects and outcome evidence. All four skill paths and existing
+discovery manifests remain. #202 owns representative implementation/review and
+equivalent non-Pane evaluation; its case handoff belongs in #248's report.
+Structural/document checks do not establish behavioral parity or close gaps.
+#203 owns later retirement after accepted affected-row evidence.
+
 ## Pane–SoundAtlas Composition Contract
 
 This section is the single tracked composition-contract authority for using a
@@ -337,8 +400,9 @@ For work in the SoundAtlas repository, apply the canonical registry to the
 current Issue stage and work type before selecting generic skills. Use every
 matching repository-local `soundatlas-*` skill ahead of an
 overlapping generic skill. The matching SoundAtlas skill retains its assigned
-workflow gates, canonical artifact location, implementation procedure,
-validation, and review output.
+workflow gates, canonical artifact location, domain requirements, validation
+and review output. For implementation and review composition, generic execution
+mechanics remain runtime-selected under the contract above.
 
 Generic skills may provide a capability not covered by a SoundAtlas skill, but
 they must not replace or duplicate a matching SoundAtlas workflow. In
@@ -359,6 +423,32 @@ explicit Human authorization boundaries continue to apply.
 
 This precedence policy is owned here, with concise repository execution
 instructions in `AGENTS.md`.
+
+### Documentation consistency
+
+Classify documentation targets before editing:
+
+- **Source of truth:** authoritative product, architecture, workflow, data or
+  editorial rules; change only when approved scope names that authority.
+- **Derived guidance:** summaries, instructions or companion views; align only
+  when their source or approved Issue requires it.
+- **Workflow/process:** repeatable agent/reviewer guidance; preserve registry
+  routing and ownership.
+- **Archive/history:** completed decisions or past work; preserve historical
+  meaning without silently promoting it to authority.
+
+Identify the authoritative source and directly related documents, active
+references, compatibility wrappers and discovery consumers. Discovery does not
+authorize rewriting every mention: limit edits to named authorities and exact
+audited derived files in the Proceed. Derived changes are mechanical alignment,
+not new behavior. Preserve terminology, history and existing gates; check for
+stale, duplicate or contradictory active references without unrelated rewrites.
+A new product/source/editorial or other high-risk decision stops affected work
+and returns to its owner. Application, seed, API, deployment or production
+changes require explicit approved scope. Validate references and scope plus
+the Issue's applicable formatting/schema/domain checks; report classification,
+owners, actual related references checked and exact derived changes through
+the single canonical Implementation Report.
 
 ### Use a skill for repeatable execution
 

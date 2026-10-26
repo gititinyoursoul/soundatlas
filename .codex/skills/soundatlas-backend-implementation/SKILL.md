@@ -5,170 +5,45 @@ description: Implement SoundAtlas Python and FastAPI backend changes from approv
 
 # SoundAtlas Backend Implementation
 
-Use this skill for backend implementation work from an approved SoundAtlas
-GitHub Issue. The approved Issue is the primary product and scope authority.
+This retained entrypoint supplies SoundAtlas requirements for scoped backend
+implementation. The runtime selects suitable implementation capabilities and
+execution mechanics; ordinary repository/GitHub tools may fulfil them.
 
-## Required context
+Use the registry's [implementation and review composition](../../../docs/workflow-registry.md#implementation-and-review-composition)
+for authority inputs, readiness, allowed effects, evidence and stop routes.
+When Pane is selected, use its existing composition contract in that registry.
+This skill does not prescribe or copy a provider's implementation procedure.
 
-Read these before editing:
+## Required authorities and context
 
-- `AGENTS.md`
-- `docs/github-issue-workflow.md`
-- `docs/workflow-registry.md`
-- `docs/data/seed-data-validation.md` when seed-backed behavior is involved
-- the approved GitHub Issue, including any recorded Grill-Me findings or
-  decisions and its `## Plan Update` or `## Detailed Plan Update` when risk
-  flags are present. A standalone `## Grill-Me Review` is used when the result
-  is material or explicitly standalone; a clean check may be inline in the
-  relevant action comment.
+- `AGENTS.md`, `docs/workflow-registry.md` and
+  `docs/github-issue-workflow.md` for repository constraints and lifecycle gates.
+- The current approved Issue and confirmed decisions, Concept or
+  Concept-not-required basis, latest Plan and matching Proceed when required,
+  exact named paths and audited derived files, exclusions and allowed effects.
+- `docs/architecture/backend.md` for FastAPI/Pydantic, explicit seed loading,
+  endpoint continuity and artifact boundaries; `docs/data/seed-data-validation.md`
+  for seed-backed behavior and documented data contracts.
+- Existing `backend/app/` schemas, handlers, repositories/loaders, relevant
+  tests and seed data; the accepted response, filter, unknown-ID and
+  empty-result behavior for the slice.
+- Applicable project execution/environment authorities and the backend
+  validation commands in `AGENTS.md`.
 
-Optional context may clarify the Issue without overriding it:
+## Required outcome and evidence
 
-- endpoint or backend behavior in scope
-- relevant seed files and expected response shapes
-- filtering, unknown-ID, and empty-result behavior
-- validation commands or runtime constraints
+The approved slice must provide typed seed-backed behavior consistent with its
+schema, data and endpoint contracts. Preserve unaffected endpoint/filter/error
+behavior and include focused tests for changed behavior through
+`soundatlas-testing-implementation`. An endpoint list is not implicit permission
+to expand the MVP or change unrelated behavior.
 
-## Implementation gate
-
-Implement only when the user explicitly requests implementation of the approved
-Issue, for example `implement issue #<number>`, or when the work is clearly
-trivial and low-risk.
-
-For non-trivial Issue-based work, require a current `## Plan Update` or
-`## Detailed Plan Update` and a later `## Proceed to Implementation` record
-linking that exact Plan.
-
-For security, credentials, infrastructure, networking, workflow, UX, editorial,
-cross-cutting, user-visible, vague, or materially ambiguous risk flags, also
-require a recorded Grill-Me result with required material decisions confirmed
-and incorporated into the Plan.
-
-Use a standalone `## Grill-Me Review` for material findings, decisions,
-blockers, or explicitly standalone sessions. Record a clean check inline in the
-action comment when useful.
-
-Explicit implementation wording does not bypass these gates. Stop for approval
-if implementation reveals product behavior or another high-risk decision outside
-the approved Issue. Record low-risk local assumptions in the Implementation
-Report or Issue comment.
-
-Before the first repository edit, and again before resuming after a canonical
-revision or blocking decision, export the current Issue fields defined in
-`docs/github-issue-workflow.md` and require
-`python scripts/check_issue_readiness.py --file <export>` to pass. Add
-`--require-grill-review` when risk flags require a recorded Grill-Me result. If
-the Human has authorized the latest Plan but the Proceed record is missing, use
-`soundatlas-issue-planning` to record it first. Do not duplicate validator rules
-in this Skill.
-
-## Backend constraints
-
-- Keep FastAPI application code under `backend/app/`.
-- Use Python and `uv` patterns already established in the repository.
-- Use Pydantic schemas for API response models.
-- Load MVP data from `data/seed/` until a database is explicitly introduced.
-- Keep route, place, event, and connection field names aligned with seed data.
-- Preserve the documented seed contracts in
-  `docs/data/seed-data-validation.md`.
-- Do not introduce a database unless the approved Issue explicitly requests it.
-- Do not commit secrets, API keys, local paths, generated media, audio, or
-  video.
-- For non-trivial work, edit only named authorities and the audited direct
-  consumers listed by the Plan's planned write boundary and Proceed record.
-  Route any other path or material scope change to a linked Intake Issue.
-
-## Process
-
-1. Read the approved Issue and identify the exact backend acceptance criteria.
-2. Inspect the existing backend structure under `backend/app/`, relevant tests,
-   and the related seed data before editing.
-3. Check the documented seed contract before changing seed-backed behavior.
-4. Define or update Pydantic schemas before endpoint handlers when response
-   shapes change.
-5. Add or update explicit seed repositories/loaders when data access changes.
-6. Implement only the approved backend slice. Preserve existing endpoint,
-   filtering, unknown-ID, and empty-result behavior unless the Issue changes it.
-7. Add targeted tests for changed behavior.
-8. If implementation reveals a missing product or high-risk decision, stop and
-   update the Issue rather than silently expanding scope.
-
-## Expected MVP endpoints
-
-The current MVP backend includes:
-
-- `GET /health`
-- `GET /routes`
-- `GET /events`
-- `GET /events/{event_id}`
-- `GET /places`
-- `GET /connections`
-
-Treat this list as existing context, not permission to change endpoints outside
-the approved Issue.
-
-## Validation
-
-Run the narrowest relevant checks first. For backend changes, the repository
-defaults are:
-
-```sh
-uv run ruff check .
-uv run pyright
-uv run pytest
-```
-
-If a check is unavailable or blocked, report the blocker clearly. Also run
-`python scripts/check_doc_references.py` when workflow or documentation files
-change.
-
-## Implementation Report
-
-Before finalizing the report for completed non-trivial Issue work, use
-`soundatlas-implementation-review`. Resolve or route required findings, then
-include its Review Result in this same report. Do not post a separate routine
-review comment.
-
-Report in the Issue and final response:
-
-```md
-## Summary
-
-- What backend behavior changed.
-- Which approved Issue behavior was implemented.
-
-## Acceptance Criteria Result
-
-- AC1: Pass/Fail — evidence
-
-## Verification
-
-- `<command>` — Pass/Fail
-
-## Files Changed
-
-- `<path>`: `<reason>`
-
-## Review Result
-
-- Verdict:
-- Reviewer mode:
-- Compared artifacts:
-- Evidence coverage:
-- Findings and routing:
-- Documentation impact:
-
-## Remaining Risks
-
-- None, or the specific blocker.
-```
-
-Follow the commit-ready and local-commit lifecycle in
-`docs/github-issue-workflow.md`. Use a Conventional Commit and include
-`Issue: #<number>` in the commit body.
-
-After a successful push for completed Issue work, follow the post-push
-completion lifecycle in `docs/github-issue-workflow.md`: run the local
-completion gate, capture the published commit hash, verify acceptance criteria
-and Issue-relevant working-tree state, post the single standard completion
-comment, and close the Issue only after that comment succeeds.
+Return changed paths, acceptance-criteria evidence and actual
+`uv run ruff check .`, `uv run pyright` and `uv run pytest` results as required
+by `AGENTS.md`, together with applicable seed/reference checks. Record an
+unavailable check or partial execution explicitly; it cannot support a pass.
+Include risks and unresolved decisions through the registry contract.
+`soundatlas-issue-planning` composes the single Issue Implementation Report
+including the Review Result; commit and delivery gates remain with the
+lifecycle. Preserve this path and discovery manifest until the separate #203
+retirement gate.
