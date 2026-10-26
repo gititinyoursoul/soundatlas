@@ -101,7 +101,7 @@ described in `docs/design/screenshots/README.md`.
 
 Use these entrypoints in this order:
 
-1. `prompts/design-ux.md` - UX audit, main screen design plan, screenshot critique
+1. `prompts/design-ux.md` - compatibility entrypoint for UX Audit, UX Pass Plan, and Screenshot Critique; findings/proposals only
 2. `soundatlas-grill-me` - critique and narrow the selected UX idea before Issue planning when needed
 3. `soundatlas-issue-planning` - turn the selected design idea into one Issue Plan Update when needed
 4. `.codex/skills/soundatlas-frontend-implementation/SKILL.md` - implement frontend changes from an approved Issue
@@ -141,7 +141,7 @@ Improve the main exploration screen so a user can follow the Birth of Hip-Hop ro
 
 ### Step 2: Audit Without Editing
 
-Use the **UX Audit** template in `prompts/design-ux.md`.
+Use the **UX Audit** mode in `prompts/design-ux.md`.
 
 Rules:
 
@@ -159,9 +159,12 @@ Output:
 - Missing loading, empty, error, selected, or responsive states
 - Material UI-quality findings using the required region, evidence, owner,
   impact, and correction format
+- Findings ordered by severity with evidence, gaps against the intended
+  baseline, applicable desktop-contract rules, and affected interaction states
 - Recommended design direction
-- Proposed first UX pass
+- Candidate UX slices and a proposed first UX pass
 - Files and components likely affected
+- Suggested audit and mockup paths when durable or visual artifacts are useful
 
 Store durable audits in `docs/design/audits/` with a date or frontend version in the filename, for example:
 
@@ -238,13 +241,17 @@ Example detailed workflow slice:
 
 ### Step 5: Plan One UX Pass
 
-Use the **UX Pass Plan** template in `prompts/design-ux.md` to narrow the
+Use the **UX Pass Plan** mode in `prompts/design-ux.md` to narrow the
 selected workflow slice before implementation planning. Then use
 `soundatlas-grill-me` to critique the UX slice, and use
 `soundatlas-issue-planning` to turn it into one GitHub Issue Plan
 Update before implementing non-trivial approved work.
 
 Plan only one pass at a time.
+
+This UX slice proposal may be preserved as a design exploration, but does not
+replace the canonical implementation Plan Update in the GitHub Issue or
+authorize edits.
 
 Useful pass types:
 
@@ -259,6 +266,7 @@ Useful pass types:
 
 Output:
 
+- UX target, selected user workflow slice, and explicit out-of-scope work
 - Affected files/components
 - State changes
 - Layout and interaction changes
@@ -268,11 +276,13 @@ Output:
   and authoritative-action states
 - Relevant explicitly referenced target mockups, or `None` with a reason
 - Responsive behavior
+- Accessibility considerations
 - Required desktop visual evidence and target viewport
 - Required mobile evidence only when mobile layout or interaction changes
 - Test plan
 - Acceptance criteria
 - Risks and open questions
+- Recommended audit/design-exploration and mockup paths when useful
 - Suggested commit grouping
 
 ### Step 6: Implement One Pass
@@ -325,7 +335,7 @@ After a visual pass, run the app and capture the planned desktop evidence.
 Capture mobile evidence only when the change affects mobile layout or
 interaction.
 
-Use the **Screenshot Critique** template in `prompts/design-ux.md`.
+Use the **Screenshot Critique** mode in `prompts/design-ux.md`.
 
 If screenshots are meant to become the current tracked reference set, promote
 only the Human-approved files into `docs/design/screenshots/` and update that
@@ -341,6 +351,12 @@ Output:
 - Affordance and interaction cue issues
 - Responsive issues
 - Prioritized polish items
+- Specific findings with screenshot evidence, prioritized by user impact and
+  implementation size; classify each as bug, polish, or design direction
+- Recommended follow-up slice and whether a GitHub Issue Plan Update or
+  intended-design baseline change is needed
+- Whether the critique should be preserved under `docs/design/audits/` and
+  annotated screenshots or mockups under `docs/design/mockups/`
 - Whether each material finding is corrected in the approved pass, routed to a
   follow-up, or remains an acceptance blocker
 

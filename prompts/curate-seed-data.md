@@ -27,12 +27,11 @@ Project constraints
 
 Process
 
-- If the seed work is non-trivial, use `soundatlas-grill-me` first to check
-  draft/publish boundaries, source risk, route fit, and data-shape risk. Record
-  material findings or decisions in a standalone `## Grill-Me Review`; a clean
-  check may be noted inline in the next action comment. Then use
-  `soundatlas-issue-planning` to create or update a GitHub Issue Plan Update
-  before multi-file data changes.
+- Follow `docs/workflow-registry.md` and `docs/github-issue-workflow.md` for
+  critique, Issue planning, implementation authorization, reporting, and commits.
+  Seed-specific critique covers draft/publish boundaries, source risk, route
+  fit, and data-shape risk; editorial requirements remain in
+  `docs/content/editorial-workflow.md`.
 - Check the route content in `docs/content/routes/<route-id>/` for new route
   work, or the existing legacy concept in `docs/content/route-concepts/`, plus
   MVP scope in `docs/mvp-concept.md`.
@@ -65,7 +64,6 @@ Process
   and order during migration; do not mix sections with summary/significance or
   generate fallback headings automatically.
 - Validate JSON syntax and cross-references if tooling is available.
-- Capture new planned follow-up work in GitHub Issues. Leave legacy `TODO.md` entries alone unless the approved Issue or plan explicitly includes legacy backlog cleanup.
 
 Deliverables
 
@@ -73,7 +71,4 @@ Deliverables
 - Any updated route or validation docs.
 - Pipeline or reviewed-variant note when route-folder automation informed the
   seed changes.
-- Related GitHub Issue note, when used.
 - Validation run and outcome.
-- Suggested commit message, usually `data: ...`.
-- If implementing from an Issue, include a commit body footer such as `Issue: #123`.

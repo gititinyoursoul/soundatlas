@@ -410,6 +410,19 @@ Remove or rename a legacy wrapper only when an approved Issue explicitly
 authorizes it after repository references and compatibility needs have been
 reviewed.
 
+`prompts/design-ux.md` remains for this registry and the UX workflow’s UX Audit,
+UX Pass Plan, and Screenshot Critique consumers. Its canonical target is
+`docs/design/ux-workflow.md` plus the desktop contract and intended design
+baseline; outputs stop at findings/proposals before canonical Issue planning.
+Validate each mode’s authority/evidence links and proposal boundary. Existing
+skill manifests remain for discovery/default invocation of their own
+same-directory `SKILL.md`, with no independent behavioral authority; check that
+each resolves to its surviving skill. #202 owns representative evaluation of
+these compatibility routes and the reduced route/seed lifecycle wording.
+#203 owns retirement only after accepted affected-row evidence, a reference
+audit, and its Human-confirmed Plan. This reduction removes no entrypoint and
+does not establish behavioral parity or close evaluation gaps.
+
 ### Document ownership and precedence
 
 - `AGENTS.md` owns repository-wide constraints and working conventions.
