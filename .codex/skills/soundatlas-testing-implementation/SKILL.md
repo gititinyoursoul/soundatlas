@@ -5,11 +5,11 @@ description: Plan and implement focused SoundAtlas tests from approved Issues or
 
 # SoundAtlas Testing Implementation
 
-Use this skill for standalone SoundAtlas test planning and test implementation
+Use this skill for standalone SoundAtlas test planning and implementation
 across backend, frontend, data validation, and cross-cutting behavior. The
-approved GitHub Issue or concrete focused test scope defines what may be
-tested. Implementation skills remain responsible for targeted tests covering
-behavior they change; this skill is not a mandatory separate gate for every
+approved GitHub Issue or concrete focused scope defines what may be tested.
+Implementation skills remain responsible for targeted tests covering behavior
+they change; this skill is not an additional mandatory stage for every
 implementation.
 
 ## Required context
@@ -61,107 +61,128 @@ For non-trivial work, edit only named authorities and the audited direct
 consumers listed by the Plan's planned write boundary and Proceed record. Route
 any other path or material scope change to a linked Intake Issue.
 
-## Process
+## Evidence contract
 
-1. Read the approved Issue or focused test request and identify the exact test
-   behavior and acceptance boundary.
-2. Inspect existing tests, coverage patterns, and target code before editing.
-3. Define the test level: unit, component, integration, end-to-end, or
-   seed/data validation.
-4. Identify current coverage, behaviors to cover, intentional out-of-scope
-   behavior, required fixtures/mocks, and environment constraints.
-5. Prefer a small first test slice before broad coverage.
-6. Add only the tests in the approved or focused scope. Keep fixtures minimal,
-   deterministic, independent, and shaped like current seed/API responses.
-7. Mock filesystem paths, network calls, map tiles, and external media. Do not
-   require real browser network access, audio, video, or large fixtures.
-8. If implementation reveals a missing product or high-risk decision, stop and
-   update the Issue rather than silently expanding test scope.
+A focused test scope names the behavior, relevant positive and negative cases,
+test level, existing runner, fixture and mock boundaries, environment, and
+expected assertions before execution. Prefer a small first slice with minimal,
+deterministic, independent fixtures shaped like current seed or API data.
+Isolate filesystem writes, network calls, map tiles, and external media. Do not
+require real browser network access, audio, video, or large fixtures.
+
+Keep these evidence types distinct:
+
+- **Hypothesis experiment:** tests a proposition or informs a decision. Record
+  the hypothesis and observed result. It does not replace required
+  deterministic assertions.
+- **Deterministic automated coverage:** exercises approved behavior at the
+  required unit, component, integration, end-to-end, or seed/data-contract
+  level with repeatable inputs and meaningful assertions. Browser tests can
+  qualify when deterministic and required; a runner name alone does not prove
+  coverage level.
+- **Runtime validation:** checks behavior in the actual authorized runtime,
+  including browser or Leaflet rendering when required. It does not make up for
+  missing deterministic unit, component, integration, or data-contract tests.
+- **PR journey QA:** exercises a user journey and records observations. It adds
+  broader confidence but cannot alone satisfy required deterministic coverage.
+
+Do not treat different evidence as a substitute for a required coverage level.
+For example, server-side rendering does not establish browser interaction, and
+a screenshot does not establish unit assertions.
+
+## Runner and environment selection
+
+Choose commands from current `AGENTS.md`, project instructions, manifests, and
+the applicable data authority. Use ordinary repository tools when they meet
+the scope. When Pane is selected, follow the existing Pane–SoundAtlas
+composition contract in `docs/workflow-registry.md`; do not require equivalence
+to named Pane methods or a particular provider. A missing provider by itself
+does not establish a capability gap.
+
+For project-specific execution, first check project instructions and Compose
+configuration and use only an operator-approved mode and service. `project
+run` requires explicit one-off approval; Compose membership or healthy status
+does not grant it. `project exec` requires a separately authorized running
+service. Build or start the stack only when authorized and needed. Do not
+install project toolchains in the persistent runtime or bypass a denial.
 
 ## Backend guidance
 
-- Use `pytest` through `uv run pytest` when possible.
+- Use `uv run pytest` for focused backend tests. When backend code changes, run
+  the required `uv run ruff check .`, `uv run pyright`, and `uv run pytest`.
 - Cover API response behavior, seed loading, filtering, unknown IDs, empty
   results, and reference integrity when relevant to the approved scope.
 - Use small fixtures and mock filesystem paths or external services.
 
 ## Frontend guidance
 
-- Use `npm test` once frontend test infrastructure exists.
-- Prefer Vitest for pure TypeScript utilities and lightweight state logic.
-- Prefer Svelte Testing Library for component rendering and interaction tests.
+- Use the existing Vitest setup for focused frontend tests. `npm test` also
+  runs the legacy CSS checker, so a targeted Vitest filter is not the full
+  validation gate.
+- Use current utility and component test patterns. Identify server-rendered
+  component coverage as SSR; do not describe it as browser interaction.
 - Use Playwright for browser end-to-end, screenshot, or Leaflet rendering tests
-  only when the scope requires it; report Chromium/environment blockers.
+  only when the approved scope requires it. Report Chromium or environment
+  blockers separately from available deterministic checks.
 - Mock Leaflet, map tiles, and browser network behavior.
 - Keep fixtures small and shaped like current API or seed responses.
 
-## Validation
+For frontend code changes, follow `AGENTS.md` validation requirements,
+including `npm run validate`; use `validate:release` or `validate:pages` when
+their documented conditions apply.
 
-Run the narrowest relevant command first, then broader checks when useful:
+## Data/API guidance
 
-```sh
-uv run pytest
-npm test
-```
+Follow `docs/data/seed-data-validation.md` for seed checks and select the
+relevant schema, repository, or API tests for the approved contract. Keep
+backend schema/seed evidence and frontend API-client evidence separate unless
+the scope includes a test that establishes their interaction.
 
-Run only the applicable command for the target area. Also run
-`git diff --check` and `python scripts/check_doc_references.py` when workflow or
-documentation files change.
+## Unavailable and partial execution
 
-## Test Report
+Distinguish an unmet prerequisite before invocation from a command that started
+and failed or produced partial results. Record the tested revision, behavior
+and intended evidence level, actual command and environment, result or exact
+missing prerequisite, completed and unrun checks, changed paths or partial
+effects, and the recovery owner. Mark unavailable checks blocked or unrun,
+never passing. Preserve required coverage and stop affected acceptance until
+the gap is resolved; runtime recovery mechanics belong to the runtime owner.
 
-Before finalizing the report for completed non-trivial Issue work, use
-`soundatlas-implementation-review`. Resolve or route required findings, then
-include its Review Result in this same report. Do not post a separate routine
-review comment.
+If implementation reveals a missing product or high-risk decision, stop and
+update the Issue rather than silently expanding scope. A test result alone
+does not advance delivery, Project status, publication, or retirement.
 
-Report in the Issue and final response:
+## #202 evaluation handoff
 
-```md
-## Summary
+Issue #202 owns representative behavior execution and the readiness/GAP-4
+verdict. These are prepared cases, not evidence that execution has occurred.
+Each requires an approved #202 scope, tested revision, current authorities and
+authorization, actual capability/provider/procedure and provenance,
+runner/environment, fixture/mock choices, commands, results, and
+expected-versus-observed evidence. Include an ordinary-tools path for the same
+required checks and selected-Pane evidence only when Pane is chosen.
 
-- What test coverage changed.
-- Which approved behavior or focused scope was covered.
+| Case and entry criteria | Expected outcome | Evidence to record |
+| --- | --- | --- |
+| Backend API/filter/error behavior with an approved scope and existing `backend/tests/test_api.py` | Use TestClient and deterministic seed input; assert filtering, unknown ID, and invalid range behavior. Use a temporary seed repository for writes; candidate command: `uv run pytest tests/test_api.py`. | Assertions, fixtures and write isolation, actual test level and result; a health check or journey alone is insufficient. |
+| Frontend state/rendering with an approved scope and existing selection/Timeline tests | Exercise empty, ordered, and selected states with `npm exec -- vitest run src/lib/data/selection.test.ts src/lib/components/Timeline.test.ts`. | Deterministic inputs and results; identify Timeline server rendering as SSR. Required browser interaction is separate evidence or remains blocked. |
+| Data/API contract with an approved schema, seed, or client scope | Check story representation exclusivity/order, references/default place, and mocked API responses; candidate commands: `uv run pytest tests/test_schemas.py tests/test_seed_repository.py` and `npm exec -- vitest run src/lib/api/soundatlas.test.ts`. Do not write production seeds. | Positive and invalid payload results, reference assertions, mock boundary, and separate backend/frontend evidence; do not infer cross-system parity. |
+| Unavailable runner, browser, or service, or a denied approved-route prerequisite | Record the unmet prerequisite before start versus a failure after start; retain successful checks, mark unrun obligations, stop affected acceptance, and name the recovery owner. Do not cause a denial intentionally. | Exact prerequisite/error, command if attempted, revision, partial effects, completed/unrun checks, and confirmation that no bypass, install, or pass claim occurred. |
 
-## Coverage and Scope
+Textual routes and structural checks do not close GAP-4. Retirement remains
+blocked until every required #202 case passes and #202 records accepted
+affected-row evidence, followed by a Human-confirmed #203 Plan. If evaluation
+fails, retain the override and route the correction to its owner; rollback
+restores only this slice's prior hunks while preserving user work and canonical
+Issue history. Issue #203 owns any later retirement decision; #249 does not
+retire this testing override.
 
-- Test level:
-- Covered behavior:
-- Intentionally out of scope:
-- Fixtures/mocks/environment:
+## Validation and reporting
 
-## Acceptance Criteria Result
-
-- AC1: Pass/Fail — evidence
-
-## Verification
-
-- `<command>` — Pass/Fail
-
-## Files Changed
-
-- `<path>`: `<reason>`
-
-## Review Result
-
-- Verdict:
-- Reviewer mode:
-- Compared artifacts:
-- Evidence coverage:
-- Findings and routing:
-- Documentation impact:
-
-## Remaining Risks
-
-- None, or the specific gap/blocker.
-```
-
-Follow the commit-ready and local-commit lifecycle in
-`docs/github-issue-workflow.md`. Use a Conventional Commit and include
-`Issue: #<number>` in the commit body.
-
-After a successful push for completed Issue work, follow the post-push
-completion lifecycle in `docs/github-issue-workflow.md`: run the local
-completion gate, capture the published commit hash, verify acceptance criteria
-and Issue-relevant working-tree state, post the single standard completion
-comment, and close the Issue only after that comment succeeds.
+Run only checks required by the approved scope and current project guidance.
+Workflow or documentation changes use the validation commands named by their
+Plan, including `git diff --check` and `python scripts/check_doc_references.py`
+when applicable. The Issue lifecycle, implementation review, commit, and
+reporting requirements are owned by `docs/github-issue-workflow.md`,
+`docs/workflow-registry.md`, and `soundatlas-issue-planning`; follow those
+sources instead of duplicating their generic edit and report procedures here.

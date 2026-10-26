@@ -610,7 +610,7 @@ by the agent.
 | Frontend implementation                 | Skill                                  | Validated latest Plan and Proceed record when non-trivial                    | Approved GitHub Issue; `.codex/skills/soundatlas-frontend-implementation/SKILL.md` | `.codex/skills/soundatlas-frontend-implementation/SKILL.md`                                                      | Frontend changes and implementation report with planned UI-quality evidence for non-trivial user-visible work |
 | Backend implementation                  | Skill                                  | Validated latest Plan and Proceed record when non-trivial                    | Approved GitHub Issue; `.codex/skills/soundatlas-backend-implementation/SKILL.md` | `.codex/skills/soundatlas-backend-implementation/SKILL.md`                                                        | Backend changes and implementation report                           |
 | Documentation and workflow changes      | Skill                                  | Validated latest Plan and Proceed record when non-trivial                    | Approved GitHub Issue; `.codex/skills/soundatlas-documentation-implementation/SKILL.md` | `.codex/skills/soundatlas-documentation-implementation/SKILL.md`                                                  | Documentation changes and implementation report                     |
-| Test planning and implementation        | Skill                                  | Validated latest Plan and Proceed record for non-trivial Issue work          | Approved GitHub Issue or focused scope; `.codex/skills/soundatlas-testing-implementation/SKILL.md` | `.codex/skills/soundatlas-testing-implementation/SKILL.md`                                                        | Tests and verification report                                       |
+| Test planning and implementation        | Skill                                  | Validated latest Plan and Proceed record for non-trivial Issue work          | Approved GitHub Issue or focused scope; `.codex/skills/soundatlas-testing-implementation/SKILL.md` | `.codex/skills/soundatlas-testing-implementation/SKILL.md`                                                        | Focused deterministic coverage contract, distinct evidence types, and unavailable or partial execution outcomes; canonical reporting follows Issue lifecycle |
 | Experimental route-authoring runs       | Skill                                  | Approved Issue, accepted Concept, current Plan, and matching Proceed record  | Approved Issue for scope; skill for procedure; route-version artifacts under `docs/content/route-experiments/` for run state | `.codex/skills/soundatlas-experimental-route-authoring/SKILL.md` | Numbered experimental run outputs and comparison evidence           |
 | UX audit and critique                   | Prompt                                 | Inspection before implementation; Grill-Me before Issue planning when needed | `docs/design/desktop-ui-guide.md`, `docs/design/current-frontend-design.md`, explicitly referenced target mockups, and relevant audit | `prompts/design-ux.md` | Findings, UX slice, or audit with bounded UI-quality evidence |
 | Route editorial workflow                | Prompt plus command reference          | Grill-Me and approved Issue before broad route/seed changes                  | Route-folder artifacts and `docs/content/editorial-workflow.md`                    | `prompts/create-route.md` and `docs/content/workflow-commands.md`                                               | Route artifacts and reviewed seed proposal                          |
@@ -625,6 +625,14 @@ Frontend, backend, documentation, and testing implementation route directly to
 their corresponding skills. Grill Me also routes directly to
 `soundatlas-grill-me`. The YouTube query prompt remains a prompt because its
 specialized output boundary is intentional.
+
+The testing skill is SoundAtlas's focused deterministic-testing override. It
+defines coverage and evidence boundaries while leaving generic execution and
+Issue reporting procedure to their existing owners. Hypothesis experiments,
+runtime validation, and PR journey QA are separate evidence types; none
+substitutes for required deterministic assertions. Issue #202 owns
+representative execution and the readiness/GAP-4 verdict. Issue #203 owns any
+later retirement; #249 does not retire the override.
 
 ## Migration Guidance
 
