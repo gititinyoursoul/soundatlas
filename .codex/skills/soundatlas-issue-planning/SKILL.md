@@ -188,6 +188,14 @@ API, data, security, or workflow rules would otherwise be unclear.
   starts as a task, review, investigation, or decision.
 - Keep Plan Updates concise by default; use Detailed Plan Updates only when
   implementation would otherwise need to rediscover decisions.
+  For verification-only Issues with no planned repository edits, keep the Plan
+  to unresolved evidence gaps, the smallest checks needed to resolve them, and
+  the resulting decision or handoff. Reference existing policy instead of
+  restating it. Keep collected identities, hashes and execution details in the
+  report; retain inputs needed to define a check in the Plan. Bound any review
+  specimen to the requested evidence purpose. This changes neither required
+  independence, provenance, revision freshness, authorization nor acceptance
+  evidence.
 - Require user confirmation for material decisions about product behavior,
   scope, security, privacy, external APIs, editorial/source quality,
   irreversible workflow behavior, or production stability. Record low-risk
