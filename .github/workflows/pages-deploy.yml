@@ -41,6 +41,8 @@ jobs:
         working-directory: frontend
         env:
           LEGACY_CSS_BASE_REF: ${{ github.event.before }}
+          VITE_DATA_MODE: static
+          VITE_BASE_PATH: /soundatlas
 
       - name: Set up uv
         uses: astral-sh/setup-uv@v9.0.0
@@ -54,6 +56,10 @@ jobs:
 
       - name: Test backend
         run: uv run pytest
+        working-directory: backend
+
+      - name: Type-check backend
+        run: uv run pyright
         working-directory: backend
 
   deploy:
