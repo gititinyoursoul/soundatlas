@@ -1,14 +1,8 @@
-name: Frontend CI
+name: CI
 
 on:
   push:
-    paths:
-      - "frontend/**"
-      - ".github/workflows/**"
   pull_request:
-    paths:
-      - "frontend/**"
-      - ".github/workflows/**"
 
 permissions:
   contents: read
@@ -18,7 +12,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  validate:
+  frontend:
     name: Validate frontend
     runs-on: ubuntu-latest
     steps:
@@ -43,3 +37,28 @@ jobs:
         working-directory: frontend
         env:
           LEGACY_CSS_BASE_REF: ${{ github.event.pull_request.base.sha || github.event.before }}
+
+  backend:
+    name: Validate backend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v9.0.0
+        with:
+          version: latest
+          prune-cache: true
+
+      - name: Lint backend
+        run: uv run ruff check .
+        working-directory: backend
+
+      - name: Type-check backend
+        run: uv run pyright
+        working-directory: backend
+
+      - name: Test backend
+        run: uv run pytest
+        working-directory: backend

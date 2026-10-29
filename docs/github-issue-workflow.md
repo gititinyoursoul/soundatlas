@@ -817,11 +817,11 @@ If the index already contains unrelated staged work, the agent must not stage
 or commit into that index. It reports the conflict and leaves the existing
 staged work unchanged.
 
-A failed Frontend CI run blocks Issue completion and any non-corrective push
+A failed CI frontend job blocks Issue completion and any non-corrective push
 for its delivered range. A corrective push that addresses that exact failure is
 allowed only after `npm run validate:pages` passes locally and the human
 explicitly authorizes the push. Completion remains blocked until the corrective
-range's Frontend CI run passes. A demonstrably external GitHub/CI failure may
+range's CI frontend job passes. A demonstrably external GitHub/CI failure may
 be excepted only when the Issue records the affected run link and reason and
 the human explicitly authorizes the push.
 
@@ -911,8 +911,7 @@ Issue closure is a mandatory, ordered post-push step:
 
 1. Confirm that the reviewed commit or integration range was pushed to the
    intended remote branch, then capture its published commit hash.
-2. For a delivered range that triggers Frontend CI, confirm that its Frontend
-   CI run passed before continuing. A failed run leaves the Issue open under
+2. For a delivered range that triggers CI, confirm that its CI frontend job passed before continuing. A failed run leaves the Issue open under
    the corrective-push and external-failure rules above.
 3. Run the completion gate with the report, commit hash, one planned completion
    comment, and Issue-relevant working-tree verification:
@@ -939,7 +938,7 @@ Issue closure is a mandatory, ordered post-push step:
    reviewed integration range. The helper validates the accepted Issue report
    and remote reachability before mutating GitHub. Provide
    `--frontend-ci-run <run-id-or-url>` when the
-   delivered range triggers Frontend CI. It is not a push hook, scheduled
+   delivered range triggers CI. It is not a push hook, scheduled
    process, or substitute for the preceding human authorization and checks.
 
 4. Verify every acceptance criterion against the committed change and checks.

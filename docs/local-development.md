@@ -342,7 +342,7 @@ To validate the GitHub Pages deployment mode locally, run:
 npm run validate:pages
 ```
 
-This uses the same static-data mode and `/soundatlas` base path as Frontend CI.
+This uses the same static-data mode and `/soundatlas` base path as CI.
 
 Optional coverage reports:
 
