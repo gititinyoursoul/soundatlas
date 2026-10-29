@@ -243,8 +243,10 @@ def project_ids(run: Run, owner: str, project_number: int) -> tuple[str, str, st
 
 
 def complete(args: argparse.Namespace, run: Run) -> int:
-    if not (args.push_authorized or args.merged_pr):
-        raise ReconciliationError("complete requires --push-authorized or --merged-pr")
+    if args.merged_pr and not args.merge_authorized:
+        raise ReconciliationError("PR completion requires --merge-authorized")
+    if not args.merged_pr and not args.push_authorized:
+        raise ReconciliationError("non-PR completion requires --push-authorized")
     if not args.working_tree_verified:
         raise ReconciliationError("complete requires --working-tree-verified")
     data = issue_data(run, args.repo, args.issue)
@@ -434,6 +436,7 @@ def parser() -> argparse.ArgumentParser:
     )
     complete_parser.add_argument("--push-authorized", action="store_true")
     complete_parser.add_argument("--merged-pr", type=int, help="merged PR closing this Issue")
+    complete_parser.add_argument("--merge-authorized", action="store_true")
     complete_parser.add_argument("--post-merge-verified", action="store_true", help="attest CI and applicable deployment verification")
     complete_parser.add_argument("--working-tree-verified", action="store_true")
     complete_parser.add_argument(

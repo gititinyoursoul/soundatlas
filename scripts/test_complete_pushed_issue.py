@@ -74,7 +74,7 @@ class CompletePushedIssueTests(unittest.TestCase):
         return responses
 
     def pr_args(self):
-        return ("--repo", "owner/repo", "--owner", "owner", "complete", "--issue", "178", "--commit", "abcdef0", "--merged-pr", "42", "--post-merge-verified", "--working-tree-verified")
+        return ("--repo", "owner/repo", "--owner", "owner", "complete", "--issue", "178", "--commit", "abcdef0", "--merged-pr", "42", "--merge-authorized", "--post-merge-verified", "--working-tree-verified")
 
     def test_merged_pr_completion_does_not_close_again(self):
         runner = FakeRunner(self.pr_responses())
@@ -99,6 +99,12 @@ class CompletePushedIssueTests(unittest.TestCase):
         args = tuple(arg for arg in self.pr_args() if arg != "--post-merge-verified")
         self.assertEqual(self.run_main(runner, *args), 1)
         self.assertFalse(any(call[0][:2] == ["gh", "api"] for call in runner.calls))
+
+    def test_merged_pr_requires_authorization_before_inspection(self):
+        runner = FakeRunner({})
+        args = tuple(arg for arg in self.pr_args() if arg != "--merge-authorized")
+        self.assertEqual(self.run_main(runner, *args), 1)
+        self.assertEqual(runner.calls, [])
 
     def test_merged_pr_rejects_same_issue_number_in_another_repository(self):
         responses = self.pr_responses()

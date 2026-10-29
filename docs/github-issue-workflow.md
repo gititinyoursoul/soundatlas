@@ -930,7 +930,7 @@ effects before resuming only missing steps. Do not duplicate a completion
 comment or mark `Done` before evidence exists. Existing completion evidence
 must match the delivery; ambiguous or conflicting evidence requires human
 review, not an automatic overwrite. The explicit helper may be used for a
-closed Issue with `--merged-pr <number> --post-merge-verified` and the reviewed
+closed Issue with `--merged-pr <number> --merge-authorized --post-merge-verified` and the reviewed
 commit, after the human-authorized merge and checks. It checks the merged PR,
 linked Issue, reviewed PR head and reachability of the published merge commit.
 The verification flag attests that required CI and deployment checks passed;
