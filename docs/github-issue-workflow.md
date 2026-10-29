@@ -906,12 +906,15 @@ history, or archive to recover.
 
 ### Merged pull request route
 
-Before merging a PR into the repository default branch, verify accepted review,
-successful PR checks, reviewed delivery scope, and the separate explicit Human
-authorization for that exact merge. List each Issue intended to close using a
-GitHub closing reference such as `Closes #98` only when its scope and all
-pre-merge requirements are satisfied. Assess each linked Issue separately; do
-not imply authorization for other merges or external effects.
+When creating a PR, include a GitHub closing reference such as `Closes #98`
+for each Issue it actually addresses. Assess each Issue separately; do not
+wait for checks to pass before adding the references.
+
+Before merging into the repository default branch, follow the applicable GitHub
+protection rules for required checks and GitHub PR approvals, verify the
+reviewed delivery scope, and obtain separate explicit Human authorization for
+that exact merge. SoundAtlas implementation review remains a separate
+requirement. Do not imply authorization for other merges or external effects.
 
 After merge, inspect the actual Issue and PR state, record the merged commit and
 verify default-branch CI and applicable deployment. For each affected Issue,
