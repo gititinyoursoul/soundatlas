@@ -34,6 +34,13 @@ def project_command(*arguments: str) -> list[str]:
     return [sys.executable, PROJECT_HELPER, *arguments]
 
 
+def require_default_branch(run: Run, repo: str, branch: str) -> None:
+    data = json_output(run, ["gh", "repo", "view", repo, "--json", "defaultBranchRef"])
+    default = data.get("defaultBranchRef") if isinstance(data, dict) else None
+    if not isinstance(default, dict) or default.get("name") != branch:
+        raise ReconciliationError("PR target is not the repository default branch")
+
+
 def run_command(command: list[str], input_text: str | None = None) -> str:
     result = subprocess.run(
         command,
@@ -282,6 +289,7 @@ def complete(args: argparse.Namespace, run: Run) -> int:
     if args.merged_pr:
         if not args.post_merge_verified:
             raise ReconciliationError("PR completion requires --post-merge-verified")
+        require_default_branch(run, args.repo, args.branch)
         pr = json_output(run, ["gh", "pr", "view", str(args.merged_pr), "--repo", args.repo,
                                "--json", "state,baseRefName,headRefOid,mergeCommit,closingIssuesReferences"])
         linked = pr.get("closingIssuesReferences", [])
@@ -382,6 +390,7 @@ def record_pr_failure(args: argparse.Namespace, run: Run) -> int:
     """Reopen one affected Issue and record an observed post-merge failure."""
     if not args.merge_authorized or not args.failure.strip():
         raise ReconciliationError("failure recovery requires merge authorization and a failure description")
+    require_default_branch(run, args.repo, args.branch)
     data = issue_data(run, args.repo, args.issue)
     comments = data.get("comments")
     if not isinstance(comments, list) or data.get("state") not in ("OPEN", "CLOSED"):

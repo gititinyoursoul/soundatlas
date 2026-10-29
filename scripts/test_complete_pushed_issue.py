@@ -67,6 +67,7 @@ def project_command(*arguments):
 class CompletePushedIssueTests(unittest.TestCase):
     def pr_responses(self):
         responses = self.completion_responses()
+        responses[("gh", "repo", "view", "owner/repo", "--json", "defaultBranchRef")] = output({"defaultBranchRef": {"name": "main"}})
         issue_key = ("gh", "issue", "view", "178", "--repo", "owner/repo", "--json", "number,title,state,comments,url")
         responses[issue_key] = self.issue().replace('"OPEN"', '"CLOSED"')
         responses[("gh", "pr", "view", "42", "--repo", "owner/repo", "--json", "state,baseRefName,headRefOid,mergeCommit,closingIssuesReferences")] = output({"state": "MERGED", "baseRefName": "main", "headRefOid": "abcdef0123456789", "mergeCommit": {"oid": "merge123"}, "closingIssuesReferences": [{"number": 178, "repository": {"name": "repo", "owner": {"login": "owner"}}}]})
@@ -105,6 +106,13 @@ class CompletePushedIssueTests(unittest.TestCase):
         args = tuple(arg for arg in self.pr_args() if arg != "--merge-authorized")
         self.assertEqual(self.run_main(runner, *args), 1)
         self.assertEqual(runner.calls, [])
+
+    def test_merged_pr_rejects_non_default_target(self):
+        responses = self.pr_responses()
+        responses[("gh", "repo", "view", "owner/repo", "--json", "defaultBranchRef")] = output({"defaultBranchRef": {"name": "different"}})
+        runner = FakeRunner(responses)
+        self.assertEqual(self.run_main(runner, *self.pr_args()), 1)
+        self.assertFalse(any(call[0][:2] == ["gh", "api"] for call in runner.calls))
 
     def test_merged_pr_rejects_same_issue_number_in_another_repository(self):
         responses = self.pr_responses()
