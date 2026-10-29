@@ -243,17 +243,18 @@ def project_ids(run: Run, owner: str, project_number: int) -> tuple[str, str, st
 
 
 def complete(args: argparse.Namespace, run: Run) -> int:
-    if not args.push_authorized:
-        raise ReconciliationError("complete requires --push-authorized")
+    if not (args.push_authorized or args.merged_pr):
+        raise ReconciliationError("complete requires --push-authorized or --merged-pr")
     if not args.working_tree_verified:
         raise ReconciliationError("complete requires --working-tree-verified")
     data = issue_data(run, args.repo, args.issue)
-    if data.get("state") != "OPEN":
-        raise ReconciliationError(f"Issue #{args.issue} is not open")
+    expected_state = "CLOSED" if args.merged_pr else "OPEN"
+    if data.get("state") != expected_state:
+        raise ReconciliationError(f"Issue #{args.issue} is not {expected_state.lower()}")
     comments = data.get("comments", [])
     if not isinstance(comments, list):
         raise ReconciliationError("Issue comments are unavailable")
-    if completion_comments(comments):
+    if completion_comments(comments) and not args.merged_pr:
         raise ReconciliationError(
             "Issue already has a completion comment; do not rewrite completion evidence"
         )
@@ -275,7 +276,28 @@ def complete(args: argparse.Namespace, run: Run) -> int:
             "latest Implementation Report does not name the reviewed integration range"
         )
     validate_completion_text(report, commit, 1, True)
-    published, remote_head = remote_contains(run, commit, args.remote, args.branch)
+    published_commit = commit
+    if args.merged_pr:
+        if not args.post_merge_verified:
+            raise ReconciliationError("PR completion requires --post-merge-verified")
+        pr = json_output(run, ["gh", "pr", "view", str(args.merged_pr), "--repo", args.repo,
+                               "--json", "state,baseRefName,headRefOid,mergeCommit,closingIssuesReferences"])
+        linked = pr.get("closingIssuesReferences", [])
+        merge_commit = pr.get("mergeCommit") or {}
+        def same_issue(issue: Any) -> bool:
+            if not isinstance(issue, dict) or issue.get("number") != args.issue:
+                return False
+            repository = issue.get("repository") or {}
+            owner = repository.get("owner") or {}
+            return f"{owner.get('login', '')}/{repository.get('name', '')}".lower() == args.repo.lower()
+
+        if (not isinstance(linked, list) or pr.get("state") != "MERGED" or pr.get("baseRefName") != args.branch
+            or pr.get("headRefOid") != commit
+            or not any(same_issue(issue) for issue in linked)
+            or not merge_commit.get("oid")):
+            raise ReconciliationError("merged PR does not match the reviewed revision, branch, and Issue")
+        published_commit = merge_commit["oid"]
+    published, remote_head = remote_contains(run, published_commit, args.remote, args.branch)
     if not published:
         raise ReconciliationError(
             f"{commit} is not reachable from {args.remote}/{args.branch}"
@@ -314,44 +336,76 @@ def complete(args: argparse.Namespace, run: Run) -> int:
             f"Issue #{args.issue} is not in Project #{args.project_number}"
         )
     project_id, status_id, done_id = project_ids(run, args.owner, args.project_number)
+    verification = (
+        f"accepted Implementation Report; reviewed `{reviewed_range}` and merged `{published_commit}` on `{args.remote}/{args.branch}`; post-merge verification passed"
+        if args.merged_pr
+        else f"accepted Implementation Report; reviewed `{reviewed_range}` and published `{published_commit}` on `{args.remote}/{args.branch}` at `{remote_head}`"
+    )
     comment = (
         "## Completed\n\n"
         f"- Commit: `{commit}`\n"
         f"- Issue: #{args.issue}\n"
         "- Acceptance criteria: complete\n"
-        f"- Verification: accepted Implementation Report; reviewed `{reviewed_range}` is published on `{args.remote}/{args.branch}` at `{remote_head}`"
+        f"- Verification: {verification}"
     )
     if args.frontend_ci_run:
         comment += f"; successful Frontend CI run `{args.frontend_ci_run}`"
     comment += "\n"
-    run(
-        [
-            "gh",
-            "api",
-            "--method",
-            "POST",
-            f"repos/{args.repo}/issues/{args.issue}/comments",
-            "--input",
-            "-",
-        ],
-        json.dumps({"body": comment}),
-    )
-    run(
-        project_command(
-            "item-edit",
-            "--id",
-            item["id"],
-            "--project-id",
-            project_id,
-            "--field-id",
-            status_id,
-            "--single-select-option-id",
-            done_id,
-        ),
-        None,
-    )
-    run(["gh", "issue", "close", str(args.issue), "--repo", args.repo], None)
-    print(f"Completed Issue #{args.issue} at published commit {commit}.")
+    if args.merged_pr:
+        comment += f"- Merged PR: #{args.merged_pr}; published commit: `{published_commit}`\n"
+    existing = [str(c.get("body", "")) for c in comments if first_heading(str(c.get("body", ""))) == "## Completed"]
+    if len(existing) > 1 or (existing and existing[0] != comment):
+        raise ReconciliationError("existing completion evidence does not match this delivery")
+    if not existing:
+        run(
+            ["gh", "api", "--method", "POST",
+             f"repos/{args.repo}/issues/{args.issue}/comments", "--input", "-"],
+            json.dumps({"body": comment}),
+        )
+    if item.get("status") != "Done":
+        run(
+            project_command(
+                "item-edit", "--id", item["id"], "--project-id", project_id,
+                "--field-id", status_id, "--single-select-option-id", done_id,
+            ),
+            None,
+        )
+    if data.get("state") == "OPEN":
+        run(["gh", "issue", "close", str(args.issue), "--repo", args.repo], None)
+    print(f"Completed Issue #{args.issue} at published commit {published_commit}.")
+    return 0
+
+
+def record_pr_failure(args: argparse.Namespace, run: Run) -> int:
+    """Reopen one affected Issue and record an observed post-merge failure."""
+    if not args.merge_authorized or not args.failure.strip():
+        raise ReconciliationError("failure recovery requires merge authorization and a failure description")
+    data = issue_data(run, args.repo, args.issue)
+    comments = data.get("comments")
+    if not isinstance(comments, list) or data.get("state") not in ("OPEN", "CLOSED"):
+        raise ReconciliationError("Issue state or comments unavailable")
+    pr = json_output(run, ["gh", "pr", "view", str(args.merged_pr), "--repo", args.repo,
+                           "--json", "state,baseRefName,closingIssuesReferences"])
+    linked = pr.get("closingIssuesReferences")
+    if not isinstance(linked, list) or pr.get("state") != "MERGED" or pr.get("baseRefName") != args.branch:
+        raise ReconciliationError("PR is not merged into the intended branch")
+    def matches(issue: Any) -> bool:
+        if not isinstance(issue, dict) or issue.get("number") != args.issue:
+            return False
+        repo = issue.get("repository") or {}
+        owner = repo.get("owner") or {}
+        return f"{owner.get('login', '')}/{repo.get('name', '')}".lower() == args.repo.lower()
+    if not any(matches(issue) for issue in linked):
+        raise ReconciliationError("PR does not link this Issue")
+    body = f"## Post-merge verification failure\n\n- PR: #{args.merged_pr}\n- Issue: #{args.issue}\n- Failure: {args.failure.strip()}\n"
+    prior = [str(comment.get("body", "")) for comment in comments if first_heading(str(comment.get("body", ""))) == "## Post-merge verification failure"]
+    if prior and body not in prior:
+        raise ReconciliationError("existing failure evidence differs; inspect before recovery")
+    if data["state"] == "CLOSED":
+        run(["gh", "issue", "reopen", str(args.issue), "--repo", args.repo], None)
+    if body not in prior:
+        run(["gh", "api", "--method", "POST", f"repos/{args.repo}/issues/{args.issue}/comments", "--input", "-"], json.dumps({"body": body}))
+    print(f"Recorded verification failure for Issue #{args.issue}.")
     return 0
 
 
@@ -379,11 +433,18 @@ def parser() -> argparse.ArgumentParser:
         "--range", dest="commit_range", help="reviewed <base>..<head> integration range"
     )
     complete_parser.add_argument("--push-authorized", action="store_true")
+    complete_parser.add_argument("--merged-pr", type=int, help="merged PR closing this Issue")
+    complete_parser.add_argument("--post-merge-verified", action="store_true", help="attest CI and applicable deployment verification")
     complete_parser.add_argument("--working-tree-verified", action="store_true")
     complete_parser.add_argument(
         "--frontend-ci-run",
         help="required when the delivered range triggers Frontend CI",
     )
+    failure_parser = subparsers.add_parser("record-pr-failure", help="reopen one affected Issue and record post-merge verification failure")
+    failure_parser.add_argument("--issue", type=int, required=True)
+    failure_parser.add_argument("--merged-pr", type=int, required=True)
+    failure_parser.add_argument("--failure", required=True)
+    failure_parser.add_argument("--merge-authorized", action="store_true")
     return command_parser
 
 
@@ -399,6 +460,8 @@ def main(argv: list[str] | None = None, run: Run = run_command) -> int:
                 args.remote,
                 args.branch,
             )
+        if args.command == "record-pr-failure":
+            return record_pr_failure(args, run)
         return complete(args, run)
     except (ReconciliationError, ValidationError) as exc:
         print(f"Reconciliation failed: {exc}", file=sys.stderr)

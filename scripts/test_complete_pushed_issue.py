@@ -65,6 +65,101 @@ def project_command(*arguments):
 
 
 class CompletePushedIssueTests(unittest.TestCase):
+    def pr_responses(self):
+        responses = self.completion_responses()
+        issue_key = ("gh", "issue", "view", "178", "--repo", "owner/repo", "--json", "number,title,state,comments,url")
+        responses[issue_key] = self.issue().replace('"OPEN"', '"CLOSED"')
+        responses[("gh", "pr", "view", "42", "--repo", "owner/repo", "--json", "state,baseRefName,headRefOid,mergeCommit,closingIssuesReferences")] = output({"state": "MERGED", "baseRefName": "main", "headRefOid": "abcdef0123456789", "mergeCommit": {"oid": "merge123"}, "closingIssuesReferences": [{"number": 178, "repository": {"name": "repo", "owner": {"login": "owner"}}}]})
+        responses[("git", "merge-base", "--is-ancestor", "merge123", "fedcba9876543210")] = ""
+        return responses
+
+    def pr_args(self):
+        return ("--repo", "owner/repo", "--owner", "owner", "complete", "--issue", "178", "--commit", "abcdef0", "--merged-pr", "42", "--post-merge-verified", "--working-tree-verified")
+
+    def test_merged_pr_completion_does_not_close_again(self):
+        runner = FakeRunner(self.pr_responses())
+        self.assertEqual(self.run_main(runner, *self.pr_args()), 0)
+        self.assertFalse(any(call[0][:3] == ["gh", "issue", "close"] for call in runner.calls))
+        self.assertTrue(any(call[0][:3] == MODULE.project_command("item-edit") for call in runner.calls))
+
+    def test_merged_pr_handles_each_linked_issue_separately(self):
+        responses = self.pr_responses()
+        key = ("gh", "pr", "view", "42", "--repo", "owner/repo", "--json", "state,baseRefName,headRefOid,mergeCommit,closingIssuesReferences")
+        pr = json.loads(responses[key])
+        pr["closingIssuesReferences"].append({"number": 179, "repository": {"name": "repo", "owner": {"login": "owner"}}})
+        responses[key] = output(pr)
+        runner = FakeRunner(responses)
+        self.assertEqual(self.run_main(runner, *self.pr_args()), 0)
+        payload = next(json.loads(data)["body"] for cmd, data in runner.calls if cmd[:3] == ["gh", "api", "--method"])
+        self.assertIn("Issue: #178", payload)
+        self.assertNotIn("Issue: #179", payload)
+
+    def test_merged_pr_requires_verification_before_mutation(self):
+        runner = FakeRunner(self.pr_responses())
+        args = tuple(arg for arg in self.pr_args() if arg != "--post-merge-verified")
+        self.assertEqual(self.run_main(runner, *args), 1)
+        self.assertFalse(any(call[0][:2] == ["gh", "api"] for call in runner.calls))
+
+    def test_merged_pr_rejects_same_issue_number_in_another_repository(self):
+        responses = self.pr_responses()
+        key = ("gh", "pr", "view", "42", "--repo", "owner/repo", "--json", "state,baseRefName,headRefOid,mergeCommit,closingIssuesReferences")
+        pr = json.loads(responses[key])
+        pr["closingIssuesReferences"][0]["repository"]["owner"]["login"] = "other"
+        responses[key] = output(pr)
+        runner = FakeRunner(responses)
+        self.assertEqual(self.run_main(runner, *self.pr_args()), 1)
+        self.assertFalse(any(call[0][:2] == ["gh", "api"] for call in runner.calls))
+
+    def test_merged_pr_recovery_does_not_repeat_completion_comment(self):
+        runner = FakeRunner(self.pr_responses())
+        self.assertEqual(self.run_main(runner, *self.pr_args()), 0)
+        posted = next(json.loads(data)["body"] for cmd, data in runner.calls if cmd[:3] == ["gh", "api", "--method"])
+        responses = self.pr_responses()
+        key = ("gh", "issue", "view", "178", "--repo", "owner/repo", "--json", "number,title,state,comments,url")
+        issue = json.loads(responses[key])
+        issue["comments"].append({"body": posted})
+        responses[key] = output(issue)
+        runner = FakeRunner(responses)
+        self.assertEqual(self.run_main(runner, *self.pr_args()), 0)
+        self.assertFalse(any(call[0][:2] == ["gh", "api"] for call in runner.calls))
+
+    def test_verification_failure_reopens_and_records_only_affected_issue(self):
+        responses = self.pr_responses()
+        pr_key = ("gh", "pr", "view", "42", "--repo", "owner/repo", "--json", "state,baseRefName,headRefOid,mergeCommit,closingIssuesReferences")
+        failure_pr_key = ("gh", "pr", "view", "42", "--repo", "owner/repo", "--json", "state,baseRefName,closingIssuesReferences")
+        responses[failure_pr_key] = responses[pr_key]
+        responses[("gh", "issue", "reopen", "178", "--repo", "owner/repo")] = ""
+        runner = FakeRunner(responses)
+        args = ("--repo", "owner/repo", "record-pr-failure", "--issue", "178", "--merged-pr", "42", "--failure", "CI failed", "--merge-authorized")
+        self.assertEqual(self.run_main(runner, *args), 0)
+        self.assertEqual(runner.calls[-2][0][:3], ["gh", "issue", "reopen"])
+        self.assertIn("CI failed", json.loads(runner.calls[-1][1])["body"])
+        self.assertFalse(any(call[0][:3] == MODULE.project_command("item-edit") for call in runner.calls))
+
+    def test_verification_failure_stops_if_reopen_fails(self):
+        responses = self.pr_responses()
+        pr_key = ("gh", "pr", "view", "42", "--repo", "owner/repo", "--json", "state,baseRefName,headRefOid,mergeCommit,closingIssuesReferences")
+        failure_pr_key = ("gh", "pr", "view", "42", "--repo", "owner/repo", "--json", "state,baseRefName,closingIssuesReferences")
+        responses[failure_pr_key] = responses[pr_key]
+        responses[("gh", "issue", "reopen", "178", "--repo", "owner/repo")] = MODULE.ReconciliationError("reopen failed")
+        runner = FakeRunner(responses)
+        self.assertEqual(self.run_main(runner, "--repo", "owner/repo", "record-pr-failure", "--issue", "178", "--merged-pr", "42", "--failure", "CI failed", "--merge-authorized"), 1)
+        self.assertFalse(any(call[0][:2] == ["gh", "api"] for call in runner.calls))
+
+    def test_verification_failure_recovery_does_not_repeat_evidence(self):
+        responses = self.pr_responses()
+        pr_key = ("gh", "pr", "view", "42", "--repo", "owner/repo", "--json", "state,baseRefName,headRefOid,mergeCommit,closingIssuesReferences")
+        failure_pr_key = ("gh", "pr", "view", "42", "--repo", "owner/repo", "--json", "state,baseRefName,closingIssuesReferences")
+        responses[failure_pr_key] = responses[pr_key]
+        key = ("gh", "issue", "view", "178", "--repo", "owner/repo", "--json", "number,title,state,comments,url")
+        issue = json.loads(responses[key])
+        issue["state"] = "OPEN"
+        issue["comments"].append({"body": "## Post-merge verification failure\n\n- PR: #42\n- Issue: #178\n- Failure: CI failed\n"})
+        responses[key] = output(issue)
+        runner = FakeRunner(responses)
+        self.assertEqual(self.run_main(runner, "--repo", "owner/repo", "record-pr-failure", "--issue", "178", "--merged-pr", "42", "--failure", "CI failed", "--merge-authorized"), 0)
+        self.assertFalse(any(call[0][:2] == ["gh", "api"] or call[0][:3] == ["gh", "issue", "reopen"] for call in runner.calls))
+
     def issue(self, report=VALID_REPORT, completed=False):
         comments = [{"body": report}]
         if completed:

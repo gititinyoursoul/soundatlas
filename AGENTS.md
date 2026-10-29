@@ -264,18 +264,19 @@ heading wording and order exactly when migrating reviewed content.
   commit or range, set the Issue's Project Tracker status to `Locally
   Implemented` while it awaits push. If corrective work invalidates that
   result, return it to `In Progress`. After successful push, verification, and
-  completion-comment posting, set Project status to `Done` and explicitly
-  close the Issue. Project status does not replace Issue comments, push
+  completion-comment posting, set Project status to `Done`. Explicitly close
+  non-PR Issues; a merged PR may already have closed an Issue. Project status does not replace Issue comments, push
   authorization, completion evidence, or the closed state.
 - After a successful push, capture the published commit hash, verify all
   acceptance criteria, confirm that no Issue-relevant changes remain
   uncommitted, post the standard commit-referencing completion comment, and
-  then close the Issue.
+  then explicitly close non-PR Issues. For merged PRs follow the post-merge
+  verification route in `docs/github-issue-workflow.md`.
 - Use `python scripts/complete_pushed_issue.py` only as an explicitly invoked
   post-push aid after the Human-authorized push. Its `audit` command is
   read-only; its `complete` command must verify the existing Issue evidence
-  before it posts the completion comment, sets Project status to `Done`, and
-  closes one Issue. Do not invoke it from a push trigger, scheduled job, or
+  before it posts the completion comment and sets Project status to `Done`;
+  it explicitly closes only non-PR Issues. Do not invoke it from a push trigger, scheduled job, or
   `Done`-to-close automation.
 - Unrelated user-owned working-tree changes do not block closure and must not be included merely to make the tree clean.
 - Do not make a final delivery push or close an Issue when review is not
