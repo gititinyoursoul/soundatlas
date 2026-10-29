@@ -138,7 +138,8 @@ bodies and may remain command arguments.
     verification.
 21. Agent posts the standard completion comment only after the gate passes and
     sets Project status to `Done` only after that comment succeeds, then closes
-    the Issue explicitly.
+    non-PR Issues explicitly. A merged PR may already have closed an Issue;
+    follow the PR route below.
 22. If review, integration, push, post-push verification, or a GitHub
     operation fails,
     agent reports the failure and leaves the Issue open when possible.
@@ -377,15 +378,15 @@ Report, push-authorization, completion, or Issue-state evidence.
 - `Locally Implemented`: the combined `## Implementation Report` has an
   `Accepted` Review Result and the named reviewed local commit or range exists.
   The Issue remains open and may still be awaiting push authorization.
-- `Done`: the reviewed work was pushed, post-push verification passed, and the
-  completion comment succeeded. Set this immediately before explicitly closing
-  the Issue as completed.
+- `Done`: the reviewed work was delivered, post-delivery verification passed,
+  and the completion comment succeeded. For non-PR delivery set this immediately
+  before explicitly closing the Issue; a merged PR may have closed it already.
 
 If corrective work invalidates an accepted local result, move `Locally
 Implemented` back to `In Progress`. Keep automatic `Done`-to-close behavior
 disabled so the completion comment and status transition remain ordered and
-the agent performs the explicit close only after both succeed. A closed Issue
-may be set to `Done` as a fallback when reconciling external state.
+the agent performs non-PR explicit close only after both succeed. A merged PR
+may close before these steps; its verification and evidence are still required.
 
 Use `python scripts/gh_project.py` for every Project Tracker operation; do not
 use direct `gh project` commands. To add an Issue and set its status, use
@@ -892,8 +893,8 @@ uncertain mutation, or infer that a later stage succeeded.
 | Validation, index, authority, or base mismatch | Stop the affected stage and preserve the index, references, and user work; return to the relevant correction or Human gate. |
 | Integration conflict or changed range | Do not perform unauthorized conflict work. After the permitted resolution, revalidate and review the resulting range before a separately authorized push. |
 | Push fails or publication is uncertain | Read remote state before claiming publication or retrying; do not infer completion or closure. |
-| CI, verification, or completion-comment operation fails | Keep the Issue open and retain `Locally Implemented` while that accepted result remains valid. Corrective work that invalidates it returns Project status to `In Progress`. |
-| Completion comment succeeds but Project update fails | Preserve the comment and readback evidence; report the partial state and perform only the remaining authorized operation after readback. Do not duplicate the comment or close before `Done`. |
+| CI or verification fails | Keep a non-PR Issue open; reopen each affected Issue closed by a merged PR and record the failure. Retain `Locally Implemented` while the accepted result remains valid; otherwise return it to `In Progress`. |
+| Completion comment or Project update fails after successful verification | Preserve observed state and evidence. A merged-PR Issue remains closed; a non-PR Issue remains open. Report the incomplete bookkeeping and perform only the missing authorized step after readback. Do not duplicate evidence or mark `Done` before the comment. |
 | Project reaches `Done` but Issue close fails | Leave the Issue open, report the failure, and retry closure only after verifying the existing completion evidence. |
 
 Rollback restores only the reviewed Issue-scoped documentation hunks and
@@ -902,6 +903,46 @@ does not imply a compensating mutation; do not force-push, delete, rewrite
 history, or archive to recover.
 
 ## Post-Push Completion and Issue Closure
+
+### Merged pull request route
+
+Before merging a PR into the repository default branch, verify accepted review,
+successful PR checks, reviewed delivery scope, and the separate explicit Human
+authorization for that exact merge. List each Issue intended to close using a
+GitHub closing reference such as `Closes #98` only when its scope and all
+pre-merge requirements are satisfied. Assess each linked Issue separately; do
+not imply authorization for other merges or external effects.
+
+After merge, inspect the actual Issue and PR state, record the merged commit and
+verify default-branch CI and applicable deployment. For each affected Issue,
+verify its acceptance criteria, accepted report and Issue-relevant worktree,
+then post completion evidence and set Project status to `Done`. A GitHub-closed
+Issue is not proof that these steps passed. When verification fails, reopen
+each affected Issue, record the failure and observed effects, and retain or
+restore the appropriate pre-completion Project status; do not claim completion.
+If reopening or recording fails, report the precise partial state and inspect
+effects before recovery. A successful Issue remains separately assessable when
+another linked Issue fails.
+
+If verification succeeded but posting evidence or updating the Project fails,
+leave the Issue closed, report incomplete bookkeeping, and inspect actual
+effects before resuming only missing steps. Do not duplicate a completion
+comment or mark `Done` before evidence exists. Existing completion evidence
+must match the delivery; ambiguous or conflicting evidence requires human
+review, not an automatic overwrite. The explicit helper may be used for a
+closed Issue with `--merged-pr <number> --merge-authorized --post-merge-verified` and the reviewed
+commit, after the human-authorized merge and checks. It checks the merged PR,
+linked Issue, reviewed PR head and reachability of the published merge commit.
+The verification flag attests that required CI and deployment checks passed;
+the helper does not independently verify deployment. A failure requires the
+explicit recovery above, not an invocation claiming successful verification.
+The explicitly invoked helper `record-pr-failure --issue <number> --merged-pr
+<number> --failure <description> --merge-authorized` can reopen one linked
+Issue and record a failure. Check and update the Project status separately.
+If it stops after reopening, read back state and evidence before resuming; it
+does not duplicate the same failure comment.
+
+### Explicit non-PR route
 
 For completed Issue-based work, an explicit request to push the reviewed change
 counts as authorization to close the associated Issue unless the human

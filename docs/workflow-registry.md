@@ -68,7 +68,7 @@ Request
   |     -> Human-authorized local integration to main
   |     -> Human-authorized push of the reviewed main range
   |     -> Push + verification + completion comment
-  |     -> Project Done + explicit Issue closure
+  |     -> Project Done + explicit non-PR Issue closure
   |
   +-- Non-trivial work
         -> Preserve supplied material + Project Todo
@@ -92,8 +92,12 @@ Request
         -> Human-authorized local integration to main
         -> Human-authorized push of the reviewed main range
         -> Push + verification + completion comment
-        -> Project Done + explicit Issue closure
+        -> Project Done + explicit non-PR Issue closure
 ```
+
+Alternatively, an explicitly authorized PR merge may close eligible linked
+Issues before post-merge verification. Follow the PR-specific recovery,
+evidence, and Project status rules in `docs/github-issue-workflow.md`.
 
 Concept work is conditional. Use it when explicitly requested or when planning
 would otherwise have to invent material target behavior, semantics, scope,
@@ -125,7 +129,8 @@ commit or range, and `Done` after push, verification, and the completion
 comment succeed. It must not substitute for Issue records, explicit push
 authorization, completion evidence, or Issue closure. Corrective work returns
 `Locally Implemented` to `In Progress`; successful post-push completion sets
-`Done` and then closes the Issue explicitly. Keep automatic `Done`-to-close
+`Done` and then closes non-PR Issues explicitly. A merged PR may already have
+closed an Issue; verification and evidence still precede `Done`. Keep automatic `Done`-to-close
 behavior disabled so those actions remain ordered.
 
 ## Git Integration Boundary
@@ -692,15 +697,15 @@ For an approved prompt-to-skill extraction:
   containing the Review Result. Do not post a separate routine review comment.
 - After a successful push for completed Issue work, run the local completion
   gate, capture the published hash, verify Issue-relevant completeness, post
-  the single standard completion comment, and close the Issue only after that
-  comment succeeds. Preserve the documented exceptions in
+  the single standard completion comment, and close non-PR Issues only after that
+  comment succeeds. For merged PRs follow the route in
   `docs/github-issue-workflow.md`.
 - Set Project status to `In Progress` at the documented transition out of
   Intake. Set it to `Locally Implemented` only after the accepted implementation
   review and named local commit/range exist; return it to `In Progress` if
   corrective work invalidates that result. Set `Done` only after successful
-  push, verification, and completion-comment posting, then close the Issue
-  explicitly. Do not introduce workflow-state labels or automate `Done` to
+  delivery, verification, and completion-comment posting, then explicitly close
+  non-PR Issues. Merged PRs may already have closed them. Do not introduce workflow-state labels or automate `Done` to
   close the Issue.
 - For every completed process task or handoff, follow the project-wide
   completion-handoff requirement in `AGENTS.md`.

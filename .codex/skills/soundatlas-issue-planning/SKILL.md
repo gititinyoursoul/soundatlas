@@ -167,7 +167,8 @@ Changes` section instead of silently rewriting the meaning of the Issue.
    authorization, completion comments, or Issue closure.
 
    Post-push completion requires the local completion gate, one standard
-   completion comment, and successful comment posting before closure. Keep an
+   completion comment, and successful comment posting before explicit non-PR
+   closure; a merged PR may close earlier under the lifecycle contract. Keep an
    incomplete report or non-`Accepted` review open for correction.
 
 ## Issue Artifact Contracts
