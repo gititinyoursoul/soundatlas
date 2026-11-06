@@ -1,0 +1,753 @@
+{
+  "_meta": {
+    "description": "Geographic places used by SoundAtlas events.",
+    "schema_version": 2
+  },
+  "places": [
+    {
+      "id": "south-bronx",
+      "name": "South Bronx",
+      "borough": "Bronx",
+      "place_type": "region",
+      "summary": "Regional context for many early hip-hop parties, crews, and social conditions.",
+      "content_review_status": "draft",
+      "latitude": 40.8176,
+      "longitude": -73.9182,
+      "source_urls": [
+        "https://americanhistory.si.edu/press/releases/hip-hop-comes-smithsonian"
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -73.9195,
+              40.8564
+            ],
+            [
+              -73.9,
+              40.852
+            ],
+            [
+              -73.88,
+              40.849
+            ],
+            [
+              -73.868,
+              40.847
+            ],
+            [
+              -73.874,
+              40.838
+            ],
+            [
+              -73.8785,
+              40.8255
+            ],
+            [
+              -73.878,
+              40.815
+            ],
+            [
+              -73.871,
+              40.8065
+            ],
+            [
+              -73.8585,
+              40.802
+            ],
+            [
+              -73.852751919912,
+              40.799825050778
+            ],
+            [
+              -73.862928,
+              40.797265
+            ],
+            [
+              -73.868350426088,
+              40.792342147554
+            ],
+            [
+              -73.890459134842,
+              40.790269456109
+            ],
+            [
+              -73.912528,
+              40.796118
+            ],
+            [
+              -73.919896,
+              40.799392
+            ],
+            [
+              -73.922663,
+              40.802119
+            ],
+            [
+              -73.927663,
+              40.802399
+            ],
+            [
+              -73.932364,
+              40.808519
+            ],
+            [
+              -73.932857,
+              40.810327
+            ],
+            [
+              -73.932828,
+              40.823366
+            ],
+            [
+              -73.933763,
+              40.831686
+            ],
+            [
+              -73.933247,
+              40.835632
+            ],
+            [
+              -73.927091,
+              40.847353
+            ],
+            [
+              -73.920137719979,
+              40.856507739027
+            ],
+            [
+              -73.9195,
+              40.8564
+            ]
+          ]
+        ]
+      },
+      "geometry_precision": "interpretive",
+      "geometry_source_type": "curated",
+      "geometry_source_url": "https://commons.wikimedia.org/wiki/File:Southbronx.png",
+      "geometry_source_note": "SoundAtlas-curated cultural-area outline, clipped to the frontend's simplified Bronx boundary; northern and eastern limits use Southbronx.png as an illustrative, unreviewed visual reference. Not an administrative boundary.",
+      "geometry_license": "CC BY-SA 2.5"
+    },
+    {
+      "id": "new-york-city",
+      "name": "New York City",
+      "borough": "Citywide",
+      "place_type": "city",
+      "summary": "Citywide context for the blackout, media, the record industry, and club circulation.",
+      "content_review_status": "draft",
+      "latitude": 40.7128,
+      "longitude": -74.006,
+      "source_urls": [
+        "https://www.pbs.org/wgbh/americanexperience/films/blackout/"
+      ]
+    },
+    {
+      "id": "1520-sedgwick-avenue",
+      "name": "1520 Sedgwick Avenue",
+      "borough": "Bronx",
+      "place_type": "building",
+      "summary": "Apartment building whose community room is considered a symbolic node in early hip-hop history.",
+      "content_review_status": "draft",
+      "latitude": 40.8471,
+      "longitude": -73.9243,
+      "source_urls": [
+        "https://www.history.com/this-day-in-history/hip-hop-is-born-at-a-birthday-party-in-the-bronx"
+      ]
+    },
+    {
+      "id": "cedar-playground-bronx",
+      "name": "Cedar Playground",
+      "borough": "Bronx",
+      "place_type": "park",
+      "summary": "Public space in the West Bronx context, connected to early DJ and park-party culture.",
+      "content_review_status": "draft",
+      "latitude": 40.856,
+      "longitude": -73.9195,
+      "source_urls": [],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -73.91813,
+              40.854744
+            ],
+            [
+              -73.917742,
+              40.854651
+            ],
+            [
+              -73.917643,
+              40.854754
+            ],
+            [
+              -73.917447,
+              40.854739
+            ],
+            [
+              -73.917084,
+              40.854648
+            ],
+            [
+              -73.916995,
+              40.854792
+            ],
+            [
+              -73.917013,
+              40.854834
+            ],
+            [
+              -73.91716,
+              40.854888
+            ],
+            [
+              -73.916893,
+              40.855328
+            ],
+            [
+              -73.916846,
+              40.85544
+            ],
+            [
+              -73.916832,
+              40.85552
+            ],
+            [
+              -73.916857,
+              40.85559
+            ],
+            [
+              -73.916933,
+              40.85568
+            ],
+            [
+              -73.91709,
+              40.855754
+            ],
+            [
+              -73.91721,
+              40.855739
+            ],
+            [
+              -73.91813,
+              40.854744
+            ]
+          ]
+        ]
+      },
+      "geometry_precision": "site",
+      "geometry_source_type": "external",
+      "geometry_source_url": "https://www.openstreetmap.org/way/1105528044",
+      "geometry_source_note": "OpenStreetMap way 1105528044, Cedar Playground, fetched through Nominatim on 2026-06-28.",
+      "geometry_license": "ODbL 1.0"
+    },
+    {
+      "id": "bronx-river-houses",
+      "name": "Bronx River Houses",
+      "borough": "Bronx",
+      "place_type": "housing_complex",
+      "summary": "Housing complex in the Soundview context, closely connected to Afrika Bambaataa and early scene organization.",
+      "content_review_status": "draft",
+      "latitude": 40.835,
+      "longitude": -73.8769,
+      "source_urls": [
+        "https://citylore.org/places/bronx-river-houses/",
+        "https://bronxriver.org/post/greenway/the-bronx-river-houses-resilience/feed"
+      ]
+    },
+    {
+      "id": "the-roxy-nyc",
+      "name": "The Roxy",
+      "borough": "Manhattan",
+      "place_type": "club",
+      "summary": "Downtown club and roller rink on West 18th Street, relevant to hip-hop as a club, art, and media phenomenon.",
+      "content_review_status": "draft",
+      "latitude": 40.7463,
+      "longitude": -74.0069,
+      "source_urls": [
+        "https://www.filmlinc.org/films/wild-style/"
+      ]
+    },
+    {
+      "id": "englewood-sugar-hill-records",
+      "name": "Sugar Hill Records / Englewood",
+      "borough": "External",
+      "place_type": "external_node",
+      "summary": "External industry node in Englewood, New Jersey, connected to Sugar Hill Records and Rapper's Delight.",
+      "content_review_status": "draft",
+      "latitude": 40.8929,
+      "longitude": -73.9726,
+      "source_urls": [
+        "https://www.britannica.com/topic/the-Sugarhill-Gang",
+        "https://www.latimes.com/entertainment-arts/music/story/2023-08-07/sugar-hill-records-gang-sylvia-robinson-rappers-delight-1979-50th-anniversary-hip-hop"
+      ]
+    },
+    {
+      "id": "the-loft-broadway",
+      "name": "The Loft",
+      "borough": "Manhattan",
+      "place_type": "club",
+      "summary": "David Mancuso's private party space at 645–647 Broadway, organized around recorded music, careful sound, dancing, and community.",
+      "content_review_status": "draft",
+      "latitude": 40.726871,
+      "longitude": -73.995882,
+      "source_urls": [
+        "https://www.nyclgbtsites.org/site/david-mancuso-residence-the-loft/"
+      ]
+    },
+    {
+      "id": "the-gallery-nyc",
+      "name": "The Gallery",
+      "borough": "Manhattan",
+      "place_type": "club",
+      "summary": "The Gallery's 172 Mercer Street location, where Nicky Siano coordinated DJ performance, sound, lighting, and crowd response.",
+      "content_review_status": "draft",
+      "latitude": 40.725396,
+      "longitude": -73.997378,
+      "source_urls": [
+        "https://www.nyclgbtsites.org/site/the-gallery/"
+      ]
+    },
+    {
+      "id": "studio-54",
+      "name": "Studio 54",
+      "borough": "Manhattan",
+      "place_type": "club",
+      "summary": "A Midtown club that made disco visible in 1977 as a glamorous, media-driven pop phenomenon.",
+      "content_review_status": "draft",
+      "latitude": 40.7644,
+      "longitude": -73.983,
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Studio_54"
+      ]
+    },
+    {
+      "id": "paradise-garage",
+      "name": "Paradise Garage",
+      "borough": "Manhattan",
+      "place_type": "club",
+      "summary": "The 84 King Street club built around music, dancing, Larry Levan's DJ practice, purpose-designed sound, and a largely minority membership.",
+      "content_review_status": "draft",
+      "latitude": 40.727611,
+      "longitude": -74.006388,
+      "source_urls": [
+        "https://www.nyclgbtsites.org/site/paradise-garage/"
+      ]
+    },
+    {
+      "id": "west-end-records",
+      "name": "West End Records",
+      "borough": "Manhattan",
+      "place_type": "label",
+      "summary": "A New York label node for disco, boogie, post-disco, 12-inch, and club culture.",
+      "content_review_status": "draft",
+      "latitude": 40.7527,
+      "longitude": -73.994,
+      "source_urls": [
+        "https://pitchfork.com/thepitch/where-to-start-with-west-end-records-the-influential-disco-label-set-for-relaunch/"
+      ]
+    },
+    {
+      "id": "prelude-records",
+      "name": "Prelude Records",
+      "borough": "Manhattan",
+      "place_type": "label",
+      "summary": "A label context for post-disco, synth-heavy club music, and remix culture in the early 1980s.",
+      "content_review_status": "draft",
+      "latitude": 40.7556,
+      "longitude": -73.9865,
+      "source_urls": []
+    },
+    {
+      "id": "bay-ridge-brooklyn",
+      "name": "Bay Ridge",
+      "borough": "Brooklyn",
+      "place_type": "neighborhood",
+      "summary": "A Brooklyn context for the pop myth around Saturday Night Fever and everyday disco culture.",
+      "content_review_status": "draft",
+      "latitude": 40.6262,
+      "longitude": -74.0302,
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Saturday_Night_Fever"
+      ]
+    },
+    {
+      "id": "wbls-nyc-radio",
+      "name": "WBLS / NYC Radio",
+      "borough": "Manhattan",
+      "place_type": "media_node",
+      "summary": "A radio and media node linking club response, DJs, labels, and broader pop reception.",
+      "content_review_status": "draft",
+      "latitude": 40.727,
+      "longitude": -74.007,
+      "source_urls": [
+        "https://pitchfork.com/features/article/9710-the-larry-levan-bump-how-the-legendary-paradise-garage-dj-ignited-some-of-the-80s-biggest-hits/"
+      ]
+    },
+    {
+      "id": "cbgb",
+      "name": "CBGB",
+      "borough": "Manhattan",
+      "place_type": "club",
+      "summary": "Bowery music club that became the central venue for New York punk and new wave bands in the 1970s.",
+      "content_review_status": "draft",
+      "latitude": 40.7251,
+      "longitude": -73.9916,
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/CBGB"
+      ]
+    },
+    {
+      "id": "maxs-kansas-city",
+      "name": "Max's Kansas City",
+      "borough": "Manhattan",
+      "place_type": "club",
+      "summary": "Park Avenue South venue that connected Warhol-era art rock, glam, proto-punk, and later punk booking.",
+      "content_review_status": "draft",
+      "latitude": 40.7365,
+      "longitude": -73.9885,
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Max%27s_Kansas_City"
+      ]
+    },
+    {
+      "id": "mercer-arts-center",
+      "name": "Mercer Arts Center",
+      "borough": "Manhattan",
+      "place_type": "arts_center",
+      "summary": "Greenwich Village arts complex associated with early 1970s glam and proto-punk performance before its 1973 collapse.",
+      "content_review_status": "draft",
+      "latitude": 40.7281,
+      "longitude": -73.9965,
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Mercer_Arts_Center"
+      ]
+    },
+    {
+      "id": "artists-space",
+      "name": "Artists Space",
+      "borough": "Manhattan",
+      "place_type": "arts_space",
+      "summary": "Downtown art space linked to the 1978 no wave festival that helped shape the No New York compilation.",
+      "content_review_status": "draft",
+      "latitude": 40.7242,
+      "longitude": -74.0025,
+      "source_urls": [
+        "https://artistsspace.org/",
+        "https://en.wikipedia.org/wiki/No_New_York"
+      ]
+    },
+    {
+      "id": "mudd-club",
+      "name": "Mudd Club",
+      "borough": "Manhattan",
+      "place_type": "club",
+      "summary": "TriBeCa club where post-punk, no wave, performance, fashion, and downtown art scenes overlapped.",
+      "content_review_status": "draft",
+      "latitude": 40.718,
+      "longitude": -74.0047,
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Mudd_Club"
+      ]
+    },
+    {
+      "id": "tier-3",
+      "name": "Tier 3",
+      "borough": "Manhattan",
+      "place_type": "club",
+      "summary": "Downtown venue remembered for experimental performance, no wave, post-punk, and early 1980s scene crossover.",
+      "content_review_status": "draft",
+      "latitude": 40.7177,
+      "longitude": -74.007,
+      "source_urls": []
+    },
+    {
+      "id": "danceteria",
+      "name": "Danceteria",
+      "borough": "Manhattan",
+      "place_type": "club",
+      "summary": "Multi-format nightclub that linked new wave, DJs, video, dance culture, and downtown crossover audiences.",
+      "content_review_status": "draft",
+      "latitude": 40.7423,
+      "longitude": -73.9935,
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Danceteria"
+      ]
+    },
+    {
+      "id": "99-records",
+      "name": "99 Records",
+      "borough": "Manhattan",
+      "place_type": "label",
+      "summary": "Greenwich Village store and label connected to no wave, post-punk, post-disco, and independent downtown music.",
+      "content_review_status": "draft",
+      "latitude": 40.7302,
+      "longitude": -74.0007,
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/99_Records"
+      ]
+    },
+    {
+      "id": "palladium-ballroom",
+      "name": "Palladium Ballroom",
+      "borough": "Manhattan",
+      "place_type": "ballroom",
+      "summary": "Former Midtown ballroom remembered as a mambo-era center whose dance culture shaped later New York salsa audiences.",
+      "content_review_status": "draft",
+      "latitude": 40.7624,
+      "longitude": -73.9828,
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Salsa_music"
+      ]
+    },
+    {
+      "id": "east-harlem-el-barrio",
+      "name": "East Harlem / El Barrio",
+      "borough": "Manhattan",
+      "place_type": "neighborhood",
+      "summary": "Puerto Rican and broader Latin neighborhood context for boogaloo, Latin soul, salsa audiences, and Nuyorican cultural life.",
+      "content_review_status": "draft",
+      "latitude": 40.7947,
+      "longitude": -73.9389,
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Nuyorican_movement"
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -73.957,
+              40.7847
+            ],
+            [
+              -73.952,
+              40.795
+            ],
+            [
+              -73.947,
+              40.807
+            ],
+            [
+              -73.939,
+              40.82
+            ],
+            [
+              -73.929,
+              40.819
+            ],
+            [
+              -73.925,
+              40.811
+            ],
+            [
+              -73.93,
+              40.799
+            ],
+            [
+              -73.936,
+              40.789
+            ],
+            [
+              -73.945,
+              40.784
+            ],
+            [
+              -73.957,
+              40.7847
+            ]
+          ]
+        ]
+      },
+      "geometry_precision": "interpretive",
+      "geometry_source_type": "curated",
+      "geometry_source_note": "SoundAtlas-curated cultural-area outline, not an administrative boundary."
+    },
+    {
+      "id": "fania-records-nyc",
+      "name": "Fania Records / NYC",
+      "borough": "Manhattan",
+      "place_type": "label",
+      "summary": "New York label and media node that organized, recorded, marketed, and circulated salsa as a global urban sound.",
+      "content_review_status": "draft",
+      "latitude": 40.759,
+      "longitude": -73.9845,
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Fania_Records"
+      ]
+    },
+    {
+      "id": "cheetah-nightclub",
+      "name": "Cheetah",
+      "borough": "Manhattan",
+      "place_type": "club",
+      "summary": "Midtown nightclub where the 1971 Fania All-Stars concert helped make salsa visible as a mass urban phenomenon.",
+      "content_review_status": "draft",
+      "latitude": 40.7629,
+      "longitude": -73.9858,
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Cheetah_(nightclub)"
+      ]
+    },
+    {
+      "id": "yankee-stadium",
+      "name": "Yankee Stadium",
+      "borough": "Bronx",
+      "place_type": "stadium",
+      "summary": "Bronx stadium used as a marker of salsa's move from neighborhood and club scenes to large-scale concert spectacle.",
+      "content_review_status": "draft",
+      "latitude": 40.8296,
+      "longitude": -73.9262,
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Fania_Records"
+      ]
+    },
+    {
+      "id": "el-museo-del-barrio",
+      "name": "El Museo del Barrio",
+      "borough": "Manhattan",
+      "place_type": "cultural_institution",
+      "summary": "East Harlem cultural institution founded to center Puerto Rican, Caribbean, Latin American, and Latino art and history.",
+      "content_review_status": "draft",
+      "latitude": 40.7931,
+      "longitude": -73.9518,
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/El_Museo_del_Barrio"
+      ]
+    },
+    {
+      "id": "nuyorican-poets-cafe",
+      "name": "Nuyorican Poets Cafe",
+      "borough": "Manhattan",
+      "place_type": "cultural_space",
+      "summary": "Lower East Side cultural space that gave performance language to Nuyorican identity, poetry, theater, music, and urban experience.",
+      "content_review_status": "draft",
+      "latitude": 40.7217,
+      "longitude": -73.9834,
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Nuyorican_Poets_Caf%C3%A9"
+      ]
+    },
+    {
+      "id": "slugs-saloon",
+      "name": "Slugs' Saloon",
+      "borough": "Manhattan",
+      "place_type": "club",
+      "summary": "East Village jazz club associated with free jazz, Sun Ra, Albert Ayler, Rashied Ali, and adventurous late-1960s audiences.",
+      "content_review_status": "draft",
+      "latitude": 40.7225,
+      "longitude": -73.9796,
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Slugs%27_Saloon"
+      ]
+    },
+    {
+      "id": "studio-rivbea",
+      "name": "Studio Rivbea",
+      "borough": "Manhattan",
+      "place_type": "loft",
+      "summary": "Sam and Bea Rivers' Bond Street loft, one of the central artist-run spaces of the 1970s New York loft jazz scene.",
+      "content_review_status": "draft",
+      "latitude": 40.7279,
+      "longitude": -73.9959,
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Sam_Rivers_(jazz_musician)",
+        "https://en.wikipedia.org/wiki/Loft_jazz"
+      ]
+    },
+    {
+      "id": "alis-alley",
+      "name": "Ali's Alley",
+      "borough": "Manhattan",
+      "place_type": "loft",
+      "summary": "Rashied Ali's musician-run loft and label context, part of the wider downtown loft jazz infrastructure.",
+      "content_review_status": "draft",
+      "latitude": 40.7232,
+      "longitude": -73.994,
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Loft_jazz"
+      ]
+    },
+    {
+      "id": "the-kitchen",
+      "name": "The Kitchen",
+      "borough": "Manhattan",
+      "place_type": "arts_institution",
+      "summary": "Experimental art and performance institution founded in 1971 that connected video, music, dance, performance, and new media.",
+      "content_review_status": "draft",
+      "latitude": 40.7455,
+      "longitude": -74.0069,
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/The_Kitchen_(art_institution)"
+      ]
+    },
+    {
+      "id": "experimental-intermedia",
+      "name": "Experimental Intermedia",
+      "borough": "Manhattan",
+      "place_type": "arts_space",
+      "summary": "Loft-based intermedia and experimental music context associated with drone, film, performance, and long-running avant-garde presentations.",
+      "content_review_status": "draft",
+      "latitude": 40.7157,
+      "longitude": -73.997,
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Phill_Niblock"
+      ]
+    },
+    {
+      "id": "roulette-intermedium",
+      "name": "Roulette",
+      "borough": "Manhattan",
+      "place_type": "arts_space",
+      "summary": "Artist-run presenter founded in 1978 for experimental music, improvisation, dance, intermedia, and one-time performance projects.",
+      "content_review_status": "draft",
+      "latitude": 40.7197,
+      "longitude": -74.005,
+      "source_urls": [
+        "https://en.wikipedia.org/wiki/Roulette_Intermedium"
+      ]
+    },
+    {
+      "id": "leviticus",
+      "name": "Leviticus",
+      "borough": "Manhattan",
+      "place_type": "club",
+      "summary": "A West 33rd Street club associated with the Best of Friends and Black disco nightlife by late 1974.",
+      "content_review_status": "draft",
+      "latitude": 40.748883,
+      "longitude": -73.987109,
+      "source_urls": [
+        "https://retrocdn.net/images/5/5c/CashBox_US_1974-12-28.pdf",
+        "https://americanhistory.si.edu/collections/archival-collection/sova-nmah-ac-1614"
+      ]
+    },
+    {
+      "id": "new-york-record-pool-prince-street",
+      "name": "New York Record Pool",
+      "borough": "Manhattan",
+      "place_type": "record_pool",
+      "summary": "The Prince Street base of the New York Record Pool, organized in 1975 to connect participating DJs with promotional records and record-company feedback.",
+      "content_review_status": "draft",
+      "latitude": 40.724911,
+      "longitude": -73.998685,
+      "source_urls": [
+        "https://www.worldradiohistory.com/Archive-All-Music/Record-World/70s/RW-1975-07-12.pdf",
+        "https://www.timlawrence.info/articles2/2013/7/16/disco-in-encyclopedia-of-popular-music-of-the-world-volume-8-genres-north-america-eds-john-shepherd-and-david-horn-london-continuum-2012-180-86"
+      ]
+    },
+    {
+      "id": "st-marys-recreation-center",
+      "name": "St. Mary's Recreation Center",
+      "borough": "Bronx",
+      "place_type": "community_center",
+      "summary": "A South Bronx recreation center that became an important Latin Hustle incubator beginning in summer 1974.",
+      "content_review_status": "draft",
+      "latitude": 40.811496,
+      "longitude": -73.914094,
+      "source_urls": [
+        "https://bronxhistoricalsociety.org/dance/2"
+      ]
+    }
+  ]
+}
