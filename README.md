@@ -66,9 +66,9 @@ Each data file exposes a top-level collection (`routes`, `places`, or `events`).
 - Events link to a route through `route_id` and to places through `place_ids` and `default_place_id`. They also retain a `place_id` field.
 - Navigation entries contain a nested route object and flags such as `appears_in_routes` and `appears_in_published_routes`.
 
-When changing an export, preserve stable IDs and valid references. Keep duplicated route metadata in `route-navigation.json` consistent with `routes.json`. Check that JSON remains valid and preview the affected route, event, and map location.
+Durable changes to this README and the data are maintained in the private source project and delivered by regenerating the checked site. Direct edits in this generated repository may be overwritten by the next publication.
 
-Prefer making durable changes in the original source project and regenerating this site. Direct edits to generated files may be overwritten by a future export; hashed files in `_app/immutable/` should be regenerated through the original build process.
+Source updates preserve stable IDs and valid references, keep duplicated route metadata in `route-navigation.json` consistent with `routes.json`, and validate the JSON and affected route, event, and map location. Hashed files in `_app/immutable/` are regenerated through the original build process.
 
 ## Content and attribution
 
